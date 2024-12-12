@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Backend\DepartmentController;
+use App\Http\Controllers\Backend\DivisionController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +16,7 @@ use App\Http\Controllers\Backend\MenusController;
 use App\Http\Controllers\Backend\SubmenusController;
 use App\Http\Controllers\Backend\LevelsController;
 use App\Http\Controllers\Backend\PendudukController;
+use App\Http\Controllers\Backend\CompanyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,14 +29,12 @@ use App\Http\Controllers\Backend\PendudukController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 Auth::routes();
 
 Route::get('/', 'HomeController@redirectAdmin')->name('index');
 Route::get('/home', 'HomeController@index')->name('home');
+Route::resource('companies', CompanyController::class);
+Route::any('companies/{id}', [CompanyController::class, 'update']);
 
 /**
  * Admin routes
@@ -68,4 +69,16 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::post('penduduk/import', [PendudukController::class, 'import'])->name('penduduk.import');
     Route::get('penduduk/export', [PendudukController::class, 'export'])->name('penduduk.export');
     Route::resource('penduduk', PendudukController::class);
+
+    // Company routes
+    Route::resource('companies', CompanyController::class);
+    Route::any('companies/{id}', [CompanyController::class, 'update']);
+
+    // Division routes
+    Route::resource('divisions', DivisionController::class);
+    Route::any('divisions/{id}', [DivisionController::class, 'update']);
+
+    // Department Routes
+    Route::resource('departments', DepartmentController::class);
+    Route::any('departments/{id}', [DepartmentController::class, 'update']);
 })->middleware('auth:admin');
