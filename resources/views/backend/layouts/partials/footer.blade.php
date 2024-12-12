@@ -23,6 +23,6 @@
 <!-- footer area start-->
 <footer>
     <div class="footer-area">
-        <!-- <p>© Copyright adicahyo 2024. All right reserved.</p> -->
+        <!-- <p>© Copyright Bromindo 2024. All right reserved.</p> -->
     </div>
 </footer>
