@@ -1,0 +1,119 @@
+// fonts variable
+$heading-font: "Public Sans", sans-serif !default;
+$body-font: "Public Sans", sans-serif !default;
+
+// color variable
+
+$colors: (
+  gray: (
+    900: #191b1c,
+    800: #313638,
+    700: #4a5154,
+    600: #626c70,
+    500: #7b878c,
+    400: #959fa3,
+    300: #b0b7ba,
+    200: #cacfd1,
+    100: #e5e7e8,
+    50: #f5f6f7,
+    10: #fff,
+  ),
+  primary: (
+    900: #03132b,
+    800: #062657,
+    700: #083982,
+    600: #0b4cae,
+    500: #005ce8,
+    400: #3e7fe1,
+    300: #6e9fe8,
+    200: #9fbff0,
+    100: #cfdff7,
+    50: #f0f6ff,
+  ),
+  secondary: (
+    900: #333014,
+    800: #666129,
+    700: #99913d,
+    600: #ccc252,
+    500: #fff266,
+    400: #fff585,
+    300: #fff7a3,
+    200: #fffac2,
+    100: #fffce0,
+    50: #fffef0,
+  ),
+  success: (
+    900: #032314,
+    800: #064627,
+    700: #09693b,
+    600: #0c8c4e,
+    500: #0faf62,
+    400: #3fbf81,
+    300: #6fcfa1,
+    200: #9fdfc0,
+    100: #cfefe0,
+    50: #e7f7ef,
+  ),
+  warning: (
+    900: #331e00,
+    800: #663c00,
+    700: #995900,
+    600: #cc7700,
+    500: #ff9500,
+    400: #ffaa33,
+    300: #ffbf66,
+    200: #ffd599,
+    100: #ffeacc,
+    50: #fff4e6,
+  ),
+  danger: (
+    900: #2e0e0e,
+    800: #5d1c1c,
+    700: #8b2a2a,
+    600: #ba3838,
+    500: #e84646,
+    400: #ed6b6b,
+    300: #f19090,
+    200: #f6b5b5,
+    100: #fadada,
+    50: #fdeded,
+  ),
+);
+
+$bodyfontScale: (
+  xl: (
+    20: 20px,
+    lineheight: 32px,
+  ),
+  lg: (
+    18: 18px,
+    lineheight: 28px,
+  ),
+  md: (
+    16: 16px,
+    lineheight: 24px,
+  ),
+  xs: (
+    14: 14px,
+    lineheight: 22px,
+  ),
+  xss: (
+    12: 12px,
+    lineheight: 20px,
+  ),
+);
+
+$bodyfontvariation: 20px 18px 16px 14px 12px;
+$lineheightvariation: 32px 28px 24px 20px 12px;
+
+$headingfontSize: 72px 64px 48px 40px 36px 32px;
+$headingLineheight: 80px 72px 56px 48px 44px 40px;
+
+// button font size
+$button_font_size: 14px;
+$buton_line_height: 14px;
+$buton_border_radius: 4px;
+$button_padding: 12px 24px 12px 24px;
+$button_font_weight: 600;
+$button_font_family: $heading-font;
+

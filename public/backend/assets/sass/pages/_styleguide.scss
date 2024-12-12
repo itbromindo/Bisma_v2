@@ -1,0 +1,27 @@
+.padding-bottom {
+  padding-bottom: 70px;
+}
+
+.primary-button-list-wrap {
+  margin-bottom: 70px;
+}
+.component-title {
+  margin-bottom: 40px;
+}
+
+.sitemap {
+  h1 {
+    font-size: 30px;
+    margin-bottom: 40px;
+    line-height: 1;
+  }
+  ul {
+    padding-left: 30px;
+    li {
+      margin-bottom: 7px;
+      a {
+        color: var(--gray-900);
+      }
+    }
+  }
+}

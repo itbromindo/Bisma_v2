@@ -1,0 +1,254 @@
+.profile {
+  &-wrap {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    padding: 84px 40px 30px;
+    position: relative;
+    z-index: 0;
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    justify-content: space-between;
+    @include max(1300px) {
+      display: block;
+    }
+    @include max(767px) {
+      padding: 15px;
+    }
+    &:before {
+      width: 100%;
+      height: 59%;
+      content: "";
+      left: 0;
+      top: 0;
+      z-index: -1;
+      position: absolute;
+      background-size: cover;
+      background-image: url(../images/all-img/bannar.jpg);
+      @include max(1199px) {
+        height: 45%;
+      }
+      @include max(767px) {
+        content: none;
+      }
+    }
+  }
+  &-left {
+    display: flex;
+    align-items: flex-end;
+    @include max(1300px) {
+      margin-bottom: 20px;
+    }
+    @include max(767px) {
+      align-items: center;
+    }
+    @include max(479px) {
+      display: block;
+      text-align: center;
+    }
+  }
+  &-thumb {
+    flex-shrink: 0;
+    margin-right: 24px;
+    width: 200px;
+    height: 200px;
+    overflow: hidden;
+    border-radius: 100%;
+    border: 7px solid white;
+    @include max(1400px) {
+      width: 170px;
+      height: 170px;
+      margin-right: 15px;
+    }
+    @include max(991px) {
+      width: 150px;
+      height: 150px;
+    }
+    @include max(479px) {
+      margin: 0 auto 15px;
+      width: 120px;
+      height: 120px;
+    }
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+  &-data {
+    padding-bottom: 10px;
+    h4 {
+      font-weight: 600;
+      font-size: 24px;
+      line-height: 32px;
+      margin-bottom: 5px;
+      color: var(--gray-900);
+    }
+    p {
+      font-size: 16px;
+      line-height: 24px;
+      color: var(--gray-600);
+      margin: 0;
+    }
+  }
+  &-right {
+    display: flex;
+    max-width: 516px;
+    width: 100%;
+    margin-bottom: 15px;
+    justify-content:space-between;
+    @include max(1300px) {
+      max-width: 100%;
+      text-align: center;
+      margin: 0;
+    }
+    @include max(380px) {
+      display: block;
+    }
+
+    &-item {
+      flex: 1;
+      @include breakpoint(xs) {
+        margin-bottom: 15px;
+        &:last-child {
+          margin-bottom: 0px;
+        }
+      }
+      h4 {
+        font-weight: 500;
+        font-size: 18px;
+        line-height: 24px;
+      }
+      p {
+        font-size: 14px;
+        line-height: 20px;
+        margin: 0;
+        color: var(--gray-600);
+      }
+    }
+  }
+}
+
+.about-content,
+.social-icon {
+  h4 {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    margin-bottom: 8px;
+  }
+  p {
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--gray-500);
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+.biography-details {
+  margin-top: 24px;
+  ul {
+    li {
+      font-size: 14px;
+      line-height: 20px;
+      margin-bottom: 12px;
+      &:last-child {
+        margin-bottom: 0;
+      }
+      color: var(--gray-900);
+      span {
+        color: var(--gray-400);
+        width: 135px;
+        display: inline-block;
+      }
+    }
+  }
+}
+
+.upload {
+  &-photo {
+    &-thumb {
+      width: 152px;
+      height: 152px;
+      border-radius: 100%;
+      overflow: hidden;
+      margin: 0 auto 35px;
+
+      @include max(767px) {
+        margin: 0 auto 24px;
+      }
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      &.two {
+        width: 100%;
+        height: 140px;
+        border-radius: 0;
+        border-radius: 8px 8px 0 0;
+        @include max(767px) {
+          height: 114px;
+        }
+        @include max(575px) {
+          height: 140px;
+        }
+      }
+    }
+    &-content {
+      padding: 24px 39px 39px;
+      @include max(767px) {
+        padding: 24px;
+      }
+      &.two {
+        padding: 12px 39px 39px;
+        @include max(767px) {
+          padding: 24px;
+        }
+      }
+      .btn-danger2 {
+        margin-bottom: 24px;
+      }
+      p {
+        font-size: 14px;
+        line-height: 20px;
+        color: var(--gray-600);
+        span {
+          font-weight: 500;
+          color: var(--gray-900);
+        }
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+
+  &-file {
+    display: block;
+    position: relative;
+    padding: 40px 40px 0;
+    @include max(767px) {
+      padding: 24px 24px 0;
+    }
+
+    &.two {
+      padding: 0;
+    }
+  }
+  &-btn-wrap {
+    padding: 0 40px;
+    @include max(767px) {
+      padding: 0 24px;
+    }
+  }
+}
+.kanban-link {
+  color: var(--gray-900);
+  &:hover {
+    color: var(--gray-700);
+  }
+}

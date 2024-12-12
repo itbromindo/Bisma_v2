@@ -1,0 +1,57 @@
+.table-bordered td, .table-bordered th {
+    border: 1px solid #e9ecef;
+}
+.fc-event {
+    border-radius: 2px;
+    border: none;
+    cursor: move;
+    font-size: .8125rem;
+    margin: 5px 7px;
+    padding: 5px 5px;
+    text-align: center;
+}
+#external-events{
+    .fc-event{
+        text-align: left!important;
+    padding: 6px 16px;
+    font-size: 13px;
+    margin: {
+        left: 0px;
+        right: 0px;
+    };
+    }
+}
+.fc .fc-toolbar .btn{
+    text-transform: capitalize;
+}
+.fc th{
+    font-size: 13px;
+    color: var(--gray-500);
+    font-weight: 400;
+    padding: 10px 8px;
+    background-color: #F7F8F8;
+
+}
+.fc-ltr .fc-dayGrid-view .fc-day-top .fc-day-number{
+    float: none;
+    padding: 16px;
+    display: inline-block;
+    color: var(--gray-700);
+}
+.fc .fc-row .fc-content-skeleton table, .fc .fc-row .fc-content-skeleton td, .fc .fc-row .fc-mirror-skeleton td{
+    text-align: left;
+}
+.modal-backdrop.show{
+    opacity: 0.7;
+}
+.fc-day-top.fc-other-month{
+    opacity: 1;
+    .fc-day-number{
+        color: var(--gray-300) !important;
+    }
+   
+}
+
+.fc-toolbar{
+    flex-wrap: wrap;
+}
