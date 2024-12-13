@@ -84,7 +84,10 @@ Menus - Admin Panel
                                 <input type="hidden" id="menus_id">
                                 <div class="fromGroup mb-3">
                                     <label>Modul</Select></label>
-                                    <input class="form-control" type="text" id="moduls_code" placeholder="Code Modul" />
+                                    {{-- <input class="form-control" type="text" id="moduls_code" placeholder="Code Modul" /> --}}
+                                    <select class="form-control" id="moduls_code" style="width: 100%;">
+                                        <option value="" disabled selected>Pilih Modul</option>
+                                    </select>
                                 </div>
                                 <div class="fromGroup mb-3">
                                     <label>Nama</label>
@@ -122,7 +125,30 @@ Menus - Admin Panel
         </div>
     </div>
 </div>
+
 <script>
+    $(document).ready(function() {        
+        $('#moduls_code').select2({
+            placeholder: "Pilih Modul",
+            allowClear: true,
+            ajax: {
+                url: '/admin/combomodul',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
+    });
 
     function reload(){
         // setTimeout(function () {
@@ -188,10 +214,12 @@ Menus - Admin Panel
             success: function (data) {
                 // console.log('hasil => ',data);
                 document.getElementById('menus_id').value = data.menus_id; 
-                document.getElementById('moduls_code').value = data.moduls_code; 
                 document.getElementById('menus_name').value = data.menus_name; 
                 document.getElementById('menus_notes').value = data.menus_notes;
                 document.getElementById('menus_route').value = data.menus_route;
+                
+                // khusus select2
+                $('#moduls_code').append(new Option(data.moduls_name, data.moduls_code, true, true)).trigger('change');
             },
             error: function (dataerror) {
                 console.log(dataerror);
