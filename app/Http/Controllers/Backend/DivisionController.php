@@ -23,7 +23,7 @@ class DivisionController extends Controller
 
     public function index()
     {
-        // $this->checkAuthorization(auth()->user(), ['divisions.view']);
+        $this->checkAuthorization(auth()->user(), ['divisions.view']);
 
         $listdata = $this->model
             ->where('division_soft_delete', 0)
@@ -52,7 +52,7 @@ class DivisionController extends Controller
 
     public function store(Request $request)
     {
-        // $this->checkAuthorization(auth()->user(), ['divisions.create']);
+        $this->checkAuthorization(auth()->user(), ['divisions.create']);
 
         $validator = Validator::make($request->all(), $this->mandatory);
 

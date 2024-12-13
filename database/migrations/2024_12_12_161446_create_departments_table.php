@@ -31,7 +31,7 @@ return new class extends Migration
                   ->references('division_code')
                   ->on('divisions')
                   ->cascadeOnUpdate()
-                  ->cascadeOnDelete(); // Revisi cascade
+                  ->cascadeOnDelete(); 
         });
     }
 

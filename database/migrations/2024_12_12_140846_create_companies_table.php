@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('companies_deleted_at')->nullable();
             $table->string('companies_deleted_by', 225)->nullable();
             $table->text('companies_notes')->nullable();
-            $table->integer('companies_soft_delete')->default(0); // 1 for yes, 0 for no
+            $table->boolean('companies_soft_delete')->default(0); // 1 for yes, 0 for no
         });
         
     }

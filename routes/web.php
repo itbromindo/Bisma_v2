@@ -1,7 +1,12 @@
 <?php
 
+use App\Http\Controllers\Backend\CityController;
 use App\Http\Controllers\Backend\DepartmentController;
 use App\Http\Controllers\Backend\DivisionController;
+use App\Http\Controllers\Backend\HomebaseController;
+use App\Http\Controllers\Backend\MasterApprovalController;
+use App\Http\Controllers\Backend\ProvinceController;
+use App\Http\Controllers\Backend\ShiftController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -33,8 +38,7 @@ Auth::routes();
 
 Route::get('/', 'HomeController@redirectAdmin')->name('index');
 Route::get('/home', 'HomeController@index')->name('home');
-Route::resource('companies', CompanyController::class);
-Route::any('companies/{id}', [CompanyController::class, 'update']);
+
 
 /**
  * Admin routes
@@ -80,5 +84,26 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     // Department Routes
     Route::resource('departments', DepartmentController::class);
+    Route::resource('departments', DepartmentController::class);
     Route::any('departments/{id}', [DepartmentController::class, 'update']);
+    
+    // Homebase Routes
+    Route::resource('homebases', HomebaseController::class);
+    Route::any('homebases/{id}', [HomebaseController::class, 'update']);
+
+    // Shift Routes
+    Route::resource('shifts', ShiftController::class);
+    Route::any('shifts/{id}', [ShiftController::class, 'update']);
+
+    // Master Approval Routes
+    Route::resource('master_approvals', MasterApprovalController::class);
+    Route::any('master_approvals/{id}', [MasterApprovalController::class, 'update']);
+
+    //Province Routes
+    Route::resource('provinces', ProvinceController::class);
+    Route::any('provinces/{id}', [ProvinceController::class, 'update']);
+    
+    //City Routes
+    Route::resource('cities', CityController::class);
+    Route::any('cities/{id}', [CityController::class, 'update']);
 })->middleware('auth:admin');

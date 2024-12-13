@@ -29,7 +29,7 @@ return new class extends Migration
                   ->references('companies_code')
                   ->on('companies')
                   ->cascadeOnUpdate()
-                  ->cascadeOnDelete(); // Revisi cascade
+                  ->cascadeOnDelete(); 
         });
         
     }

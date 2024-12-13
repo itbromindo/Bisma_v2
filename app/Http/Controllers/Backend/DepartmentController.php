@@ -24,7 +24,7 @@ class DepartmentController extends Controller
 
     public function index(): Renderable
     {
-        // $this->checkAuthorization(auth()->user(), ['department.view']);
+        $this->checkAuthorization(auth()->user(), ['department.view']);
 
         $listdata = $this->model
             ->where('department_soft_delete', 0)
@@ -44,7 +44,7 @@ class DepartmentController extends Controller
 
     public function store(Request $request)
     {
-        // $this->checkAuthorization(auth()->user(), ['department.create']);
+        $this->checkAuthorization(auth()->user(), ['department.create']);
         $validator = Validator::make($request->all(), $this->mandatory);
 
         if ($validator->fails()) {
