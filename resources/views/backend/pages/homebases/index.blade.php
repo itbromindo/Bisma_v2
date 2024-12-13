@@ -51,7 +51,7 @@ Homebases - Admin Panel
                                                         <td>
                                                             <ul class="action-btn">
                                                                 <li>
-                                                                    <button onclick="delete_data('{{ $homebase->id }}')">
+                                                                    <button onclick="delete_data('{{ $homebase->homebase_id }}')">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                             <path d="M12.5 3.5L3.5 12.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                             <path d="M12.5 12.5L3.5 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
@@ -59,7 +59,7 @@ Homebases - Admin Panel
                                                                     </button>
                                                                 </li>
                                                                 <li>
-                                                                    <button title="Edit" onclick="showedit('{{ $homebase->id }}')">
+                                                                    <button title="Edit" onclick="showedit('{{ $homebase->homebase_id }}')">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                             <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                             <path d="M11.5 2.5L13.5 4.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />

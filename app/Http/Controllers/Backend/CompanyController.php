@@ -22,7 +22,7 @@ class CompanyController extends Controller
 
     public function index()
     {
-        // $this->checkAuthorization(auth()->user(), ['companies.view']);
+        $this->checkAuthorization(auth()->user(), ['companies.view']);
 
         $listdata = $this->model
             ->where('companies_soft_delete', 0)
@@ -42,7 +42,7 @@ class CompanyController extends Controller
 
     public function store(Request $request)
     {
-        // $this->checkAuthorization(auth()->user(), ['companies.create']);
+        $this->checkAuthorization(auth()->user(), ['companies.create']);
         $validator = Validator::make($request->all(), $this->mandatory);
 
         if ($validator->fails()) {

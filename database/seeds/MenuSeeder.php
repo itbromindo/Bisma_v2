@@ -28,6 +28,7 @@ class MenuSeeder extends Seeder
             ['menus_code' => '1012', 'moduls_code' => '1000', 'menus_name' => 'Master Approval', 'menus_route' => 'master_approvals', 'menus_notes' => '-'],
             ['menus_code' => '1013', 'moduls_code' => '1000', 'menus_name' => 'Province', 'menus_route' => 'provinces', 'menus_notes' => '-'],
             ['menus_code' => '1014', 'moduls_code' => '1000', 'menus_name' => 'City', 'menus_route' => 'cities', 'menus_notes' => '-'],
+            ['menus_code' => '1015', 'moduls_code' => '1000', 'menus_name' => 'District', 'menus_route' => 'districts', 'menus_notes' => '-'],
         ];
 
         Menus::insert($menu);

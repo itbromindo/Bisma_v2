@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\CityController;
 use App\Http\Controllers\Backend\DepartmentController;
+use App\Http\Controllers\Backend\DistrictController;
 use App\Http\Controllers\Backend\DivisionController;
 use App\Http\Controllers\Backend\HomebaseController;
 use App\Http\Controllers\Backend\MasterApprovalController;
@@ -106,4 +107,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     //City Routes
     Route::resource('cities', CityController::class);
     Route::any('cities/{id}', [CityController::class, 'update']);
+
+    //District Routes
+    Route::resource('districts', DistrictController::class);
+    Route::any('districts/{id}', [DistrictController::class, 'update']);
 })->middleware('auth:admin');

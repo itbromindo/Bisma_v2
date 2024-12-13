@@ -173,6 +173,16 @@ class RolePermissionSeeder extends Seeder
                     'cities.update',
                 ]
             ],
+            [
+                'group_name' => 'District',
+                'permissions' => [
+                    'districts.create',
+                    'districts.view',
+                    'districts.edit',
+                    'districts.delete',
+                    'districts.update',
+                ]
+            ],
         ];
 
         // Do same for the admin guard for tutorial purposes.
