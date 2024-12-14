@@ -52,8 +52,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::any('users/{id}', [UsersController::class, 'update']);
     Route::resource('moduls', ModulsController::class);
     Route::any('moduls/{id}', [ModulsController::class, 'update']);
+    Route::get('combomodul', [ModulsController::class, 'combo']);
     Route::resource('menus', MenusController::class);
     Route::any('menus/{id}', [MenusController::class, 'update']);
+    Route::get('combomenu', [MenusController::class, 'combo']);
     Route::resource('submenus', SubmenusController::class);
     Route::any('submenus/{id}', [SubmenusController::class, 'update']);
     Route::resource('levels', LevelsController::class);
