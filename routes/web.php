@@ -49,16 +49,26 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('roles', RolesController::class);
     Route::resource('permission', RolesController::class);
     Route::resource('admins', AdminsController::class);
+
+    // User Routes
     Route::resource('users', UsersController::class);
     Route::any('users/{id}', [UsersController::class, 'update']);
+
+    // Modul Routes
     Route::resource('moduls', ModulsController::class);
     Route::any('moduls/{id}', [ModulsController::class, 'update']);
     Route::get('combomodul', [ModulsController::class, 'combo']);
+
+    // Menu Routes
     Route::resource('menus', MenusController::class);
     Route::any('menus/{id}', [MenusController::class, 'update']);
     Route::get('combomenu', [MenusController::class, 'combo']);
+
+    // Submenu Routes
     Route::resource('submenus', SubmenusController::class);
     Route::any('submenus/{id}', [SubmenusController::class, 'update']);
+
+    // Level Routes
     Route::resource('levels', LevelsController::class);
     Route::any('levels/{id}', [LevelsController::class, 'update']);
 
@@ -114,4 +124,41 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     //District Routes
     Route::resource('districts', DistrictController::class);
     Route::any('districts/{id}', [DistrictController::class, 'update']);
+
+    // Goods Routes
+    Route::resource('goods', App\Http\Controllers\Backend\GoodsController::class);
+    Route::any('goods/{id}', [App\Http\Controllers\Backend\GoodsController::class, 'update']);
+
+    // product_divisions
+    Route::resource('product_divisions', App\Http\Controllers\Backend\ProductdivisionController::class);
+    Route::any('product_divisions/{id}', [App\Http\Controllers\Backend\ProductdivisionController::class, 'update']);
+
+    // product_category
+    Route::resource('product_category', App\Http\Controllers\Backend\ProductcategoryController::class);
+    Route::any('product_category/{id}', [App\Http\Controllers\Backend\ProductcategoryController::class, 'update']);
+
+    // brand
+    Route::resource('brand', App\Http\Controllers\Backend\BrandController::class);
+    Route::any('brand/{id}', [App\Http\Controllers\Backend\BrandController::class, 'update']);
+
+    // uom
+    Route::resource('uom', App\Http\Controllers\Backend\UomController::class);
+    Route::any('uom/{id}', [App\Http\Controllers\Backend\UomController::class, 'update']);
+
+    // warehouse
+    Route::resource('warehouse', App\Http\Controllers\Backend\WarehouseController::class);
+    Route::any('warehouse/{id}', [App\Http\Controllers\Backend\WarehouseController::class, 'update']);
+
+    // customer
+    Route::resource('customer', App\Http\Controllers\Backend\CustomerController::class);
+    Route::any('customer/{id}', [App\Http\Controllers\Backend\CustomerController::class, 'update']);
+
+    // customer_category
+    Route::resource('customer_category', App\Http\Controllers\Backend\CustomercategoryController::class);
+    Route::any('customer_category/{id}', [App\Http\Controllers\Backend\CustomercategoryController::class, 'update']);
+
+    // company_type
+    Route::resource('company_type', App\Http\Controllers\Backend\CompanytypeController::class);
+    Route::any('company_type/{id}', [App\Http\Controllers\Backend\CompanytypeController::class, 'update']);
+
 })->middleware('auth:admin');

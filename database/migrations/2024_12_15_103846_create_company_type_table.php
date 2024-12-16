@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('company_type_id');
             $table->string('company_type_code', 225)->unique();
             $table->string('company_type_name', 225)->nullable();
-            $table->timestamp('level_created_at')->nullable();
+            $table->timestamp('company_type_created_at')->nullable();
             $table->string('company_type_created_by', 225)->nullable();
             $table->timestamp('company_type_updated_at')->nullable();
             $table->string('company_type_updated_by', 225)->nullable();

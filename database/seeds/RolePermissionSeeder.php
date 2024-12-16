@@ -183,6 +183,96 @@ class RolePermissionSeeder extends Seeder
                     'districts.update',
                 ]
             ],
+            [
+                'group_name' => 'goods',
+                'permissions' => [
+                    'goods.create',
+                    'goods.view',
+                    'goods.edit',
+                    'goods.delete',
+                    'goods.update',
+                ]
+            ],
+            [
+                'group_name' => 'product_divisions',
+                'permissions' => [
+                    'product_divisions.create',
+                    'product_divisions.view',
+                    'product_divisions.edit',
+                    'product_divisions.delete',
+                    'product_divisions.update',
+                ]
+            ],
+            [
+                'group_name' => 'product_category',
+                'permissions' => [
+                    'product_category.create',
+                    'product_category.view',
+                    'product_category.edit',
+                    'product_category.delete',
+                    'product_category.update',
+                ]
+            ],
+            [
+                'group_name' => 'brand',
+                'permissions' => [
+                    'brand.create',
+                    'brand.view',
+                    'brand.edit',
+                    'brand.delete',
+                    'brand.update',
+                ]
+            ],
+            [
+                'group_name' => 'uom',
+                'permissions' => [
+                    'uom.create',
+                    'uom.view',
+                    'uom.edit',
+                    'uom.delete',
+                    'uom.update',
+                ]
+            ],
+            [
+                'group_name' => 'warehouse',
+                'permissions' => [
+                    'warehouse.create',
+                    'warehouse.view',
+                    'warehouse.edit',
+                    'warehouse.delete',
+                    'warehouse.update',
+                ]
+            ],
+            [
+                'group_name' => 'customer',
+                'permissions' => [
+                    'customer.create',
+                    'customer.view',
+                    'customer.edit',
+                    'customer.delete',
+                    'customer.update',
+                ]
+            ],
+            [
+                'group_name' => 'customer_category',
+                'permissions' => [
+                    'customer_category.create',
+                    'customer_category.view',
+                    'customer_category.edit',
+                    'customer_category.delete',
+                    'customer_category.update',
+                ]
+            ],
+            [
+                'group_name' => 'company_type',
+                'permissions' => [
+                    'company_type.create',
+                    'company_type.view',
+                    'company_type.edit',
+                    'company_type.delete',
+                    'company_type.update',
+                ]
+            ],
         ];
 
         // Do same for the admin guard for tutorial purposes.
