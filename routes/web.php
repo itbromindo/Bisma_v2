@@ -41,6 +41,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('roles', RolesController::class);
+    Route::resource('permission', RolesController::class);
     Route::resource('admins', AdminsController::class);
     Route::resource('users', UsersController::class);
     Route::any('users/{id}', [UsersController::class, 'update']);
