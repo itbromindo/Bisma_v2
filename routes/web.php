@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Backend\ChecklistController;
 use App\Http\Controllers\Backend\CityController;
+use App\Http\Controllers\Backend\DecissionQuotationController;
 use App\Http\Controllers\Backend\DepartmentController;
 use App\Http\Controllers\Backend\DescriptionQuotationController;
 use App\Http\Controllers\Backend\DistrictController;
@@ -132,13 +133,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('origin_inquiries', OriginInquiryController::class);
     Route::any('origin_inquiries/{id}', [OriginInquiryController::class, 'update']);
     
-    //Origin Inquiry Routes
+    //Description Quotation Routes
     Route::resource('description_quotations', DescriptionQuotationController::class);
     Route::any('description_quotations/{id}', [DescriptionQuotationController::class, 'update']);
     
     //Origin Parameter Duedate Routes
     Route::resource('parameter_duedates', ParameterDuedateController::class);
     Route::any('parameter_duedates/{id}', [ParameterDuedateController::class, 'update']);
+    
+    //Decission Quotation Routes
+    Route::resource('decission_quotations', DecissionQuotationController::class);
+    Route::any('decission_quotations/{id}', [DecissionQuotationController::class, 'update']);
    
     Route::resource('pillars', PillarController::class);
     Route::any('pillars/{id}', [PillarController::class, 'update']);

@@ -29,7 +29,7 @@ class ParameterDuedateController extends Controller
      */
     public function index(): Renderable
     {
-        // $this->checkAuthorization(auth()->user(), ['parameter_duedate.view']);
+        $this->checkAuthorization(auth()->user(), ['parameter_duedate.view']);
 
         $listdata = $this->model
             ->where('param_duedate_soft_delete', 0)
@@ -55,7 +55,7 @@ class ParameterDuedateController extends Controller
      */
     public function store(Request $request)
     {
-        // $this->checkAuthorization(auth()->user(), ['parameter_duedate.create']);
+        $this->checkAuthorization(auth()->user(), ['parameter_duedate.create']);
         $validator = Validator::make($request->all(), $this->mandatory);
 
         if ($validator->fails()) {
@@ -85,7 +85,7 @@ class ParameterDuedateController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // $this->checkAuthorization(auth()->user(), ['parameter_duedate.edit']);
+        $this->checkAuthorization(auth()->user(), ['parameter_duedate.edit']);
         $validator = Validator::make($request->all(), $this->mandatory);
 
         if ($validator->fails()) {
@@ -114,7 +114,7 @@ class ParameterDuedateController extends Controller
      */
     public function destroy($id)
     {
-        // $this->checkAuthorization(auth()->user(), ['parameter_duedate.delete']);
+        $this->checkAuthorization(auth()->user(), ['parameter_duedate.delete']);
 
         $result = $this->model->find($id)->update([
             'param_duedate_deleted_at' => date("Y-m-d h:i:s"),

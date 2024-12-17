@@ -253,6 +253,26 @@ class RolePermissionSeeder extends Seeder
                     'inquiry_statuses.update',
                 ]
             ],
+            [
+                'group_name' => 'Parameter Duedate',
+                'permissions' => [
+                    'parameter_duedate.create',
+                    'parameter_duedate.view',
+                    'parameter_duedate.edit',
+                    'parameter_duedate.delete',
+                    'parameter_duedate.update',
+                ]
+            ],
+            [
+                'group_name' => 'Decission Quotation',
+                'permissions' => [
+                    'decission_quotation.create',
+                    'decission_quotation.view',
+                    'decission_quotation.edit',
+                    'decission_quotation.delete',
+                    'decission_quotation.update',
+                ]
+            ],
         ];
 
         // Do same for the admin guard for tutorial purposes.

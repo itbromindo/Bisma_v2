@@ -171,8 +171,26 @@ Parameter Duedates - Admin Panel
         });
     }
 
+    function showedit(id) {
+        $.ajax({
+            type: "GET",
+            url: "/admin/parameter_duedates/"+id,
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                document.getElementById('param_duedate_id').value = data.param_duedate_id; 
+                document.getElementById('param_duedate_name').value = data.param_duedate_name; 
+                document.getElementById('param_duedate_notes').value = data.param_duedate_notes;
+                document.getElementById('param_duedate_time').value = data.param_duedate_time;
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
+            }
+        });
+    }
+
     function updateInput(id) {
-        const postdata = new FormData();
+        var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('param_duedate_name', document.getElementById('param_duedate_name').value); 
         postdata.append('param_duedate_notes', document.getElementById('param_duedate_notes').value);
@@ -180,15 +198,20 @@ Parameter Duedates - Admin Panel
         postdata.append('param_duedate_time', document.getElementById('param_duedate_time').value);
 
         $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
             type: "POST",
             url: `/admin/parameter_duedates/${id}`,
             data: postdata,
             processData: false,
             contentType: false,
             dataType: "json",
+            async: false,
             success: function (data) {
                 if (data.status === 401) {
                     alert('Form Wajib Harus diisi');
+                    return;
                 } else if (data.status === 501) {
                     alert(data.message);
                 } else {
@@ -198,8 +221,8 @@ Parameter Duedates - Admin Panel
                     }, 500);
                 }
             },
-            error: function (error) {
-                console.error(error);
+            error: function (dataerror) {
+                console.log(dataerror);
             }
         });
     }
@@ -223,23 +246,6 @@ Parameter Duedates - Admin Panel
                         reload();
                     }, 500);
                 }
-            },
-            error: function (error) {
-                console.error(error);
-            }
-        });
-    }
-
-    function showedit(id) {
-        $.ajax({
-            type: "GET",
-            url: `/admin/parameter_duedates/${id}`,
-            dataType: "json",
-            success: function (data) {
-                document.getElementById('param_duedate_id').value = data.parameter_duedate_id; 
-                document.getElementById('param_duedate_name').value = data.parameter_duedate_name; 
-                document.getElementById('param_duedate_notes').value = data.parameter_duedate_notes;
-                document.getElementById('param_duedate_time').value = data.parameter_duedate_time;
             },
             error: function (error) {
                 console.error(error);

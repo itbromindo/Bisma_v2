@@ -36,6 +36,8 @@ class MenuSeeder extends Seeder
             ['menus_code' => '1023', 'moduls_code' => '5000', 'menus_name' => 'Option Checklist', 'menus_route' => 'optionchecklists', 'menus_notes' => '-'],
             ['menus_code' => '1024', 'moduls_code' => '5000', 'menus_name' => 'Template Win Lose', 'menus_route' => 'template_win_loses', 'menus_notes' => '-'],
             ['menus_code' => '1025', 'moduls_code' => '5000', 'menus_name' => 'Inquiry Status', 'menus_route' => 'inquiry_statuses', 'menus_notes' => '-'],
+            ['menus_code' => '1026', 'moduls_code' => '4000', 'menus_name' => 'Parameter Duedate', 'menus_route' => 'parameter_duedates', 'menus_notes' => '-'],
+            ['menus_code' => '1027', 'moduls_code' => '4000', 'menus_name' => 'Decission Quotation', 'menus_route' => 'decission_quotations', 'menus_notes' => '-'],
         ];
 
         Menus::insert($menu);
