@@ -203,6 +203,56 @@ class RolePermissionSeeder extends Seeder
                     'origin_inquiries.update',
                 ]
             ],
+            [
+                'group_name' => 'Pillar',
+                'permissions' => [
+                    'pillars.create',
+                    'pillars.view',
+                    'pillars.edit',
+                    'pillars.delete',
+                    'pillars.update',
+                ]
+            ],
+            [
+                'group_name' => 'Checklist',
+                'permissions' => [
+                    'checklists.create',
+                    'checklists.view',
+                    'checklists.edit',
+                    'checklists.delete',
+                    'checklists.update',
+                ]
+            ],
+            [
+                'group_name' => 'Option Checklist',
+                'permissions' => [
+                    'optionchecklists.create',
+                    'optionchecklists.view',
+                    'optionchecklists.edit',
+                    'optionchecklists.delete',
+                    'optionchecklists.update',
+                ]
+            ],
+            [
+                'group_name' => 'Template Win Or Loses',
+                'permissions' => [
+                    'template_win_loses.create',
+                    'template_win_loses.view',
+                    'template_win_loses.edit',
+                    'template_win_loses.delete',
+                    'template_win_loses.update',
+                ]
+            ],
+            [
+                'group_name' => 'Inquiry Status',
+                'permissions' => [
+                    'inquiry_statuses.create',
+                    'inquiry_statuses.view',
+                    'inquiry_statuses.edit',
+                    'inquiry_statuses.delete',
+                    'inquiry_statuses.update',
+                ]
+            ],
         ];
 
         // Do same for the admin guard for tutorial purposes.

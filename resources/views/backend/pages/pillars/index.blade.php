@@ -1,7 +1,7 @@
 @extends('backend.layouts.master')
 
 @section('title')
-Companies - Admin Panel
+Pillars - Admin Panel
 @endsection
 
 @section('admin-content')
@@ -11,12 +11,12 @@ Companies - Admin Panel
             <div class="row">
                 <div class="col-12 rt-mb-25">
                     <div class="breadcrumbs">
-                        <div class="breadcrumb-title"> Company Management</div>
+                        <div class="breadcrumb-title"> Account Setting</div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Companies</li>
+                                <li class="breadcrumb-item"><a href='/admin'>Setting</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"> Pillars</li>
                             </ol>
                         </nav>
                     </div>
@@ -34,22 +34,22 @@ Companies - Admin Panel
                                                 <tr>
                                                     <th scope="col">NO</th>
                                                     <th scope="col">NAME</th>
-                                                    <th scope="col">NOTES</th>
+                                                    <th scope="col">NOTE</th>
                                                     <th scope="col">CODE</th>
-                                                    <th scope="col">ACTION</th>
+                                                    <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($companies as $company)
+                                                @foreach ($pillars as $pillar)
                                                     <tr>
                                                         <td scope="row">{{ $loop->index + 1 }}</td>
-                                                        <td>{{ $company->companies_name }}</td>
-                                                        <td>{{ $company->companies_notes }}</td>
-                                                        <td>{{ $company->companies_code }}</td>
+                                                        <td>{{ $pillar->pillar_items }}</td>
+                                                        <td>{{ $pillar->pillar_notes }}</td>
+                                                        <td>{{ $pillar->pillar_code }}</td>
                                                         <td>
                                                             <ul class="action-btn">
                                                                 <li>
-                                                                    <button onclick="delete_data('{{ $company->companies_id }}')">
+                                                                    <button onclick="delete_data('{{ $pillar->pillar_id }}')">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                             <path d="M12.5 3.5L3.5 12.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                             <path d="M12.5 12.5L3.5 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
@@ -57,7 +57,7 @@ Companies - Admin Panel
                                                                     </button>
                                                                 </li>
                                                                 <li>
-                                                                    <button title="Edit" onclick="showedit('{{ $company->companies_id }}')">
+                                                                    <button title="Edit" onclick="showedit('{{ $pillar->pillar_id }}')">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                             <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                             <path d="M11.5 2.5L13.5 4.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
@@ -81,14 +81,20 @@ Companies - Admin Panel
                         <div class="card-header">Form Input</div>
                         <div class="card-body">
                             <form>
-                                <input type="hidden" id="company_id">
+                                <input type="hidden" id="pillar_id">
+                                <!-- <div class="fromGroup mb-3">
+                                    <label>Menu</label>
+                                    <select class="form-control" id="menus_code" style="width: 100%;">
+                                        <option value="" disabled selected>Pilih Modul</option>
+                                    </select>
+                                </div> -->
                                 <div class="fromGroup mb-3">
-                                    <label>Company Name</label>
-                                    <input class="form-control" type="text" id="companies_name" placeholder="Company Name" />
+                                    <label>Nama</label>
+                                    <input class="form-control" type="text" id="pillar_items" placeholder="Nama Pilar" />
                                 </div>
                                 <div class="fromGroup mb-3">
-                                    <label>Notes</label>
-                                    <textarea class="form-control" name="companies_notes" id="companies_notes" placeholder="Notes"></textarea>
+                                    <label>Note</label>
+                                    <textarea class="form-control" name="pillar_notes" id="pillar_notes" placeholder="Catatan"></textarea>
                                 </div>
                                 <div class="row">
                                     <button type="button" class="btn btn-primary pill mt-3" onclick="save()">
@@ -116,12 +122,35 @@ Companies - Admin Panel
 </div>
 
 <script>
+    $(document).ready(function() {
+        $('#menus_code').select2({
+            placeholder: "Pilih Modul",
+            allowClear: true,
+            ajax: {
+                url: '/admin/combomenu',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
+    });
+
     function reload(){
-        window.open("/admin/companies", "_self");
+        window.open("/admin/pillars", "_self");
     }
 
     function save() {
-        id = document.getElementById('company_id').value;
+        id = document.getElementById('pillar_id').value;
         if (id == '') {
             saveInput();
         } else {
@@ -132,12 +161,13 @@ Companies - Admin Panel
     function saveInput() {
         var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('companies_name', document.getElementById('companies_name').value); 
-        postdata.append('companies_notes', document.getElementById('companies_notes').value); 
+        // postdata.append('menus_code', document.getElementById('menus_code').value); 
+        postdata.append('pillar_items', document.getElementById('pillar_items').value); 
+        postdata.append('pillar_notes', document.getElementById('pillar_notes').value); 
 
         $.ajax({
             type: "POST",
-            url: "/admin/companies",
+            url: "/admin/pillars",
             data: (postdata),
             processData: false,
             contentType: false,
@@ -147,10 +177,13 @@ Companies - Admin Panel
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
                     return;
+                } else if (data.status == 501) {
+                    alert(data.message);
+                    return;
                 } else {
                     alert('Berhasil Disimpan');
                     setTimeout(function () {
-                        window.open("/admin/companies", "_self");
+                        window.open("/admin/pillars", "_self");
                     }, 500);
                 }
             },
@@ -163,13 +196,15 @@ Companies - Admin Panel
     function showedit(id){
         $.ajax({
             type: "GET",
-            url: "/admin/companies/"+id,
+            url: "/admin/pillars/"+id,
             dataType: "json",
             async: false,
             success: function (data) {
-                document.getElementById('company_id').value = data.companies_id;
-                document.getElementById('companies_name').value = data.companies_name; 
-                document.getElementById('companies_notes').value = data.companies_notes;
+                document.getElementById('pillar_id').value = data.pillar_id;
+                document.getElementById('pillar_items').value = data.pillar_items; 
+                document.getElementById('pillar_notes').value = data.pillar_notes;
+
+                $('#menus_code').append(new Option(data.menus_name, data.menus_code, true, true)).trigger('change');
             },
             error: function (dataerror) {
                 console.log(dataerror);
@@ -180,15 +215,16 @@ Companies - Admin Panel
     function updateInput(id) {
         var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('companies_name', document.getElementById('companies_name').value); 
-        postdata.append('companies_notes', document.getElementById('companies_notes').value); 
+        // postdata.append('menus_code', document.getElementById('menus_code').value); 
+        postdata.append('pillar_items', document.getElementById('pillar_items').value); 
+        postdata.append('pillar_notes', document.getElementById('pillar_notes').value); 
 
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             type: "POST",
-            url: "/admin/companies/"+id,
+            url: "/admin/pillars/"+id,
             data: (postdata),
             processData: false,
             contentType: false,
@@ -198,10 +234,13 @@ Companies - Admin Panel
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
                     return;
+                } else if (data.status == 501) {
+                    alert(data.message);
+                    return;
                 } else {
                     alert('Berhasil Update');
                     setTimeout(function () {
-                        window.open("/admin/companies", "_self");
+                        window.open("/admin/pillars", "_self");
                     }, 500);
                 }
             },
@@ -217,7 +256,7 @@ Companies - Admin Panel
         
         $.ajax({
             type: "DELETE",
-            url: "/admin/companies/"+id,
+            url: "/admin/pillars/"+id,
             data: (postdata),
             dataType: "json",
             async: false,
@@ -225,10 +264,13 @@ Companies - Admin Panel
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
                     return;
+                } else if (data.status == 501) {
+                    alert(data.message);
+                    return;
                 } else {
                     alert('Data Berhasil Dihapus');
                     setTimeout(function () {
-                        window.open("/admin/companies", "_self");
+                        window.open("/admin/pillars", "_self");
                     }, 500);
                 }
             },

@@ -31,6 +31,11 @@ class MenuSeeder extends Seeder
             ['menus_code' => '1015', 'moduls_code' => '3000', 'menus_name' => 'District', 'menus_route' => 'districts', 'menus_notes' => '-'],
             ['menus_code' => '1016', 'moduls_code' => '4000', 'menus_name' => 'Inquiry Good', 'menus_route' => 'inquiry_goods', 'menus_notes' => '-'],
             ['menus_code' => '1017', 'moduls_code' => '4000', 'menus_name' => 'Origin Inquiry', 'menus_route' => 'origin_inquiries', 'menus_notes' => '-'],
+            ['menus_code' => '1021', 'moduls_code' => '5000', 'menus_name' => 'Pillar', 'menus_route' => 'pillars', 'menus_notes' => '-'],
+            ['menus_code' => '1022', 'moduls_code' => '5000', 'menus_name' => 'Checklist', 'menus_route' => 'checklists', 'menus_notes' => '-'],
+            ['menus_code' => '1023', 'moduls_code' => '5000', 'menus_name' => 'Option Checklist', 'menus_route' => 'optionchecklists', 'menus_notes' => '-'],
+            ['menus_code' => '1024', 'moduls_code' => '5000', 'menus_name' => 'Template Win Lose', 'menus_route' => 'template_win_loses', 'menus_notes' => '-'],
+            ['menus_code' => '1025', 'moduls_code' => '5000', 'menus_name' => 'Inquiry Status', 'menus_route' => 'inquiry_statuses', 'menus_notes' => '-'],
         ];
 
         Menus::insert($menu);

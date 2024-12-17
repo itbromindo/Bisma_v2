@@ -211,11 +211,8 @@ Provinces - Admin Panel
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
                     return;
-                } else if (data.status == 501) {
-                    alert(data.message);
-                    return;
                 } else {
-                    alert('Berhasil Diupdate');
+                    alert('Berhasil Update');
                     setTimeout(function () {
                         window.open("/admin/provinces", "_self");
                     }, 500);
@@ -225,7 +222,6 @@ Provinces - Admin Panel
                 console.log(dataerror);
             }
         });
-
     }
 
     function delete_data(id){
