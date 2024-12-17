@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\OptionChecklist;
-use App\Models\Checklist;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Support\Renderable;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Http\RedirectResponse;
 
 class OptionChecklistController extends Controller
 {
@@ -26,7 +26,7 @@ class OptionChecklistController extends Controller
     /**
      * Display a listing of the option checklist.
      */
-    public function index()
+    public function index(): Renderable
     {
         $this->checkAuthorization(auth()->user(), ['optionchecklists.view']);
 
@@ -39,6 +39,15 @@ class OptionChecklistController extends Controller
         ]);
     }
 
+    /**
+     * Show the form for creating a new option checklist.
+     */
+    public function show($id)
+    {
+        $this->checkAuthorization(auth()->user(), ['optionchecklists.view']);
+        $model = $this->model->find($id);
+        return $model;
+    }
 
     /**
      * Store a newly created option checklist.
@@ -46,8 +55,8 @@ class OptionChecklistController extends Controller
     public function store(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['optionchecklists.create']);
-        
         $validator = Validator::make($request->all(), $this->mandatory);
+
         if ($validator->fails()) {
             $messages = [
                 'data' => $validator->errors()->first(),
@@ -65,20 +74,9 @@ class OptionChecklistController extends Controller
             'option_checklist_created_by' => Session::get('user_code'),
         ]);
 
-        session()->flash('success', __('option Checklist has been created.'));
+        session()->flash('success', __('Option Checklist has been created.'));
         return response()->json(['status' => 200, 'message' => 'Success']);
     }
-
-    /**
-     * Show the form for editing the specified option checklist.
-     */
-
-     public function show($id)
-     {
-         $this->checkAuthorization(auth()->user(), ['optionchecklists.view']);
-         $model = $this->model->find($id);
-         return $model;
-     }
 
     /**
      * Update the specified option checklist.
@@ -86,8 +84,8 @@ class OptionChecklistController extends Controller
     public function update(Request $request, $id)
     {
         $this->checkAuthorization(auth()->user(), ['optionchecklists.edit']);
-        
         $validator = Validator::make($request->all(), $this->mandatory);
+
         if ($validator->fails()) {
             $messages = [
                 'data' => $validator->errors()->first(),
@@ -103,7 +101,7 @@ class OptionChecklistController extends Controller
             'option_checklist_updated_by' => Session::get('user_code'),
         ]);
 
-        session()->flash('success', 'option Checklist has been updated.');
+        session()->flash('success', 'Option Checklist has been updated.');
         return response()->json(['status' => 200, 'message' => 'Success']);
     }
 
@@ -120,7 +118,7 @@ class OptionChecklistController extends Controller
             'option_checklist_soft_delete' => 1,
         ]);
 
-        session()->flash('success', 'option Checklist has been deleted.');
+        session()->flash('success', 'Option Checklist has been deleted.');
         return response()->json(['status' => 200, 'message' => 'Success']);
     }
 }
