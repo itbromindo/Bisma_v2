@@ -101,4 +101,16 @@ class CustomercategoryController extends Controller
         session()->flash('success', 'customer_category has been deleted.');
         return $result;
     }
+
+    public function combo(Request $request)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->model
+            ->select('customer_category_code as id', 'customer_category_name as text')
+            ->where('customer_category_name', 'like', '%' . $search . '%')
+            ->where('customer_category_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
+    }
 }

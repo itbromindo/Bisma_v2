@@ -116,14 +116,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     //Province Routes
     Route::resource('provinces', ProvinceController::class);
     Route::any('provinces/{id}', [ProvinceController::class, 'update']);
+    Route::get('comboprovinces', [App\Http\Controllers\Backend\ProvinceController::class, 'combo']);
     
     //City Routes
     Route::resource('cities', CityController::class);
     Route::any('cities/{id}', [CityController::class, 'update']);
+    Route::get('combocities', [App\Http\Controllers\Backend\CityController::class, 'combo']);
 
     //District Routes
     Route::resource('districts', DistrictController::class);
     Route::any('districts/{id}', [DistrictController::class, 'update']);
+    Route::get('combodistricts', [App\Http\Controllers\Backend\DistrictController::class, 'combo']);
 
     // Goods Routes
     Route::resource('goods', App\Http\Controllers\Backend\GoodsController::class);
@@ -160,6 +163,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     // customer_category
     Route::resource('customer_category', App\Http\Controllers\Backend\CustomercategoryController::class);
     Route::any('customer_category/{id}', [App\Http\Controllers\Backend\CustomercategoryController::class, 'update']);
+    Route::get('combokategoricustomer', [App\Http\Controllers\Backend\CustomercategoryController::class, 'combo']);
 
     // company_type
     Route::resource('company_type', App\Http\Controllers\Backend\CompanytypeController::class);
