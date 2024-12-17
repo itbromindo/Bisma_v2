@@ -1,7 +1,7 @@
 @extends('backend.layouts.master')
 
 @section('title')
-Companies - Admin Panel
+Option Checklist - Admin Panel
 @endsection
 
 @section('admin-content')
@@ -11,12 +11,12 @@ Companies - Admin Panel
             <div class="row">
                 <div class="col-12 rt-mb-25">
                     <div class="breadcrumbs">
-                        <div class="breadcrumb-title"> Company Management</div>
+                        <div class="breadcrumb-title">Option Checklist</div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Companies</li>
+                                <li class="breadcrumb-item"><a href='/admin'>Setting</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Option Checklist</li>
                             </ol>
                         </nav>
                     </div>
@@ -33,23 +33,25 @@ Companies - Admin Panel
                                             <thead style="text-align: center">
                                                 <tr>
                                                     <th scope="col">NO</th>
-                                                    <th scope="col">NAME</th>
-                                                    <th scope="col">NOTES</th>
-                                                    <th scope="col">CODE</th>
-                                                    <th scope="col">ACTION</th>
+                                                    <th scope="col">Checklist Code</th>
+                                                    <th scope="col">Items</th>
+                                                    <th scope="col">Notes</th>
+                                                    <th scope="col">Option Code</th>
+                                                    <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($companies as $company)
+                                                @foreach ($option_checklist as $item)
                                                     <tr>
                                                         <td scope="row">{{ $loop->index + 1 }}</td>
-                                                        <td>{{ $company->companies_name }}</td>
-                                                        <td>{{ $company->companies_notes }}</td>
-                                                        <td>{{ $company->companies_code }}</td>
+                                                        <td>{{ $item->checklist_code }}</td>
+                                                        <td>{{ $item->option_checklist_items }}</td>
+                                                        <td>{{ $item->option_checklist_notes }}</td>
+                                                        <td>{{ $item->option_checklist_code }}</td>
                                                         <td>
                                                             <ul class="action-btn">
                                                                 <li>
-                                                                    <button onclick="delete_data('{{ $company->companies_id }}')">
+                                                                    <button onclick="delete_data('{{ $item->option_checklist_id }}')">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                             <path d="M12.5 3.5L3.5 12.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                             <path d="M12.5 12.5L3.5 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
@@ -57,7 +59,7 @@ Companies - Admin Panel
                                                                     </button>
                                                                 </li>
                                                                 <li>
-                                                                    <button title="Edit" onclick="showedit('{{ $company->companies_id }}')">
+                                                                    <button title="Edit" onclick="showedit('{{ $item->option_checklist_id }}')">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                             <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                             <path d="M11.5 2.5L13.5 4.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
@@ -81,30 +83,31 @@ Companies - Admin Panel
                         <div class="card-header">Form Input</div>
                         <div class="card-body">
                             <form>
-                                <input type="hidden" id="company_id">
-                                <div class="fromGroup mb-3">
-                                    <label>Company Name</label>
-                                    <input class="form-control" type="text" id="companies_name" placeholder="Company Name" />
+                                <input type="hidden" id="option_checklist_id">
+                                <div class="form-group mb-3">
+                                    <label for="checklist_code">Checklist Code</label>
+                                    <input class="form-control" type="text" id="checklist_code" placeholder="Enter checklist code" />
                                 </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Notes</label>
-                                    <textarea class="form-control" name="companies_notes" id="companies_notes" placeholder="Notes"></textarea>
+                                <div class="form-group mb-3">
+                                    <label for="option_checklist_items">Items</label>
+                                    <input class="form-control" type="text" id="option_checklist_items" placeholder="Enter checklist items" />
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="option_checklist_notes">Notes</label>
+                                    <textarea class="form-control" id="option_checklist_notes" placeholder="Enter notes"></textarea>
                                 </div>
                                 <div class="row">
                                     <button type="button" class="btn btn-primary pill mt-3" onclick="save()">
                                         Save
                                     </button>
-                                    <button type="button" class="btn btn-secondary2 pill btn-icon" onclick="reload()">
+                                    <button type="button" class="btn btn-secondary pill btn-icon" onclick="reload()">
                                         <span class="button-content-wrapper">
-                                            <span class="button-text">
-                                                New Data
-                                            </span>
+                                            <span class="button-text">New Data</span>
                                             <span class="button-icon">
                                                 <i class="ph-arrow-left"></i>
                                             </span>
                                         </span>
                                     </button>
-                                    
                                 </div>
                             </form>
                         </div>
@@ -117,11 +120,11 @@ Companies - Admin Panel
 
 <script>
     function reload(){
-        window.open("/admin/companies", "_self");
+        window.open("/admin/optionchecklists", "_self");
     }
 
     function save() {
-        id = document.getElementById('company_id').value;
+        var id = document.getElementById('option_checklist_id').value;
         if (id == '') {
             saveInput();
         } else {
@@ -132,46 +135,48 @@ Companies - Admin Panel
     function saveInput() {
         var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('companies_name', document.getElementById('companies_name').value); 
-        postdata.append('companies_notes', document.getElementById('companies_notes').value); 
+        postdata.append('checklist_code', document.getElementById('checklist_code').value);
+        postdata.append('option_checklist_items', document.getElementById('option_checklist_items').value);
+        postdata.append('option_checklist_notes', document.getElementById('option_checklist_notes').value);
 
         $.ajax({
             type: "POST",
-            url: "/admin/companies",
-            data: (postdata),
+            url: "/admin/optionchecklists",
+            data: postdata,
             processData: false,
             contentType: false,
             dataType: "json",
             async: false,
-            success: function (data) {
+            success: function(data) {
                 if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
+                    alert('Form must be filled out correctly');
                     return;
                 } else {
-                    alert('Berhasil Disimpan');
-                    setTimeout(function () {
-                        window.open("/admin/companies", "_self");
+                    alert('Successfully saved');
+                    setTimeout(function() {
+                        window.open("/admin/optionchecklists", "_self");
                     }, 500);
                 }
             },
-            error: function (dataerror) {
+            error: function(dataerror) {
                 console.log(dataerror);
             }
         });
     }
 
-    function showedit(id){
+    function showedit(id) {
         $.ajax({
             type: "GET",
-            url: "/admin/companies/"+id,
+            url: "/admin/optionchecklists/" + id,
             dataType: "json",
             async: false,
-            success: function (data) {
-                document.getElementById('company_id').value = data.companies_id;
-                document.getElementById('companies_name').value = data.companies_name; 
-                document.getElementById('companies_notes').value = data.companies_notes;
+            success: function(data) {
+                document.getElementById('option_checklist_id').value = data.id;
+                document.getElementById('checklist_code').value = data.checklist_code;
+                document.getElementById('option_checklist_items').value = data.option_checklist_items;
+                document.getElementById('option_checklist_notes').value = data.option_checklist_notes;
             },
-            error: function (dataerror) {
+            error: function(dataerror) {
                 console.log(dataerror);
             }
         });
@@ -180,59 +185,59 @@ Companies - Admin Panel
     function updateInput(id) {
         var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('companies_name', document.getElementById('companies_name').value); 
-        postdata.append('companies_notes', document.getElementById('companies_notes').value); 
+        postdata.append('option_checklist_items', document.getElementById('option_checklist_items').value);
+        postdata.append('option_checklist_notes', document.getElementById('option_checklist_notes').value);
 
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             type: "POST",
-            url: "/admin/companies/"+id,
-            data: (postdata),
+            url: "/admin/optionchecklists/" + id,
+            data: postdata,
             processData: false,
             contentType: false,
             dataType: "json",
             async: false,
-            success: function (data) {
+            success: function(data) {
                 if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
+                    alert('Form must be filled out correctly');
                     return;
                 } else {
-                    alert('Berhasil Update');
-                    setTimeout(function () {
-                        window.open("/admin/companies", "_self");
+                    alert('Successfully updated');
+                    setTimeout(function() {
+                        window.open("/admin/optionchecklists", "_self");
                     }, 500);
                 }
             },
-            error: function (dataerror) {
+            error: function(dataerror) {
                 console.log(dataerror);
             }
         });
     }
 
-    function delete_data(id){
+    function delete_data(id) {
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
-        
+
         $.ajax({
             type: "DELETE",
-            url: "/admin/companies/"+id,
-            data: (postdata),
+            url: "/admin/optionchecklists/" + id,
+            data: postdata,
             dataType: "json",
             async: false,
-            success: function (data) {
+            success: function(data) {
                 if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
+                    alert('Form must be filled out correctly');
                     return;
                 } else {
-                    alert('Data Berhasil Dihapus');
-                    setTimeout(function () {
-                        window.open("/admin/companies", "_self");
+                    alert('Successfully deleted');
+                    setTimeout(function() {
+                        window.open("/admin/optionchecklists", "_self");
                     }, 500);
                 }
             },
-            error: function (dataerror) {
+            error: function(dataerror) {
                 console.log(dataerror);
             }
         });

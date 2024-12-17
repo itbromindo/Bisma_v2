@@ -19,6 +19,7 @@ class ModulSeeder extends Seeder
             ['moduls_code' => '1000', 'moduls_name' => 'Setting', 'moduls_icon' => 'ph-gear', 'moduls_notes' => '-'],
             ['moduls_code' => '2000', 'moduls_name' => 'Master', 'moduls_icon' => 'ph-notebook', 'moduls_notes' => '-'],
             ['moduls_code' => '3000', 'moduls_name' => 'Location', 'moduls_icon' => 'ph-eye', 'moduls_notes' => '-'],
+            ['moduls_code' => '5000', 'moduls_name' => 'Pillars', 'moduls_icon' => 'ph-eye', 'moduls_notes' => '-'],
         ];
 
         Moduls::insert($modul);

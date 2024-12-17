@@ -1,13 +1,18 @@
 <?php
 
+use App\Http\Controllers\Backend\ChecklistController;
 use App\Http\Controllers\Backend\CityController;
 use App\Http\Controllers\Backend\DepartmentController;
 use App\Http\Controllers\Backend\DistrictController;
 use App\Http\Controllers\Backend\DivisionController;
 use App\Http\Controllers\Backend\HomebaseController;
+use App\Http\Controllers\Backend\InquiryStatusController;
 use App\Http\Controllers\Backend\MasterApprovalController;
+use App\Http\Controllers\Backend\OptionChecklistController;
+use App\Http\Controllers\Backend\PillarController;
 use App\Http\Controllers\Backend\ProvinceController;
 use App\Http\Controllers\Backend\ShiftController;
+use App\Http\Controllers\Backend\TemplateWinLoseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -113,4 +118,22 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     //District Routes
     Route::resource('districts', DistrictController::class);
     Route::any('districts/{id}', [DistrictController::class, 'update']);
+   
+    Route::resource('pillars', PillarController::class);
+    Route::any('pillars/{id}', [PillarController::class, 'update']);
+
+    Route::resource('pillars', PillarController::class);
+    Route::any('pillars/{id}', [PillarController::class, 'update']);
+    
+    Route::resource('checklists', ChecklistController::class);
+    Route::any('checklists/{id}', [ChecklistController::class, 'update']);
+    
+    Route::resource('optionchecklists', OptionChecklistController::class);
+    Route::any('optionchecklists/{id}', [OptionChecklistController::class, 'update']);
+
+    Route::resource('template_win_loses', TemplateWinLoseController::class);
+    Route::any('template_win_loses/{id}', [TemplateWinLoseController::class, 'update']);
+    
+    Route::resource('inquiry_statuses', InquiryStatusController::class);
+    Route::any('inquiry_statuses/{id}', [InquiryStatusController::class, 'update']);
 })->middleware('auth:admin');
