@@ -11,12 +11,12 @@ Districts - Admin Panel
             <div class="row">
                 <div class="col-12 rt-mb-25">
                     <div class="breadcrumbs">
-                        <div class="breadcrumb-title"> District Management</div>
+                        <div class="breadcrumb-title">District Management</div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Setting</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"> Districts</li>
+                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Districts</li>
                             </ol>
                         </nav>
                     </div>
@@ -34,22 +34,20 @@ Districts - Admin Panel
                                                 <tr>
                                                     <th scope="col">NO</th>
                                                     <th scope="col">NAME</th>
-                                                    <th scope="col">NOTE</th>
-                                                    <th scope="col">District CODE</th>
-                                                    <th scope="col">City CODE</th>
-                                                    <th scope="col">STATUS</th>
-                                                    <th scope="col">Action</th>
+                                                    <th scope="col">NOTES</th>
+                                                    <th scope="col">CODE</th>
+                                                    <th scope="col">CITY</th>
+                                                    <th scope="col">ACTION</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($districts as $district)
                                                     <tr>
-                                                        <td scope="row">{{ $loop->index+1 }}</td>
+                                                        <td scope="row">{{ $loop->index + 1 }}</td>
                                                         <td>{{ $district->districts_name }}</td>
                                                         <td>{{ $district->districts_notes }}</td>
                                                         <td>{{ $district->districts_code }}</td>
                                                         <td>{{ $district->cities_code }}</td>
-                                                        <td>{{ $district->districts_status }}</td>
                                                         <td>
                                                             <ul class="action-btn">
                                                                 <li>
@@ -75,9 +73,6 @@ Districts - Admin Panel
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="pagination-wrapper">
-                                        {{ $districts->links() }}
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -88,24 +83,24 @@ Districts - Admin Panel
                         <div class="card-header">Form Input</div>
                         <div class="card-body">
                             <form>
-                                <input type="hidden" id="districts_id">
+                                <input type="hidden" id="district_id">
                                 <div class="fromGroup mb-3">
-                                    <label>Name</label>
+                                    <label>District Name</label>
                                     <input class="form-control" type="text" id="districts_name" placeholder="District Name" />
                                 </div>
                                 <div class="fromGroup mb-3">
-                                    <label>Note</label>
-                                    <textarea class="form-control" id="districts_notes" placeholder="Notes"></textarea>
+                                    <label>Notes</label>
+                                    <textarea class="form-control" name="districts_notes" id="districts_notes" placeholder="Notes"></textarea>
                                 </div>
                                 <div class="fromGroup mb-3">
                                     <label>City Code</label>
                                     <input class="form-control" type="text" id="cities_code" placeholder="City Code" />
                                 </div>
                                 <div class="fromGroup mb-3">
-                                    <label>Status</label>
+                                    <label>District Status</label>
                                     <select class="form-control" id="districts_status">
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
+                                        <option value="1">Active</option>
+                                        <option value="0">Inactive</option>
                                     </select>
                                 </div>
                                 <div class="row">
@@ -114,12 +109,15 @@ Districts - Admin Panel
                                     </button>
                                     <button type="button" class="btn btn-secondary2 pill btn-icon" onclick="reload()">
                                         <span class="button-content-wrapper">
-                                            <span class="button-text">New Data</span>
+                                            <span class="button-text">
+                                                New Data
+                                            </span>
                                             <span class="button-icon">
                                                 <i class="ph-arrow-left"></i>
                                             </span>
                                         </span>
                                     </button>
+                                    
                                 </div>
                             </form>
                         </div>
@@ -129,13 +127,14 @@ Districts - Admin Panel
         </div>
     </div>
 </div>
+
 <script>
-   function reload(){
+    function reload(){
         window.open("/admin/districts", "_self");
     }
 
     function save() {
-        let id = document.getElementById('districts_id').value;
+        id = document.getElementById('district_id').value;
         if (id == '') {
             saveInput();
         } else {
@@ -144,10 +143,10 @@ Districts - Admin Panel
     }
 
     function saveInput() {
-        let postdata = new FormData();
+        var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('districts_name', document.getElementById('districts_name').value); 
-        postdata.append('districts_notes', document.getElementById('districts_notes').value); 
+        postdata.append('districts_name', document.getElementById('districts_name').value);
+        postdata.append('districts_notes', document.getElementById('districts_notes').value);
         postdata.append('cities_code', document.getElementById('cities_code').value);
         postdata.append('districts_status', document.getElementById('districts_status').value);
 
@@ -183,8 +182,8 @@ Districts - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                document.getElementById('districts_id').value = data.id; 
-                document.getElementById('districts_name').value = data.districts_name; 
+                document.getElementById('district_id').value = data.districts_id;
+                document.getElementById('districts_name').value = data.districts_name;
                 document.getElementById('districts_notes').value = data.districts_notes;
                 document.getElementById('cities_code').value = data.cities_code;
                 document.getElementById('districts_status').value = data.districts_status;
@@ -198,18 +197,18 @@ Districts - Admin Panel
     function updateInput(id) {
         var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('districts_name', document.getElementById('districts_name').value); 
-        postdata.append('districts_notes', document.getElementById('districts_notes').value); 
+        postdata.append('districts_name', document.getElementById('districts_name').value);
+        postdata.append('districts_notes', document.getElementById('districts_notes').value);
         postdata.append('cities_code', document.getElementById('cities_code').value);
         postdata.append('districts_status', document.getElementById('districts_status').value);
-        
+
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             type: "POST",
             url: "/admin/districts/"+id,
-            data: (postdata),
+            data: postdata,
             processData: false,
             contentType: false,
             dataType: "json",
@@ -218,11 +217,8 @@ Districts - Admin Panel
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
                     return;
-                } else if (data.status == 501) {
-                    alert(data.message);
-                    return;
                 } else {
-                    alert('Berhasil Diupdate');
+                    alert('Berhasil Update');
                     setTimeout(function () {
                         window.open("/admin/districts", "_self");
                     }, 500);
@@ -232,25 +228,21 @@ Districts - Admin Panel
                 console.log(dataerror);
             }
         });
-
     }
 
     function delete_data(id){
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
-        
+
         $.ajax({
             type: "DELETE",
             url: "/admin/districts/"+id,
-            data: (postdata),
+            data: postdata,
             dataType: "json",
             async: false,
             success: function (data) {
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
-                    return;
-                } else if (data.status == 501) {
-                    alert(data.message);
                     return;
                 } else {
                     alert('Data Berhasil Dihapus');

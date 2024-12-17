@@ -1,7 +1,7 @@
 @extends('backend.layouts.master')
 
 @section('title')
-Shifts - Admin Panel
+    Shifts - Admin Panel
 @endsection
 
 @section('admin-content')
@@ -11,12 +11,12 @@ Shifts - Admin Panel
             <div class="row">
                 <div class="col-12 rt-mb-25">
                     <div class="breadcrumbs">
-                        <div class="breadcrumb-title"> Account Setting</div>
+                        <div class="breadcrumb-title">Shift Management</div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Setting</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"> Shifts</li>
+                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Shifts</li>
                             </ol>
                         </nav>
                     </div>
@@ -33,31 +33,21 @@ Shifts - Admin Panel
                                             <thead style="text-align: center">
                                                 <tr>
                                                     <th scope="col">NO</th>
-                                                    <th scope="col">NAME</th>
-                                                    <th scope="col">Shift CODE</th>
-                                                    <th scope="col">START TIME (Before Break)</th>
-                                                    <th scope="col">END TIME (Before Break)</th>
-                                                    <th scope="col">START TIME (Break)</th>
-                                                    <th scope="col">END TIME (Break)</th>
-                                                    <th scope="col">START TIME (After Break)</th>
-                                                    <th scope="col">END TIME (After Break)</th>
-                                                    <th scope="col">Company CODE</th>
-                                                    <th scope="col">Action</th>
+                                                    <th scope="col">SHIFT NAME</th>
+                                                    <th scope="col">COMPANY CODE</th>
+                                                    <th scope="col">START TIME</th>
+                                                    <th scope="col">END TIME</th>
+                                                    <th scope="col">ACTION</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($shifts as $shift)
                                                     <tr>
-                                                        <td scope="row">{{ $loop->index+1 }}</td>
+                                                        <td scope="row">{{ $loop->index + 1 }}</td>
                                                         <td>{{ $shift->shift_name }}</td>
-                                                        <td>{{ $shift->shift_code }}</td>
-                                                        <td>{{ $shift->shift_start_time_before_break }}</td>
-                                                        <td>{{ $shift->shift_end_time_before_break }}</td>
-                                                        <td>{{ $shift->shift_start_time_break }}</td>
-                                                        <td>{{ $shift->shift_end_time_break }}</td>
-                                                        <td>{{ $shift->shift_start_time_after_break }}</td>
-                                                        <td>{{ $shift->shift_end_time_after_break }}</td>
                                                         <td>{{ $shift->companies_code }}</td>
+                                                        <td>{{ $shift->shift_start_time_before_break }}</td>
+                                                        <td>{{ $shift->shift_end_time_after_break }}</td>
                                                         <td>
                                                             <ul class="action-btn">
                                                                 <li>
@@ -94,37 +84,33 @@ Shifts - Admin Panel
                         <div class="card-body">
                             <form>
                                 <input type="hidden" id="shift_id">
-                                <div class="fromGroup mb-3">
+                                <div class="formGroup mb-3">
                                     <label>Shift Name</label>
                                     <input class="form-control" type="text" id="shift_name" placeholder="Shift Name" />
                                 </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Start Time (Before Break)</label>
-                                    <input class="form-control" type="time" id="shift_start_time_before_break" />
-                                </div>
-                                <div class="fromGroup mb-3">
-                                    <label>End Time (Before Break)</label>
-                                    <input class="form-control" type="time" id="shift_end_time_before_break" />
-                                </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Start Time (Break)</label>
-                                    <input class="form-control" type="time" id="shift_start_time_break" />
-                                </div>
-                                <div class="fromGroup mb-3">
-                                    <label>End Time (Break)</label>
-                                    <input class="form-control" type="time" id="shift_end_time_break" />
-                                </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Start Time (After Break)</label>
-                                    <input class="form-control" type="time" id="shift_start_time_after_break" />
-                                </div>
-                                <div class="fromGroup mb-3">
-                                    <label>End Time (After Break)</label>
-                                    <input class="form-control" type="time" id="shift_end_time_after_break" />
-                                </div>
-                                <div class="fromGroup mb-3">
+                                <div class="formGroup mb-3">
                                     <label>Company Code</label>
                                     <input class="form-control" type="text" id="companies_code" placeholder="Company Code" />
+                                </div>
+                                <div class="formGroup mb-3">
+                                    <label>Start Time Before Break</label>
+                                    <input class="form-control" type="time" id="shift_start_time_before_break" />
+                                </div>
+                                <div class="formGroup mb-3">
+                                    <label>End Time Before Break</label>
+                                    <input class="form-control" type="time" id="shift_end_time_before_break" />
+                                </div>
+                                <div class="formGroup mb-3">
+                                    <label>Start Time After Break</label>
+                                    <input class="form-control" type="time" id="shift_start_time_after_break" />
+                                </div>
+                                <div class="formGroup mb-3">
+                                    <label>End Time After Break</label>
+                                    <input class="form-control" type="time" id="shift_end_time_after_break" />
+                                </div>
+                                <div class="formGroup mb-3">
+                                    <label>Shift Notes</label>
+                                    <textarea class="form-control" id="shift_notes" placeholder="Notes"></textarea>
                                 </div>
                                 <div class="row">
                                     <button type="button" class="btn btn-primary pill mt-3" onclick="save()">
@@ -132,7 +118,9 @@ Shifts - Admin Panel
                                     </button>
                                     <button type="button" class="btn btn-secondary2 pill btn-icon" onclick="reload()">
                                         <span class="button-content-wrapper">
-                                            <span class="button-text">New Data</span>
+                                            <span class="button-text">
+                                                New Data
+                                            </span>
                                             <span class="button-icon">
                                                 <i class="ph-arrow-left"></i>
                                             </span>
@@ -147,14 +135,15 @@ Shifts - Admin Panel
         </div>
     </div>
 </div>
+
 <script>
     function reload(){
         window.open("/admin/shifts", "_self");
     }
 
     function save() {
-        let id = document.getElementById('shift_id').value;
-        if (id === '') {
+        id = document.getElementById('shift_id').value;
+        if (id == '') {
             saveInput();
         } else {
             updateInput(id);
@@ -162,16 +151,15 @@ Shifts - Admin Panel
     }
 
     function saveInput() {
-        let postdata = new FormData();
+        var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('shift_name', document.getElementById('shift_name').value);
+        postdata.append('companies_code', document.getElementById('companies_code').value);
         postdata.append('shift_start_time_before_break', document.getElementById('shift_start_time_before_break').value);
         postdata.append('shift_end_time_before_break', document.getElementById('shift_end_time_before_break').value);
-        postdata.append('shift_start_time_break', document.getElementById('shift_start_time_break').value);
-        postdata.append('shift_end_time_break', document.getElementById('shift_end_time_break').value);
         postdata.append('shift_start_time_after_break', document.getElementById('shift_start_time_after_break').value);
         postdata.append('shift_end_time_after_break', document.getElementById('shift_end_time_after_break').value);
-        postdata.append('companies_code', document.getElementById('companies_code').value);
+        postdata.append('shift_notes', document.getElementById('shift_notes').value);
 
         $.ajax({
             type: "POST",
@@ -182,14 +170,11 @@ Shifts - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                if (data.status === 401) {
-                    alert('All fields are required');
-                    return;
-                } else if (data.status === 501) {
-                    alert(data.message);
+                if (data.status == 401) {
+                    alert('Form Wajib Harus diisi');
                     return;
                 } else {
-                    alert('Successfully saved');
+                    alert('Berhasil Disimpan');
                     setTimeout(function () {
                         window.open("/admin/shifts", "_self");
                     }, 500);
@@ -201,22 +186,21 @@ Shifts - Admin Panel
         });
     }
 
-    function showedit(id) {
+    function showedit(id){
         $.ajax({
             type: "GET",
-            url: "/admin/shifts/" + id,
+            url: "/admin/shifts/"+id,
             dataType: "json",
             async: false,
             success: function (data) {
-                document.getElementById('shift_id').value = data.id;
+                document.getElementById('shift_id').value = data.shift_id;
                 document.getElementById('shift_name').value = data.shift_name;
+                document.getElementById('companies_code').value = data.companies_code;
                 document.getElementById('shift_start_time_before_break').value = data.shift_start_time_before_break;
                 document.getElementById('shift_end_time_before_break').value = data.shift_end_time_before_break;
-                document.getElementById('shift_start_time_break').value = data.shift_start_time_break;
-                document.getElementById('shift_end_time_break').value = data.shift_end_time_break;
                 document.getElementById('shift_start_time_after_break').value = data.shift_start_time_after_break;
                 document.getElementById('shift_end_time_after_break').value = data.shift_end_time_after_break;
-                document.getElementById('companies_code').value = data.companies_code;
+                document.getElementById('shift_notes').value = data.shift_notes;
             },
             error: function (dataerror) {
                 console.log(dataerror);
@@ -225,31 +209,33 @@ Shifts - Admin Panel
     }
 
     function updateInput(id) {
-        let postdata = new FormData();
+        var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('shift_name', document.getElementById('shift_name').value);
+        postdata.append('companies_code', document.getElementById('companies_code').value);
         postdata.append('shift_start_time_before_break', document.getElementById('shift_start_time_before_break').value);
         postdata.append('shift_end_time_before_break', document.getElementById('shift_end_time_before_break').value);
-        postdata.append('shift_start_time_break', document.getElementById('shift_start_time_break').value);
-        postdata.append('shift_end_time_break', document.getElementById('shift_end_time_break').value);
         postdata.append('shift_start_time_after_break', document.getElementById('shift_start_time_after_break').value);
         postdata.append('shift_end_time_after_break', document.getElementById('shift_end_time_after_break').value);
-        postdata.append('companies_code', document.getElementById('companies_code').value);
+        postdata.append('shift_notes', document.getElementById('shift_notes').value);
 
         $.ajax({
-            type: "PUT",
-            url: "/admin/shifts/" + id,
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            type: "POST",
+            url: "/admin/shifts/"+id,
             data: postdata,
             processData: false,
             contentType: false,
             dataType: "json",
             async: false,
             success: function (data) {
-                if (data.status === 401) {
-                    alert('All fields are required');
+                if (data.status == 401) {
+                    alert('Form Wajib Harus diisi');
                     return;
                 } else {
-                    alert('Successfully updated');
+                    alert('Berhasil Update');
                     setTimeout(function () {
                         window.open("/admin/shifts", "_self");
                     }, 500);
@@ -261,35 +247,31 @@ Shifts - Admin Panel
         });
     }
 
-    function delete_data(id) {
-        if (confirm("Are you sure you want to delete this data?")) {
-            let postdata = new FormData();
-            postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+    function delete_data(id){
+        var postdata = {};
+        postdata._token = document.getElementsByName('_token')[0].defaultValue;
 
-            $.ajax({
-                type: "DELETE",
-                url: "/admin/shifts/" + id,
-                data: postdata,
-                processData: false,
-                contentType: false,
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data.status === 401) {
-                        alert('Failed to delete');
-                        return;
-                    } else {
-                        alert('Successfully deleted');
-                        setTimeout(function () {
-                            window.open("/admin/shifts", "_self");
-                        }, 500);
-                    }
-                },
-                error: function (dataerror) {
-                    console.log(dataerror);
+        $.ajax({
+            type: "DELETE",
+            url: "/admin/shifts/"+id,
+            data: postdata,
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.status == 401) {
+                    alert('Form Wajib Harus diisi');
+                    return;
+                } else {
+                    alert('Data Berhasil Dihapus');
+                    setTimeout(function () {
+                        window.open("/admin/shifts", "_self");
+                    }, 500);
                 }
-            });
-        }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
+            }
+        });
     }
 </script>
 @endsection

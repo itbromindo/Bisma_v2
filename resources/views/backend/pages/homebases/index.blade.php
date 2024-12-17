@@ -10,13 +10,13 @@ Homebases - Admin Panel
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 rt-mb-25">
-                    <div class="breadcrumbs ">
-                        <div class="breadcrumb-title"> Account Setting</div>
+                    <div class="breadcrumbs">
+                        <div class="breadcrumb-title">Homebase Management</div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Setting</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"> Homebase</li>
+                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Homebases</li>
                             </ol>
                         </nav>
                     </div>
@@ -29,25 +29,23 @@ Homebases - Admin Panel
                             <div class="col-lg-12">
                                 <div class="table-wrapper">
                                     <div class="table-content table-responsive">
-                                        <table class="table align-middle table-basic ">
+                                        <table class="table align-middle table-basic">
                                             <thead style="text-align: center">
                                                 <tr>
                                                     <th scope="col">NO</th>
                                                     <th scope="col">NAME</th>
-                                                    <th scope="col">NOTE</th>
-                                                    <th scope="col">Homebase CODE</th>
-                                                    <th scope="col">Company CODE</th>
-                                                    <th scope="col">Action</th>
+                                                    <th scope="col">NOTES</th>
+                                                    <th scope="col">CODE</th>
+                                                    <th scope="col">ACTION</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($homebases as $homebase)
                                                     <tr>
-                                                        <td scope="row">{{ $loop->index+1 }}</td>
+                                                        <td scope="row">{{ $loop->index + 1 }}</td>
                                                         <td>{{ $homebase->homebase_name }}</td>
                                                         <td>{{ $homebase->homebase_notes }}</td>
                                                         <td>{{ $homebase->homebase_code }}</td>
-                                                        <td>{{ $homebase->companies_code }}</td>
                                                         <td>
                                                             <ul class="action-btn">
                                                                 <li>
@@ -85,16 +83,16 @@ Homebases - Admin Panel
                             <form>
                                 <input type="hidden" id="homebase_id">
                                 <div class="fromGroup mb-3">
-                                    <label>Nama</label>
-                                    <input class="form-control" type="text" id="homebase_name" placeholder="Nama Homebase" />
+                                    <label>Homebase Name</label>
+                                    <input class="form-control" type="text" id="homebase_name" placeholder="Homebase Name" />
                                 </div>
                                 <div class="fromGroup mb-3">
-                                    <label>Note</label>
-                                    <textarea class="form-control" name="homebase_notes" id="homebase_notes" placeholder="Catatan"></textarea>
+                                    <label>Notes</label>
+                                    <textarea class="form-control" name="homebase_notes" id="homebase_notes" placeholder="Notes"></textarea>
                                 </div>
                                 <div class="fromGroup mb-3">
                                     <label>Company Code</label>
-                                    <textarea class="form-control" name="companies_code" id="companies_code" placeholder="Code"></textarea>
+                                    <input class="form-control" type="text" id="companies_code" placeholder="Company Code" />
                                 </div>
                                 <div class="row">
                                     <button type="button" class="btn btn-primary pill mt-3" onclick="save()">
@@ -119,6 +117,7 @@ Homebases - Admin Panel
         </div>
     </div>
 </div>
+
 <script>
     function reload(){
         window.open("/admin/homebases", "_self");
@@ -136,10 +135,9 @@ Homebases - Admin Panel
     function saveInput() {
         var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('homebase_name', document.getElementById('homebase_name').value); 
-        postdata.append('homebase_notes', document.getElementById('homebase_notes').value); 
+        postdata.append('homebase_name', document.getElementById('homebase_name').value);
         postdata.append('homebase_notes', document.getElementById('homebase_notes').value);
-        postdata.append('companies_code', document.getElementById('companies_code').value); 
+        postdata.append('companies_code', document.getElementById('companies_code').value);
 
         $.ajax({
             type: "POST",
@@ -153,9 +151,6 @@ Homebases - Admin Panel
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
                     return;
-                } else if (data.status == 501) {
-                    alert(data.message);
-                    return;
                 } else {
                     alert('Berhasil Disimpan');
                     setTimeout(function () {
@@ -167,7 +162,6 @@ Homebases - Admin Panel
                 console.log(dataerror);
             }
         });
-
     }
 
     function showedit(id){
@@ -177,10 +171,10 @@ Homebases - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                document.getElementById('homebase_id').value = data.id; 
-                document.getElementById('homebase_name').value = data.homebase_name; 
+                document.getElementById('homebase_id').value = data.homebase_id;
+                document.getElementById('homebase_name').value = data.homebase_name;
                 document.getElementById('homebase_notes').value = data.homebase_notes;
-                postdata.append('companies_code', document.getElementById('companies_code').value); 
+                document.getElementById('companies_code').value = data.companies_code;
             },
             error: function (dataerror) {
                 console.log(dataerror);
@@ -191,9 +185,9 @@ Homebases - Admin Panel
     function updateInput(id) {
         var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('homebase_name', document.getElementById('homebase_name').value); 
+        postdata.append('homebase_name', document.getElementById('homebase_name').value);
         postdata.append('homebase_notes', document.getElementById('homebase_notes').value);
-        postdata.append('companies_code', document.getElementById('companies_code').value); 
+        postdata.append('companies_code', document.getElementById('companies_code').value);
 
         $.ajax({
             headers: {
@@ -210,11 +204,8 @@ Homebases - Admin Panel
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
                     return;
-                } else if (data.status == 501) {
-                    alert(data.message);
-                    return;
                 } else {
-                    alert('Berhasil Diupdate');
+                    alert('Berhasil Update');
                     setTimeout(function () {
                         window.open("/admin/homebases", "_self");
                     }, 500);
@@ -224,13 +215,12 @@ Homebases - Admin Panel
                 console.log(dataerror);
             }
         });
-
     }
 
     function delete_data(id){
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
-        
+
         $.ajax({
             type: "DELETE",
             url: "/admin/homebases/"+id,
@@ -240,9 +230,6 @@ Homebases - Admin Panel
             success: function (data) {
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
-                    return;
-                } else if (data.status == 501) {
-                    alert(data.message);
                     return;
                 } else {
                     alert('Data Berhasil Dihapus');
@@ -256,6 +243,5 @@ Homebases - Admin Panel
             }
         });
     }
-
 </script>
 @endsection

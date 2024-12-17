@@ -11,12 +11,12 @@ Departments - Admin Panel
             <div class="row">
                 <div class="col-12 rt-mb-25">
                     <div class="breadcrumbs">
-                        <div class="breadcrumb-title"> Department Management</div>
+                        <div class="breadcrumb-title">Department Management</div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Setting</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"> Departments</li>
+                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Departments</li>
                             </ol>
                         </nav>
                     </div>
@@ -34,16 +34,16 @@ Departments - Admin Panel
                                                 <tr>
                                                     <th scope="col">NO</th>
                                                     <th scope="col">NAME</th>
-                                                    <th scope="col">NOTE</th>
-                                                    <th scope="col">Department CODE</th>
-                                                    <th scope="col">Division CODE</th>
-                                                    <th scope="col">Action</th>
+                                                    <th scope="col">NOTES</th>
+                                                    <th scope="col">CODE</th>
+                                                    <th scope="col">DIVISION CODE</th>
+                                                    <th scope="col">ACTION</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($departments as $department)
                                                     <tr>
-                                                        <td scope="row">{{ $loop->index+1 }}</td>
+                                                        <td scope="row">{{ $loop->index + 1 }}</td>
                                                         <td>{{ $department->department_name }}</td>
                                                         <td>{{ $department->department_notes }}</td>
                                                         <td>{{ $department->department_code }}</td>
@@ -73,9 +73,6 @@ Departments - Admin Panel
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="pagination-wrapper">
-                                        {{ $departments->links() }}
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -88,17 +85,16 @@ Departments - Admin Panel
                             <form>
                                 <input type="hidden" id="department_id">
                                 <div class="fromGroup mb-3">
-                                    <label>Name</label>
+                                    <label>Department Name</label>
                                     <input class="form-control" type="text" id="department_name" placeholder="Department Name" />
                                 </div>
                                 <div class="fromGroup mb-3">
-                                    <label>Note</label>
-                                    <textarea class="form-control" id="department_notes" placeholder="Notes"></textarea>
+                                    <label>Notes</label>
+                                    <textarea class="form-control" name="department_notes" id="department_notes" placeholder="Notes"></textarea>
                                 </div>
                                 <div class="fromGroup mb-3">
                                     <label>Division Code</label>
-                                    <textarea class="form-control" name="division_code" id="division_code" placeholder="Code"></textarea>
-                                </div>
+                                    <input class="form-control" type="text" id="division_code" placeholder="Division Code" />
                                 </div>
                                 <div class="row">
                                     <button type="button" class="btn btn-primary pill mt-3" onclick="save()">
@@ -114,6 +110,7 @@ Departments - Admin Panel
                                             </span>
                                         </span>
                                     </button>
+                                    
                                 </div>
                             </form>
                         </div>
@@ -123,8 +120,9 @@ Departments - Admin Panel
         </div>
     </div>
 </div>
+
 <script>
-    function reload(){
+    function reload() {
         window.open("/admin/departments", "_self");
     }
 
@@ -142,8 +140,7 @@ Departments - Admin Panel
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('department_name', document.getElementById('department_name').value); 
         postdata.append('department_notes', document.getElementById('department_notes').value); 
-        // postdata.append('department_code', document.getElementById('department_code').value); 
-        postdata.append('division_code', document.getElementById('division_code').value); 
+        postdata.append('division_code', document.getElementById('division_code').value);
 
         $.ajax({
             type: "POST",
@@ -157,9 +154,6 @@ Departments - Admin Panel
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
                     return;
-                } else if (data.status == 501) {
-                    alert(data.message);
-                    return;
                 } else {
                     alert('Berhasil Disimpan');
                     setTimeout(function () {
@@ -171,20 +165,19 @@ Departments - Admin Panel
                 console.log(dataerror);
             }
         });
-
     }
 
-    function showedit(id){
+    function showedit(id) {
         $.ajax({
             type: "GET",
             url: "/admin/departments/"+id,
             dataType: "json",
             async: false,
             success: function (data) {
-                document.getElementById('department_id').value = data.id; 
-                document.getElementById('department_name').value = data.department_name; 
+                document.getElementById('department_id').value = data.department_id;
+                document.getElementById('department_name').value = data.department_name;
                 document.getElementById('department_notes').value = data.department_notes;
-                document.getElementById('department_code').value = data.department_code;
+                document.getElementById('division_code').value = data.division_code;
             },
             error: function (dataerror) {
                 console.log(dataerror);
@@ -197,7 +190,7 @@ Departments - Admin Panel
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('department_name', document.getElementById('department_name').value); 
         postdata.append('department_notes', document.getElementById('department_notes').value); 
-        // postdata.append('companies_code', document.getElementById('companies_code').value); 
+        postdata.append('division_code', document.getElementById('division_code').value);
 
         $.ajax({
             headers: {
@@ -214,11 +207,8 @@ Departments - Admin Panel
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
                     return;
-                } else if (data.status == 501) {
-                    alert(data.message);
-                    return;
                 } else {
-                    alert('Berhasil Diupdate');
+                    alert('Berhasil Update');
                     setTimeout(function () {
                         window.open("/admin/departments", "_self");
                     }, 500);
@@ -228,10 +218,9 @@ Departments - Admin Panel
                 console.log(dataerror);
             }
         });
-
     }
 
-    function delete_data(id){
+    function delete_data(id) {
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
         
@@ -244,9 +233,6 @@ Departments - Admin Panel
             success: function (data) {
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
-                    return;
-                } else if (data.status == 501) {
-                    alert(data.message);
                     return;
                 } else {
                     alert('Data Berhasil Dihapus');

@@ -11,12 +11,12 @@ Cities - Admin Panel
             <div class="row">
                 <div class="col-12 rt-mb-25">
                     <div class="breadcrumbs">
-                        <div class="breadcrumb-title"> City Management</div>
+                        <div class="breadcrumb-title">City Management</div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Setting</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"> Cities</li>
+                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Cities</li>
                             </ol>
                         </nav>
                     </div>
@@ -33,23 +33,19 @@ Cities - Admin Panel
                                             <thead style="text-align: center">
                                                 <tr>
                                                     <th scope="col">NO</th>
-                                                    <th scope="col">NAME</th>
-                                                    <th scope="col">NOTE</th>
-                                                    <th scope="col">City CODE</th>
-                                                    <th scope="col">Province CODE</th>
-                                                    <th scope="col">STATUS</th>
-                                                    <th scope="col">Action</th>
+                                                    <th scope="col">CITY NAME</th>
+                                                    <th scope="col">NOTES</th>
+                                                    <th scope="col">CODE</th>
+                                                    <th scope="col">ACTION</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($cities as $city)
                                                     <tr>
-                                                        <td scope="row">{{ $loop->index+1 }}</td>
+                                                        <td scope="row">{{ $loop->index + 1 }}</td>
                                                         <td>{{ $city->cities_name }}</td>
                                                         <td>{{ $city->cities_notes }}</td>
                                                         <td>{{ $city->cities_code }}</td>
-                                                        <td>{{ $city->provinces_code }}</td>
-                                                        <td>{{ $city->cities_status }}</td>
                                                         <td>
                                                             <ul class="action-btn">
                                                                 <li>
@@ -75,9 +71,6 @@ Cities - Admin Panel
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="pagination-wrapper">
-                                        {{ $cities->links() }}
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -90,22 +83,22 @@ Cities - Admin Panel
                             <form>
                                 <input type="hidden" id="city_id">
                                 <div class="fromGroup mb-3">
-                                    <label>Name</label>
+                                    <label>City Name</label>
                                     <input class="form-control" type="text" id="cities_name" placeholder="City Name" />
                                 </div>
                                 <div class="fromGroup mb-3">
-                                    <label>Note</label>
-                                    <textarea class="form-control" id="cities_notes" placeholder="Notes"></textarea>
+                                    <label>Notes</label>
+                                    <textarea class="form-control" name="cities_notes" id="cities_notes" placeholder="Notes"></textarea>
                                 </div>
                                 <div class="fromGroup mb-3">
                                     <label>Province Code</label>
                                     <input class="form-control" type="text" id="provinces_code" placeholder="Province Code" />
                                 </div>
                                 <div class="fromGroup mb-3">
-                                    <label>Status</label>
+                                    <label>City Status</label>
                                     <select class="form-control" id="cities_status">
-                                        <option value="active">Active</option>
-                                        <option value="inactive">Inactive</option>
+                                        <option value="1">Active</option>
+                                        <option value="0">Inactive</option>
                                     </select>
                                 </div>
                                 <div class="row">
@@ -131,6 +124,7 @@ Cities - Admin Panel
         </div>
     </div>
 </div>
+
 <script>
     function reload(){
         window.open("/admin/cities", "_self");
@@ -148,15 +142,15 @@ Cities - Admin Panel
     function saveInput() {
         var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('cities_name', document.getElementById('cities_name').value); 
-        postdata.append('cities_notes', document.getElementById('cities_notes').value); 
+        postdata.append('cities_name', document.getElementById('cities_name').value);
+        postdata.append('cities_notes', document.getElementById('cities_notes').value);
         postdata.append('provinces_code', document.getElementById('provinces_code').value);
         postdata.append('cities_status', document.getElementById('cities_status').value);
 
         $.ajax({
             type: "POST",
             url: "/admin/cities",
-            data: (postdata),
+            data: postdata,
             processData: false,
             contentType: false,
             dataType: "json",
@@ -185,8 +179,8 @@ Cities - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                document.getElementById('city_id').value = data.id; 
-                document.getElementById('cities_name').value = data.cities_name; 
+                document.getElementById('city_id').value = data.cities_id;
+                document.getElementById('cities_name').value = data.cities_name;
                 document.getElementById('cities_notes').value = data.cities_notes;
                 document.getElementById('provinces_code').value = data.provinces_code;
                 document.getElementById('cities_status').value = data.cities_status;
@@ -200,18 +194,18 @@ Cities - Admin Panel
     function updateInput(id) {
         var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('cities_name', document.getElementById('cities_name').value); 
-        postdata.append('cities_notes', document.getElementById('cities_notes').value); 
+        postdata.append('cities_name', document.getElementById('cities_name').value);
+        postdata.append('cities_notes', document.getElementById('cities_notes').value);
         postdata.append('provinces_code', document.getElementById('provinces_code').value);
         postdata.append('cities_status', document.getElementById('cities_status').value);
-        
+
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             type: "POST",
             url: "/admin/cities/"+id,
-            data: (postdata),
+            data: postdata,
             processData: false,
             contentType: false,
             dataType: "json",
@@ -220,11 +214,8 @@ Cities - Admin Panel
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
                     return;
-                } else if (data.status == 501) {
-                    alert(data.message);
-                    return;
                 } else {
-                    alert('Berhasil Diupdate');
+                    alert('Berhasil Update');
                     setTimeout(function () {
                         window.open("/admin/cities", "_self");
                     }, 500);
@@ -234,25 +225,21 @@ Cities - Admin Panel
                 console.log(dataerror);
             }
         });
-
     }
 
     function delete_data(id){
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
-        
+
         $.ajax({
             type: "DELETE",
             url: "/admin/cities/"+id,
-            data: (postdata),
+            data: postdata,
             dataType: "json",
             async: false,
             success: function (data) {
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
-                    return;
-                } else if (data.status == 501) {
-                    alert(data.message);
                     return;
                 } else {
                     alert('Data Berhasil Dihapus');

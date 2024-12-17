@@ -10,13 +10,13 @@ Divisions - Admin Panel
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 rt-mb-25">
-                    <div class="breadcrumbs ">
-                        <div class="breadcrumb-title"> Account Setting</div>
+                    <div class="breadcrumbs">
+                        <div class="breadcrumb-title">Division Management</div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Setting</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"> Division</li>
+                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Divisions</li>
                             </ol>
                         </nav>
                     </div>
@@ -29,21 +29,21 @@ Divisions - Admin Panel
                             <div class="col-lg-12">
                                 <div class="table-wrapper">
                                     <div class="table-content table-responsive">
-                                        <table class="table align-middle table-basic ">
+                                        <table class="table align-middle table-basic">
                                             <thead style="text-align: center">
                                                 <tr>
                                                     <th scope="col">NO</th>
                                                     <th scope="col">NAME</th>
-                                                    <th scope="col">NOTE</th>
+                                                    <th scope="col">NOTES</th>
                                                     <th scope="col">CODE</th>
-                                                    <th scope="col">COMPANY CODE</th>
-                                                    <th scope="col">Action</th>
+                                                    <th scope="col">COMPANY</th>
+                                                    <th scope="col">ACTION</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($divisions as $division)
                                                     <tr>
-                                                        <td scope="row">{{ $loop->index+1 }}</td>
+                                                        <td scope="row">{{ $loop->index + 1 }}</td>
                                                         <td>{{ $division->division_name }}</td>
                                                         <td>{{ $division->division_notes }}</td>
                                                         <td>{{ $division->division_code }}</td>
@@ -85,17 +85,13 @@ Divisions - Admin Panel
                             <form>
                                 <input type="hidden" id="division_id">
                                 <div class="fromGroup mb-3">
-                                    <label>Name</label>
+                                    <label>Division Name</label>
                                     <input class="form-control" type="text" id="division_name" placeholder="Division Name" />
                                 </div>
                                 <div class="fromGroup mb-3">
-                                    <label>Note</label>
-                                    <textarea class="form-control" id="division_notes" placeholder="Notes"></textarea>
+                                    <label>Notes</label>
+                                    <textarea class="form-control" name="division_notes" id="division_notes" placeholder="Notes"></textarea>
                                 </div>
-                                <!-- <div class="fromGroup mb-3">
-                                    <label>Code</label>
-                                    <textarea class="form-control" id="division_code" placeholder="Code"></textarea>
-                                </div> -->
                                 <div class="fromGroup mb-3">
                                     <label>Company Code</label>
                                     <input class="form-control" type="text" id="companies_code" placeholder="Company Code" />
@@ -123,14 +119,15 @@ Divisions - Admin Panel
         </div>
     </div>
 </div>
+
 <script>
     function reload() {
         window.open("/admin/divisions", "_self");
     }
 
     function save() {
-        let id = document.getElementById('division_id').value;
-        if (id === '') {
+        id = document.getElementById('division_id').value;
+        if (id == '') {
             saveInput();
         } else {
             updateInput(id);
@@ -138,11 +135,10 @@ Divisions - Admin Panel
     }
 
     function saveInput() {
-        let postdata = new FormData();
+        var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('division_name', document.getElementById('division_name').value);
         postdata.append('division_notes', document.getElementById('division_notes').value);
-        // postdata.append('division_code', document.getElementById('division_code').value);
         postdata.append('companies_code', document.getElementById('companies_code').value);
 
         $.ajax({
@@ -154,13 +150,12 @@ Divisions - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                if (data.status === 401) {
-                    alert('All fields must be filled');
-                } else if (data.status === 501) {
-                    alert(data.message);
+                if (data.status == 401) {
+                    alert('Form Wajib Harus diisi');
+                    return;
                 } else {
-                    alert('Data successfully saved');
-                    setTimeout(() => {
+                    alert('Berhasil Disimpan');
+                    setTimeout(function () {
                         window.open("/admin/divisions", "_self");
                     }, 500);
                 }
@@ -174,14 +169,13 @@ Divisions - Admin Panel
     function showedit(id) {
         $.ajax({
             type: "GET",
-            url: `/admin/divisions/${id}`,
+            url: "/admin/divisions/" + id,
             dataType: "json",
             async: false,
             success: function (data) {
-                document.getElementById('division_id').value = data.id;
+                document.getElementById('division_id').value = data.division_id;
                 document.getElementById('division_name').value = data.division_name;
                 document.getElementById('division_notes').value = data.division_notes;
-                document.getElementById('division_code').value = data.division_code;
                 document.getElementById('companies_code').value = data.companies_code;
             },
             error: function (dataerror) {
@@ -191,11 +185,10 @@ Divisions - Admin Panel
     }
 
     function updateInput(id) {
-        let postdata = new FormData();
+        var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('division_name', document.getElementById('division_name').value);
         postdata.append('division_notes', document.getElementById('division_notes').value);
-        // postdata.append('division_code', document.getElementById('division_code').value);
         postdata.append('companies_code', document.getElementById('companies_code').value);
 
         $.ajax({
@@ -203,20 +196,19 @@ Divisions - Admin Panel
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             type: "POST",
-            url: `/admin/divisions/${id}`,
+            url: "/admin/divisions/" + id,
             data: postdata,
             processData: false,
             contentType: false,
             dataType: "json",
             async: false,
             success: function (data) {
-                if (data.status === 401) {
-                    alert('All fields must be filled');
-                } else if (data.status === 501) {
-                    alert(data.message);
+                if (data.status == 401) {
+                    alert('Form Wajib Harus diisi');
+                    return;
                 } else {
-                    alert('Data successfully updated');
-                    setTimeout(() => {
+                    alert('Berhasil Update');
+                    setTimeout(function () {
                         window.open("/admin/divisions", "_self");
                     }, 500);
                 }
@@ -228,23 +220,22 @@ Divisions - Admin Panel
     }
 
     function delete_data(id) {
-        let postdata = {};
+        var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
 
         $.ajax({
             type: "DELETE",
-            url: `/admin/divisions/${id}`,
+            url: "/admin/divisions/" + id,
             data: postdata,
             dataType: "json",
             async: false,
             success: function (data) {
-                if (data.status === 401) {
-                    alert('Failed to delete the data');
-                } else if (data.status === 501) {
-                    alert(data.message);
+                if (data.status == 401) {
+                    alert('Form Wajib Harus diisi');
+                    return;
                 } else {
-                    alert('Data successfully deleted');
-                    setTimeout(() => {
+                    alert('Data Berhasil Dihapus');
+                    setTimeout(function () {
                         window.open("/admin/divisions", "_self");
                     }, 500);
                 }
@@ -255,5 +246,4 @@ Divisions - Admin Panel
         });
     }
 </script>
-
 @endsection

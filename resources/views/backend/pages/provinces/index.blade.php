@@ -10,13 +10,13 @@ Provinces - Admin Panel
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 rt-mb-25">
-                    <div class="breadcrumbs ">
-                        <div class="breadcrumb-title"> Location Management</div>
+                    <div class="breadcrumbs">
+                        <div class="breadcrumb-title"> Province Management</div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
                                 <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"> Province</li>
+                                <li class="breadcrumb-item active" aria-current="page">Provinces</li>
                             </ol>
                         </nav>
                     </div>
@@ -34,20 +34,20 @@ Provinces - Admin Panel
                                                 <tr>
                                                     <th scope="col">NO</th>
                                                     <th scope="col">NAME</th>
+                                                    <th scope="col">NOTES</th>
                                                     <th scope="col">CODE</th>
                                                     <th scope="col">STATUS</th>
-                                                    <th scope="col">NOTES</th>
-                                                    <th scope="col">Action</th>
+                                                    <th scope="col">ACTION</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($provinces as $province)
                                                     <tr>
-                                                        <td scope="row">{{ $loop->index+1 }}</td>
+                                                        <td scope="row">{{ $loop->index + 1 }}</td>
                                                         <td>{{ $province->provinces_name }}</td>
+                                                        <td>{{ $province->provinces_notes }}</td>
                                                         <td>{{ $province->provinces_code }}</td>
                                                         <td>{{ $province->provinces_status }}</td>
-                                                        <td>{{ $province->provinces_notes }}</td>
                                                         <td>
                                                             <ul class="action-btn">
                                                                 <li>
@@ -66,7 +66,6 @@ Provinces - Admin Panel
                                                                         </svg>
                                                                     </button>
                                                                 </li>
-
                                                             </ul>
                                                         </td>
                                                     </tr>
@@ -84,18 +83,18 @@ Provinces - Admin Panel
                         <div class="card-header">Form Input</div>
                         <div class="card-body">
                             <form>
-                                <input type="hidden" id="provinces_id">
+                                <input type="hidden" id="province_id">
                                 <div class="fromGroup mb-3">
-                                    <label>Nama</label>
-                                    <input class="form-control" type="text" id="provinces_name" placeholder="Nama Provinsi" />
+                                    <label>Province Name</label>
+                                    <input class="form-control" type="text" id="provinces_name" placeholder="Province Name" />
+                                </div>
+                                <div class="fromGroup mb-3">
+                                    <label>Notes</label>
+                                    <textarea class="form-control" name="provinces_notes" id="provinces_notes" placeholder="Notes"></textarea>
                                 </div>
                                 <div class="fromGroup mb-3">
                                     <label>Status</label>
                                     <input class="form-control" type="text" id="provinces_status" placeholder="Status" />
-                                </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Note</label>
-                                    <textarea class="form-control" name="provinces_notes" id="provinces_notes" placeholder="Catatan"></textarea>
                                 </div>
                                 <div class="row">
                                     <button type="button" class="btn btn-primary pill mt-3" onclick="save()">
@@ -120,14 +119,14 @@ Provinces - Admin Panel
         </div>
     </div>
 </div>
-<script>
 
+<script>
     function reload(){
         window.open("/admin/provinces", "_self");
     }
 
     function save() {
-        id = document.getElementById('provinces_id').value;
+        id = document.getElementById('province_id').value;
         if (id == '') {
             saveInput();
         } else {
@@ -139,8 +138,8 @@ Provinces - Admin Panel
         var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('provinces_name', document.getElementById('provinces_name').value); 
-        postdata.append('provinces_status', document.getElementById('provinces_status').value);
-        postdata.append('provinces_notes', document.getElementById('provinces_notes').value);
+        postdata.append('provinces_notes', document.getElementById('provinces_notes').value); 
+        postdata.append('provinces_status', document.getElementById('provinces_status').value); 
 
         $.ajax({
             type: "POST",
@@ -154,9 +153,6 @@ Provinces - Admin Panel
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
                     return;
-                } else if (data.status == 501) {
-                    alert(data.message);
-                    return;
                 } else {
                     alert('Berhasil Disimpan');
                     setTimeout(function () {
@@ -168,7 +164,6 @@ Provinces - Admin Panel
                 console.log(dataerror);
             }
         });
-
     }
 
     function showedit(id){
@@ -178,10 +173,10 @@ Provinces - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                document.getElementById('provinces_id').value = data.id; 
+                document.getElementById('province_id').value = data.provinces_id;
                 document.getElementById('provinces_name').value = data.provinces_name; 
-                document.getElementById('provinces_status').value = data.provinces_status;
                 document.getElementById('provinces_notes').value = data.provinces_notes;
+                document.getElementById('provinces_status').value = data.provinces_status;
             },
             error: function (dataerror) {
                 console.log(dataerror);
@@ -193,8 +188,8 @@ Provinces - Admin Panel
         var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('provinces_name', document.getElementById('provinces_name').value); 
-        postdata.append('provinces_status', document.getElementById('provinces_status').value);
-        postdata.append('provinces_notes', document.getElementById('provinces_notes').value);
+        postdata.append('provinces_notes', document.getElementById('provinces_notes').value); 
+        postdata.append('provinces_status', document.getElementById('provinces_status').value); 
 
         $.ajax({
             headers: {
@@ -238,9 +233,6 @@ Provinces - Admin Panel
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
                     return;
-                } else if (data.status == 501) {
-                    alert(data.message);
-                    return;
                 } else {
                     alert('Data Berhasil Dihapus');
                     setTimeout(function () {
@@ -253,7 +245,5 @@ Provinces - Admin Panel
             }
         });
     }
-
 </script>
 @endsection
-

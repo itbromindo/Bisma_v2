@@ -17,12 +17,12 @@ class ShiftController extends Controller
             'shift_code' => 'nullable|string|max:225',
             'companies_code' => 'required|string|max:225',
             'shift_name' => 'required|string|max:225',
-            'shift_start_time_before_break' => 'required|date_format:H:i',
-            'shift_end_time_before_break' => 'required|date_format:H:i',
+            'shift_start_time_before_break' => 'nullable|date_format:H:i',
+            'shift_end_time_before_break' => 'nullable|date_format:H:i',
             'shift_start_time_break' => 'nullable|date_format:H:i',
             'shift_end_time_break' => 'nullable|date_format:H:i',
-            'shift_start_time_after_break' => 'required|date_format:H:i',
-            'shift_end_time_after_break' => 'required|date_format:H:i',
+            'shift_start_time_after_break' => 'nullable|date_format:H:i',
+            'shift_end_time_after_break' => 'nullable|date_format:H:i',
             'shift_notes' => 'nullable|string',
         ];
     }

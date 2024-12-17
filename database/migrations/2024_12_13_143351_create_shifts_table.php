@@ -16,12 +16,12 @@ return new class extends Migration
             $table->string('shift_code', 225)->unique();
             $table->string('companies_code', 225); // Foreign key to company table
             $table->string('shift_name', 225);
-            $table->time('shift_start_time_before_break');
-            $table->time('shift_end_time_before_break');
-            $table->time('shift_start_time_break');
-            $table->time('shift_end_time_break');
-            $table->time('shift_start_time_after_break');
-            $table->time('shift_end_time_after_break');
+            $table->time('shift_start_time_before_break')->nullable();
+            $table->time('shift_end_time_before_break')->nullable();
+            $table->time('shift_start_time_break')->nullable();
+            $table->time('shift_end_time_break')->nullable();
+            $table->time('shift_start_time_after_break')->nullable();
+            $table->time('shift_end_time_after_break')->nullable();
             $table->timestamp('shift_created_at')->useCurrent();
             $table->string('shift_created_by', 225);
             $table->timestamp('shift_updated_at')->nullable()->useCurrentOnUpdate();
