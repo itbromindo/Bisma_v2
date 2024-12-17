@@ -45,7 +45,7 @@ class MasterApprovalController extends Controller
 
     public function store(Request $request)
     {
-        // $this->checkAuthorization(auth()->user(), ['master_approvals.create']);
+        $this->checkAuthorization(auth()->user(), ['master_approvals.create']);
         $validator = Validator::make($request->all(), $this->mandatory);
 
         if ($validator->fails()) {

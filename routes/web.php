@@ -2,12 +2,18 @@
 
 use App\Http\Controllers\Backend\CityController;
 use App\Http\Controllers\Backend\DepartmentController;
+use App\Http\Controllers\Backend\DescriptionQuotationController;
 use App\Http\Controllers\Backend\DistrictController;
 use App\Http\Controllers\Backend\DivisionController;
 use App\Http\Controllers\Backend\HomebaseController;
+use App\Http\Controllers\Backend\InquiryGoodController;
 use App\Http\Controllers\Backend\MasterApprovalController;
+use App\Http\Controllers\Backend\OriginInquiryController;
+use App\Http\Controllers\Backend\ParameterDuedateController;
 use App\Http\Controllers\Backend\ProvinceController;
 use App\Http\Controllers\Backend\ShiftController;
+use App\Models\InquiryGood;
+use App\Models\OriginInquiry;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -87,7 +93,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     // Department Routes
     Route::resource('departments', DepartmentController::class);
-    Route::resource('departments', DepartmentController::class);
     Route::any('departments/{id}', [DepartmentController::class, 'update']);
     
     // Homebase Routes
@@ -113,4 +118,20 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     //District Routes
     Route::resource('districts', DistrictController::class);
     Route::any('districts/{id}', [DistrictController::class, 'update']);
+    
+    //Inquiry Good Routes
+    Route::resource('inquiry_goods', InquiryGoodController::class);
+    Route::any('inquiry_goods/{id}', [InquiryGoodController::class, 'update']);
+    
+    //Origin Inquiry Routes
+    Route::resource('origin_inquiries', OriginInquiryController::class);
+    Route::any('origin_inquiries/{id}', [OriginInquiryController::class, 'update']);
+    
+    //Origin Inquiry Routes
+    Route::resource('description_quotations', DescriptionQuotationController::class);
+    Route::any('description_quotations/{id}', [DescriptionQuotationController::class, 'update']);
+    
+    //Origin Parameter Duedate Routes
+    Route::resource('parameter_duedates', ParameterDuedateController::class);
+    Route::any('parameter_duedates/{id}', [ParameterDuedateController::class, 'update']);
 })->middleware('auth:admin');

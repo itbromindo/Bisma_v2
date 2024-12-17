@@ -183,6 +183,26 @@ class RolePermissionSeeder extends Seeder
                     'districts.update',
                 ]
             ],
+            [
+                'group_name' => 'Inquiry Good',
+                'permissions' => [
+                    'inquiry_goods.create',
+                    'inquiry_goods.view',
+                    'inquiry_goods.edit',
+                    'inquiry_goods.delete',
+                    'inquiry_goods.update',
+                ]
+            ],
+            [
+                'group_name' => 'Origin Inquiry',
+                'permissions' => [
+                    'origin_inquiries.create',
+                    'origin_inquiries.view',
+                    'origin_inquiries.edit',
+                    'origin_inquiries.delete',
+                    'origin_inquiries.update',
+                ]
+            ],
         ];
 
         // Do same for the admin guard for tutorial purposes.

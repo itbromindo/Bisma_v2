@@ -29,6 +29,8 @@ class MenuSeeder extends Seeder
             ['menus_code' => '1013', 'moduls_code' => '3000', 'menus_name' => 'Province', 'menus_route' => 'provinces', 'menus_notes' => '-'],
             ['menus_code' => '1014', 'moduls_code' => '3000', 'menus_name' => 'City', 'menus_route' => 'cities', 'menus_notes' => '-'],
             ['menus_code' => '1015', 'moduls_code' => '3000', 'menus_name' => 'District', 'menus_route' => 'districts', 'menus_notes' => '-'],
+            ['menus_code' => '1016', 'moduls_code' => '4000', 'menus_name' => 'Inquiry Good', 'menus_route' => 'inquiry_goods', 'menus_notes' => '-'],
+            ['menus_code' => '1017', 'moduls_code' => '4000', 'menus_name' => 'Origin Inquiry', 'menus_route' => 'origin_inquiries', 'menus_notes' => '-'],
         ];
 
         Menus::insert($menu);
