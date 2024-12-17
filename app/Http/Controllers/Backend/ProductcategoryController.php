@@ -101,4 +101,16 @@ class ProductcategoryController extends Controller
         session()->flash('success', 'product_category has been deleted.');
         return $result;
     }
+
+    public function combo(Request $request)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->model
+            ->select('product_category_code as id', 'product_category_name as text')
+            ->where('product_category_name', 'like', '%' . $search . '%')
+            ->where('product_category_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
+    }
 }

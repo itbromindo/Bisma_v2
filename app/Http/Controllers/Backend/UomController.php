@@ -101,4 +101,16 @@ class UomController extends Controller
         session()->flash('success', 'uom has been deleted.');
         return $result;
     }
+
+    public function combo(Request $request)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->model
+            ->select('uom_code as id', 'uom_name as text')
+            ->where('uom_name', 'like', '%' . $search . '%')
+            ->where('uom_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
+    }
 }

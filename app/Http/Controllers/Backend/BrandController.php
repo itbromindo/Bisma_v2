@@ -101,5 +101,17 @@ class BrandController extends Controller
         session()->flash('success', 'brand has been deleted.');
         return $result;
     }
+
+    public function combo(Request $request)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->model
+            ->select('brand_code as id', 'brand_name as text')
+            ->where('brand_name', 'like', '%' . $search . '%')
+            ->where('brand_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
+    }
 }
 

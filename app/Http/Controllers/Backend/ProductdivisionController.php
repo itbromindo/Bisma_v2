@@ -101,4 +101,16 @@ class ProductdivisionController extends Controller
         session()->flash('success', 'product_divisions has been deleted.');
         return $result;
     }
+
+    public function combo(Request $request)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->model
+            ->select('product_divisions_code as id', 'product_divisions_name as text')
+            ->where('product_divisions_name', 'like', '%' . $search . '%')
+            ->where('product_divisions_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
+    }
 }

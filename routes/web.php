@@ -132,18 +132,22 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     // product_divisions
     Route::resource('product_divisions', App\Http\Controllers\Backend\ProductdivisionController::class);
     Route::any('product_divisions/{id}', [App\Http\Controllers\Backend\ProductdivisionController::class, 'update']);
+    Route::get('comboproductdivision', [App\Http\Controllers\Backend\ProductdivisionController::class, 'combo']);
 
     // product_category
     Route::resource('product_category', App\Http\Controllers\Backend\ProductcategoryController::class);
     Route::any('product_category/{id}', [App\Http\Controllers\Backend\ProductcategoryController::class, 'update']);
+    Route::get('combokategori', [App\Http\Controllers\Backend\ProductcategoryController::class, 'combo']);
 
     // brand
     Route::resource('brand', App\Http\Controllers\Backend\BrandController::class);
     Route::any('brand/{id}', [App\Http\Controllers\Backend\BrandController::class, 'update']);
+    Route::get('combobrand', [App\Http\Controllers\Backend\BrandController::class, 'combo']);
 
     // uom
     Route::resource('uom', App\Http\Controllers\Backend\UomController::class);
     Route::any('uom/{id}', [App\Http\Controllers\Backend\UomController::class, 'update']);
+    Route::get('combosatuan', [App\Http\Controllers\Backend\UomController::class, 'combo']);
 
     // warehouse
     Route::resource('warehouse', App\Http\Controllers\Backend\WarehouseController::class);
