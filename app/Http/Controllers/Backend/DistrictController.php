@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
 use App\Models\District;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Support\Renderable;
@@ -30,8 +31,11 @@ class DistrictController extends Controller
             ->where('districts_soft_delete', 0)
             ->paginate(15);
 
+        $cities_code = City::select("cities_code")->get();
+
         return view('backend.pages.districts.index', [
             'districts' => $listdata,
+            'cities_code'=> $cities_code
         ]);
     }
 

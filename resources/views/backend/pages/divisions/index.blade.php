@@ -92,10 +92,16 @@ Divisions - Admin Panel
                                     <label>Notes</label>
                                     <textarea class="form-control" name="division_notes" id="division_notes" placeholder="Notes"></textarea>
                                 </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Company Code</label>
-                                    <input class="form-control" type="text" id="companies_code" placeholder="Company Code" />
-                                </div>
+                                <select class="form-control mb-3" id="companies_code">
+                                    <option value="">Select Company Code</option>
+                                    @if($companies_code)
+                                        @foreach ($companies_code as $company)
+                                            <option value="{{ $company->companies_code }}">{{ $company->companies_code }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled>No Company Codes Available</option>
+                                    @endif
+                                </select>
                                 <div class="row">
                                     <button type="button" class="btn btn-primary pill mt-3" onclick="save()">
                                         Save

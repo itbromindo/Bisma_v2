@@ -92,10 +92,16 @@ Districts - Admin Panel
                                     <label>Notes</label>
                                     <textarea class="form-control" name="districts_notes" id="districts_notes" placeholder="Notes"></textarea>
                                 </div>
-                                <div class="fromGroup mb-3">
-                                    <label>City Code</label>
-                                    <input class="form-control" type="text" id="cities_code" placeholder="City Code" />
-                                </div>
+                                <select class="form-control mb-3" id="cities_code">
+                                    <option value="">Select cities Code</option>
+                                    @if($cities_code)
+                                        @foreach ($cities_code as $cities)
+                                            <option value="{{ $cities->cities_code }}">{{ $cities->cities_code }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled>No cities Codes Available</option>
+                                    @endif
+                                </select>
                                 <div class="fromGroup mb-3">
                                     <label>District Status</label>
                                     <select class="form-control" id="districts_status">

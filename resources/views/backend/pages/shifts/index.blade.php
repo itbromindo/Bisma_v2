@@ -88,10 +88,16 @@
                                     <label>Shift Name</label>
                                     <input class="form-control" type="text" id="shift_name" placeholder="Shift Name" />
                                 </div>
-                                <div class="formGroup mb-3">
-                                    <label>Company Code</label>
-                                    <input class="form-control" type="text" id="companies_code" placeholder="Company Code" />
-                                </div>
+                                <select class="form-control mb-3" id="companies_code">
+                                    <option value="">Select Company Code</option>
+                                    @if($companies_code)
+                                        @foreach ($companies_code as $company)
+                                            <option value="{{ $company->companies_code }}">{{ $company->companies_code }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled>No Company Codes Available</option>
+                                    @endif
+                                </select>
                                 <div class="formGroup mb-3">
                                     <label>Start Time Before Break</label>
                                     <input class="form-control" type="time" id="shift_start_time_before_break" />

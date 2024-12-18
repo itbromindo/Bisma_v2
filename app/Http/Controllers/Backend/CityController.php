@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\City;
+use App\Models\Province;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Session;
@@ -29,8 +30,11 @@ class CityController extends Controller
             ->where('cities_soft_delete', 0)
             ->paginate(15);
 
+        $provinces_code = Province::select('provinces_code')->get();
+
         return view('backend.pages.cities.index', [
             'cities' => $listdata,
+            'provinces_code' => $provinces_code
         ]);
     }
 

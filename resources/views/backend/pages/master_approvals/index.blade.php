@@ -90,18 +90,36 @@ Master Approvals - Admin Panel
                                     <label>Approval Name</label>
                                     <input class="form-control" type="text" id="master_approvals_approval_name" placeholder="Approval Name" />
                                 </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Department Code</label>
-                                    <input class="form-control" type="text" id="department_code" placeholder="Department Code" />
-                                </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Division Code</label>
-                                    <input class="form-control" type="text" id="division_code" placeholder="Division Code" />
-                                </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Level Code</label>
-                                    <input class="form-control" type="text" id="level_code" placeholder="Level Code" />
-                                </div>
+                                <select class="form-control mb-3" id="department_code">
+                                    <option value="">Select Department Code</option>
+                                    @if($department_code)
+                                        @foreach ($department_code as $department)
+                                            <option value="{{ $department->department_code }}">{{ $department->department_code }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled>No Department Codes Available</option>
+                                    @endif
+                                </select>
+                                <select class="form-control mb-3" id="division_code">
+                                    <option value="">Select divison Code</option>
+                                    @if($division_code)
+                                        @foreach ($division_code as $division)
+                                            <option value="{{ $division->division_code }}">{{ $division->division_code }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled>No divison Codes Available</option>
+                                    @endif
+                                </select>
+                                <select class="form-control mb-3" id="level_code">
+                                    <option value="">Select level Code</option>
+                                    @if($level_code)
+                                        @foreach ($level_code as $level)
+                                            <option value="{{ $level->level_code }}">{{ $level->level_code }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled>No level Codes Available</option>
+                                    @endif
+                                </select>
                                 <div class="fromGroup mb-3">
                                     <label>Note</label>
                                     <textarea class="form-control" name="master_approvals_notes" id="master_approvals_notes" placeholder="Notes"></textarea>

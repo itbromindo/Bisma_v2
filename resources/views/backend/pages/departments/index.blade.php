@@ -92,10 +92,16 @@ Departments - Admin Panel
                                     <label>Notes</label>
                                     <textarea class="form-control" name="department_notes" id="department_notes" placeholder="Notes"></textarea>
                                 </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Division Code</label>
-                                    <input class="form-control" type="text" id="division_code" placeholder="Division Code" />
-                                </div>
+                                <select class="form-control mb-3" id="division_code">
+                                    <option value="">Select divison Code</option>
+                                    @if($division_code)
+                                        @foreach ($division_code as $division)
+                                            <option value="{{ $division->division_code }}">{{ $division->division_code }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled>No divison Codes Available</option>
+                                    @endif
+                                </select>
                                 <div class="row">
                                     <button type="button" class="btn btn-primary pill mt-3" onclick="save()">
                                         Save

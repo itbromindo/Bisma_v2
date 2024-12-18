@@ -92,10 +92,16 @@ Option Checklist - Admin Panel
                                     <label>Notes</label>
                                     <textarea class="form-control" name="option_checklist_notes" id="option_checklist_notes" placeholder="Notes"></textarea>
                                 </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Notes</label>
-                                    <textarea class="form-control" name="checklist_code" id="checklist_code" placeholder="Notes"></textarea>
-                                </div>
+                                <select class="form-control mb-3" id="checklist_code">
+                                    <option value="">Select Checklist Code</option>
+                                    @if($checklist_code)
+                                        @foreach ($checklist_code as $checklist)
+                                            <option value="{{ $checklist->checklist_code }}">{{ $checklist->checklist_code }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled>No Checklist Codes Available</option>
+                                    @endif
+                                </select>
                                 <div class="row">
                                     <button type="button" class="btn btn-primary pill mt-3" onclick="save()">
                                         Save

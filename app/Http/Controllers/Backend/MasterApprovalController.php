@@ -37,8 +37,16 @@ class MasterApprovalController extends Controller
             ->where('master_approvals_soft_delete', 0)
             ->paginate(15);
 
+        $department_code = Department::select('department_code')->get();
+        $division_code = Division::select('division_code')->get();
+        $level_code = Levels::select('level_code')->get();
+
+
         return view('backend.pages.master_approvals.index', [
             'masterApprovals' => $listdata,
+            'department_code' => $department_code,
+            'division_code' => $division_code,
+            'level_code' => $level_code,
         ]);
     }
 

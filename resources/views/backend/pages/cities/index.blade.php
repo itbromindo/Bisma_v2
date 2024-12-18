@@ -92,10 +92,16 @@ Cities - Admin Panel
                                     <label>Notes</label>
                                     <textarea class="form-control" name="cities_notes" id="cities_notes" placeholder="Notes"></textarea>
                                 </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Province Code</label>
-                                    <input class="form-control" type="text" id="provinces_code" placeholder="Province Code" />
-                                </div>
+                                <select class="form-control mb-3" id="provinces_code">
+                                    <option value="">Select provinces Code</option>
+                                    @if($provinces_code)
+                                        @foreach ($provinces_code as $province)
+                                            <option value="{{ $province->provinces_code }}">{{ $province->provinces_code }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled>No provinces Codes Available</option>
+                                    @endif
+                                </select>
                                 <div class="fromGroup mb-3">
                                     <label>City Status</label>
                                     <select class="form-control" id="cities_status">
