@@ -36,6 +36,7 @@ Cities - Admin Panel
                                                     <th scope="col">CITY NAME</th>
                                                     <th scope="col">NOTES</th>
                                                     <th scope="col">CODE</th>
+                                                    <th scope="col">PROVINCES CODE</th>
                                                     <th scope="col">ACTION</th>
                                                 </tr>
                                             </thead>
@@ -46,6 +47,7 @@ Cities - Admin Panel
                                                         <td>{{ $city->cities_name }}</td>
                                                         <td>{{ $city->cities_notes }}</td>
                                                         <td>{{ $city->cities_code }}</td>
+                                                        <td>{{ $city->provinces_code }}</td>
                                                         <td>
                                                             <ul class="action-btn">
                                                                 <li>
