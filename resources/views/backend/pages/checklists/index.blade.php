@@ -36,6 +36,7 @@ Checklists - Admin Panel
                                                     <th scope="col">CHECKLIST ITEMS</th>
                                                     <th scope="col">PILLAR CODE</th>
                                                     <th scope="col">NOTE</th>
+                                                    <th scope="col">CODE</th>
                                                     <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
@@ -46,6 +47,7 @@ Checklists - Admin Panel
                                                         <td>{{ $checklist->checklist_items }}</td>
                                                         <td>{{ $checklist->pillar_code }}</td>
                                                         <td>{{ $checklist->checklist_notes }}</td>
+                                                        <td>{{ $checklist->checklist_code }}</td>
                                                         <td>
                                                             <ul class="action-btn">
                                                                 <li>

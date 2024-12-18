@@ -36,6 +36,7 @@ Option Checklist - Admin Panel
                                                     <th scope="col">ITEM</th>
                                                     <th scope="col">NOTE</th>
                                                     <th scope="col">CODE</th>
+                                                    <th scope="col">CHECKLIST CODE</th>
                                                     <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
@@ -46,6 +47,7 @@ Option Checklist - Admin Panel
                                                         <td>{{ $checklist->option_checklist_items }}</td>
                                                         <td>{{ $checklist->option_checklist_notes }}</td>
                                                         <td>{{ $checklist->option_checklist_code }}</td>
+                                                        <td>{{ $checklist->checklist_code }}</td>
                                                         <td>
                                                             <ul class="action-btn">
                                                                 <li>
@@ -89,6 +91,10 @@ Option Checklist - Admin Panel
                                 <div class="fromGroup mb-3">
                                     <label>Notes</label>
                                     <textarea class="form-control" name="option_checklist_notes" id="option_checklist_notes" placeholder="Notes"></textarea>
+                                </div>
+                                <div class="fromGroup mb-3">
+                                    <label>Notes</label>
+                                    <textarea class="form-control" name="checklist_code" id="checklist_code" placeholder="Notes"></textarea>
                                 </div>
                                 <div class="row">
                                     <button type="button" class="btn btn-primary pill mt-3" onclick="save()">
@@ -134,6 +140,7 @@ Option Checklist - Admin Panel
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('option_checklist_items', document.getElementById('option_checklist_items').value);
         postdata.append('option_checklist_notes', document.getElementById('option_checklist_notes').value);
+        postdata.append('checklist_code', document.getElementById('checklist_code').value);
 
         $.ajax({
             type: "POST",
@@ -171,6 +178,7 @@ Option Checklist - Admin Panel
                 document.getElementById('option_checklist_id').value = data.option_checklist_id;
                 document.getElementById('option_checklist_items').value = data.option_checklist_items;
                 document.getElementById('option_checklist_notes').value = data.option_checklist_notes;
+                document.getElementById('checklist_code').value = data.checklist_code;
             },
             error: function(dataerror) {
                 console.log(dataerror);
@@ -183,6 +191,7 @@ Option Checklist - Admin Panel
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('option_checklist_items', document.getElementById('option_checklist_items').value);
         postdata.append('option_checklist_notes', document.getElementById('option_checklist_notes').value);
+        postdata.append('checklist_code', document.getElementById('checklist_code').value);
 
         $.ajax({
             headers: {

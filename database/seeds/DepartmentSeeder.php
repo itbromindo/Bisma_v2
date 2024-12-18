@@ -17,7 +17,7 @@ class DepartmentSeeder extends Seeder
             [
                 'department_code' => 'Dept001',
                 'division_code' => 'D001',
-                'department_name' => 'HR Department',
+                'department_name' => 'IT Dev',
                 'department_created_at' => now(),
                 'department_created_by' => 'admin',
                 'department_updated_at' => now(),
@@ -30,7 +30,7 @@ class DepartmentSeeder extends Seeder
             [
                 'department_code' => 'Dept002',
                 'division_code' => 'D002', 
-                'department_name' => 'Finance Department',
+                'department_name' => 'IT Support',
                 'department_created_at' => now(),
                 'department_created_by' => 'admin',
                 'department_updated_at' => now(),

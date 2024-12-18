@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('option_checklist', function (Blueprint $table) {
-            $table->id('option_checklist_id');
+            $table->bigIncrements('option_checklist_id');
             $table->string('option_checklist_code', 225)->unique();
             $table->string('checklist_code', 225);
             $table->string('option_checklist_items', 225);

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->bigIncrements('param_duedate_id');
             $table->string('param_duedate_code', 225)->unique();
             $table->string('param_duedate_name', 225);
-            $table->integer('param_duedate_time');
+            $table->string('param_duedate_time');
             $table->string('user_code', 225); // Relasi dengan tabel users
             $table->timestamp('param_duedate_created_at')->nullable();
             $table->string('param_duedate_created_by', 225)->nullable();

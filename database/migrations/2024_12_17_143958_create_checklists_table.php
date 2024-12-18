@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('checklists', function (Blueprint $table) {
-            $table->id('checklist_id'); // Custom primary key
+            $table->bigIncrements('checklist_id'); 
             $table->string('checklist_code', 225)->unique();
             $table->string('pillar_code', 225); 
             $table->string('checklist_items', 225);

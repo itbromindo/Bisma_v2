@@ -22,7 +22,6 @@ Master Approvals - Admin Panel
                     </div>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-xxl-8 col-xl-8 col-md-8">
                     <section class="tables">
@@ -34,29 +33,27 @@ Master Approvals - Admin Panel
                                             <thead style="text-align: center">
                                                 <tr>
                                                     <th scope="col">NO</th>
-                                                    <th scope="col">Code</th>
-                                                    <th scope="col">Name</th>
-                                                    <th scope="col">Department</th>
-                                                    <th scope="col">Division</th>
-                                                    <th scope="col">Level</th>
-                                                    <th scope="col">Notes</th>
-                                                    <th scope="col">Action</th>
+                                                    <th scope="col">APPROVAL NAME</th>
+                                                    <th scope="col">DEPARTMENT</th>
+                                                    <th scope="col">DIVISION</th>
+                                                    <th scope="col">LEVEL</th>
+                                                    <th scope="col">NOTES</th>
+                                                    <th scope="col">ACTION</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($master_approvals as $master_approval)
+                                                @foreach ($master_approvals as $approval)
                                                     <tr>
                                                         <td scope="row">{{ $loop->index + 1 }}</td>
-                                                        <td>{{ $master_approval->master_approvals_code }}</td>
-                                                        <td>{{ $master_approval->master_approvals_name }}</td>
-                                                        <td>{{ $master_approval->department_code }}</td>
-                                                        <td>{{ $master_approval->division_code }}</td>
-                                                        <td>{{ $master_approval->level_code }}</td>
-                                                        <td>{{ $master_approval->master_approvals_notes }}</td>
+                                                        <td>{{ $approval->master_approvals_name }}</td>
+                                                        <td>{{ $approval->department_code }}</td>
+                                                        <td>{{ $approval->division_code }}</td>
+                                                        <td>{{ $approval->level_code }}</td>
+                                                        <td>{{ $approval->master_approvals_notes }}</td>
                                                         <td>
                                                             <ul class="action-btn">
                                                                 <li>
-                                                                    <button onclick="delete_data('{{ $master_approval->master_approvals_id }}')">
+                                                                    <button onclick="delete_data('{{ $approval->master_approvals_id }}')">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                             <path d="M12.5 3.5L3.5 12.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                             <path d="M12.5 12.5L3.5 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
@@ -64,7 +61,7 @@ Master Approvals - Admin Panel
                                                                     </button>
                                                                 </li>
                                                                 <li>
-                                                                    <button title="Edit" onclick="showedit('{{ $master_approval->master_approvals_id }}')">
+                                                                    <button title="Edit" onclick="showedit('{{ $approval->master_approvals_id }}')">
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                             <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                             <path d="M11.5 2.5L13.5 4.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
@@ -83,32 +80,27 @@ Master Approvals - Admin Panel
                         </div>
                     </section>
                 </div>
-
                 <div class="col-xxl-4 col-xl-4 col-md-4">
                     <div class="card">
                         <div class="card-header">Form Input</div>
                         <div class="card-body">
                             <form>
-                                <input type="hidden" id="master_approval_id">
+                                <input type="hidden" id="approval_id">
                                 <div class="fromGroup mb-3">
-                                    <label>Master Approval Code</label>
-                                    <input class="form-control" type="text" id="master_approvals_code" placeholder="Master Approval Code" />
-                                </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Master Approval Name</label>
-                                    <input class="form-control" type="text" id="master_approvals_name" placeholder="Master Approval Name" required />
+                                    <label>Approval Name</label>
+                                    <input class="form-control" type="text" id="master_approvals_name" placeholder="Approval Name" />
                                 </div>
                                 <div class="fromGroup mb-3">
                                     <label>Department Code</label>
-                                    <input class="form-control" type="text" id="department_code" placeholder="Department Code" required />
+                                    <input class="form-control" type="text" id="department_code" placeholder="Department Code" />
                                 </div>
                                 <div class="fromGroup mb-3">
                                     <label>Division Code</label>
-                                    <input class="form-control" type="text" id="division_code" placeholder="Division Code" required />
+                                    <input class="form-control" type="text" id="division_code" placeholder="Division Code" />
                                 </div>
                                 <div class="fromGroup mb-3">
                                     <label>Level Code</label>
-                                    <input class="form-control" type="text" id="level_code" placeholder="Level Code" required />
+                                    <input class="form-control" type="text" id="level_code" placeholder="Level Code" />
                                 </div>
                                 <div class="fromGroup mb-3">
                                     <label>Notes</label>
@@ -120,7 +112,9 @@ Master Approvals - Admin Panel
                                     </button>
                                     <button type="button" class="btn btn-secondary2 pill btn-icon" onclick="reload()">
                                         <span class="button-content-wrapper">
-                                            <span class="button-text">New Data</span>
+                                            <span class="button-text">
+                                                New Data
+                                            </span>
                                             <span class="button-icon">
                                                 <i class="ph-arrow-left"></i>
                                             </span>
@@ -142,7 +136,7 @@ Master Approvals - Admin Panel
     }
 
     function save() {
-        let id = document.getElementById('master_approval_id').value;
+        id = document.getElementById('approval_id').value;
         if (id == '') {
             saveInput();
         } else {
@@ -191,8 +185,7 @@ Master Approvals - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                document.getElementById('master_approval_id').value = data.id;
-                document.getElementById('master_approvals_code').value = data.master_approvals_code;
+                document.getElementById('approval_id').value = data.id;
                 document.getElementById('master_approvals_name').value = data.master_approvals_name;
                 document.getElementById('department_code').value = data.department_code;
                 document.getElementById('division_code').value = data.division_code;
@@ -243,9 +236,8 @@ Master Approvals - Admin Panel
     }
 
     function delete_data(id) {
-        var postdata = {
-            _token: document.getElementsByName('_token')[0].defaultValue
-        };
+        var postdata = {};
+        postdata._token = document.getElementsByName('_token')[0].defaultValue;
 
         $.ajax({
             type: "DELETE",

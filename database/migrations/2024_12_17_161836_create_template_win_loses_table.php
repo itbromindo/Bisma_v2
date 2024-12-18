@@ -14,7 +14,7 @@ class CreateTemplateWinLosesTable extends Migration
     public function up()
     {
         Schema::create('template_win_loses', function (Blueprint $table) {
-            $table->id('template_win_loses_id');
+            $table->bigIncrements('template_win_loses_id');
             $table->string('template_win_loses_code', 225)->unique();
             $table->string('template_win_loses_title', 225);
             $table->text('template_win_loses_text');

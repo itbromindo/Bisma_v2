@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pillars', function (Blueprint $table) {
-            $table->id('pillar_id');  // Customizing the primary key name
+            $table->bigIncrements('pillar_id');  
             $table->string('pillar_code', 225)->unique();
             $table->string('pillar_items', 225);
             $table->timestamp('pillar_created_at')->nullable();
