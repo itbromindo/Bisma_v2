@@ -22,13 +22,16 @@ class CompanytypeController extends Controller
     public function index()
     {      
         $this->checkAuthorization(auth()->user(), ['company_type.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where('company_type_name', 'like', '%' . $search . '%')
         ->where('company_type_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.company_type.index', [
             'company_type' => $listdata,
+            'search' => $search
         ]);
     }
 
