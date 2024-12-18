@@ -27,15 +27,19 @@ class ChecklistController extends Controller
     public function index(): Renderable
     {
         $this->checkAuthorization(auth()->user(), ['checklists.view']);
-
+    
         $listdata = $this->model
             ->where('checklist_soft_delete', 0)
             ->paginate(15);
-
+    
+        $pillar_code = Pillar::select('pillar_code')->get(); 
+    
         return view('backend.pages.checklists.index', [
             'checklists' => $listdata,
+            'pillar_code' => $pillar_code,
         ]);
     }
+    
 
     public function show($id)
     {
@@ -99,6 +103,7 @@ class ChecklistController extends Controller
         $result = $checklist->update([
             'checklist_items' => $request->checklist_items,
             'checklist_notes' => $request->checklist_notes,
+            'pillar_code' => $request->pillar_code,
             'checklist_updated_at' => now(),
             'checklist_updated_by' => Session::get('user_code'),
         ]);

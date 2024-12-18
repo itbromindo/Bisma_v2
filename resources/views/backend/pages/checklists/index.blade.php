@@ -88,10 +88,16 @@ Checklists - Admin Panel
                                     <label>Checklist Name</label>
                                     <input class="form-control" type="text" id="checklist_items" placeholder="Checklist Name" />
                                 </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Pillar Code</label>
-                                    <input class="form-control" type="text" id="pillar_code" placeholder="Pillar Code" />
-                                </div>
+                                <select class="form-control mb-3" id="pillar_code">
+                                    <option value="">Select Pillar Code</option>
+                                    @if($pillar_code)
+                                        @foreach ($pillar_code as $pillar)
+                                            <option value="{{ $pillar->pillar_code }}">{{ $pillar->pillar_code }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled>No Pillar Codes Available</option>
+                                    @endif
+                                </select>
                                 <div class="fromGroup mb-3">
                                     <label>Note</label>
                                     <textarea class="form-control" name="checklist_notes" id="checklist_notes" placeholder="Notes"></textarea>

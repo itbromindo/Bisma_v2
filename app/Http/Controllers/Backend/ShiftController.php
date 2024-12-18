@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Company;
 use App\Models\Shift;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -35,8 +36,11 @@ class ShiftController extends Controller
             ->where('shift_soft_delete', 0)
             ->paginate(15);
 
+        $companies_code = Company::select("companies_code")->get();
+
         return view('backend.pages.shifts.index', [
             'shifts' => $listdata,
+            'companies_code' => $companies_code,
         ]);
     }
 

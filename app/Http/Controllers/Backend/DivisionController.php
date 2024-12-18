@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Company;
 use App\Models\Division;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -29,8 +30,11 @@ class DivisionController extends Controller
             ->where('division_soft_delete', 0)
             ->paginate(15);
 
+        $companies_code = Company::select('companies_code')->get();
+
         return view('backend.pages.divisions.index', [
             'divisions' => $listdata,
+            'companies_code' => $companies_code,
         ]);
     }
 

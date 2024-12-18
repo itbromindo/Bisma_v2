@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Department;
+use App\Models\Division;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Session;
@@ -30,8 +31,11 @@ class DepartmentController extends Controller
             ->where('department_soft_delete', 0)
             ->paginate(15);
 
+        $division_code = Division::select('division_code')->get();
+
         return view('backend.pages.departments.index', [
             'departments' => $listdata,
+            'division_code'=>$division_code,
         ]);
     }
 

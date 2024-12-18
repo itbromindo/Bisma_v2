@@ -9,17 +9,18 @@ class MasterApproval extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'master_approvals_id'; // Primary key
-    protected $table = 'master_approvals'; 
+    protected $table = 'master_approvals';
+
+    protected $primaryKey = 'master_approvals_id';
 
     public $timestamps = false; 
 
     protected $fillable = [
         'master_approvals_code',
-        'master_approvals_name',
-        'department_code',
-        'division_code',
-        'level_code',
+        'master_approvals_approval_name',
+        'department_code', 
+        'division_code', 
+        'level_code',       
         'master_approvals_created_at',
         'master_approvals_created_by',
         'master_approvals_updated_at',
@@ -32,7 +33,7 @@ class MasterApproval extends Model
 
     public function department()
     {
-        return $this->belongsTo(Department::class, 'department_code', 'departments_code');
+        return $this->belongsTo(Department::class, 'department_code', 'department_code');
     }
 
     public function division()

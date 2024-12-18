@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Checklist;
 use App\Models\OptionChecklist;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Support\Renderable;
@@ -34,8 +35,11 @@ class OptionChecklistController extends Controller
             ->where('option_checklist_soft_delete', 0)
             ->paginate(15);
 
+            $checklist_code = Checklist::select('checklist_code')->get();
+
         return view('backend.pages.optionchecklists.index', [
             'option_checklist' => $listData,
+            'checklist_code' => $checklist_code,
         ]);
     }
 
@@ -97,6 +101,7 @@ class OptionChecklistController extends Controller
         $result = $this->model->find($id)->update([
             'option_checklist_items' => $request->option_checklist_items,
             'option_checklist_notes' => $request->option_checklist_notes,
+            'checklist_code' => $request->checklist_code,
             'option_checklist_updated_at' => now(),
             'option_checklist_updated_by' => Session::get('user_code'),
         ]);

@@ -36,6 +36,7 @@ Homebases - Admin Panel
                                                     <th scope="col">NAME</th>
                                                     <th scope="col">NOTES</th>
                                                     <th scope="col">CODE</th>
+                                                    <th scope="col">COMPANY CODE</th>
                                                     <th scope="col">ACTION</th>
                                                 </tr>
                                             </thead>
@@ -46,6 +47,7 @@ Homebases - Admin Panel
                                                         <td>{{ $homebase->homebase_name }}</td>
                                                         <td>{{ $homebase->homebase_notes }}</td>
                                                         <td>{{ $homebase->homebase_code }}</td>
+                                                        <td>{{ $homebase->companies_code }}</td>
                                                         <td>
                                                             <ul class="action-btn">
                                                                 <li>
@@ -90,10 +92,16 @@ Homebases - Admin Panel
                                     <label>Notes</label>
                                     <textarea class="form-control" name="homebase_notes" id="homebase_notes" placeholder="Notes"></textarea>
                                 </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Company Code</label>
-                                    <input class="form-control" type="text" id="companies_code" placeholder="Company Code" />
-                                </div>
+                                <select class="form-control mb-3" id="companies_code">
+                                    <option value="">Select Company Code</option>
+                                    @if($companies_code)
+                                        @foreach ($companies_code as $company)
+                                            <option value="{{ $company->companies_code }}">{{ $company->companies_code }}</option>
+                                        @endforeach
+                                    @else
+                                        <option value="" disabled>No Company Codes Available</option>
+                                    @endif
+                                </select>
                                 <div class="row">
                                     <button type="button" class="btn btn-primary pill mt-3" onclick="save()">
                                         Save
