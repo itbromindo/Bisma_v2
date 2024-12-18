@@ -15,7 +15,7 @@ Master Approvals - Admin Panel
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
+                                <li class="breadcrumb-item"><a href='/admin'>Setting</a></li>
                                 <li class="breadcrumb-item active" aria-current="page">Master Approvals</li>
                             </ol>
                         </nav>
@@ -34,18 +34,18 @@ Master Approvals - Admin Panel
                                                 <tr>
                                                     <th scope="col">NO</th>
                                                     <th scope="col">APPROVAL NAME</th>
-                                                    <th scope="col">DEPARTMENT</th>
-                                                    <th scope="col">DIVISION</th>
-                                                    <th scope="col">LEVEL</th>
-                                                    <th scope="col">NOTES</th>
-                                                    <th scope="col">ACTION</th>
+                                                    <th scope="col">DEPARTMENT CODE</th>
+                                                    <th scope="col">DIVISION CODE</th>
+                                                    <th scope="col">LEVEL CODE</th>
+                                                    <th scope="col">NOTE</th>
+                                                    <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($master_approvals as $approval)
+                                                @foreach ($masterApprovals as $approval)
                                                     <tr>
                                                         <td scope="row">{{ $loop->index + 1 }}</td>
-                                                        <td>{{ $approval->master_approvals_name }}</td>
+                                                        <td>{{ $approval->master_approvals_approval_name }}</td>
                                                         <td>{{ $approval->department_code }}</td>
                                                         <td>{{ $approval->division_code }}</td>
                                                         <td>{{ $approval->level_code }}</td>
@@ -85,10 +85,10 @@ Master Approvals - Admin Panel
                         <div class="card-header">Form Input</div>
                         <div class="card-body">
                             <form>
-                                <input type="hidden" id="approval_id">
+                                <input type="hidden" id="master_approvals_id">
                                 <div class="fromGroup mb-3">
                                     <label>Approval Name</label>
-                                    <input class="form-control" type="text" id="master_approvals_name" placeholder="Approval Name" />
+                                    <input class="form-control" type="text" id="master_approvals_approval_name" placeholder="Approval Name" />
                                 </div>
                                 <div class="fromGroup mb-3">
                                     <label>Department Code</label>
@@ -103,7 +103,7 @@ Master Approvals - Admin Panel
                                     <input class="form-control" type="text" id="level_code" placeholder="Level Code" />
                                 </div>
                                 <div class="fromGroup mb-3">
-                                    <label>Notes</label>
+                                    <label>Note</label>
                                     <textarea class="form-control" name="master_approvals_notes" id="master_approvals_notes" placeholder="Notes"></textarea>
                                 </div>
                                 <div class="row">
@@ -131,12 +131,12 @@ Master Approvals - Admin Panel
 </div>
 
 <script>
-    function reload() {
+    function reload(){
         window.open("/admin/master_approvals", "_self");
     }
 
     function save() {
-        id = document.getElementById('approval_id').value;
+        id = document.getElementById('master_approvals_id').value;
         if (id == '') {
             saveInput();
         } else {
@@ -147,16 +147,16 @@ Master Approvals - Admin Panel
     function saveInput() {
         var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('master_approvals_name', document.getElementById('master_approvals_name').value);
-        postdata.append('department_code', document.getElementById('department_code').value);
+        postdata.append('master_approvals_approval_name', document.getElementById('master_approvals_approval_name').value); 
+        postdata.append('department_code', document.getElementById('department_code').value); 
         postdata.append('division_code', document.getElementById('division_code').value);
         postdata.append('level_code', document.getElementById('level_code').value);
-        postdata.append('master_approvals_notes', document.getElementById('master_approvals_notes').value);
+        postdata.append('master_approvals_notes', document.getElementById('master_approvals_notes').value); 
 
         $.ajax({
             type: "POST",
             url: "/admin/master_approvals",
-            data: postdata,
+            data: (postdata),
             processData: false,
             contentType: false,
             dataType: "json",
@@ -164,6 +164,9 @@ Master Approvals - Admin Panel
             success: function (data) {
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
+                    return;
+                } else if (data.status == 501) {
+                    alert(data.message);
                     return;
                 } else {
                     alert('Berhasil Disimpan');
@@ -178,16 +181,16 @@ Master Approvals - Admin Panel
         });
     }
 
-    function showedit(id) {
+    function showedit(id){
         $.ajax({
             type: "GET",
-            url: "/admin/master_approvals/" + id,
+            url: "/admin/master_approvals/"+id,
             dataType: "json",
             async: false,
             success: function (data) {
-                document.getElementById('approval_id').value = data.id;
-                document.getElementById('master_approvals_name').value = data.master_approvals_name;
-                document.getElementById('department_code').value = data.department_code;
+                document.getElementById('master_approvals_id').value = data.master_approvals_id;
+                document.getElementById('master_approvals_approval_name').value = data.master_approvals_approval_name; 
+                document.getElementById('department_code').value = data.department_code; 
                 document.getElementById('division_code').value = data.division_code;
                 document.getElementById('level_code').value = data.level_code;
                 document.getElementById('master_approvals_notes').value = data.master_approvals_notes;
@@ -201,19 +204,19 @@ Master Approvals - Admin Panel
     function updateInput(id) {
         var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('master_approvals_name', document.getElementById('master_approvals_name').value);
-        postdata.append('department_code', document.getElementById('department_code').value);
+        postdata.append('master_approvals_approval_name', document.getElementById('master_approvals_approval_name').value); 
+        postdata.append('department_code', document.getElementById('department_code').value); 
         postdata.append('division_code', document.getElementById('division_code').value);
         postdata.append('level_code', document.getElementById('level_code').value);
-        postdata.append('master_approvals_notes', document.getElementById('master_approvals_notes').value);
+        postdata.append('master_approvals_notes', document.getElementById('master_approvals_notes').value); 
 
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             type: "POST",
-            url: "/admin/master_approvals/" + id,
-            data: postdata,
+            url: "/admin/master_approvals/"+id,
+            data: (postdata),
             processData: false,
             contentType: false,
             dataType: "json",
@@ -221,6 +224,9 @@ Master Approvals - Admin Panel
             success: function (data) {
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
+                    return;
+                } else if (data.status == 501) {
+                    alert(data.message);
                     return;
                 } else {
                     alert('Berhasil Update');
@@ -235,19 +241,22 @@ Master Approvals - Admin Panel
         });
     }
 
-    function delete_data(id) {
+    function delete_data(id){
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
-
+        
         $.ajax({
             type: "DELETE",
-            url: "/admin/master_approvals/" + id,
-            data: postdata,
+            url: "/admin/master_approvals/"+id,
+            data: (postdata),
             dataType: "json",
             async: false,
             success: function (data) {
                 if (data.status == 401) {
                     alert('Form Wajib Harus diisi');
+                    return;
+                } else if (data.status == 501) {
+                    alert(data.message);
                     return;
                 } else {
                     alert('Data Berhasil Dihapus');

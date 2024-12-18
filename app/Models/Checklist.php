@@ -13,11 +13,11 @@ class Checklist extends Model
 
     protected $primaryKey = 'checklist_id';
 
-    public $timestamps = false; // Adjust if you want to use timestamps
+    public $timestamps = false; 
 
     protected $fillable = [
         'checklist_code',
-        'pillar_code', // Foreign key to the Pillar table
+        'pillar_code', 
         'checklist_items',
         'checklist_created_at',
         'checklist_created_by',
@@ -29,7 +29,6 @@ class Checklist extends Model
         'checklist_soft_delete',
     ];
 
-    // Define the relationship to Pillar
     public function pillar()
     {
         return $this->belongsTo(Pillar::class, 'pillar_code', 'pillar_code');
