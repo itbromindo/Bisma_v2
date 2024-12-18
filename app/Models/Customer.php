@@ -25,14 +25,14 @@ class Customer extends Model
         'provinces_code',
         'customers_category',
         'customers_area',
-        'customer_created_at',
-        'customer_created_by',
-        'customer_updated_at',
-        'customer_updated_by',
-        'customer_deleted_at',
-        'customer_deleted_by',
-        'customer_notes',
-        'customer_soft_delete'
+        'customers_created_at',
+        'customers_created_by',
+        'customers_updated_at',
+        'customers_updated_by',
+        'customers_deleted_at',
+        'customers_deleted_by',
+        'customers_notes',
+        'customers_soft_delete'
     ];
 
     public $timestamps = true;
