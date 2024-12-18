@@ -108,4 +108,16 @@ class DistrictController extends Controller
         session()->flash('success', __('District has been deleted.'));
         return $result;
     }
+
+    public function combo(Request $request)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->model
+            ->select('districts_code as id', 'districts_name as text')
+            ->where('districts_name', 'like', '%' . $search . '%')
+            ->where('districts_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
+    }
 }

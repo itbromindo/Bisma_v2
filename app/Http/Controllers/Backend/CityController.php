@@ -105,4 +105,16 @@ class CityController extends Controller
         session()->flash('success', __('cities has been deleted.'));
         return $result;
     }
+
+    public function combo(Request $request)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->model
+            ->select('cities_code as id', 'cities_name as text')
+            ->where('cities_name', 'like', '%' . $search . '%')
+            ->where('cities_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
+    }
 }

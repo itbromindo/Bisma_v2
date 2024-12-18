@@ -17,7 +17,6 @@ class RolesController extends Controller
     public function index(): Renderable
     {
         $this->checkAuthorization(auth()->user(), ['role.view']);
-
         return view('backend.pages.roles.index', [
             'roles' => Role::all(),
         ]);
@@ -55,7 +54,7 @@ class RolesController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['role.edit']);
 
-        $role = Role::findById($id, 'admin');
+        $role = Role::findById($id, 'web');
         if (!$role) {
             session()->flash('error', 'Role not found.');
             return back();
