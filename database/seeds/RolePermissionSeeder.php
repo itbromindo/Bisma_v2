@@ -273,6 +273,16 @@ class RolePermissionSeeder extends Seeder
                     'decission_quotation.update',
                 ]
             ],
+            [
+                'group_name' => 'Quotation Status',
+                'permissions' => [
+                    'quotation_statuses.create',
+                    'quotation_statuses.view',
+                    'quotation_statuses.edit',
+                    'quotation_statuses.delete',
+                    'quotation_statuses.update',
+                ]
+            ],
         ];
 
         // Do same for the admin guard for tutorial purposes.

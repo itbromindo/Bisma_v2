@@ -16,6 +16,7 @@ use App\Http\Controllers\Backend\ParameterDuedateController;
 use App\Http\Controllers\Backend\OptionChecklistController;
 use App\Http\Controllers\Backend\PillarController;
 use App\Http\Controllers\Backend\ProvinceController;
+use App\Http\Controllers\Backend\QuotationStatusController;
 use App\Http\Controllers\Backend\ShiftController;
 use App\Models\InquiryGood;
 use App\Models\OriginInquiry;
@@ -144,6 +145,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     //Decission Quotation Routes
     Route::resource('decission_quotations', DecissionQuotationController::class);
     Route::any('decission_quotations/{id}', [DecissionQuotationController::class, 'update']);
+    
+    //Quotation Status Routes
+    Route::resource('quotation_statuses', QuotationStatusController::class);
+    Route::any('quotation_statuses/{id}', [QuotationStatusController::class, 'update']);
    
     Route::resource('pillars', PillarController::class);
     Route::any('pillars/{id}', [PillarController::class, 'update']);
