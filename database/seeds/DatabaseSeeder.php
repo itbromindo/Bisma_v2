@@ -41,5 +41,6 @@ class DatabaseSeeder extends Seeder
         $this->call(OptionChecklistsSeeder::class);
         $this->call(TemplateWinLosesSeeder::class);
         $this->call(InquiryStatusesSeeder::class);
+        $this->call(QuotationStatusesSeeder::class);
     }
 }
