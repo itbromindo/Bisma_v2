@@ -19,17 +19,19 @@ class CompanyController extends Controller
             'companies_notes' => 'nullable|string',
         ];
     }
-
     public function index()
     {
         $this->checkAuthorization(auth()->user(), ['companies.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-            ->where('companies_soft_delete', 0)
-            ->paginate(15);
+        ->where('companies_name', 'like', '%' . $search . '%')
+        ->where('companies_soft_delete', 0)
+        ->paginate(1);
 
         return view('backend.pages.companies.index', [
             'companies' => $listdata,
+            'search' => $search,
         ]);
     }
 
@@ -101,5 +103,18 @@ class CompanyController extends Controller
         ]);
         session()->flash('success', 'Company has been deleted.');
         return $result;
+    }
+
+    public function combo(Request $request)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+
+        $listdata = $this->model
+            ->select('companies_code as id', 'companies_name as text')
+            ->where('companies_name', 'like', '%' . $search . '%')
+            ->where('companies_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
     }
 }

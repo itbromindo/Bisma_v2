@@ -25,16 +25,16 @@ class DivisionController extends Controller
     public function index()
     {
         $this->checkAuthorization(auth()->user(), ['divisions.view']);
+        $search = $_GET['search'] ?? '';
 
-        $listdata = $this->model
-            ->where('division_soft_delete', 0)
-            ->paginate(15);
+        $listdata = $this->model->where('division_name', 'like', '%' . $search . '%')->where('division_soft_delete', 0)->paginate(15);
 
-        $companies_code = Company::select('companies_code')->get();
+        $companies = Company::select('companies_code', 'companies_name')->get();
 
         return view('backend.pages.divisions.index', [
             'divisions' => $listdata,
-            'companies_code' => $companies_code,
+            'search' => $search,
+            'companies' => $companies,
         ]);
     }
 
