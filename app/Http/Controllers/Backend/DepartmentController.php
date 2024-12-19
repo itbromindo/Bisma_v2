@@ -26,16 +26,15 @@ class DepartmentController extends Controller
     public function index(): Renderable
     {
         $this->checkAuthorization(auth()->user(), ['department.view']);
+        $search = $_GET['search'] ?? '';
 
-        $listdata = $this->model
-            ->where('department_soft_delete', 0)
-            ->paginate(15);
+        $listdata = $this->model->where('department_name', 'like', '%' . $search . '%')->where('department_soft_delete', 0)->paginate(15);
 
-        $division_code = Division::select('division_code')->get();
+        $division = Division::select('division_code', 'division_name')->get();
 
         return view('backend.pages.departments.index', [
             'departments' => $listdata,
-            'division_code'=>$division_code,
+            'divisions'=>$division,
         ]);
     }
 

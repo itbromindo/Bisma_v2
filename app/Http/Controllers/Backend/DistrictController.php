@@ -27,15 +27,16 @@ class DistrictController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['districts.view']);
 
-        $listdata = $this->model
-            ->where('districts_soft_delete', 0)
-            ->paginate(15);
+        $search = $_GET['search'] ??'';
 
-        $cities_code = City::select("cities_code")->get();
+        $listdata = $this->model->where('districts_name', 'like', '%' . $search . '%')->where('districts_soft_delete', 0)->paginate(15);
+
+        $cities = City::select('cities_code', 'cities_name')->get();
 
         return view('backend.pages.districts.index', [
             'districts' => $listdata,
-            'cities_code'=> $cities_code
+            'search' => $search,
+            'cities'=> $cities
         ]);
     }
 

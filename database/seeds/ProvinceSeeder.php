@@ -23,7 +23,7 @@ class ProvinceSeeder extends Seeder
                 'provinces_deleted_at' => null,
                 'provinces_deleted_by' => null,
                 'provinces_notes' => 'Notes for Province A',
-                'provinces_status' => 1,
+                'provinces_status' => 'Active',
                 'provinces_soft_delete' => 0,
             ],
             [
@@ -36,7 +36,7 @@ class ProvinceSeeder extends Seeder
                 'provinces_deleted_at' => null,
                 'provinces_deleted_by' => null,
                 'provinces_notes' => 'Notes for Province B',
-                'provinces_status' => 1,
+                'provinces_status' => 'Active',
                 'provinces_soft_delete' => 0,
             ],
             

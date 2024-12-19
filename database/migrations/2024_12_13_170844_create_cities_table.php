@@ -23,7 +23,7 @@ return new class extends Migration
             $table->timestamp('cities_deleted_at')->nullable();
             $table->string('cities_deleted_by', 225)->nullable();
             $table->text('cities_notes')->nullable();
-            $table->string('cities_status', 225);
+            $table->string('cities_status', 225)->nullable();
             $table->integer('cities_soft_delete')->default(0); // 1 for yes, 0 for no
 
             // Optional: If you want to enforce a foreign key constraint

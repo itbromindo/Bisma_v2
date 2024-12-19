@@ -23,14 +23,15 @@ class ProvinceController extends Controller
 
     public function index()
     {
-        // $this->checkAuthorization(auth()->user(), ['provinces.view']);
+        $this->checkAuthorization(auth()->user(), ['provinces.view']);
 
-        $listdata = $this->model
-            ->where('provinces_soft_delete', 0)
-            ->paginate(15);
+        $search = $_GET['search'] ?? '';
+
+        $listdata = $this->model->where('provinces_name', 'like', '%' . $search . '%')->where('provinces_soft_delete', 0)->paginate(15);
 
         return view('backend.pages.provinces.index', [
             'provinces' => $listdata,
+            'search' => $search,
         ]);
     }
 

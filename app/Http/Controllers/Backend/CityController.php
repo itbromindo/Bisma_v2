@@ -18,6 +18,7 @@ class CityController extends Controller
         $this->mandatory = [
             'cities_name' => 'required',
             'cities_code' => 'nullable|string|max:225',
+            'cities_status' => 'nullable|string|max:225',
             'provinces_code' => 'required',
         ];
     }
@@ -26,15 +27,15 @@ class CityController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['cities.view']);
 
-        $listdata = $this->model
-            ->where('cities_soft_delete', 0)
-            ->paginate(15);
+        $search = $_GET['search'] ??'';
 
-        $provinces_code = Province::select('provinces_code')->get();
+        $listdata = $this->model->where('cities_name', 'like', '%' . $search . '%')->where('cities_soft_delete', 0)->paginate(15);
+
+        $provinces = Province::select('provinces_code', 'provinces_name')->get();
 
         return view('backend.pages.cities.index', [
             'cities' => $listdata,
-            'provinces_code' => $provinces_code
+            'provinces' => $provinces
         ]);
     }
 
