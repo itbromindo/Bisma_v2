@@ -27,7 +27,9 @@ class DivisionController extends Controller
         $this->checkAuthorization(auth()->user(), ['divisions.view']);
         $search = $_GET['search'] ?? '';
 
-        $listdata = $this->model->where('division_name', 'like', '%' . $search . '%')->where('division_soft_delete', 0)->paginate(15);
+        $listdata = $this->model
+        ->where('division_name', 'like', '%' . $search . '%')
+        ->where('division_soft_delete', 0)->paginate(15);
 
         $companies = Company::select('companies_code', 'companies_name')->get();
 

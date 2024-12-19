@@ -19,6 +19,7 @@ class DescriptionQuotationController extends Controller
             'template_inquiry_desc_code' => 'nullable',
             'template_inquiry_desc_title' => 'required',
             'template_inquiry_desc_text' => 'required',
+            'template_inquiry_desc_notes' => 'nullable',
         );
     }
 
@@ -27,14 +28,17 @@ class DescriptionQuotationController extends Controller
      */
     public function index(): Renderable
     {
-        // $this->checkAuthorization(auth()->user(), ['description_quotations.view']);
+        $this->checkAuthorization(auth()->user(), ['description_quotations.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
             ->where('template_inquiry_desc_soft_delete', 0)
+            ->where('template_inquiry_desc_title', 'like', '%' . $search . '%')
             ->paginate(15);
 
         return view('backend.pages.description_quotations.index', [
             'description_quotations' => $listdata,
+            'search' => $search
         ]);
     }
 
@@ -43,7 +47,7 @@ class DescriptionQuotationController extends Controller
      */
     public function show($id)
     {
-        // $this->checkAuthorization(auth()->user(), ['description_quotations.view']);
+        $this->checkAuthorization(auth()->user(), ['description_quotations.view']);
         $model = $this->model->find($id);
         return $model;
     }
@@ -53,7 +57,7 @@ class DescriptionQuotationController extends Controller
      */
     public function store(Request $request)
     {
-        // $this->checkAuthorization(auth()->user(), ['description_quotations.create']);
+        $this->checkAuthorization(auth()->user(), ['description_quotations.create']);
         $validator = Validator::make($request->all(), $this->mandatory);
 
         if ($validator->fails()) {
@@ -68,6 +72,7 @@ class DescriptionQuotationController extends Controller
             'template_inquiry_desc_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
             'template_inquiry_desc_title' => $request->template_inquiry_desc_title,
             'template_inquiry_desc_text' => $request->template_inquiry_desc_text,
+            'template_inquiry_desc_notes' => $request->template_inquiry_desc_notes,
             'template_inquiry_desc_created_at' => date("Y-m-d h:i:s"),
             'template_inquiry_desc_created_by' => Session::get('user_code'),
         ]);
@@ -81,7 +86,7 @@ class DescriptionQuotationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // $this->checkAuthorization(auth()->user(), ['description_quotations.edit']);
+        $this->checkAuthorization(auth()->user(), ['description_quotations.edit']);
 
         $validator = Validator::make($request->all(), $this->mandatory);
 
@@ -96,6 +101,7 @@ class DescriptionQuotationController extends Controller
         $result = $this->model->find($id)->update([
             'template_inquiry_desc_title' => $request->template_inquiry_desc_title,
             'template_inquiry_desc_text' => $request->template_inquiry_desc_text,
+            'template_inquiry_desc_notes' => $request->template_inquiry_desc_notes,
             'template_inquiry_desc_updated_at' => date("Y-m-d h:i:s"),
             'template_inquiry_desc_updated_by' => Session::get('user_code'),
         ]);
@@ -109,7 +115,7 @@ class DescriptionQuotationController extends Controller
      */
     public function destroy($id)
     {
-        // $this->checkAuthorization(auth()->user(), ['description_quotations.delete']);
+        $this->checkAuthorization(auth()->user(), ['description_quotations.delete']);
 
         $result = $this->model->find($id)->update([
             'template_inquiry_desc_deleted_at' => date("Y-m-d h:i:s"),

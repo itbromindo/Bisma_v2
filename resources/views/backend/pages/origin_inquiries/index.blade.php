@@ -23,7 +23,26 @@ Origin Inquiries - Admin Panel
                 </div>
             </div>
             <div class="row">
-                <div class="col-xxl-8 col-xl-8 col-md-8">
+            <div class="col-xxl-12 col-xl-12 col-md-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>Origin Inquiry</h5>
+                            <div class="d-flex align-items-center">
+                                <div class="app-main-search me-2">
+                                    <form action="/admin/origin_inquiries" method="GET" class="d-flex">
+                                        <div class="input-box d-flex">
+                                            <input type="text" name="search" id="search" value="{{$search ?? ''}}" class="form-control" placeholder="Search Here">
+                                            <button type="submit" class="btn btn-light ms-2">
+                                                <img src="{{ asset('backend/assets/images/svg/search.svg')}}" alt="Search" draggable="false">
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput">Tambah Data</button>
+                            </div>
+                        </div>
+
+                <div class="card-body">
                     <section class="tables">
                         <div class="row">
                             <div class="col-lg-12">
@@ -32,7 +51,7 @@ Origin Inquiries - Admin Panel
                                         <table class="table align-middle table-basic ">
                                             <thead style="text-align: center">
                                                 <tr>
-                                                    <th scope="col">NO</th>
+                                                    <th scope="col" width="5%">NO</th>
                                                     <th scope="col">Name</th>
                                                     <th scope="col">Notes</th>
                                                     <th scope="col">CODE</th>
@@ -42,29 +61,25 @@ Origin Inquiries - Admin Panel
                                             <tbody>
                                                 @foreach ($origin_inquiries as $origin_inquiry)
                                                     <tr>
-                                                        <td scope="row">{{ $loop->index+1 }}</td>
+                                                        <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
                                                         <td>{{ $origin_inquiry->origin_inquiry_name }}</td>
                                                         <td>{{ $origin_inquiry->origin_inquiry_notes }}</td>
                                                         <td>{{ $origin_inquiry->origin_inquiry_code }}</td>
-                                                        <td>
-                                                            <ul class="action-btn">
-                                                                <li>
-                                                                    <button onclick="delete_data('{{ $origin_inquiry->origin_inquiry_id }}')">
-                                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                            <path d="M12.5 3.5L3.5 12.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            <path d="M12.5 12.5L3.5 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                        </svg>
-                                                                    </button>
-                                                                </li>
-                                                                <li>
-                                                                    <button title="Edit" onclick="showedit('{{$origin_inquiry->origin_inquiry_id }}')">
-                                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                            <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            <path d="M11.5 2.5L13.5 4.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                        </svg>
-                                                                    </button>
-                                                                </li>
-                                                            </ul>
+                                                        <td class="text-center">
+                                                            <div class="d-flex justify-content-center gap-2">
+                                                            <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $origin_inquiry->origin_inquiry_id }}')">
+                                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                            </svg>
+                                                            </button>
+                                                                <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('{{ $origin_inquiry->origin_inquiry_id }}')">
+                                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                            </svg>
+                                                                </button>
+                                                            </div>   
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -74,12 +89,53 @@ Origin Inquiries - Admin Panel
                                 </div>
                             </div>
                         </div>
-                    </section>
+                        <!-- Pagination -->
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination justify-content-end">
+                                        <!-- Previous Page Link -->
+                                        <li class="page-item {{ $origin_inquiries->onFirstPage() ? 'disabled' : '' }}">
+                                            <a class="page-link" href="{{ $origin_inquiries->appends(['search' => $search ?? request('search')])->previousPageUrl() }}" aria-label="Previous">
+                                                <i class="ph-arrow-left"></i>
+                                            </a>
+                                        </li>
+
+                                        <!-- Page Number Links -->
+                                        @foreach ($origin_inquiries->links()->elements[0] as $page => $url)
+                                            <li class="page-item {{ $origin_inquiries->currentPage() == $page ? 'active' : '' }}">
+                                                <a class="page-link" href="{{ $url }}">{{ sprintf('%02d', $page) }}</a>
+                                            </li>
+                                        @endforeach
+
+                                        <!-- Next Page Link -->
+                                        <li class="page-item {{ $origin_inquiries->hasMorePages() ? '' : 'disabled' }}">
+                                            <a class="page-link" href="{{ $origin_inquiries->appends(['search' => $search ?? request('search')])->nextPageUrl() }}" aria-label="Next">
+                                                <i class="ph-arrow-right"></i>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                            </section>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-xxl-4 col-xl-4 col-md-4">
-                    <div class="card">
-                        <div class="card-header">Form Input</div>
-                        <div class="card-body">
+            </div>
+        </div>
+    </div>
+</div>
+                <div class="modal fade" id="modalinput" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Form Input</h5>
+                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
                             <form>
                                 <input type="hidden" id="origin_inquiry_id">
                                 <div class="fromGroup mb-3">
@@ -90,30 +146,16 @@ Origin Inquiries - Admin Panel
                                     <label>Notes</label>
                                     <textarea class="form-control" name="origin_inquiry_notes" id="origin_inquiry_notes" placeholder="Enter Notes"></textarea>
                                 </div>
-                                <div class="row">
-                                    <button type="button" class="btn btn-primary pill mt-3" onclick="save()">
-                                        Save
-                                    </button>
-                                    <button type="button" class="btn btn-secondary2 pill btn-icon" onclick="reload()">
-                                        <span class="button-content-wrapper">
-                                            <span class="button-text">
-                                                New Data
-                                            </span>
-                                            <span class="button-icon">
-                                                <i class="ph-arrow-left"></i>
-                                            </span>
-                                        </span>
-                                    </button>
-                                </div>
                             </form>
                         </div>
-                    </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                            <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                        </div>
                 </div>
-            </div>
         </div>
-    </div>
 </div>
-
 <script>
     function reload(){
         window.open("/admin/origin_inquiries", "_self");
@@ -169,6 +211,7 @@ Origin Inquiries - Admin Panel
                 document.getElementById('origin_inquiry_id').value = data.origin_inquiry_id; 
                 document.getElementById('origin_inquiry_name').value = data.origin_inquiry_name; 
                 document.getElementById('origin_inquiry_notes').value = data.origin_inquiry_notes;
+                $('#modalinput').modal('show');
             },
             error: function (dataerror) {
                 console.log(dataerror);
@@ -214,6 +257,7 @@ Origin Inquiries - Admin Panel
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
 
+        if (confirm('Apakah Anda Yakin Menghapus Data Ini?')) {
         $.ajax({
             type: "DELETE",
             url: "/admin/origin_inquiries/"+id,
@@ -221,15 +265,24 @@ Origin Inquiries - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                alert('Successfully deleted');
-                setTimeout(function () {
-                    window.open("/admin/origin_inquiries", "_self");
-                }, 500);
-            },
+                if (data.status == 401) {
+                        alert('Form Wajib Harus diisi');
+                        return;
+                    } else if (data.status == 501) {
+                        alert(data.message);
+                        return;
+                    } else {
+                        alert('Data Berhasil Dihapus');
+                        setTimeout(function () {
+                            window.open("/admin/origin_inquiries", "_self");
+                        }, 500);
+                    }
+                },
             error: function (dataerror) {
                 console.log(dataerror);
             }
         });
+    }
     }
 </script>
 @endsection

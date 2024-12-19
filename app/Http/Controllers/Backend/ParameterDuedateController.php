@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\ParameterDuedate;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
@@ -16,10 +17,10 @@ class ParameterDuedateController extends Controller
     {
         $this->model = new ParameterDuedate();
         $this->mandatory = array(
-            'param_duedate_code' => 'nullable',
-            'param_duedate_name' => 'required',
+            'param_duedate_code' => 'nullable|string|max:225',
+            'param_duedate_name' => 'required|string|max:225',
             'param_duedate_time' => 'required|integer',
-            'param_duedate_notes' => 'required',
+            'param_duedate_notes' => 'nullable|string',
             'user_code' => 'required|string|max:225',
         );
     }
@@ -30,13 +31,19 @@ class ParameterDuedateController extends Controller
     public function index(): Renderable
     {
         $this->checkAuthorization(auth()->user(), ['parameter_duedate.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+            ->where('param_duedate_name', 'like', '%' . $search . '%')
             ->where('param_duedate_soft_delete', 0)
             ->paginate(15);
 
+        $users = User::select('user_code', 'users_name')->get();
+
         return view('backend.pages.parameter_duedates.index', [
             'parameter_duedates' => $listdata,
+            'search' => $search,
+            'users' => $users
         ]);
     }
 
@@ -77,7 +84,7 @@ class ParameterDuedateController extends Controller
         ]);
 
         session()->flash('success', 'Parameter Due Date has been created.');
-        return $request;
+        return $result;
     }
 
     /**
@@ -96,7 +103,16 @@ class ParameterDuedateController extends Controller
             return response()->json($messages);
         }
 
-        $result = $this->model->find($id)->update([
+        $model = $this->model->find($id);
+
+        if (!$model) {
+            return response()->json([
+                'data' => 'Parameter not found.',
+                'status' => 404,
+            ]);
+        }
+
+        $result = $model->update([
             'param_duedate_name' => $request->param_duedate_name,
             'param_duedate_time' => $request->param_duedate_time,
             'param_duedate_notes' => $request->param_duedate_notes,
@@ -106,7 +122,7 @@ class ParameterDuedateController extends Controller
         ]);
 
         session()->flash('success', 'Parameter Due Date has been updated.');
-        return $request;
+        return $result;
     }
 
     /**

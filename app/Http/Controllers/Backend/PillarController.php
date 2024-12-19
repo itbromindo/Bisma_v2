@@ -25,13 +25,16 @@ class PillarController extends Controller
     public function index(): Renderable
     {
         $this->checkAuthorization(auth()->user(), ['pillars.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
             ->where('pillar_soft_delete', 0)
+            ->where('pillar_items', 'like', '%' . $search . '%')
             ->paginate(15);
 
         return view('backend.pages.pillars.index', [
             'pillars' => $listdata,
+            'search' => $search,
         ]);
     }
 

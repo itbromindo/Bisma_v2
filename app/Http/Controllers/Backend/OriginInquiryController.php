@@ -25,13 +25,16 @@ class OriginInquiryController extends Controller
     public function index(): Renderable
     {        
         $this->checkAuthorization(auth()->user(), ['origin_inquiries.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
             ->where('origin_inquiry_soft_delete', 0)
+            ->where('origin_inquiry_name', 'like', '%' . $search . '%')
             ->paginate(15);
 
         return view('backend.pages.origin_inquiries.index', [
             'origin_inquiries' => $listdata,
+            'search' => $search
         ]);
     }
 

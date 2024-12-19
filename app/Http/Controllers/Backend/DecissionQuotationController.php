@@ -28,12 +28,16 @@ class DecissionQuotationController extends Controller
     public function index(): Renderable
     {
         $this->checkAuthorization(auth()->user(), ['decission_quotation.view']);
+        $search = $_GET['search'] ?? '';
+
         $listdata = $this->model
             ->where('template_decission_quotation_soft_delete', 0)
+            ->where('template_decission_quotation_title', 'like', '%' . $search . '%')
             ->paginate(15);
 
         return view('backend.pages.decission_quotations.index', [
             'decission_quotations' => $listdata,
+            'search' => $search,
         ]);
     }
 

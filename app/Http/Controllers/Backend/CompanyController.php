@@ -27,7 +27,7 @@ class CompanyController extends Controller
         $listdata = $this->model
         ->where('companies_name', 'like', '%' . $search . '%')
         ->where('companies_soft_delete', 0)
-        ->paginate(1);
+        ->paginate(15);
 
         return view('backend.pages.companies.index', [
             'companies' => $listdata,

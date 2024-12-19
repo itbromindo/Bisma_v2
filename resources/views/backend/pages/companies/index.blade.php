@@ -90,7 +90,7 @@ Company - Admin Panel
                                     </div>
                                 </div>
 
-<div class="row">
+                                <div class="row">
                                     <div class="col-lg-12">
                                         <nav aria-label="Page navigation">
                                             <ul class="pagination justify-content-end">
