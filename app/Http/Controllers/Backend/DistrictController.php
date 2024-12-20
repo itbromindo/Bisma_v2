@@ -31,7 +31,7 @@ class DistrictController extends Controller
 
         $listdata = $this->model->where('districts_name', 'like', '%' . $search . '%')->where('districts_soft_delete', 0)->paginate(15);
 
-        $cities = City::select('cities_code', 'cities_name')->get();
+        $cities = City::select('cities_code', 'cities_name')->orderBy('cities_name', 'asc')->get();
 
         return view('backend.pages.districts.index', [
             'districts' => $listdata,

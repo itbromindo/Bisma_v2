@@ -36,7 +36,7 @@ class ShiftController extends Controller
 
         $listdata = $this->model->where('shift_name', 'like', '%'. $search . '%')->where('shift_soft_delete', 0)->paginate(15);
 
-        $companies = Company::select("companies_code", "companies_name")->get();
+        $companies = Company::select("companies_code", "companies_name")->orderBy('companies_name', 'asc')->get();
 
         return view('backend.pages.shifts.index', [
             'shifts' => $listdata,

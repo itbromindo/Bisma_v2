@@ -56,6 +56,7 @@ Provinces - Admin Panel
                                                         <tr>
                                                             <th scope="col" width="5%">NO</th>
                                                             <th scope="col">NAME</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NOTES</th>
                                                             <th scope="col">STATUS</th>
                                                             <th scope="col">Action</th>
@@ -68,6 +69,7 @@ Provinces - Admin Panel
                                                                     {{ ($provinces->currentPage() - 1) * $provinces->perPage() + $loop->iteration }}
                                                                 </td>
                                                                 <td>{{ $province->provinces_name }}</td>
+                                                                <td>{{ $province->provinces_code }}</td>
                                                                 <td>{{ $province->provinces_notes }}</td>
                                                                 <td>{{ $province->provinces_status }}</td>
                                                                 <td class="text-center">
@@ -209,6 +211,8 @@ Provinces - Admin Panel
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     function reload() {
         window.open("/admin/provinces", "_self");
@@ -227,12 +231,21 @@ Provinces - Admin Panel
             _token: '{{ csrf_token() }}'
         };
 
-        $.post('/admin/provinces', data, function (response) {
+        $.post('/admin/provinces', data, function(response) {
             if (response.status === 401) {
-                alert(response.data);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: response.data
+                });
             } else {
-                alert('Data Saved!');
-                location.reload();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Data Saved!',
+                }).then(function() {
+                    location.reload();
+                });
             }
         });
     }
@@ -249,33 +262,57 @@ Provinces - Admin Panel
             url: `/admin/provinces/${id}`,
             type: 'PUT',
             data: data,
-            success: function (response) {
+            success: function(response) {
                 if (response.status === 401) {
-                    alert(response.data);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.data
+                    });
                 } else {
-                    alert('Data Updated!');
-                    location.reload();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Updated!',
+                    }).then(function() {
+                        location.reload();
+                    });
                 }
             }
         });
     }
 
     function delete_data(id) {
-        if (confirm('Are you sure?')) {
-            $.ajax({
-                url: `/admin/provinces/${id}`,
-                type: 'DELETE',
-                data: { _token: '{{ csrf_token() }}' },
-                success: function (response) {
-                    alert('Data Deleted!');
-                    location.reload();
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/provinces/${id}`,
+                    type: 'DELETE',
+                    data: { _token: '{{ csrf_token() }}' },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            text: 'Data has been deleted.',
+                        }).then(function() {
+                            location.reload();
+                        });
+                    }
+                });
+            }
+        });
     }
 
     function showedit(id) {
-        $.get(`/admin/provinces/${id}`, function (data) {
+        $.get(`/admin/provinces/${id}`, function(data) {
             document.getElementById('province_id').value = data.provinces_id;
             document.getElementById('provinces_name').value = data.provinces_name;
             document.getElementById('provinces_notes').value = data.provinces_notes;
@@ -284,4 +321,5 @@ Provinces - Admin Panel
         });
     }
 </script>
+
 @endsection

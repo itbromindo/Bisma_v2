@@ -199,6 +199,9 @@ Shifts - Admin Panel
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     function reload() {
         window.open("/admin/shifts", "_self");
@@ -223,10 +226,19 @@ Shifts - Admin Panel
 
         $.post('/admin/shifts', data, function(response) {
             if (response.status === 401) {
-                alert(response.data);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: response.data
+                });
             } else {
-                alert('Data Saved!');
-                location.reload();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Data Saved!',
+                }).then(function() {
+                    location.reload();
+                });
             }
         });
     }
@@ -249,27 +261,51 @@ Shifts - Admin Panel
             data: data,
             success: function(response) {
                 if (response.status === 401) {
-                    alert(response.data);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.data
+                    });
                 } else {
-                    alert('Data Updated!');
-                    location.reload();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Updated!',
+                    }).then(function() {
+                        location.reload();
+                    });
                 }
             }
         });
     }
 
     function delete_data(id) {
-        if (confirm('Are you sure?')) {
-            $.ajax({
-                url: `/admin/shifts/${id}`,
-                type: 'DELETE',
-                data: { _token: '{{ csrf_token() }}' },
-                success: function(response) {
-                    alert('Data Deleted!');
-                    location.reload();
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/shifts/${id}`,
+                    type: 'DELETE',
+                    data: { _token: '{{ csrf_token() }}' },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            text: 'Data has been deleted.',
+                        }).then(function() {
+                            location.reload();
+                        });
+                    }
+                });
+            }
+        });
     }
 
     function showedit(id) {
@@ -286,4 +322,5 @@ Shifts - Admin Panel
         });
     }
 </script>
+
 @endsection

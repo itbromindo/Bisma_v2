@@ -37,9 +37,9 @@ class MasterApprovalController extends Controller
 
         $listdata = $this->model->where('master_approvals_approval_name', 'like', '%' . $search . '%')->where('master_approvals_soft_delete', 0)->paginate(15);
 
-        $departments = Department::select('department_code', 'department_name')->get();
-        $division = Division::select('division_code', 'division_name')->get();
-        $levels = Levels::select('level_code','level_name' )->get();
+        $departments = Department::select('department_code', 'department_name')->orderBy('department_name', 'asc')->get();
+        $division = Division::select('division_code', 'division_name')->orderBy('division_name', 'asc')->get();
+        $levels = Levels::select('level_code','level_name')->orderBy('level_name','asc')->get();
 
 
         return view('backend.pages.master_approvals.index', [
@@ -133,20 +133,37 @@ class MasterApprovalController extends Controller
 
     public function destroy($id)
     {
+        // Authorization check
         $this->checkAuthorization(auth()->user(), ['master_approvals.delete']);
-
+    
+        // Find the record
         $masterApproval = $this->model->find($id);
+    
+        // If not found
         if (!$masterApproval) {
-            return response()->json(['data' => 'Master Approval not found', 'status' => 404]);
+            return response()->json([
+                'data' => 'Master Approval not found',
+                'status' => 404
+            ], 404);
         }
-
+    
+        // Soft delete logic
         $result = $masterApproval->update([
             'master_approvals_deleted_at' => now(),
             'master_approvals_deleted_by' => Session::get('user_code'),
             'master_approvals_soft_delete' => 1,
         ]);
 
-        session()->flash('success', 'Master Approval has been deleted.');
-        return $result;
+        if ($result) {
+            return response()->json([
+                'status' => 200,
+                'message' => 'Data has been deleted successfully.'
+            ]);
+        }
+        return response()->json([
+            'status' => 500,
+            'message' => 'Failed to delete Master Approval.'
+        ], 500);
     }
+    
 }

@@ -31,7 +31,7 @@ class CityController extends Controller
 
         $listdata = $this->model->where('cities_name', 'like', '%' . $search . '%')->where('cities_soft_delete', 0)->paginate(15);
 
-        $provinces = Province::select('provinces_code', 'provinces_name')->get();
+        $provinces = Province::select('provinces_code', 'provinces_name')->orderBy('provinces_name', 'asc')->get();
 
         return view('backend.pages.cities.index', [
             'cities' => $listdata,

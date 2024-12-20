@@ -30,7 +30,7 @@ class DepartmentController extends Controller
 
         $listdata = $this->model->where('department_name', 'like', '%' . $search . '%')->where('department_soft_delete', 0)->paginate(15);
 
-        $division = Division::select('division_code', 'division_name')->get();
+        $division = Division::select('division_code', 'division_name')->orderBy('division_name', 'asc')->get();
 
         return view('backend.pages.departments.index', [
             'departments' => $listdata,

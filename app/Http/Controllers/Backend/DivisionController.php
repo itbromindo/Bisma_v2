@@ -31,7 +31,7 @@ class DivisionController extends Controller
         ->where('division_name', 'like', '%' . $search . '%')
         ->where('division_soft_delete', 0)->paginate(15);
 
-        $companies = Company::select('companies_code', 'companies_name')->get();
+        $companies = Company::select('companies_code', 'companies_name')->orderBy('companies_name', 'asc')->get();
 
         return view('backend.pages.divisions.index', [
             'divisions' => $listdata,

@@ -30,7 +30,7 @@ class HomebaseController extends Controller
 
         $listdata = $this->model->where('homebase_name','like', '%'. $search. '%')->where('homebase_soft_delete', 0)->paginate(15);
 
-        $companies = Company::select('companies_code', 'companies_name')->get();
+        $companies = Company::select('companies_code', 'companies_name')->orderBy('companies_name', 'asc')->get();
 
         return view('backend.pages.homebases.index', [
             'homebases' => $listdata,
