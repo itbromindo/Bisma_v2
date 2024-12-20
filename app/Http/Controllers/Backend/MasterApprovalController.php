@@ -33,20 +33,21 @@ class MasterApprovalController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['master_approvals.view']);
 
-        $listdata = $this->model
-            ->where('master_approvals_soft_delete', 0)
-            ->paginate(15);
+        $search = $_GET['search'] ??'';
 
-        $department_code = Department::select('department_code')->get();
-        $division_code = Division::select('division_code')->get();
-        $level_code = Levels::select('level_code')->get();
+        $listdata = $this->model->where('master_approvals_approval_name', 'like', '%' . $search . '%')->where('master_approvals_soft_delete', 0)->paginate(15);
+
+        $departments = Department::select('department_code', 'department_name')->get();
+        $division = Division::select('division_code', 'division_name')->get();
+        $levels = Levels::select('level_code','level_name' )->get();
 
 
         return view('backend.pages.master_approvals.index', [
             'masterApprovals' => $listdata,
-            'department_code' => $department_code,
-            'division_code' => $division_code,
-            'level_code' => $level_code,
+            'search' => $search,
+            'departments' => $departments,
+            'divisions' => $division,
+            'levels' => $levels,
         ]);
     }
 

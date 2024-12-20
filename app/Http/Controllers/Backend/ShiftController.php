@@ -32,15 +32,16 @@ class ShiftController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['shifts.view']);
 
-        $listdata = $this->model
-            ->where('shift_soft_delete', 0)
-            ->paginate(15);
+        $search = $_GET['search'] ?? '';
 
-        $companies_code = Company::select("companies_code")->get();
+        $listdata = $this->model->where('shift_name', 'like', '%'. $search . '%')->where('shift_soft_delete', 0)->paginate(15);
+
+        $companies = Company::select("companies_code", "companies_name")->get();
 
         return view('backend.pages.shifts.index', [
             'shifts' => $listdata,
-            'companies_code' => $companies_code,
+            'search' => $search,
+            'companies' => $companies,
         ]);
     }
 

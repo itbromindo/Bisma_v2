@@ -36,6 +36,6 @@ class Shift extends Model
 
     public function company()
     {
-        return $this->belongsTo(Company::class, 'companies_code', 'code');
+        return $this->belongsTo(Company::class, 'companies_code', 'companies_code');
     }
 }

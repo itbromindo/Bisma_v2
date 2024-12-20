@@ -26,15 +26,16 @@ class HomebaseController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['homebases.view']);
 
-        $listdata = $this->model
-            ->where('homebase_soft_delete', 0)
-            ->paginate(15);
+        $search = $_GET['search'] ?? '';
 
-        $companies_code = Company::select('companies_code')->get();
+        $listdata = $this->model->where('homebase_name','like', '%'. $search. '%')->where('homebase_soft_delete', 0)->paginate(15);
+
+        $companies = Company::select('companies_code', 'companies_name')->get();
 
         return view('backend.pages.homebases.index', [
             'homebases' => $listdata,
-            'companies_code' => $companies_code,
+            'companies' => $companies,
+            'search' => $search
         ]);
     }
 
