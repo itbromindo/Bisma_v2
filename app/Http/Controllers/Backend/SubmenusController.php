@@ -27,13 +27,16 @@ class SubmenusController extends Controller
     public function index(): Renderable
     {        
         $this->checkAuthorization(auth()->user(), ['submenus.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where('submenus_name', 'like', '%' . $search . '%')
         ->where('submenus_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.submenus.index', [
             'submenus' => $listdata,
+            'search' => $search,
         ]);
     }
 

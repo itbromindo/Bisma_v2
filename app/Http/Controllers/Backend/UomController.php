@@ -22,13 +22,16 @@ class UomController extends Controller
     public function index()
     {      
         $this->checkAuthorization(auth()->user(), ['uom.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where('uom_name', 'like', '%' . $search . '%')
         ->where('uom_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.uom.index', [
             'uom' => $listdata,
+            'search' => $search
         ]);
     }
 

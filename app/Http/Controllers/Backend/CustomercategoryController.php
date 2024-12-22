@@ -22,13 +22,16 @@ class CustomercategoryController extends Controller
     public function index()
     {      
         $this->checkAuthorization(auth()->user(), ['customer_category.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where('customer_category_name', 'like', '%' . $search . '%')
         ->where('customer_category_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.customer_category.index', [
             'customer_category' => $listdata,
+            'search' => $search
         ]);
     }
 

@@ -27,13 +27,16 @@ class ModulsController extends Controller
     public function index(): Renderable
     {        
         $this->checkAuthorization(auth()->user(), ['moduls.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where('moduls_name', 'like', '%' . $search . '%')
         ->where('moduls_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.moduls.index', [
             'moduls' => $listdata,
+            'search' => $search,
         ]);
     }
 

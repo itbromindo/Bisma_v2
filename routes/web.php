@@ -100,6 +100,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('departments', DepartmentController::class);
     Route::resource('departments', DepartmentController::class);
     Route::any('departments/{id}', [DepartmentController::class, 'update']);
+    Route::get('combodepartments', [App\Http\Controllers\Backend\DepartmentController::class, 'combo']);
     
     // Homebase Routes
     Route::resource('homebases', HomebaseController::class);

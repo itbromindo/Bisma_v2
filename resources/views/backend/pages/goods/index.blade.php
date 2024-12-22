@@ -25,319 +25,324 @@ Goods - Admin Panel
             </div>
             <div class="row">
                 <div class="col-xl-12 pt-0 px-2 pl-md-0 pr-md-2">
-                    <div class="card border-top-primary">
-
-                        <div class="card-body">
-                            <ul class="nav nav-tabs nav-tabs-bottom">
-                                <li class="nav-item">
-                                    <a href="#bottom-tab1" id="tab1" class="nav-link active font-weight-bold text-uppercase font-size-lg"
-                                    data-bs-toggle="tab">
-                                        
-                                        List Barang
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#bottom-tab2" id="tab2" class="nav-link font-weight-bold text-uppercase font-size-lg"
-                                    data-bs-toggle="tab">
-                                        
-                                        Tambah/Edit Barang
-                                    </a>
-                                </li>
-                            </ul>
-
-                            <div class="tab-content">
-                                <div class="tab-pane fade show active" id="bottom-tab1">
-                                    <div class="card">
-                                        <div class="card-body">
-                                            <div class="col-md-12 pt-0 pl-1 pr-1">
-                                                <section class="tables">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <div class="table-wrapper">
-                                                                <div class="table-content table-responsive">
-                                                                    <table class="table align-middle table-basic ">
-                                                                        <thead style="text-align: center">
-                                                                            <tr>
-                                                                                <th scope="col">NO</th>
-                                                                                <th scope="col">NAME</th>
-                                                                                <th scope="col">HARGA</th>
-                                                                                <th scope="col">NOTE</th>
-                                                                                <th scope="col">Action</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            @foreach ($barang as $brg)
-                                                                                <tr>
-                                                                                    <td scope="row">{{ $loop->index+1 }}</td>
-                                                                                    <td>{{ $brg->goods_name }}</td>
-                                                                                    <td>{{ $brg->goods_price }}</td>
-                                                                                    <td>{{ $brg->goods_notes }}</td>
-                                                                                    <td>
-                                                                                        <ul class="action-btn">
-                                                                                            <li>
-                                                                                                <button onclick="delete_data('{{ $brg->goods_id }}')">
-                                                                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                                        <path d="M12.5 3.5L3.5 12.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                                        <path d="M12.5 12.5L3.5 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                                    </svg>
-                                                                                                </button>
-                                                                                            </li>
-                                                                                            <li>
-                                                                                                <button title="Edit" onclick="showedit('{{ $brg->goods_id }}')">
-                                                                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                                        <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                                        <path d="M11.5 2.5L13.5 4.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                                    </svg>
-                                                                                                </button>
-                                                                                            </li>
-
-                                                                                        </ul>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            @endforeach
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </section>
-                                            </div>
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>Master Barang</h5>
+                            <div class="d-flex align-items-center">
+                                <div class="app-main-search me-2">
+                                    <form action="/admin/goods" method="GET" class="d-flex">
+                                        <div class="input-box d-flex">
+                                            <input type="text" name="search" id="search" value="{{$search ?? ''}}" class="form-control" placeholder="Search Here">
+                                            <button type="submit" class="btn btn-light ms-2">
+                                                <img src="{{ asset('backend/assets/images/svg/search.svg')}}" alt="Search" draggable="false">
+                                            </button>
                                         </div>
-                                    </div>
+                                    </form>
                                 </div>
-
-                                <div class="tab-pane fade" id="bottom-tab2">
-                                    <div class="col-md-12 pt-0 pl-1 pr-1">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <form>
-                                                    <input type="hidden" id="goods_id">
-                                                    <div class="row">
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>Nama</label>
-                                                                <input class="form-control" type="text" id="goods_name" placeholder="Nama Produk" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>FOTO</label>
-                                                                <input class="form-control" type="file" id="goods_photo" placeholder="Foto Produk" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="form-group mb-3">
-                                                                <label>PERUNTUKAN</label>
-                                                                <div class="row" id="goods_usage">
-                                                                    <!-- Radio Option 1 -->
-                                                                    <div class="col-6">
-                                                                        <div class="form-check from-radio-custom mb-3">
-                                                                            <input class="form-check-input" type="radio" name="goods_usage" id="inventory_office" value="inventory_office">
-                                                                            <label class="form-check-label" for="inventory_office">
-                                                                                Inventory Kantor
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <!-- Radio Option 2 -->
-                                                                    <div class="col-6">
-                                                                        <div class="form-check from-radio-custom mb-3">
-                                                                            <input class="form-check-input" type="radio" name="goods_usage" id="warehouse" value="warehouse">
-                                                                            <label class="form-check-label" for="warehouse">
-                                                                                Gudang
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>SPESIFIKASI</label>
-                                                                <div class="row" id="goods_specification">
-                                                                    <!-- Radio Option 1 -->
-                                                                    <div class="col-6">
-                                                                        <div class="form-check from-radio-custom mb-3">
-                                                                            <input class="form-check-input" type="radio" name="goods_specification" id="umum" value="umum">
-                                                                            <label class="form-check-label" for="umum">
-                                                                                Umum
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <!-- Radio Option 2 -->
-                                                                    <div class="col-6">
-                                                                        <div class="form-check from-radio-custom mb-3">
-                                                                            <input class="form-check-input" type="radio" name="goods_specification" id="spesial" value="spesial">
-                                                                            <label class="form-check-label" for="spesial">
-                                                                                Spesial
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>BRAND</label>
-                                                                <select class="form-control" id="brand_code" style="width: 100%;">
-                                                                    <option value="" disabled selected>Pilih Brand</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>HARGA POKOK</label>
-                                                                <input class="form-control" type="number" id="goods_price" placeholder="Harga Pokok" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>STOK BARANG</label>
-                                                                <input class="form-control" type="number" id="goods_stock" placeholder="Stok Barang" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>MARGIN END USER (%)</label>
-                                                                <input class="form-control" type="number" id="goods_end_user_margin" placeholder="Margin (%)" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>MARGIN KONTRAKTOR (%)</label>
-                                                                <input class="form-control" type="number" id="goods_contractor_margin" placeholder="Margin (%)" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>MARGIN RESELLER (%)</label>
-                                                                <input class="form-control" type="number" id="goods_reseller_margin" placeholder="Margin (%)" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>MARGIN PRICE LIST (%)</label>
-                                                                <input class="form-control" type="number" id="goods_pricelist_margon" placeholder="Margin (%)" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>HARGA END USER</label>
-                                                                <input class="form-control" type="number" id="goods_end_user_price" placeholder="Harga" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>HARGA KONTRAKTOR</label>
-                                                                <input class="form-control" type="number" id="goods_contractor_price" placeholder="Harga" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>HARGA RESELLER</label>
-                                                                <input class="form-control" type="number" id="goods_reseller_price" placeholder="Harga" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>HARGA PRICE LIST</label>
-                                                                <input class="form-control" type="number" id="goods_pricelist_price" placeholder="Harga" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>SATUAN</label>
-                                                                <select class="form-control" id="uom_code" style="width: 100%;">
-                                                                    <option value="" disabled selected>Pilih Satuan</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>BERAT</label>
-                                                                <input class="form-control" type="number" id="goods_weight" placeholder="Berat" />
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>TYPE</label>
-                                                                <select class="form-control" id="product_division_code" style="width: 100%;">
-                                                                    <option value="" disabled selected>Pilih Type</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>KATEGORI</label>
-                                                                <select class="form-control" id="product_category_code" style="width: 100%;">
-                                                                    <option value="" disabled selected>Pilih Kategori</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>KETERSEDIAAN</label>
-                                                                <div class="row" id="goods_availability">
-                                                                    <!-- Radio Option 1 -->
-                                                                    <div class="col-6">
-                                                                        <div class="form-check from-radio-custom mb-3">
-                                                                            <input class="form-check-input" type="radio" name="goods_availability" id="ready" value="ready">
-                                                                            <label class="form-check-label" for="ready">
-                                                                                Ready
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                                    <!-- Radio Option 2 -->
-                                                                    <div class="col-6">
-                                                                        <div class="form-check from-radio-custom mb-3">
-                                                                            <input class="form-check-input" type="radio" name="goods_availability" id="indent" value="indent">
-                                                                            <label class="form-check-label" for="indent">
-                                                                                Indent
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-mb-3 col-lg-3">
-                                                            <div class="fromGroup mb-3">
-                                                                <label>Catatan</label>
-                                                                <textarea class="form-control" name="goods_notes" id="goods_notes" placeholder="Catatan"></textarea>
-                                                            </div>
-                                                        </div>
-                                                        <!-- <div class="fromGroup mb-3">
-                                                            <label>Note</label>
-                                                        </div> -->
-                                                    </div>
-                                                    <div class="row">
-                                                        <div class="col-12 d-flex justify-content-center align-items-center">
-                                                            <button type="button" class="btn btn-secondary btn-sm mx-2" onclick="reload()">
-                                                                <span class="button-content-wrapper d-flex align-items-center">
-                                                                    <span class="button-text me-1">
-                                                                        New Data
-                                                                    </span>
-                                                                    <span class="button-icon">
-                                                                        <i class="ph-arrow-left"></i>
-                                                                    </span>
-                                                                </span>
-                                                            </button>
-                                                            <button type="button" class="btn btn-primary btn-sm mx-2" onclick="save()">
-                                                                Save
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput" onclick="clearform()">Tambah Data</button>
                             </div>
                         </div>
+                        <div class="card-body">
+                            <section class="tables">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="table-wrapper">
+                                            <div class="table-content table-responsive">
+                                                <table class="table align-middle table-basic ">
+                                                    <thead style="text-align: center">
+                                                        <tr>
+                                                            <th scope="col">NO</th>
+                                                            <th scope="col">NAME</th>
+                                                            <th scope="col">HARGA</th>
+                                                            <th scope="col">NOTE</th>
+                                                            <th scope="col">Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($barang as $brg)
+                                                            <tr>
+                                                                <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
+                                                                <td>{{ $brg->goods_name }}</td>
+                                                                <td>{{ $brg->goods_price }}</td>
+                                                                <td>{{ $brg->goods_notes }}</td>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex justify-content-center gap-2">
+                                                                        <!-- Tombol Delete -->
+                                                                        <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $brg->goods_id }}')">
+                                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                            </svg>
+                                                                        </button>
+                                                                        <!-- Tombol Edit -->
+                                                                        <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('{{ $brg->goods_id }}')">
+                                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                            </svg>
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Pagination -->
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination justify-content-end">
+                                                <!-- Previous Page Link -->
+                                                <li class="page-item {{ $barang->onFirstPage() ? 'disabled' : '' }}">
+                                                    <a class="page-link" href="{{ $barang->appends(['search' => $search ?? request('search')])->previousPageUrl() }}" aria-label="Previous">
+                                                        <i class="ph-arrow-left"></i>
+                                                    </a>
+                                                </li>
 
+                                                <!-- Page Number Links -->
+                                                @foreach ($barang->onEachSide(0)->appends(['search' => $search ?? request('search')])->links()->elements[0] as $page => $url)
+                                                    <li class="page-item {{ $barang->currentPage() == $page ? 'active' : '' }}">
+                                                        <a class="page-link" href="{{ $url }}">{{ sprintf('%02d', $page) }}</a>
+                                                    </li>
+                                                @endforeach
+
+                                                <!-- Next Page Link -->
+                                                <li class="page-item {{ $barang->hasMorePages() ? '' : 'disabled' }}">
+                                                    <a class="page-link" href="{{ $barang->appends(['search' => $search ?? request('search')])->nextPageUrl() }}" aria-label="Next">
+                                                        <i class="ph-arrow-right"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalinput" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 85%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tittleform">Form Input</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" id="goods_id">
+                    <div class="row">
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>Nama</label>
+                                <input class="form-control" type="text" id="goods_name" placeholder="Nama Produk" />
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>FOTO</label>
+                                <input class="form-control" type="file" id="goods_photo" placeholder="Foto Produk" />
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="form-group mb-3">
+                                <label>PERUNTUKAN</label>
+                                <div class="row" id="goods_usage">
+                                    <!-- Radio Option 1 -->
+                                    <div class="col-6">
+                                        <div class="form-check from-radio-custom mb-3">
+                                            <input class="form-check-input" type="radio" name="goods_usage" id="inventory_office" value="inventory_office">
+                                            <label class="form-check-label" for="inventory_office">
+                                                Inventory Kantor
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <!-- Radio Option 2 -->
+                                    <div class="col-6">
+                                        <div class="form-check from-radio-custom mb-3">
+                                            <input class="form-check-input" type="radio" name="goods_usage" id="warehouse" value="warehouse">
+                                            <label class="form-check-label" for="warehouse">
+                                                Gudang
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>SPESIFIKASI</label>
+                                <div class="row" id="goods_specification">
+                                    <!-- Radio Option 1 -->
+                                    <div class="col-6">
+                                        <div class="form-check from-radio-custom mb-3">
+                                            <input class="form-check-input" type="radio" name="goods_specification" id="umum" value="umum">
+                                            <label class="form-check-label" for="umum">
+                                                Umum
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <!-- Radio Option 2 -->
+                                    <div class="col-6">
+                                        <div class="form-check from-radio-custom mb-3">
+                                            <input class="form-check-input" type="radio" name="goods_specification" id="spesial" value="spesial">
+                                            <label class="form-check-label" for="spesial">
+                                                Spesial
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>BRAND</label>
+                                <select class="form-control" id="brand_code" style="width: 100%;">
+                                    <option value="" disabled selected>Pilih Brand</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>HARGA POKOK</label>
+                                <input class="form-control" type="number" id="goods_price" placeholder="Harga Pokok" />
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>STOK BARANG</label>
+                                <input class="form-control" type="number" id="goods_stock" placeholder="Stok Barang" />
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>MARGIN END USER (%)</label>
+                                <input class="form-control" type="number" id="goods_end_user_margin" placeholder="Margin (%)" />
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>MARGIN KONTRAKTOR (%)</label>
+                                <input class="form-control" type="number" id="goods_contractor_margin" placeholder="Margin (%)" />
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>MARGIN RESELLER (%)</label>
+                                <input class="form-control" type="number" id="goods_reseller_margin" placeholder="Margin (%)" />
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>MARGIN PRICE LIST (%)</label>
+                                <input class="form-control" type="number" id="goods_pricelist_margon" placeholder="Margin (%)" />
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>HARGA END USER</label>
+                                <input class="form-control" type="number" id="goods_end_user_price" placeholder="Harga" />
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>HARGA KONTRAKTOR</label>
+                                <input class="form-control" type="number" id="goods_contractor_price" placeholder="Harga" />
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>HARGA RESELLER</label>
+                                <input class="form-control" type="number" id="goods_reseller_price" placeholder="Harga" />
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>HARGA PRICE LIST</label>
+                                <input class="form-control" type="number" id="goods_pricelist_price" placeholder="Harga" />
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>SATUAN</label>
+                                <select class="form-control" id="uom_code" style="width: 100%;">
+                                    <option value="" disabled selected>Pilih Satuan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>BERAT</label>
+                                <input class="form-control" type="number" id="goods_weight" placeholder="Berat" />
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>TYPE</label>
+                                <select class="form-control" id="product_division_code" style="width: 100%;">
+                                    <option value="" disabled selected>Pilih Type</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>KATEGORI</label>
+                                <select class="form-control" id="product_category_code" style="width: 100%;">
+                                    <option value="" disabled selected>Pilih Kategori</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>KETERSEDIAAN</label>
+                                <div class="row" id="goods_availability">
+                                    <!-- Radio Option 1 -->
+                                    <div class="col-6">
+                                        <div class="form-check from-radio-custom mb-3">
+                                            <input class="form-check-input" type="radio" name="goods_availability" id="ready" value="ready">
+                                            <label class="form-check-label" for="ready">
+                                                Ready
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <!-- Radio Option 2 -->
+                                    <div class="col-6">
+                                        <div class="form-check from-radio-custom mb-3">
+                                            <input class="form-check-input" type="radio" name="goods_availability" id="indent" value="indent">
+                                            <label class="form-check-label" for="indent">
+                                                Indent
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>Catatan</label>
+                                <textarea class="form-control" name="goods_notes" id="goods_notes" placeholder="Catatan"></textarea>
+                            </div>
+                        </div>
+                        <!-- <div class="fromGroup mb-3">
+                            <label>Note</label>
+                        </div> -->
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                <button type="button" class="btn btn-primary" onclick="save()">Save</button>
             </div>
         </div>
     </div>
@@ -445,6 +450,33 @@ Goods - Admin Panel
         }
     }
 
+    function clearform() {
+        document.getElementById('goods_id').value = '';
+        document.getElementById('goods_name').value = ''; 
+        document.getElementById('goods_photo').value = ''; 
+        document.querySelectorAll('input[name="goods_usage"]').forEach(radio => radio.checked = false);
+        document.querySelectorAll('input[name="goods_specification"]').forEach(radio => radio.checked = false);
+        $('#brand_code').append(new Option('', '', true, true)).trigger('change');
+        document.getElementById('goods_price').value = '';
+        document.getElementById('goods_stock').value = '';
+        document.getElementById('goods_end_user_margin').value = '';
+        document.getElementById('goods_contractor_margin').value = '';
+        document.getElementById('goods_reseller_margin').value = '';
+        document.getElementById('goods_pricelist_margon').value = '';
+        document.getElementById('goods_end_user_price').value = '';
+        document.getElementById('goods_contractor_price').value = '';
+        document.getElementById('goods_reseller_price').value = '';
+        document.getElementById('goods_pricelist_price').value = '';
+        $('#uom_code').append(new Option('', '', true, true)).trigger('change');
+        document.getElementById('goods_weight').value = '';
+        $('#product_division_code').append(new Option('', '', true, true)).trigger('change');
+        $('#product_category_code').append(new Option('', '', true, true)).trigger('change');
+        document.querySelectorAll('input[name="goods_availability"]').forEach(radio => radio.checked = false);
+        document.getElementById('goods_notes').value = '';
+
+        document.getElementById('tittleform').innerHTML = 'Form Input';
+    }
+
     function saveInput() {
         var postdata = new FormData();
         // Tambahkan token CSRF
@@ -532,8 +564,10 @@ Goods - Admin Panel
                 $('#product_category_code').append(new Option(data.product_category_name, data.product_category_code, true, true)).trigger('change');
                 document.querySelector(`input[name="goods_availability"][id="${data.goods_availability}"]`).checked = true
                 document.getElementById('goods_notes').value = data.goods_notes;
-
-                $('#tab2').tab('show');
+                
+                document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
+                // Tampilkan modal
+                $('#modalinput').modal('show')
             },
             error: function (dataerror) {
                 console.log(dataerror);
@@ -607,30 +641,32 @@ Goods - Admin Panel
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
         
-        $.ajax({
-            type: "DELETE",
-            url: "/admin/goods/"+id,
-            data: (postdata),
-            dataType: "json",
-            async: false,
-            success: function (data) {
-                if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
-                    return;
-                } else if (data.status == 501) {
-                    alert(data.message);
-                    return;
-                } else {
-                    alert('Data Berhasil Dihapus');
-                    setTimeout(function () {
-                        window.open("/admin/goods", "_self");
-                    }, 500);
+        if (confirm('Apakah Anda Yakin Menghapus Data Ini?')) {
+            $.ajax({
+                type: "DELETE",
+                url: "/admin/goods/"+id,
+                data: (postdata),
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.status == 401) {
+                        alert('Form Wajib Harus diisi');
+                        return;
+                    } else if (data.status == 501) {
+                        alert(data.message);
+                        return;
+                    } else {
+                        alert('Data Berhasil Dihapus');
+                        setTimeout(function () {
+                            window.open("/admin/goods", "_self");
+                        }, 500);
+                    }
+                },
+                error: function (dataerror) {
+                    console.log(dataerror);
                 }
-            },
-            error: function (dataerror) {
-                console.log(dataerror);
-            }
-        });
+            });
+        }
     }
 
 </script>

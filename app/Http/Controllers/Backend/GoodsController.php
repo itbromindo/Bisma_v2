@@ -39,13 +39,21 @@ class GoodsController extends Controller
     public function index()
     {      
         $this->checkAuthorization(auth()->user(), ['goods.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where(function($q) use ($search){
+            $q->where('goods_name', 'like', '%' . $search . '%')
+            ->orWhere('goods_usage', 'like', '%' . $search . '%')
+            ->orWhere('goods_specification', 'like', '%' . $search . '%')  
+            ->orWhere('goods_price', 'like', '%' . $search . '%');
+        })
         ->where('goods_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.goods.index', [
             'barang' => $listdata,
+            'search' => $search,
         ]);
     }
 

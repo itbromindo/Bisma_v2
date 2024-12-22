@@ -22,13 +22,16 @@ class BrandController extends Controller
     public function index()
     {      
         $this->checkAuthorization(auth()->user(), ['brand.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where('brand_name', 'like', '%' . $search . '%')
         ->where('brand_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.brand.index', [
             'brand' => $listdata,
+            'search' => $search
         ]);
     }
 
