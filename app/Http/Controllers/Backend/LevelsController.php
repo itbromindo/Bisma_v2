@@ -117,4 +117,16 @@ class LevelsController extends Controller
         session()->flash('success', 'Level has been deleted.');
         return $result;
     }
+
+    public function combo(Request $request)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->model
+            ->select('level_code as id', 'level_name as text')
+            ->where('level_name', 'like', '%' . $search . '%')
+            ->where('level_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
+    }
 }

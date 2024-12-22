@@ -71,6 +71,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     // Level Routes
     Route::resource('levels', LevelsController::class);
     Route::any('levels/{id}', [LevelsController::class, 'update']);
+    Route::get('combolevels', [LevelsController::class, 'combo']);
 
     // Login Routes.
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -91,10 +92,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     // Company routes
     Route::resource('companies', CompanyController::class);
     Route::any('companies/{id}', [CompanyController::class, 'update']);
+    Route::get('combocompanies', [CompanyController::class, 'combo']);
 
     // Division routes
     Route::resource('divisions', DivisionController::class);
     Route::any('divisions/{id}', [DivisionController::class, 'update']);
+    Route::get('combodivisions', [DivisionController::class, 'combo']);
 
     // Department Routes
     Route::resource('departments', DepartmentController::class);
@@ -105,10 +108,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     // Homebase Routes
     Route::resource('homebases', HomebaseController::class);
     Route::any('homebases/{id}', [HomebaseController::class, 'update']);
+    Route::get('combohomebases', [HomebaseController::class, 'combo']);
 
     // Shift Routes
     Route::resource('shifts', ShiftController::class);
     Route::any('shifts/{id}', [ShiftController::class, 'update']);
+    Route::get('comboshifts', [ShiftController::class, 'combo']);
 
     // Master Approval Routes
     Route::resource('master_approvals', MasterApprovalController::class);

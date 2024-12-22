@@ -60,20 +60,34 @@ class UsersController extends Controller
     public function index()
     {        
         $this->checkAuthorization(auth()->user(), ['users.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where(function($q) use ($search) {
+            $q->where('users_name', 'like', '%' . $search . '%')
+            ->orWhere('users_email', 'like', '%' . $search . '%')
+            ->orWhere('users_office_phone', 'like', '%' . $search . '%');
+        })
         ->where('users_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.users.index', [
             'users' => $listdata,
+            'search' => $search,
         ]);
     }
 
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['users.view']);
-        $user = $this->model->find($id);
+        $user = $this->model
+        ->leftjoin('level', 'level.level_code', '=', 'users.users_level')
+        ->leftjoin('companies', 'companies.companies_code', '=', 'users.users_company')
+        ->leftjoin('homebases', 'homebases.homebase_code', '=', 'users.users_homebase')
+        ->leftjoin('divisions', 'divisions.division_code', '=', 'users.users_division')
+        ->leftjoin('departments', 'departments.department_code', '=', 'users.users_department')
+        ->leftjoin('shifts', 'shifts.shift_code', '=', 'users.users_shift')
+        ->find($id);
         return $user;
     }
 

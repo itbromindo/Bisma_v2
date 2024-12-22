@@ -544,7 +544,7 @@ Goods - Admin Panel
                 // console.log('hasil => ',data);
                 document.getElementById('goods_id').value = data.goods_id; 
                 document.getElementById('goods_name').value = data.goods_name; 
-                // document.getElementById('goods_photo').value = data.goods_photo; 
+                document.getElementById('goods_photo').value = data.goods_photo; 
                 document.querySelector(`input[name="goods_usage"][id="${data.goods_usage}"]`).checked = true
                 document.querySelector(`input[name="goods_specification"][id="${data.goods_specification}"]`).checked = true
                 $('#brand_code').append(new Option(data.brand_name, data.brand_code, true, true)).trigger('change');

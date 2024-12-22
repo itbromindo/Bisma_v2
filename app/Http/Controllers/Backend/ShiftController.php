@@ -123,4 +123,16 @@ class ShiftController extends Controller
         session()->flash('success', __('Shift has been deleted.'));
         return $result;
     }
+
+    public function combo(Request $request)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->model
+            ->select('shift_code as id', 'shift_name as text')
+            ->where('shift_name', 'like', '%' . $search . '%')
+            ->where('shift_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
+    }
 }
