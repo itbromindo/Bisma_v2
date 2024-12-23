@@ -30,16 +30,19 @@ class OptionChecklistController extends Controller
     public function index(): Renderable
     {
         $this->checkAuthorization(auth()->user(), ['optionchecklists.view']);
+        $search = $_GET['search'] ?? '';
 
         $listData = $this->model
             ->where('option_checklist_soft_delete', 0)
+            ->where('option_checklist_items', 'like', '%' . $search . '%')
             ->paginate(15);
 
-            $checklist_code = Checklist::select('checklist_code')->get();
+            $checklists = Checklist::select('checklist_code', 'checklist_items')->get();
 
         return view('backend.pages.optionchecklists.index', [
             'option_checklist' => $listData,
-            'checklist_code' => $checklist_code,
+            'checklists' => $checklists,
+            'search' => $search,
         ]);
     }
 

@@ -25,13 +25,16 @@ class TemplateWinLoseController extends Controller
     public function index(): Renderable
     {
         $this->checkAuthorization(auth()->user(), ['template_win_loses.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
             ->where('template_win_loses_soft_delete', 0)
+            ->where('template_win_loses_title', 'like', '%' . $search . '%')
             ->paginate(15);
 
         return view('backend.pages.template_win_loses.index', [
             'template_win_loses' => $listdata,
+            'search' => $search,
         ]);
     }
 

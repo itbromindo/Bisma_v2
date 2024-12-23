@@ -94,7 +94,7 @@ Departments - Admin Panel
                                     </div>
                                 </div>
 
-<div class="row">
+                                <div class="row">
                                     <div class="col-lg-12">
                                         <nav aria-label="Page navigation">
                                             <ul class="pagination justify-content-end">
@@ -161,20 +161,10 @@ Departments - Admin Panel
                             <option value="" disabled>No Divisions Available</option>
                         @endif
                     </select>
-                    <div class="row">
-                        <button type="button" class="btn btn-primary pill mt-3" onclick="save()">
-                            Save
-                        </button>
-                        <button type="button" class="btn btn-secondary2 pill btn-icon" onclick="reload()">
-                            <span class="button-content-wrapper">
-                                <span class="button-text">
-                                    New Data
-                                </span>
-                                <span class="button-icon">
-                                    <i class="ph-arrow-left"></i>
-                                </span>
-                            </span>
-                        </button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                        <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
                     </div>
                 </form>
             </div>
