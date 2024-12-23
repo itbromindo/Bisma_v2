@@ -23,7 +23,7 @@ class UsersController extends Controller
         $this->model = new User();
         $this->mandatory = array(
             'users_name' => 'required', 
-            'users_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
+            // 'users_photo' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048', 
             'users_email' => 'required', 
             'users_password' => 'required',
             'users_office_phone' => 'required',
@@ -52,8 +52,8 @@ class UsersController extends Controller
             'users_bpjs_tk_number' => 'required',
             'users_bpjs_number' => 'required',
             'users_ktp_number' => 'required',
-            'users_ktp_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'users_signature' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'users_ktp_picture' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'users_signature' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048',
 		);
     }
 
@@ -128,7 +128,7 @@ class UsersController extends Controller
 			$file3->move(public_path('file_user'), $newFileName3);
 		}
 
-        $result = $this->model->create([
+        $user = $this->model->create([
             'user_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
             'users_name' => $request->users_name, 
             'users_photo' => $newFileName1 ? 'file_user/' . $newFileName1 : null, 
@@ -164,7 +164,13 @@ class UsersController extends Controller
             'users_signature' => $newFileName3 ? 'file_user/' . $newFileName3 : null,
             'users_created_at' => date("Y-m-d h:i:s"),
             'users_created_by' => Session::get('user_code'),
+            'users_permission' => $request->users_permission,
         ]);
+
+        // Assign role to user
+        if ($request->filled('users_permission')) {
+            $user->assignRole($request->users_permission); // Spatie Permission
+        }
 
         session()->flash('success', __('User has been created.'));
         return $request;
@@ -191,10 +197,11 @@ class UsersController extends Controller
 		}
 
         $result = [
-            'users_name' => $request->users_name, 
-            // 'users_photo' => $request->users_photo, 
+            'users_name' => $request->users_name,  
             'users_email' => $request->users_email, 
-            'users_password' => Hash::make($request->users_password), 
+            'users_password' => $request->users_password 
+                ? Hash::make($request->users_password) 
+                : $this->model->find($id)->users_password,
             'users_office_phone' => $request->users_office_phone, 
             'users_personal_phone' => $request->users_personal_phone, 
             'users_join_date' => $request->users_join_date, 
@@ -221,10 +228,9 @@ class UsersController extends Controller
             'users_bpjs_tk_number' => $request->users_bpjs_tk_number,
             'users_bpjs_number' => $request->users_bpjs_number,
             'users_ktp_number' => $request->users_ktp_number,
-            // 'users_ktp_picture' => $request->users_ktp_picture,
-            // 'users_signature' => $request->users_signature,
             'users_updated_at' => date("Y-m-d h:i:s"),
             'users_updated_by' => Session::get('user_code'),
+            'users_permission' => $request->users_permission,
         ];
 
         if ($request->hasFile('users_photo')) {
@@ -249,10 +255,20 @@ class UsersController extends Controller
 		}
 
         // Update data di database
-		$resultdata = $this->model->find($id)->update($result);
+        $admin = $this->model->find($id);
+        $admin->update($result);
+
+        // Update roles
+        $admin->roles()->detach(); // Hapus semua peran lama
+        if ($request->users_permission) {
+            $admin->assignRole($request->users_permission); // Tambahkan peran baru
+        }
 
         session()->flash('success', 'Admin has been updated.');
-        return $request;
+        return response()->json([
+            'status' => 200,
+            'message' => 'Admin updated successfully!',
+        ]);
     }
 
     public function destroy($id)

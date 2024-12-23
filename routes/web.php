@@ -48,6 +48,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('roles', RolesController::class);
     Route::resource('permission', RolesController::class);
+    Route::get('comboroles', [RolesController::class, 'combo']);
     Route::resource('admins', AdminsController::class);
 
     // User Routes

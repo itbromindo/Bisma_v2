@@ -62,7 +62,7 @@ Users - Admin Panel
                                                     <tbody>
                                                         @foreach ($users as $user)
                                                             <tr>
-                                                                <td scope="row">{{ $loop->index+1 }}</td>
+                                                                <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
                                                                 <td>{{ $user->users_name }}</td>
                                                                 <td>{{ $user->users_email }}</td>
                                                                 <td>{{ $user->users_office_phone }}</td>
@@ -373,6 +373,14 @@ Users - Admin Panel
                                 <input class="form-control" type="file" id="users_signature" placeholder="file" />
                             </div>
                         </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>Role</label>
+                                <select class="form-control" id="users_permission" style="width: 100%;">
+                                    <option value="" disabled selected>Pilih Role</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -519,6 +527,28 @@ Users - Admin Panel
                 cache: true
             }
         });
+
+        // shift 
+        $('#users_permission').select2({
+            placeholder: "Pilih Role",
+            allowClear: true,
+            ajax: {
+                url: '/admin/comboroles',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
     });
 
     function reload(){
@@ -570,6 +600,7 @@ Users - Admin Panel
         document.getElementById('users_ktp_number').value = '';
         document.getElementById('users_ktp_picture').value = '';
         document.getElementById('users_signature').value = '';
+        $('#users_permission').append(new Option('', '', true, true)).trigger('change');
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
     }
@@ -610,6 +641,7 @@ Users - Admin Panel
         postdata.append('users_ktp_number', document.getElementById('users_ktp_number').value);
         postdata.append('users_ktp_picture', document.getElementById('users_ktp_picture').files[0]); 
         postdata.append('users_signature', document.getElementById('users_signature').files[0]); 
+        postdata.append('users_permission', document.getElementById('users_permission').value);
 
         $.ajax({
             type: "POST",
@@ -684,6 +716,7 @@ Users - Admin Panel
                 document.getElementById('users_ktp_number').value = data.users_ktp_number;
                 // document.getElementById('users_ktp_picture').value = data.users_ktp_picture;
                 // document.getElementById('users_signature').value = data.users_signature;
+                $('#users_permission').append(new Option(data.users_permission, data.users_permission, true, true)).trigger('change');
                 
                 document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
                 // Tampilkan modal
@@ -734,6 +767,7 @@ Users - Admin Panel
         // postdata.append('users_signature', document.getElementById('users_signature').value);
         postdata.append('users_ktp_picture', document.getElementById('users_ktp_picture').files[0]); 
         postdata.append('users_signature', document.getElementById('users_signature').files[0]); 
+        postdata.append('users_permission', document.getElementById('users_permission').value);
         // console.log('Data FormData: ', Array.from(postdata.entries()));
         
 

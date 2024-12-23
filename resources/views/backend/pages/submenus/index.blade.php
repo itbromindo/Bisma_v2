@@ -142,7 +142,7 @@ Sub Menu - Admin Panel
                     <div class="fromGroup mb-3">
                         <label>Menu</Select></label>
                         <select class="form-control" id="menus_code" style="width: 100%;">
-                            <option value="" disabled selected>Pilih Modul</option>
+                            <option value="" disabled selected>Pilih Menu</option>
                         </select>
                     </div>
                     <div class="fromGroup mb-3">
@@ -167,7 +167,7 @@ Sub Menu - Admin Panel
 
     $(document).ready(function() {        
         $('#menus_code').select2({
-            placeholder: "Pilih Modul",
+            placeholder: "Pilih Menu",
             allowClear: true,
             ajax: {
                 url: '/admin/combomenu',
