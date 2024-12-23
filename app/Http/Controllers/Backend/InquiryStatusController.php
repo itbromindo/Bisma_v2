@@ -25,13 +25,16 @@ class InquiryStatusController extends Controller
     public function index(): Renderable
     {
         $this->checkAuthorization(auth()->user(), ['inquiry_statuses.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
             ->where('inquiry_status_soft_delete', 0)
+            ->where('inquiry_status_name', 'like', '%' . $search . '%')
             ->paginate(15);
 
         return view('backend.pages.inquiry_statuses.index', [
             'inquiry_statuses' => $listdata,
+            'search' => $search,
         ]);
     }
 

@@ -38,7 +38,7 @@ Cities - Admin Panel
                                         </div>
                                     </form>
                                 </div>
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput">Add Data</button>
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput">Tambah Data</button>
                             </div>
                         </div>
 
@@ -162,16 +162,10 @@ Cities - Admin Panel
                             <option value="Inactive">Inactive</option>
                         </select>
                     </div>
-                    <div class="row">
-                        <button type="button" class="btn btn-primary pill mt-3" onclick="save()">Save</button>
-                        <button type="button" class="btn btn-secondary2 pill btn-icon" onclick="reload()">
-                            <span class="button-content-wrapper">
-                                <span class="button-text">New Data</span>
-                                <span class="button-icon">
-                                    <i class="ph-arrow-left"></i>
-                                </span>
-                            </span>
-                        </button>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                        <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
                     </div>
                 </form>
             </div>

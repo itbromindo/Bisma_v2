@@ -1,7 +1,7 @@
 @extends('backend.layouts.master')
 
 @section('title')
-Option Checklist - Admin Panel
+Option Checklists - Admin Panel
 @endsection
 
 @section('admin-content')
@@ -11,26 +11,45 @@ Option Checklist - Admin Panel
             <div class="row">
                 <div class="col-12 rt-mb-25">
                     <div class="breadcrumbs">
-                        <div class="breadcrumb-title">Account Setting</div>
+                        <div class="breadcrumb-title">Option Checklist Management</div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Setting</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Option Checklist</li>
+                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">Option Checklists</li>
                             </ol>
                         </nav>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-xxl-8 col-xl-8 col-md-8">
-                    <section class="tables">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="table-wrapper">
-                                    <div class="table-content table-responsive">
-                                        <table class="table align-middle table-basic">
-                                            <thead style="text-align: center">
+                <div class="col-xxl-12 col-xl-12 col-md-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5>Master Option Checklists</h5>
+                            <div class="d-flex align-items-center">
+                                <div class="app-main-search me-2">
+                                    <form action="/admin/optionchecklists" method="GET" class="d-flex">
+                                        <div class="input-box d-flex">
+                                            <input type="text" name="search" id="search" value="{{$search ?? ''}}" class="form-control" placeholder="Search Here">
+                                            <button type="submit" class="btn btn-light ms-2">
+                                                <img src="{{ asset('backend/assets/images/svg/search.svg') }}" alt="Search" draggable="false">
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput">Tambah Data</button>
+                            </div>
+                        </div>
+
+                        <div class="card-body">
+                            <section class="tables">
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="table-wrapper">
+                                            <div class="table-content table-responsive">
+                                                <table class="table align-middle table-basic">
+                                                <thead style="text-align: center">
                                                 <tr>
                                                     <th scope="col">NO</th>
                                                     <th scope="col">ITEM</th>
@@ -48,80 +67,99 @@ Option Checklist - Admin Panel
                                                         <td>{{ $checklist->option_checklist_notes }}</td>
                                                         <td>{{ $checklist->option_checklist_code }}</td>
                                                         <td>{{ $checklist->checklist_code }}</td>
-                                                        <td>
-                                                            <ul class="action-btn">
-                                                                <li>
-                                                                    <button onclick="delete_data('{{ $checklist->option_checklist_id }}')">
-                                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                            <path d="M12.5 3.5L3.5 12.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            <path d="M12.5 12.5L3.5 3.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                        </svg>
-                                                                    </button>
-                                                                </li>
-                                                                <li>
-                                                                    <button title="Edit" onclick="showedit('{{ $checklist->option_checklist_id }}')">
-                                                                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                            <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            <path d="M11.5 2.5L13.5 4.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                        </svg>
-                                                                    </button>
-                                                                </li>
-                                                            </ul>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                                                <td class="text-center">
+                                                                    <div class="d-flex justify-content-center gap-2">
+                                                                        <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $checklist->option_checklist_id }}')">
+                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                            </svg>
+                                                                        </button>
+                                                                        <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('{{ $checklist->option_checklist_id }}')">
+                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                            </svg>
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </section>
-                </div>
-                <div class="col-xxl-4 col-xl-4 col-md-4">
-                    <div class="card">
-                        <div class="card-header">Form Input</div>
-                        <div class="card-body">
-                            <form>
-                                <input type="hidden" id="option_checklist_id">
-                                <div class="fromGroup mb-3">
-                                    <label>Item</label>
-                                    <input class="form-control" type="text" id="option_checklist_items" placeholder="Item" />
-                                </div>
-                                <div class="fromGroup mb-3">
-                                    <label>Notes</label>
-                                    <textarea class="form-control" name="option_checklist_notes" id="option_checklist_notes" placeholder="Notes"></textarea>
-                                </div>
-                                <select class="form-control mb-3" id="checklist_code">
-                                    <option value="">Select Checklist Code</option>
-                                    @if($checklist_code)
-                                        @foreach ($checklist_code as $checklist)
-                                            <option value="{{ $checklist->checklist_code }}">{{ $checklist->checklist_code }}</option>
-                                        @endforeach
-                                    @else
-                                        <option value="" disabled>No Checklist Codes Available</option>
-                                    @endif
-                                </select>
                                 <div class="row">
-                                    <button type="button" class="btn btn-primary pill mt-3" onclick="save()">
-                                        Save
-                                    </button>
-                                    <button type="button" class="btn btn-secondary2 pill btn-icon" onclick="reload()">
-                                        <span class="button-content-wrapper">
-                                            <span class="button-text">
-                                                New Data
-                                            </span>
-                                            <span class="button-icon">
-                                                <i class="ph-arrow-left"></i>
-                                            </span>
-                                        </span>
-                                    </button>
-                                    
+                                    <div class="col-lg-12">
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination justify-content-end">
+                                                <!-- Pagination controls -->
+                                                <li class="page-item {{ $option_checklist->onFirstPage() ? 'disabled' : '' }}">
+                                                    <a class="page-link" href="{{ $option_checklist->appends(['search' => $search ?? request('search')])->previousPageUrl() }}" aria-label="Previous">
+                                                        <i class="ph-arrow-left"></i>
+                                                    </a>
+                                                </li>
+                                                @foreach ($option_checklist->onEachSide(0)->appends(['search' => $search ?? request('search')])->links()->elements[0] as $page => $url)
+                                                    <li class="page-item {{ $option_checklist->currentPage() == $page ? 'active' : '' }}">
+                                                        <a class="page-link" href="{{ $url }}">{{ sprintf('%02d', $page) }}</a>
+                                                    </li>
+                                                @endforeach
+                                                <li class="page-item {{ $option_checklist->hasMorePages() ? '' : 'disabled' }}">
+                                                    <a class="page-link" href="{{ $option_checklist->appends(['search' => $search ?? request('search')])->nextPageUrl() }}" aria-label="Next">
+                                                        <i class="ph-arrow-right"></i>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </nav>
+                                    </div>
                                 </div>
-                            </form>
+                            </section>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalinput" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Form Input</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="hidden" id="option_checklist_id">
+                    <div class="fromGroup mb-3">
+                        <label>Option Checklist Items</label>
+                        <input class="form-control" type="text" id="option_checklist_items" placeholder="Option Checklist Items" />
+                    </div>
+                    <div class="fromGroup mb-3">
+                        <label>Notes</label>
+                        <textarea class="form-control" name="option_checklist_notes" id="option_checklist_notes" placeholder="Notes"></textarea>
+                    </div>
+                    <select class="form-control mb-3" id="checklist_code">
+                        <option value="">Select Checklist</option>
+                        @if($checklists)
+                            @foreach ($checklists as $checklist)
+                                <option value="{{ $checklist->checklist_code }}">{{ $checklist->checklist_items }}</option>
+                            @endforeach
+                        @else
+                                    <option value="" disabled>No Checklist Available</option>
+                        @endif
+                    </select>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                        <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -133,128 +171,72 @@ Option Checklist - Admin Panel
     }
 
     function save() {
-        id = document.getElementById('option_checklist_id').value;
-        if (id == '') {
-            saveInput();
-        } else {
-            updateInput(id);
-        }
+        const id = document.getElementById('option_checklist_id').value;
+        id ? updateInput(id) : saveInput();
     }
 
     function saveInput() {
-        var postdata = new FormData();
-        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('option_checklist_items', document.getElementById('option_checklist_items').value);
-        postdata.append('option_checklist_notes', document.getElementById('option_checklist_notes').value);
-        postdata.append('checklist_code', document.getElementById('checklist_code').value);
+        const data = {
+            option_checklist_items: document.getElementById('option_checklist_items').value,
+            option_checklist_notes: document.getElementById('option_checklist_notes').value,
+            checklist_code: document.getElementById('checklist_code').value,
+            _token: '{{ csrf_token() }}'
+        };
 
-        $.ajax({
-            type: "POST",
-            url: "/admin/optionchecklists",
-            data: postdata,
-            processData: false,
-            contentType: false,
-            dataType: "json",
-            success: function(data) {
-                if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
-                    return;
-                } else if (data.status == 501) {
-                    alert(data.message);
-                    return;
-                } else {
-                    alert('Berhasil Disimpan');
-                    setTimeout(function() {
-                        window.open("/admin/optionchecklists", "_self");
-                    }, 500);
-                }
-            },
-            error: function(dataerror) {
-                console.log(dataerror);
-            }
-        });
-    }
-
-    function showedit(id) {
-        $.ajax({
-            type: "GET",
-            url: "/admin/optionchecklists/" + id,
-            dataType: "json",
-            success: function(data) {
-                document.getElementById('option_checklist_id').value = data.option_checklist_id;
-                document.getElementById('option_checklist_items').value = data.option_checklist_items;
-                document.getElementById('option_checklist_notes').value = data.option_checklist_notes;
-                document.getElementById('checklist_code').value = data.checklist_code;
-            },
-            error: function(dataerror) {
-                console.log(dataerror);
+        $.post('/admin/optionchecklists', data, function(response) {
+            if (response.status === 401) {
+                alert(response.data);
+            } else {
+                alert('Data Saved!');
+                location.reload();
             }
         });
     }
 
     function updateInput(id) {
-        var postdata = new FormData();
-        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('option_checklist_items', document.getElementById('option_checklist_items').value);
-        postdata.append('option_checklist_notes', document.getElementById('option_checklist_notes').value);
-        postdata.append('checklist_code', document.getElementById('checklist_code').value);
+        const data = {
+            option_checklist_items: document.getElementById('option_checklist_items').value,
+            option_checklist_notes: document.getElementById('option_checklist_notes').value,
+            checklist_code: document.getElementById('checklist_code').value,
+            _token: '{{ csrf_token() }}'
+        };
 
         $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            type: "POST",
-            url: "/admin/optionchecklists/" + id,
-            data: postdata,
-            processData: false,
-            contentType: false,
-            dataType: "json",
-            success: function(data) {
-                if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
-                    return;
-                } else if (data.status == 501) {
-                    alert(data.message);
-                    return;
+            url: `/admin/optionchecklists/${id}`,
+            type: 'PUT',
+            data: data,
+            success: function(response) {
+                if (response.status === 401) {
+                    alert(response.data);
                 } else {
-                    alert('Berhasil Update');
-                    setTimeout(function() {
-                        window.open("/admin/optionchecklists", "_self");
-                    }, 500);
+                    alert('Data Updated!');
+                    location.reload();
                 }
-            },
-            error: function(dataerror) {
-                console.log(dataerror);
             }
         });
     }
 
     function delete_data(id) {
-        var postdata = {};
-        postdata._token = document.getElementsByName('_token')[0].defaultValue;
-
-        $.ajax({
-            type: "DELETE",
-            url: "/admin/optionchecklists/" + id,
-            data: postdata,
-            dataType: "json",
-            success: function(data) {
-                if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
-                    return;
-                } else if (data.status == 501) {
-                    alert(data.message);
-                    return;
-                } else {
-                    alert('Data Berhasil Dihapus');
-                    setTimeout(function() {
-                        window.open("/admin/optionchecklists", "_self");
-                    }, 500);
+        if (confirm('Are you sure?')) {
+            $.ajax({
+                url: `/admin/optionchecklists/${id}`,
+                type: 'DELETE',
+                data: { _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    alert('Data Deleted!');
+                    location.reload();
                 }
-            },
-            error: function(dataerror) {
-                console.log(dataerror);
-            }
+            });
+        }
+    }
+
+    function showedit(id) {
+        $.get(`/admin/optionchecklists/${id}`, function(data) {
+            document.getElementById('option_checklist_id').value = data.option_checklist_id;
+            document.getElementById('option_checklist_items').value = data.option_checklist_items;
+            document.getElementById('option_checklist_notes').value = data.option_checklist_notes;
+            document.getElementById('checklist_code').value = data.checklist_code;
+            $('#modalinput').modal('show');
         });
     }
 </script>
