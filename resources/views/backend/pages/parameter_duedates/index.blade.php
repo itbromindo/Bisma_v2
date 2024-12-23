@@ -184,6 +184,7 @@ Parameter Due Dates - Admin Panel
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function reload() {
         window.open("/admin/parameter_duedates", "_self");
@@ -205,10 +206,19 @@ Parameter Due Dates - Admin Panel
 
         $.post('/admin/parameter_duedates', data, function(response) {
             if (response.status === 401) {
-                alert(response.data);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: response.data
+                });
             } else {
-                alert('Data Saved!');
-                location.reload();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Saved!',
+                    text: 'Data has been saved successfully.'
+                }).then(() => {
+                    location.reload();
+                });
             }
         });
     }
@@ -228,27 +238,51 @@ Parameter Due Dates - Admin Panel
             data: data,
             success: function(response) {
                 if (response.status === 401) {
-                    alert(response.data);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: response.data
+                    });
                 } else {
-                    alert('Data Updated!');
-                    location.reload();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Updated!',
+                        text: 'Data has been updated successfully.'
+                    }).then(() => {
+                        location.reload();
+                    });
                 }
             }
         });
     }
 
     function delete_data(id) {
-        if (confirm('Are you sure?')) {
-            $.ajax({
-                url: `/admin/parameter_duedates/${id}`,
-                type: 'DELETE',
-                data: { _token: '{{ csrf_token() }}' },
-                success: function(response) {
-                    alert('Data Deleted!');
-                    location.reload();
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/parameter_duedates/${id}`,
+                    type: 'DELETE',
+                    data: { _token: '{{ csrf_token() }}' },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            text: 'Data has been deleted successfully.'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                });
+            }
+        });
     }
 
     function showedit(id) {

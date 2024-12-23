@@ -156,8 +156,9 @@ Origin Inquiries - Admin Panel
                 </div>
         </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function reload(){
+    function reload() {
         window.open("/admin/origin_inquiries", "_self");
     }
 
@@ -186,13 +187,19 @@ Origin Inquiries - Admin Panel
             async: false,
             success: function (data) {
                 if (data.status == 401) {
-                    alert('Form is required');
-                    return;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Form is required'
+                    });
                 } else {
-                    alert('Successfully saved');
-                    setTimeout(function () {
-                        window.open("/admin/origin_inquiries", "_self");
-                    }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Successfully saved',
+                    }).then(function () {
+                        reload();
+                    });
                 }
             },
             error: function (dataerror) {
@@ -201,10 +208,10 @@ Origin Inquiries - Admin Panel
         });
     }
 
-    function showedit(id){
+    function showedit(id) {
         $.ajax({
             type: "GET",
-            url: "/admin/origin_inquiries/"+id,
+            url: "/admin/origin_inquiries/" + id,
             dataType: "json",
             async: false,
             success: function (data) {
@@ -230,7 +237,7 @@ Origin Inquiries - Admin Panel
                 'X-CSRF-TOKEN': '{{ csrf_token() }}'
             },
             type: "POST",
-            url: "/admin/origin_inquiries/"+id,
+            url: "/admin/origin_inquiries/" + id,
             data: postdata,
             processData: false,
             contentType: false,
@@ -238,13 +245,19 @@ Origin Inquiries - Admin Panel
             async: false,
             success: function (data) {
                 if (data.status == 401) {
-                    alert('Form is required');
-                    return;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Form is required'
+                    });
                 } else {
-                    alert('Successfully updated');
-                    setTimeout(function () {
-                        window.open("/admin/origin_inquiries", "_self");
-                    }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Successfully updated',
+                    }).then(function () {
+                        reload();
+                    });
                 }
             },
             error: function (dataerror) {
@@ -253,36 +266,55 @@ Origin Inquiries - Admin Panel
         });
     }
 
-    function delete_data(id){
+    function delete_data(id) {
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
 
-        if (confirm('Apakah Anda Yakin Menghapus Data Ini?')) {
-        $.ajax({
-            type: "DELETE",
-            url: "/admin/origin_inquiries/"+id,
-            data: postdata,
-            dataType: "json",
-            async: false,
-            success: function (data) {
-                if (data.status == 401) {
-                        alert('Form Wajib Harus diisi');
-                        return;
-                    } else if (data.status == 501) {
-                        alert(data.message);
-                        return;
-                    } else {
-                        alert('Data Berhasil Dihapus');
-                        setTimeout(function () {
-                            window.open("/admin/origin_inquiries", "_self");
-                        }, 500);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "/admin/origin_inquiries/" + id,
+                    data: postdata,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.status == 401) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Form is required'
+                            });
+                        } else if (data.status == 501) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: data.message
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: 'Your data has been deleted.',
+                            }).then(function () {
+                                reload();
+                            });
+                        }
+                    },
+                    error: function (dataerror) {
+                        console.log(dataerror);
                     }
-                },
-            error: function (dataerror) {
-                console.log(dataerror);
+                });
             }
         });
-    }
     }
 </script>
 @endsection

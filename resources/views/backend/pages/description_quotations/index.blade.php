@@ -162,6 +162,8 @@ Description Quotations - Admin Panel
                 </div>
         </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function reload() {
         window.open("/admin/description_quotations", "_self");
@@ -193,10 +195,17 @@ Description Quotations - Admin Panel
             async: false,
             success: function (data) {
                 if (data.status == 401) {
-                    alert('Form fields are required');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Form fields are required',
+                    });
                 } else {
-                    alert('Saved successfully');
-                    reload();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Saved successfully',
+                    }).then(() => {
+                        reload();
+                    });
                 }
             },
             error: function (dataerror) {
@@ -241,10 +250,17 @@ Description Quotations - Admin Panel
             async: false,
             success: function (data) {
                 if (data.status == 401) {
-                    alert('Form fields are required');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Form fields are required',
+                    });
                 } else {
-                    alert('Updated successfully');
-                    reload();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Updated successfully',
+                    }).then(() => {
+                        reload();
+                    });
                 }
             },
             error: function (dataerror) {
@@ -257,26 +273,44 @@ Description Quotations - Admin Panel
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
 
-        if (confirm('Apakah Anda Yakin Menghapus Data Ini?')) {
-        $.ajax({
-            type: "DELETE",
-            url: "/admin/description_quotations/" + id,
-            data: postdata,
-            dataType: "json",
-            async: false,
-            success: function (data) {
-                if (data.status == 401) {
-                    alert('Form fields are required');
-                } else {
-                    alert('Deleted successfully');
-                    reload();
-                }
-            },
-            error: function (dataerror) {
-                console.log(dataerror);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to delete this data?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "/admin/description_quotations/" + id,
+                    data: postdata,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.status == 401) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Form fields are required',
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted successfully',
+                            }).then(() => {
+                                reload();
+                            });
+                        }
+                    },
+                    error: function (dataerror) {
+                        console.log(dataerror);
+                    }
+                });
             }
         });
     }
-    }
 </script>
+
 @endsection

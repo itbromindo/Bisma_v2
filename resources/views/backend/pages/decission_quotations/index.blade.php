@@ -164,8 +164,9 @@ Decission Quotation - Admin Panel
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function reload(){
+    function reload() {
         window.open("/admin/decission_quotations", "_self");
     }
 
@@ -184,10 +185,19 @@ Decission Quotation - Admin Panel
 
         $.post('/admin/decission_quotations', data, function(response) {
             if (response.status === 401) {
-                alert(response.data);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: response.data
+                });
             } else {
-                alert('Data Saved!');
-                location.reload();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Saved',
+                    text: 'Data has been saved successfully!'
+                }).then(() => {
+                    location.reload();
+                });
             }
         });
     }
@@ -206,27 +216,51 @@ Decission Quotation - Admin Panel
             data: data,
             success: function(response) {
                 if (response.status === 401) {
-                    alert(response.data);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.data
+                    });
                 } else {
-                    alert('Data Updated!');
-                    location.reload();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Updated',
+                        text: 'Data has been updated successfully!'
+                    }).then(() => {
+                        location.reload();
+                    });
                 }
             }
         });
     }
 
     function delete_data(id) {
-        if (confirm('Are you sure?')) {
-            $.ajax({
-                url: `/admin/decission_quotations/${id}`,
-                type: 'DELETE',
-                data: { _token: '{{ csrf_token() }}' },
-                success: function(response) {
-                    alert('Data Deleted!');
-                    location.reload();
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "This action cannot be undone!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/decission_quotations/${id}`,
+                    type: 'DELETE',
+                    data: { _token: '{{ csrf_token() }}' },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted',
+                            text: 'Data has been deleted successfully!'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                });
+            }
+        });
     }
 
     function showedit(id) {
@@ -239,4 +273,5 @@ Decission Quotation - Admin Panel
         });
     }
 </script>
+
 @endsection

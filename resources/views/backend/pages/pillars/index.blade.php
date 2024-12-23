@@ -153,6 +153,7 @@ Pillar - Admin Panel
         </div>
     </div>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function reload() {
         window.open("/admin/pillars", "_self");
@@ -172,10 +173,18 @@ Pillar - Admin Panel
 
         $.post('/admin/pillars', data, function(response) {
             if (response.status === 401) {
-                alert(response.data);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: response.data
+                });
             } else {
-                alert('Data Saved!');
-                location.reload();
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Data Saved!',
+                }).then(() => {
+                    location.reload();
+                });
             }
         });
     }
@@ -193,27 +202,56 @@ Pillar - Admin Panel
             data: data,
             success: function(response) {
                 if (response.status === 401) {
-                    alert(response.data);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: response.data
+                    });
                 } else {
-                    alert('Data Updated!');
-                    location.reload();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Data Updated!',
+                    }).then(() => {
+                        location.reload();
+                    });
                 }
             }
         });
     }
 
     function delete_data(id) {
-        if (confirm('Are you sure?')) {
-            $.ajax({
-                url: `/admin/pillars/${id}`,
-                type: 'DELETE',
-                data: { _token: '{{ csrf_token() }}' },
-                success: function(response) {
-                    alert('Data Deleted!');
-                    location.reload();
-                }
-            });
-        }
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'This action will delete the data permanently!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/pillars/${id}`,
+                    type: 'DELETE',
+                    data: { _token: '{{ csrf_token() }}' },
+                    success: function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Data Deleted!',
+                        }).then(() => {
+                            location.reload();
+                        });
+                    },
+                    error: function(err) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Failed to Delete',
+                            text: 'There was an error deleting the data.'
+                        });
+                    }
+                });
+            }
+        });
     }
 
     function showedit(id) {
@@ -225,4 +263,5 @@ Pillar - Admin Panel
         });
     }
 </script>
+
 @endsection
