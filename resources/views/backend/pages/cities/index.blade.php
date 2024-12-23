@@ -66,11 +66,11 @@ Cities - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($cities->currentPage() - 1) * $cities->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td>{{ $city->cities_name }}</td>
-                                                                <td>{{ $city->cities_notes }}</td>
-                                                                <td>{{ $city->cities_code }}</td>
-                                                                <td>{{ $city->province->provinces_name ?? '-' }}</td>
-                                                                <td>{{ $city->cities_status }}</td>
+                                                                 <td class="text-center">{{ $city->cities_name }}</td>
+                                                                 <td class="text-center">{{ $city->cities_notes }}</td>
+                                                                 <td class="text-center">{{ $city->cities_code }}</td>
+                                                                 <td class="text-center">{{ $city->province->provinces_name ?? '-' }}</td>
+                                                                 <td class="text-center">{{ $city->cities_status }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $city->cities_id }}')">

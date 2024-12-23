@@ -62,13 +62,13 @@ Checklists - Admin Panel
                                                     <tbody id="tableBody">
                                                         @foreach ($checklists as $checklist)
                                                             <tr>
-                                                                <td scope="row" class="text-center">
+                                                            <td scope="row" class="text-center">
                                                                     {{ ($checklists->currentPage() - 1) * $checklists->perPage() + $loop->iteration }}
                                                                 </td>
                                                                 <td>{{ $checklist->checklist_items }}</td>
                                                                 <td>{{ $checklist->checklist_notes }}</td>
                                                                 <td>{{ $checklist->checklist_code }}</td>
-                                                                <td>{{ $checklist->pillar_code }}</td>
+                                                                <td>{{ $checklist->pillar->pillar_items }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $checklist->checklist_id }}')">

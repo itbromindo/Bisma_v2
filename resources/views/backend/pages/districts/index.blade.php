@@ -66,11 +66,11 @@ Districts - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($districts->currentPage() - 1) * $districts->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td>{{ $district->districts_name }}</td>
-                                                                <td>{{ $district->districts_notes }}</td>
-                                                                <td>{{ $district->districts_code }}</td>
-                                                                <td>{{ $district->city->cities_name ?? '-' }}</td>
-                                                                <td>{{ $district->districts_status }}</td>
+                                                                 <td class="text-center">{{ $district->districts_name }}</td>
+                                                                 <td class="text-center">{{ $district->districts_notes }}</td>
+                                                                 <td class="text-center">{{ $district->districts_code }}</td>
+                                                                 <td class="text-center">{{ $district->city->cities_name ?? '-' }}</td>
+                                                                 <td class="text-center">{{ $district->districts_status }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $district->districts_id }}')">

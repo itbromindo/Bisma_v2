@@ -62,10 +62,12 @@
                                                     <tbody>
                                                         @foreach ($quotation_statuses as $status)
                                                             <tr>
-                                                                <td scope="row" class="text-center">{{ $loop->index + 1 }}</td>
-                                                                <td>{{ $status->quotation_status_name }}</td>
-                                                                <td>{{ $status->quotation_status_notes }}</td>
-                                                                <td>{{ $status->quotation_status_code }}</td>
+                                                            <td scope="row" class="text-center">
+                                                                    {{ ($quotation_statuses->currentPage() - 1) * $quotation_statuses->perPage() + $loop->iteration }}
+                                                                </td>
+                                                                 <td class="text-center">{{ $status->quotation_status_name }}</td>
+                                                                 <td class="text-center">{{ $status->quotation_status_notes }}</td>
+                                                                 <td class="text-center">{{ $status->quotation_status_code }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $status->quotation_status_id }}')">
@@ -158,6 +160,9 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     function reload() {
         window.location.reload();
@@ -188,17 +193,28 @@
             async: false,
             success: function (data) {
                 if (data.status == 401) {
-                    alert('Form is required');
-                    return;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Form is required!'
+                    });
                 } else {
-                    alert('Successfully saved');
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Successfully saved!'
+                    }).then(() => {
+                        reload();
+                    });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while saving data.'
+                });
             }
         });
     }
@@ -217,6 +233,11 @@
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to fetch data.'
+                });
             }
         });
     }
@@ -240,17 +261,28 @@
             async: false,
             success: function (data) {
                 if (data.status == 401) {
-                    alert('Form is required');
-                    return;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Form is required!'
+                    });
                 } else {
-                    alert('Successfully updated');
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Successfully updated!'
+                    }).then(() => {
+                        reload();
+                    });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while updating data.'
+                });
             }
         });
     }
@@ -259,29 +291,51 @@
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
 
-        if (confirm('Are you sure you want to delete this data?')) {
-            $.ajax({
-                type: "DELETE",
-                url: "/admin/quotation_statuses/" + id,
-                data: postdata,
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data.status == 401) {
-                        alert('Form is required');
-                        return;
-                    } else {
-                        alert('Data successfully deleted');
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 500);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "/admin/quotation_statuses/" + id,
+                    data: postdata,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.status == 401) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Form is required!'
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: 'Data successfully deleted.'
+                            }).then(() => {
+                                reload();
+                            });
+                        }
+                    },
+                    error: function (dataerror) {
+                        console.log(dataerror);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'An error occurred while deleting data.'
+                        });
                     }
-                },
-                error: function (dataerror) {
-                    console.log(dataerror);
-                }
-            });
-        }
+                });
+            }
+        });
     }
 </script>
+
 @endsection

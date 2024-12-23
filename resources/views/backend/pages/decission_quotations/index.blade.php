@@ -63,11 +63,13 @@ Decission Quotation - Admin Panel
                                             <tbody>
                                                 @foreach ($decission_quotations as $quotation)
                                                     <tr>
-                                                        <td scope="row">{{ $loop->index + 1 }}</td>
-                                                        <td>{{ $quotation->template_decission_quotation_title }}</td>
-                                                        <td>{{ $quotation->template_decission_quotation_code }}</td>
-                                                        <td>{{ $quotation->template_decission_quotation_text }}</td>
-                                                        <td>{{ $quotation->template_decission_quotation_notes }}</td>
+                                                    <td scope="row" class="text-center">
+                                                                    {{ ($decission_quotations->currentPage() - 1) * $decission_quotations->perPage() + $loop->iteration }}
+                                                                </td>
+                                                         <td class="text-center">{{ $quotation->template_decission_quotation_title }}</td>
+                                                         <td class="text-center">{{ $quotation->template_decission_quotation_code }}</td>
+                                                         <td class="text-center">{{ $quotation->template_decission_quotation_text }}</td>
+                                                         <td class="text-center">{{ $quotation->template_decission_quotation_notes }}</td>
                                                         <!-- <td>{{ $quotation->is_deleted ? 'Deleted' : 'Active' }}</td> -->
                                                         
                                                                 <td class="text-center">

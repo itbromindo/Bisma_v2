@@ -71,13 +71,13 @@ Shifts - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($shifts->currentPage() - 1) * $shifts->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td>{{ $shift->shift_name }}</td>
-                                                                <td>{{ $shift->company->companies_name ?? '-' }}</td>
-                                                                <td>{{ $shift->shift_start_time_before_break }}</td>
-                                                                <td>{{ $shift->shift_end_time_before_break }}</td>
-                                                                <td>{{ $shift->shift_start_time_after_break }}</td>
-                                                                <td>{{ $shift->shift_end_time_after_break }}</td>
-                                                                <td>{{ $shift->shift_notes }}</td>
+                                                                 <td class="text-center">{{ $shift->shift_name }}</td>
+                                                                 <td class="text-center">{{ $shift->company->companies_name ?? '-' }}</td>
+                                                                 <td class="text-center">{{ $shift->shift_start_time_before_break }}</td>
+                                                                 <td class="text-center">{{ $shift->shift_end_time_before_break }}</td>
+                                                                 <td class="text-center">{{ $shift->shift_start_time_after_break }}</td>
+                                                                 <td class="text-center">{{ $shift->shift_end_time_after_break }}</td>
+                                                                 <td class="text-center">{{ $shift->shift_notes }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button

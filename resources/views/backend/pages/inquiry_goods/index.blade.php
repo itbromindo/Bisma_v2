@@ -63,8 +63,8 @@ Inquiry Goods - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($inquiry_goods->currentPage() - 1) * $inquiry_goods->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td>{{ $item->inquiry_goods_status_name }}</td>
-                                                                <td>{{ $item->inquiry_goods_status_notes }}</td>
+                                                                 <td class="text-center">{{ $item->inquiry_goods_status_name }}</td>
+                                                                 <td class="text-center">{{ $item->inquiry_goods_status_notes }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $item->inquiry_goods_status_id }}')">

@@ -62,11 +62,13 @@ Option Checklists - Admin Panel
                                             <tbody>
                                                 @foreach ($option_checklist as $checklist)
                                                     <tr>
-                                                        <td scope="row">{{ $loop->index + 1 }}</td>
-                                                        <td>{{ $checklist->option_checklist_items }}</td>
-                                                        <td>{{ $checklist->option_checklist_notes }}</td>
-                                                        <td>{{ $checklist->option_checklist_code }}</td>
-                                                        <td>{{ $checklist->checklist_code }}</td>
+                                                    <td scope="row" class="text-center">
+                                                                    {{ ($option_checklist->currentPage() - 1) * $option_checklist->perPage() + $loop->iteration }}
+                                                                </td>
+                                                         <td class="text-center">{{ $checklist->option_checklist_items }}</td>
+                                                         <td class="text-center">{{ $checklist->option_checklist_notes }}</td>
+                                                         <td class="text-center">{{ $checklist->option_checklist_code }}</td>
+                                                         <td class="text-center">{{ $checklist->checklist->checklist_items }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $checklist->option_checklist_id }}')">
@@ -165,6 +167,7 @@ Option Checklists - Admin Panel
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function reload() {
         window.open("/admin/optionchecklists", "_self");
@@ -183,14 +186,23 @@ Option Checklists - Admin Panel
             _token: '{{ csrf_token() }}'
         };
 
-        $.post('/admin/optionchecklists', data, function(response) {
-            if (response.status === 401) {
-                alert(response.data);
-            } else {
-                alert('Data Saved!');
-                location.reload();
-            }
-        });
+        $.post('/admin/optionchecklists', data)
+            .done(function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Saved!',
+                    text: 'Data has been saved successfully.'
+                }).then(() => {
+                    location.reload();
+                });
+            })
+            .fail(function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: xhr.responseJSON?.message || 'Failed to save data.'
+                });
+            });
     }
 
     function updateInput(id) {
@@ -204,40 +216,81 @@ Option Checklists - Admin Panel
         $.ajax({
             url: `/admin/optionchecklists/${id}`,
             type: 'PUT',
-            data: data,
-            success: function(response) {
-                if (response.status === 401) {
-                    alert(response.data);
-                } else {
-                    alert('Data Updated!');
+            data: data
+        })
+            .done(function(response) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Updated!',
+                    text: 'Data has been updated successfully.'
+                }).then(() => {
                     location.reload();
-                }
+                });
+            })
+            .fail(function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: xhr.responseJSON?.message || 'Failed to update data.'
+                });
+            });
+    }
+
+    function delete_data(id) {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/admin/optionchecklists/${id}`,
+                    type: 'DELETE',
+                    data: { _token: '{{ csrf_token() }}' }
+                })
+                    .done(function(response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            text: 'Data has been deleted successfully.'
+                        }).then(() => {
+                            location.reload();
+                        });
+                    })
+                    .fail(function(xhr) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: xhr.responseJSON?.message || 'Failed to delete data.'
+                        });
+                    });
             }
         });
     }
 
-    function delete_data(id) {
-        if (confirm('Are you sure?')) {
-            $.ajax({
-                url: `/admin/optionchecklists/${id}`,
-                type: 'DELETE',
-                data: { _token: '{{ csrf_token() }}' },
-                success: function(response) {
-                    alert('Data Deleted!');
-                    location.reload();
-                }
-            });
-        }
-    }
-
     function showedit(id) {
-        $.get(`/admin/optionchecklists/${id}`, function(data) {
-            document.getElementById('option_checklist_id').value = data.option_checklist_id;
-            document.getElementById('option_checklist_items').value = data.option_checklist_items;
-            document.getElementById('option_checklist_notes').value = data.option_checklist_notes;
-            document.getElementById('checklist_code').value = data.checklist_code;
-            $('#modalinput').modal('show');
-        });
+        $.get(`/admin/optionchecklists/${id}`)
+            .done(function(data) {
+                document.getElementById('option_checklist_id').value = data.option_checklist_id;
+                document.getElementById('option_checklist_items').value = data.option_checklist_items;
+                document.getElementById('option_checklist_notes').value = data.option_checklist_notes;
+                document.getElementById('checklist_code').value = data.checklist_code;
+                // Tampilkan modal tanpa notifikasi
+                $('#modalinput').modal('show');
+            })
+            .fail(function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: xhr.responseJSON?.message || 'Failed to fetch data.'
+                });
+            });
     }
 </script>
+
+
 @endsection

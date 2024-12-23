@@ -62,11 +62,13 @@ Description Quotations - Admin Panel
                                                     <tbody>
                                                         @foreach ($description_quotations as $description_quotation)
                                                             <tr>
-                                                                <td scope="row" class="text-center">{{ $loop->iteration }}</td>
-                                                                <td>{{ $description_quotation->template_inquiry_desc_title }}</td>
-                                                                <td>{{ $description_quotation->template_inquiry_desc_text }}</td>
-                                                                <td>{{ $description_quotation->template_inquiry_desc_code }}</td>
-                                                                <td>{{ $description_quotation->template_inquiry_desc_notes }}</td>
+                                                            <td scope="row" class="text-center">
+                                                                    {{ ($description_quotations->currentPage() - 1) * $description_quotations->perPage() + $loop->iteration }}
+                                                                </td>
+                                                                 <td class="text-center">{{ $description_quotation->template_inquiry_desc_title }}</td>
+                                                                 <td class="text-center">{{ $description_quotation->template_inquiry_desc_text }}</td>
+                                                                 <td class="text-center">{{ $description_quotation->template_inquiry_desc_code }}</td>
+                                                                 <td class="text-center">{{ $description_quotation->template_inquiry_desc_notes }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $description_quotation->template_inquiry_desc_id }}')">

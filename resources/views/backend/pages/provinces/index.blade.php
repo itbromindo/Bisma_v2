@@ -68,10 +68,10 @@ Provinces - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($provinces->currentPage() - 1) * $provinces->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td>{{ $province->provinces_name }}</td>
-                                                                <td>{{ $province->provinces_code }}</td>
-                                                                <td>{{ $province->provinces_notes }}</td>
-                                                                <td>{{ $province->provinces_status }}</td>
+                                                                 <td class="text-center">{{ $province->provinces_name }}</td>
+                                                                 <td class="text-center">{{ $province->provinces_code }}</td>
+                                                                 <td class="text-center">{{ $province->provinces_notes }}</td>
+                                                                 <td class="text-center">{{ $province->provinces_status }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button

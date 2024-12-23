@@ -70,12 +70,12 @@ Master Approvals - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($masterApprovals->currentPage() - 1) * $masterApprovals->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td>{{ $approval->master_approvals_approval_name }}</td>
-                                                                <td>{{ $approval->master_approvals_notes }}</td>
-                                                                <td>{{ $approval->master_approvals_code }}</td>
-                                                                <td>{{ $approval->division->division_name ?? '-' }}</td>
-                                                                <td>{{ $approval->department->department_name ?? '-' }}</td>
-                                                                <td>{{ $approval->level->level_name ?? '-' }}</td>
+                                                                 <td class="text-center">{{ $approval->master_approvals_approval_name }}</td>
+                                                                 <td class="text-center">{{ $approval->master_approvals_notes }}</td>
+                                                                 <td class="text-center">{{ $approval->master_approvals_code }}</td>
+                                                                 <td class="text-center">{{ $approval->division->division_name ?? '-' }}</td>
+                                                                 <td class="text-center">{{ $approval->department->department_name ?? '-' }}</td>
+                                                                 <td class="text-center">{{ $approval->level->level_name ?? '-' }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button

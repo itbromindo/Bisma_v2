@@ -61,7 +61,9 @@ Pillar - Admin Panel
                                             <tbody>
                                                 @foreach ($pillars as $pillar)
                                                     <tr>
-                                                        <td scope="row">{{ $loop->index + 1 }}</td>
+                                                    <td scope="row" class="text-center">
+                                                                    {{ ($pillars->currentPage() - 1) * $pillars->perPage() + $loop->iteration }}
+                                                                </td>
                                                         <td>{{ $pillar->pillar_items }}</td>
                                                         <td>{{ $pillar->pillar_notes }}</td>
                                                         <td>{{ $pillar->pillar_code }}</td>

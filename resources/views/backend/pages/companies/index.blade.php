@@ -54,6 +54,7 @@ Company - Admin Panel
                                                             <th scope="col" width="5%">NO</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">NOTE</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">Action</th>
                                                         </tr>
                                                     </thead>
@@ -63,8 +64,9 @@ Company - Admin Panel
                                                             <td scope="row" class="text-center">
                                                                     {{ ($companies->currentPage() - 1) * $companies->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td>{{ $company->companies_name }}</td>
-                                                                <td>{{ $company->companies_notes }}</td>
+                                                                 <td class="text-center">{{ $company->companies_name }}</td>
+                                                                 <td class="text-center">{{ $company->companies_notes }}</td>
+                                                                 <td class="text-center">{{ $company->companies_code }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $company->companies_id }}')">

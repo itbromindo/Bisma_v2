@@ -65,10 +65,10 @@ Parameter Due Dates - Admin Panel
                                                                 <td class="text-center">
                                                                     {{ ($parameter_duedates->currentPage() - 1) * $parameter_duedates->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td>{{ $duedate->param_duedate_name }}</td>
-                                                                <td>{{ $duedate->param_duedate_time }}</td>
-                                                                <td>{{ $duedate->param_duedate_notes }}</td>
-                                                                <td>{{ $duedate->user_code }}</td>
+                                                                 <td class="text-center">{{ $duedate->param_duedate_name }}</td>
+                                                                 <td class="text-center">{{ $duedate->param_duedate_time }}</td>
+                                                                 <td class="text-center">{{ $duedate->param_duedate_notes }}</td>
+                                                                 <td class="text-center">{{ $duedate->user->users_name }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $duedate->param_duedate_id }}')">
@@ -146,7 +146,7 @@ Parameter Due Dates - Admin Panel
                         <input class="form-control" type="text" id="param_duedate_name" placeholder="Name" />
                     </div>
                     <div class="fromGroup mb-3">
-                        <label>Time</label>
+                        <label>Due Date</label>
                         <input class="form-control" type="number" id="param_duedate_time" placeholder="Time in Hours" />
                     </div>
                     <div class="fromGroup mb-3">

@@ -65,10 +65,10 @@ Homebases - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($homebases->currentPage() - 1) * $homebases->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td>{{ $homebase->homebase_name }}</td>
-                                                                <td>{{ $homebase->homebase_notes }}</td>
-                                                                <td>{{ $homebase->homebase_code }}</td>
-                                                                <td>{{ $homebase->company->companies_name ?? '-' }}</td>
+                                                                 <td class="text-center">{{ $homebase->homebase_name }}</td>
+                                                                 <td class="text-center">{{ $homebase->homebase_notes }}</td>
+                                                                 <td class="text-center">{{ $homebase->homebase_code }}</td>
+                                                                 <td class="text-center">{{ $homebase->company->companies_name ?? '-' }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $homebase->homebase_id }}')">

@@ -61,10 +61,12 @@ Origin Inquiries - Admin Panel
                                             <tbody>
                                                 @foreach ($origin_inquiries as $origin_inquiry)
                                                     <tr>
-                                                        <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                        <td>{{ $origin_inquiry->origin_inquiry_name }}</td>
-                                                        <td>{{ $origin_inquiry->origin_inquiry_notes }}</td>
-                                                        <td>{{ $origin_inquiry->origin_inquiry_code }}</td>
+                                                    <td scope="row" class="text-center">
+                                                                    {{ ($origin_inquiries->currentPage() - 1) * $origin_inquiries->perPage() + $loop->iteration }}
+                                                                </td>
+                                                         <td class="text-center">{{ $origin_inquiry->origin_inquiry_name }}</td>
+                                                         <td class="text-center">{{ $origin_inquiry->origin_inquiry_notes }}</td>
+                                                         <td class="text-center">{{ $origin_inquiry->origin_inquiry_code }}</td>
                                                         <td class="text-center">
                                                             <div class="d-flex justify-content-center gap-2">
                                                             <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $origin_inquiry->origin_inquiry_id }}')">

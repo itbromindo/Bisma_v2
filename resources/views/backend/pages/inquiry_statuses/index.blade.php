@@ -61,10 +61,12 @@ Inquiry Status Management - Admin Panel
                                                     <tbody>
                                                         @foreach ($inquiry_statuses as $status)
                                                             <tr>
-                                                                <td scope="row" class="text-center">{{ $loop->index + 1 }}</td>
-                                                                <td>{{ $status->inquiry_status_name }}</td>
-                                                                <td>{{ $status->inquiry_status_notes }}</td>
-                                                                <td>{{ $status->inquiry_status_code }}</td>
+                                                            <td scope="row" class="text-center">
+                                                                    {{ ($inquiry_statuses->currentPage() - 1) * $inquiry_statuses->perPage() + $loop->iteration }}
+                                                                </td>
+                                                                 <td class="text-center">{{ $status->inquiry_status_name }}</td>
+                                                                 <td class="text-center">{{ $status->inquiry_status_notes }}</td>
+                                                                 <td class="text-center">{{ $status->inquiry_status_code }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $status->inquiry_status_id }}')">
@@ -157,6 +159,9 @@ Inquiry Status Management - Admin Panel
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
     function reload() {
         window.location.reload();
@@ -187,13 +192,19 @@ Inquiry Status Management - Admin Panel
             async: false,
             success: function (data) {
                 if (data.status == 401) {
-                    alert('Form is required');
-                    return;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Form is required',
+                    });
                 } else {
-                    alert('Successfully saved');
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Successfully saved',
+                    }).then(() => {
+                        reload();
+                    });
                 }
             },
             error: function (dataerror) {
@@ -239,13 +250,19 @@ Inquiry Status Management - Admin Panel
             async: false,
             success: function (data) {
                 if (data.status == 401) {
-                    alert('Form is required');
-                    return;
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Form is required',
+                    });
                 } else {
-                    alert('Successfully updated');
-                    setTimeout(function () {
-                        window.location.reload();
-                    }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Successfully updated',
+                    }).then(() => {
+                        reload();
+                    });
                 }
             },
             error: function (dataerror) {
@@ -255,32 +272,49 @@ Inquiry Status Management - Admin Panel
     }
 
     function delete_data(id) {
-        var postdata = {};
-        postdata._token = document.getElementsByName('_token')[0].defaultValue;
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                var postdata = {};
+                postdata._token = document.getElementsByName('_token')[0].defaultValue;
 
-        if (confirm('Are you sure you want to delete this data?')) {
-            $.ajax({
-                type: "DELETE",
-                url: "/admin/inquiry_statuses/" + id,
-                data: postdata,
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data.status == 401) {
-                        alert('Form is required');
-                        return;
-                    } else {
-                        alert('Data successfully deleted');
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 500);
+                $.ajax({
+                    type: "DELETE",
+                    url: "/admin/inquiry_statuses/" + id,
+                    data: postdata,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.status == 401) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Form is required',
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: 'Data has been deleted.',
+                            }).then(() => {
+                                reload();
+                            });
+                        }
+                    },
+                    error: function (dataerror) {
+                        console.log(dataerror);
                     }
-                },
-                error: function (dataerror) {
-                    console.log(dataerror);
-                }
-            });
-        }
+                });
+            }
+        });
     }
 </script>
+
 @endsection

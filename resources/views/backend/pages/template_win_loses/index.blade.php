@@ -62,11 +62,13 @@ Template Win Lose - Admin Panel
                                                     <tbody>
                                                         @foreach ($template_win_loses as $template_win_lose)
                                                             <tr>
-                                                                <td scope="row" class="text-center">{{ $loop->iteration }}</td>
-                                                                <td>{{ $template_win_lose->template_win_loses_title }}</td>
-                                                                <td>{{ $template_win_lose->template_win_loses_text }}</td>
-                                                                <td>{{ $template_win_lose->template_win_loses_code }}</td>
-                                                                <td>{{ $template_win_lose->template_win_loses_notes }}</td>
+                                                            <td scope="row" class="text-center">
+                                                                    {{ ($template_win_loses->currentPage() - 1) * $template_win_loses->perPage() + $loop->iteration }}
+                                                                </td>
+                                                                 <td class="text-center">{{ $template_win_lose->template_win_loses_title }}</td>
+                                                                 <td class="text-center">{{ $template_win_lose->template_win_loses_text }}</td>
+                                                                 <td class="text-center">{{ $template_win_lose->template_win_loses_code }}</td>
+                                                                 <td class="text-center">{{ $template_win_lose->template_win_loses_notes }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $template_win_lose->template_win_loses_id }}')">
@@ -162,6 +164,7 @@ Template Win Lose - Admin Panel
     </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     function reload() {
         window.open("/admin/template_win_loses", "_self");
@@ -193,10 +196,19 @@ Template Win Lose - Admin Panel
             async: false,
             success: function (data) {
                 if (data.status == 401) {
-                    alert('Form fields are required');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Form fields are required'
+                    });
                 } else {
-                    alert('Saved successfully');
-                    reload();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Saved',
+                        text: 'Data has been saved successfully'
+                    }).then(() => {
+                        reload();
+                    });
                 }
             },
             error: function (dataerror) {
@@ -241,10 +253,19 @@ Template Win Lose - Admin Panel
             async: false,
             success: function (data) {
                 if (data.status == 401) {
-                    alert('Form fields are required');
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Form fields are required'
+                    });
                 } else {
-                    alert('Updated successfully');
-                    reload();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Updated',
+                        text: 'Data has been updated successfully'
+                    }).then(() => {
+                        reload();
+                    });
                 }
             },
             error: function (dataerror) {
@@ -257,27 +278,47 @@ Template Win Lose - Admin Panel
         let postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
 
-        if (confirm('Are you sure you want to delete this data?')) {
-            $.ajax({
-                type: "DELETE",
-                url: "/admin/template_win_loses/" + id,
-                data: postdata,
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data.status == 401) {
-                        alert('Form fields are required');
-                    } else {
-                        alert('Deleted successfully');
-                        reload();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "/admin/template_win_loses/" + id,
+                    data: postdata,
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.status == 401) {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Failed to delete data'
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted',
+                                text: 'Data has been deleted successfully'
+                            }).then(() => {
+                                reload();
+                            });
+                        }
+                    },
+                    error: function (dataerror) {
+                        console.log(dataerror);
                     }
-                },
-                error: function (dataerror) {
-                    console.log(dataerror);
-                }
-            });
-        }
+                });
+            }
+        });
     }
 </script>
+
 
 @endsection

@@ -65,10 +65,10 @@ Divisions - Admin Panel
                                                             <td scope="row" class="text-center">
                                                                     {{ ($divisions->currentPage() - 1) * $divisions->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td>{{ $division->division_name }}</td>
-                                                                <td>{{ $division->division_notes }}</td>
-                                                                <td>{{ $division->division_code }}</td>
-                                                                <td>{{ $division->company->companies_name ?? '-' }}</td>
+                                                                 <td class="text-center">{{ $division->division_name }}</td>
+                                                                 <td class="text-center">{{ $division->division_notes }}</td>
+                                                                 <td class="text-center">{{ $division->division_code }}</td>
+                                                                 <td class="text-center">{{ $division->company->companies_name ?? '-' }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $division->division_id }}')">

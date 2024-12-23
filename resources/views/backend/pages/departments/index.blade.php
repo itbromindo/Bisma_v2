@@ -65,10 +65,10 @@ Departments - Admin Panel
                                                             <td scope="row" class="text-center">
                                                                     {{ ($departments->currentPage() - 1) * $departments->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td>{{ $department->department_name }}</td>
-                                                                <td>{{ $department->department_notes }}</td>
-                                                                <td>{{ $department->department_code }}</td>
-                                                                <td>{{ $department->division->division_name ?? '-' }}</td>
+                                                                 <td class="text-center">{{ $department->department_name }}</td>
+                                                                 <td class="text-center">{{ $department->department_notes }}</td>
+                                                                 <td class="text-center">{{ $department->department_code }}</td>
+                                                                 <td class="text-center">{{ $department->division->division_name ?? '-' }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $department->department_id }}')">
