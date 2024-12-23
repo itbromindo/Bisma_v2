@@ -21,13 +21,19 @@ class InquiryGoodController extends Controller
         ];
     }
 
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['inquiry_goods.view']);
 
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model->where('inquiry_goods_status_name', 'like', '%'. $search .'%')->where('inquiry_goods_status_soft_delete', 0)->paginate(15);
+
+        if($request -> ajax()){
+            return response()->json([
+                'inquiry_goods'=> $listdata,
+            ]);
+        }
 
         return view('backend.pages.inquiry_goods.index', [
             'inquiry_goods' => $listdata,
