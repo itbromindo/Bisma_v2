@@ -23,7 +23,7 @@ class UsersController extends Controller
         $this->model = new User();
         $this->mandatory = array(
             'users_name' => 'required', 
-            // 'users_photo' => 'required|file|mimes:pdf|max:2048', 
+            'users_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', 
             'users_email' => 'required', 
             'users_password' => 'required',
             'users_office_phone' => 'required',
@@ -52,8 +52,8 @@ class UsersController extends Controller
             'users_bpjs_tk_number' => 'required',
             'users_bpjs_number' => 'required',
             'users_ktp_number' => 'required',
-            // 'users_ktp_picture' => 'required|file|mimes:pdf|max:2048',
-            // 'users_signature' => 'required|file|mimes:pdf|max:2048',
+            'users_ktp_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'users_signature' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
 		);
     }
 
@@ -104,10 +104,34 @@ class UsersController extends Controller
 			return response()->json($messages);
 		}
 
+        // Upload file user_photo
+		$newFileName1 = null;
+		if ($request->hasFile('users_photo')) {
+			$file1 = $request->file('users_photo');
+			$newFileName1 = 'User_Image_' . time() . '_' . uniqid() . '.' . $file1->getClientOriginalExtension();
+			$file1->move(public_path('file_user'), $newFileName1);
+		}
+
+        // Upload file ktp_picture
+		$newFileName2 = null;
+		if ($request->hasFile('users_ktp_picture')) {
+			$file2 = $request->file('users_ktp_picture');
+			$newFileName2 = 'User_Image_' . time() . '_' . uniqid() . '.' . $file2->getClientOriginalExtension();
+			$file2->move(public_path('file_user'), $newFileName2);
+		}
+
+        // Upload file signature_picture
+		$newFileName3 = null;
+		if ($request->hasFile('users_signature')) {
+			$file3 = $request->file('users_signature');
+			$newFileName3 = 'User_Image_' . time() . '_' . uniqid() . '.' . $file3->getClientOriginalExtension();
+			$file3->move(public_path('file_user'), $newFileName3);
+		}
+
         $result = $this->model->create([
             'user_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
             'users_name' => $request->users_name, 
-            'users_photo' => $request->users_photo, 
+            'users_photo' => $newFileName1 ? 'file_user/' . $newFileName1 : null, 
             'users_email' => $request->users_email, 
             'users_password' => Hash::make($request->users_password), 
             'users_office_phone' => $request->users_office_phone, 
@@ -136,8 +160,8 @@ class UsersController extends Controller
             'users_bpjs_tk_number' => $request->users_bpjs_tk_number,
             'users_bpjs_number' => $request->users_bpjs_number,
             'users_ktp_number' => $request->users_ktp_number,
-            'users_ktp_picture' => $request->users_ktp_picture,
-            'users_signature' => $request->users_signature,
+            'users_ktp_picture' => $newFileName2 ? 'file_user/' . $newFileName2 : null,
+            'users_signature' => $newFileName3 ? 'file_user/' . $newFileName3 : null,
             'users_created_at' => date("Y-m-d h:i:s"),
             'users_created_by' => Session::get('user_code'),
         ]);
@@ -166,7 +190,7 @@ class UsersController extends Controller
 			return response()->json($messages);
 		}
 
-        $result = $this->model->find($id)->update([
+        $result = [
             'users_name' => $request->users_name, 
             // 'users_photo' => $request->users_photo, 
             'users_email' => $request->users_email, 
@@ -201,7 +225,31 @@ class UsersController extends Controller
             // 'users_signature' => $request->users_signature,
             'users_updated_at' => date("Y-m-d h:i:s"),
             'users_updated_by' => Session::get('user_code'),
-        ]);
+        ];
+
+        if ($request->hasFile('users_photo')) {
+			$file1 = $request->file('users_photo');
+			$newFileName1 = 'User_Image_' . time() . '_' . uniqid() . '.' . $file1->getClientOriginalExtension();
+			$file1->move(public_path('file_user'), $newFileName1);
+			$result['users_photo'] = 'file_user/' . $newFileName1;
+		}
+
+        if ($request->hasFile('users_ktp_picture')) {
+			$file2 = $request->file('users_ktp_picture');
+			$newFileName2 = 'User_Image_' . time() . '_' . uniqid() . '.' . $file2->getClientOriginalExtension();
+			$file2->move(public_path('file_user'), $newFileName2);
+			$result['users_ktp_picture'] = 'file_user/' . $newFileName2;
+		}
+
+        if ($request->hasFile('users_signature')) {
+			$file3 = $request->file('users_signature');
+			$newFileName3 = 'User_Image_' . time() . '_' . uniqid() . '.' . $file3->getClientOriginalExtension();
+			$file3->move(public_path('file_user'), $newFileName3);
+			$result['users_signature'] = 'file_user/' . $newFileName3;
+		}
+
+        // Update data di database
+		$resultdata = $this->model->find($id)->update($result);
 
         session()->flash('success', 'Admin has been updated.');
         return $request;

@@ -579,7 +579,7 @@ Users - Admin Panel
         // Tambahkan token CSRF
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('users_name', document.getElementById('users_name').value); 
-        postdata.append('users_photo', document.getElementById('users_photo').value); 
+        postdata.append('users_photo', document.getElementById('users_photo').files[0]); 
         postdata.append('users_email', document.getElementById('users_email').value); 
         postdata.append('users_password', document.getElementById('users_password').value); 
         postdata.append('users_office_phone', document.getElementById('users_office_phone').value); 
@@ -608,8 +608,8 @@ Users - Admin Panel
         postdata.append('users_bpjs_tk_number', document.getElementById('users_bpjs_tk_number').value);
         postdata.append('users_bpjs_number', document.getElementById('users_bpjs_number').value);
         postdata.append('users_ktp_number', document.getElementById('users_ktp_number').value);
-        postdata.append('users_ktp_picture', document.getElementById('users_ktp_picture').value);
-        postdata.append('users_signature', document.getElementById('users_signature').value);
+        postdata.append('users_ktp_picture', document.getElementById('users_ktp_picture').files[0]); 
+        postdata.append('users_signature', document.getElementById('users_signature').files[0]); 
 
         $.ajax({
             type: "POST",
@@ -700,7 +700,8 @@ Users - Admin Panel
         // Tambahkan token CSRF
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('users_name', document.getElementById('users_name').value); 
-        postdata.append('users_photo', document.getElementById('users_photo').value); 
+        // postdata.append('users_photo', document.getElementById('users_photo').value); 
+        postdata.append('users_photo', document.getElementById('users_photo').files[0]); 
         postdata.append('users_email', document.getElementById('users_email').value); 
         postdata.append('users_password', document.getElementById('users_password').value); 
         postdata.append('users_office_phone', document.getElementById('users_office_phone').value); 
@@ -729,8 +730,10 @@ Users - Admin Panel
         postdata.append('users_bpjs_tk_number', document.getElementById('users_bpjs_tk_number').value);
         postdata.append('users_bpjs_number', document.getElementById('users_bpjs_number').value);
         postdata.append('users_ktp_number', document.getElementById('users_ktp_number').value);
-        postdata.append('users_ktp_picture', document.getElementById('users_ktp_picture').value);
-        postdata.append('users_signature', document.getElementById('users_signature').value);
+        // postdata.append('users_ktp_picture', document.getElementById('users_ktp_picture').value);
+        // postdata.append('users_signature', document.getElementById('users_signature').value);
+        postdata.append('users_ktp_picture', document.getElementById('users_ktp_picture').files[0]); 
+        postdata.append('users_signature', document.getElementById('users_signature').files[0]); 
         // console.log('Data FormData: ', Array.from(postdata.entries()));
         
 

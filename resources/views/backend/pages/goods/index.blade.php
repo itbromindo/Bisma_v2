@@ -482,7 +482,7 @@ Goods - Admin Panel
         // Tambahkan token CSRF
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('goods_name', document.getElementById('goods_name').value); 
-        postdata.append('goods_photo', document.getElementById('goods_photo').value); 
+        postdata.append('goods_photo', document.getElementById('goods_photo').files[0]);
         postdata.append('goods_usage', document.querySelector('input[name="goods_usage"]:checked').value);
         postdata.append('goods_specification', document.querySelector('input[name="goods_specification"]:checked').value);
         postdata.append('brand_code', document.getElementById('brand_code').value);
@@ -544,9 +544,11 @@ Goods - Admin Panel
                 // console.log('hasil => ',data);
                 document.getElementById('goods_id').value = data.goods_id; 
                 document.getElementById('goods_name').value = data.goods_name; 
-                document.getElementById('goods_photo').value = data.goods_photo; 
-                document.querySelector(`input[name="goods_usage"][id="${data.goods_usage}"]`).checked = true
-                document.querySelector(`input[name="goods_specification"][id="${data.goods_specification}"]`).checked = true
+                // if (data.goods_photo) {
+                //     document.getElementById('goods_photo').value = data.goods_photo;
+                // }
+                document.querySelector(`input[name="goods_usage"][id="${data.goods_usage}"]`).checked = true;
+                document.querySelector(`input[name="goods_specification"][id="${data.goods_specification}"]`).checked = true;
                 $('#brand_code').append(new Option(data.brand_name, data.brand_code, true, true)).trigger('change');
                 document.getElementById('goods_price').value = data.goods_price;
                 document.getElementById('goods_stock').value = data.goods_stock;
@@ -562,7 +564,7 @@ Goods - Admin Panel
                 document.getElementById('goods_weight').value = data.goods_weight;
                 $('#product_division_code').append(new Option(data.product_divisions_name, data.product_division_code, true, true)).trigger('change');
                 $('#product_category_code').append(new Option(data.product_category_name, data.product_category_code, true, true)).trigger('change');
-                document.querySelector(`input[name="goods_availability"][id="${data.goods_availability}"]`).checked = true
+                document.querySelector(`input[name="goods_availability"][id="${data.goods_availability}"]`).checked = true;
                 document.getElementById('goods_notes').value = data.goods_notes;
                 
                 document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
@@ -580,7 +582,7 @@ Goods - Admin Panel
         // Tambahkan token CSRF
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('goods_name', document.getElementById('goods_name').value); 
-        postdata.append('goods_photo', document.getElementById('goods_photo').value); 
+        postdata.append('goods_photo', document.getElementById('goods_photo').files[0]); 
         postdata.append('goods_usage', document.querySelector('input[name="goods_usage"]:checked').value);
         postdata.append('goods_specification', document.querySelector('input[name="goods_specification"]:checked').value);
         postdata.append('brand_code', document.getElementById('brand_code').value);
