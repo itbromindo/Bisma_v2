@@ -16,6 +16,7 @@ class GoodsController extends Controller
         $this->mandatory = array(
             'goods_name' => 'required',
             'goods_usage' => 'required',
+            'goods_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'goods_specification' => 'required',
             'brand_code' => 'required',
             'goods_price' => 'required',
@@ -39,13 +40,22 @@ class GoodsController extends Controller
     public function index()
     {      
         $this->checkAuthorization(auth()->user(), ['goods.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where(function($q) use ($search){
+            $q->where('goods_name', 'like', '%' . $search . '%')
+            ->orWhere('goods_usage', 'like', '%' . $search . '%')
+            ->orWhere('goods_specification', 'like', '%' . $search . '%')  
+            ->orWhere('goods_price', 'like', '%' . $search . '%');
+        })
         ->where('goods_soft_delete', 0)
+        ->orderBy('goods_created_at', 'desc')
         ->paginate(15);
 
         return view('backend.pages.goods.index', [
             'barang' => $listdata,
+            'search' => $search,
         ]);
     }
 
@@ -74,10 +84,18 @@ class GoodsController extends Controller
 			return response()->json($messages);
 		}
 
+        // Upload file foto
+		$newFileName1 = null;
+		if ($request->hasFile('goods_photo')) {
+			$file1 = $request->file('goods_photo');
+			$newFileName1 = 'Goods_Image_' . time() . '_' . uniqid() . '.' . $file1->getClientOriginalExtension();
+			$file1->move(public_path('file_goods'), $newFileName1);
+		}
+
         $result = $this->model->create([
             'goods_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
             'goods_name' => $request->goods_name, 
-            'goods_photo' => $request->goods_photo, 
+            'goods_photo' => $newFileName1 ? 'file_goods/' . $newFileName1 : null,
             'goods_usage' => $request->goods_usage, 
             'goods_specification' => $request->goods_specification, 
             'brand_code' => $request->brand_code, 
@@ -119,9 +137,9 @@ class GoodsController extends Controller
 			return response()->json($messages);
 		}
 
-        $result = $this->model->find($id)->update([
+        $result = [
             'goods_name' => $request->goods_name, 
-            'goods_photo' => $request->goods_photo, 
+            // 'goods_photo' => $request->goods_photo, 
             'goods_usage' => $request->goods_usage, 
             'goods_specification' => $request->goods_specification, 
             'brand_code' => $request->brand_code, 
@@ -143,7 +161,17 @@ class GoodsController extends Controller
             'goods_notes' => $request->goods_notes, 
             'goods_updated_at' => date("Y-m-d h:i:s"),
             'goods_updated_by' => Session::get('user_code'),
-        ]);
+        ];
+
+        if ($request->hasFile('goods_photo')) {
+			$file1 = $request->file('goods_photo');
+			$newFileName1 = 'Goods_Image_' . time() . '_' . uniqid() . '.' . $file1->getClientOriginalExtension();
+			$file1->move(public_path('file_goods'), $newFileName1);
+			$result['goods_photo'] = 'file_goods/' . $newFileName1;
+		}
+
+        // Update data di database
+		$resultdata = $this->model->find($id)->update($result);
 
         session()->flash('success', 'Level has been updated.');
         return $request;

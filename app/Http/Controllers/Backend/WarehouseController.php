@@ -22,13 +22,16 @@ class WarehouseController extends Controller
     public function index()
     {      
         $this->checkAuthorization(auth()->user(), ['warehouse.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where('warehouse_name', 'like', '%' . $search . '%')
         ->where('warehouse_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.warehouse.index', [
             'warehouse' => $listdata,
+            'search' => $search
         ]);
     }
 

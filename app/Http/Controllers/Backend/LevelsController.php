@@ -31,22 +31,25 @@ class LevelsController extends Controller
     public function index()
     {      
         $this->checkAuthorization(auth()->user(), ['levels.view']);
-
-        // return Session::all();
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where('level_name', 'like', '%' . $search . '%')
         ->where('level_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.levels.index', [
             'levels' => $listdata,
+            'search' => $search,
         ]);
     }
 
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['levels.view']);
-        $model = $this->model->find($id);
+        $model = $this->model
+        ->leftjoin('departments', 'departments.department_code', '=', 'level.department_code')
+        ->find($id);
         return $model;
     }
 
@@ -113,5 +116,17 @@ class LevelsController extends Controller
         ]);
         session()->flash('success', 'Level has been deleted.');
         return $result;
+    }
+
+    public function combo(Request $request)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->model
+            ->select('level_code as id', 'level_name as text')
+            ->where('level_name', 'like', '%' . $search . '%')
+            ->where('level_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
     }
 }

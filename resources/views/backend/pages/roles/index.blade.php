@@ -2,7 +2,7 @@
 @extends('backend.layouts.master')
 
 @section('title')
-{{ __('Roles - Admin Panel') }}
+{{ __('Roles & Permission - Admin Panel') }}
 @endsection
 
 @section('admin-content')

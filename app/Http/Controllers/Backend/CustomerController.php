@@ -34,13 +34,20 @@ class CustomerController extends Controller
     public function index()
     {      
         $this->checkAuthorization(auth()->user(), ['customer.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where(function($q) use ($search){
+            $q->where('customer_name', 'like', '%' . $search . '%')
+            ->orWhere('customers_phone', 'like', '%' . $search . '%')
+            ->orWhere('customers_full_address', 'like', '%' . $search . '%');
+        })
         ->where('customers_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.customer.index', [
             'customer' => $listdata,
+            'search' => $search,
         ]);
     }
 

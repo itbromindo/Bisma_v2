@@ -60,6 +60,7 @@ class UserSeeder extends Seeder
             $user->users_deleted_at = null;
             $user->users_deleted_by = null;
             $user->users_soft_delete = 0;
+            $user->users_permission = 'superadmin'; // Default hardcoded
             $user->save();
         }
     }

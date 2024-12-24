@@ -22,13 +22,16 @@ class ProductdivisionController extends Controller
     public function index()
     {      
         $this->checkAuthorization(auth()->user(), ['product_divisions.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where('product_divisions_name', 'like', '%' . $search . '%')
         ->where('product_divisions_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.product_divisions.index', [
             'product_divisions' => $listdata,
+            'search' => $search,
         ]);
     }
 

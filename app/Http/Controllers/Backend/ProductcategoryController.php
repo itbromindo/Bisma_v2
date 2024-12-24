@@ -22,13 +22,16 @@ class ProductcategoryController extends Controller
     public function index()
     {      
         $this->checkAuthorization(auth()->user(), ['product_category.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where('product_category_name', 'like', '%' . $search . '%')
         ->where('product_category_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.product_category.index', [
             'product_category' => $listdata,
+            'search' => $search,
         ]);
     }
 

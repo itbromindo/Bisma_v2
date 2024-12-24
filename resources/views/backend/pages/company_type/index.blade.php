@@ -39,7 +39,7 @@ Jenis Perusahaan - Admin Panel
                                         </div>
                                     </form>
                                 </div>
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput">Tambah Data</button>
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput" onclick="clearform()">Tambah Data</button>
                             </div>
                         </div>
 
@@ -133,7 +133,7 @@ Jenis Perusahaan - Admin Panel
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Form Input</h5>
+                <h5 class="modal-title" id="tittleform">Form Input</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -153,8 +153,8 @@ Jenis Perusahaan - Admin Panel
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
-                <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                <button type="button" class="btn btn-primary" onclick="save()">Save</button>
             </div>
         </div>
     </div>
@@ -174,6 +174,14 @@ Jenis Perusahaan - Admin Panel
         } else {
             updateInput(id);
         }
+    }
+
+    function clearform() {
+        document.getElementById('company_type_id').value = '';
+        document.getElementById('company_type_name').value = '';
+        document.getElementById('company_type_notes').value = '';
+
+        document.getElementById('tittleform').innerHTML = 'Form Input';
     }
 
     function saveInput() {
@@ -226,6 +234,7 @@ Jenis Perusahaan - Admin Panel
                 document.getElementById('company_type_name').value = data.company_type_name; 
                 document.getElementById('company_type_notes').value = data.company_type_notes;
                 
+                document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
                 // Tampilkan modal
                 $('#modalinput').modal('show')
             },

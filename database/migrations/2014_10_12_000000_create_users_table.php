@@ -55,6 +55,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('users_deleted_at')->nullable();
             $table->string('users_deleted_by', 225)->nullable();
             $table->boolean('users_soft_delete')->default(0);
+            $table->string('users_permission', 225)->nullable();
             $table->timestamps();
         });
     }

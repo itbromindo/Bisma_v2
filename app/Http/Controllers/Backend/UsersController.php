@@ -23,7 +23,7 @@ class UsersController extends Controller
         $this->model = new User();
         $this->mandatory = array(
             'users_name' => 'required', 
-            // 'users_photo' => 'required|file|mimes:pdf|max:2048', 
+            // 'users_photo' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048', 
             'users_email' => 'required', 
             'users_password' => 'required',
             'users_office_phone' => 'required',
@@ -52,28 +52,42 @@ class UsersController extends Controller
             'users_bpjs_tk_number' => 'required',
             'users_bpjs_number' => 'required',
             'users_ktp_number' => 'required',
-            // 'users_ktp_picture' => 'required|file|mimes:pdf|max:2048',
-            // 'users_signature' => 'required|file|mimes:pdf|max:2048',
+            // 'users_ktp_picture' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'users_signature' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048',
 		);
     }
 
     public function index()
     {        
         $this->checkAuthorization(auth()->user(), ['users.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where(function($q) use ($search) {
+            $q->where('users_name', 'like', '%' . $search . '%')
+            ->orWhere('users_email', 'like', '%' . $search . '%')
+            ->orWhere('users_office_phone', 'like', '%' . $search . '%');
+        })
         ->where('users_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.users.index', [
             'users' => $listdata,
+            'search' => $search,
         ]);
     }
 
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['users.view']);
-        $user = $this->model->find($id);
+        $user = $this->model
+        ->leftjoin('level', 'level.level_code', '=', 'users.users_level')
+        ->leftjoin('companies', 'companies.companies_code', '=', 'users.users_company')
+        ->leftjoin('homebases', 'homebases.homebase_code', '=', 'users.users_homebase')
+        ->leftjoin('divisions', 'divisions.division_code', '=', 'users.users_division')
+        ->leftjoin('departments', 'departments.department_code', '=', 'users.users_department')
+        ->leftjoin('shifts', 'shifts.shift_code', '=', 'users.users_shift')
+        ->find($id);
         return $user;
     }
 
@@ -90,10 +104,34 @@ class UsersController extends Controller
 			return response()->json($messages);
 		}
 
-        $result = $this->model->create([
+        // Upload file user_photo
+		$newFileName1 = null;
+		if ($request->hasFile('users_photo')) {
+			$file1 = $request->file('users_photo');
+			$newFileName1 = 'User_Image_' . time() . '_' . uniqid() . '.' . $file1->getClientOriginalExtension();
+			$file1->move(public_path('file_user'), $newFileName1);
+		}
+
+        // Upload file ktp_picture
+		$newFileName2 = null;
+		if ($request->hasFile('users_ktp_picture')) {
+			$file2 = $request->file('users_ktp_picture');
+			$newFileName2 = 'User_Image_' . time() . '_' . uniqid() . '.' . $file2->getClientOriginalExtension();
+			$file2->move(public_path('file_user'), $newFileName2);
+		}
+
+        // Upload file signature_picture
+		$newFileName3 = null;
+		if ($request->hasFile('users_signature')) {
+			$file3 = $request->file('users_signature');
+			$newFileName3 = 'User_Image_' . time() . '_' . uniqid() . '.' . $file3->getClientOriginalExtension();
+			$file3->move(public_path('file_user'), $newFileName3);
+		}
+
+        $user = $this->model->create([
             'user_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
             'users_name' => $request->users_name, 
-            'users_photo' => $request->users_photo, 
+            'users_photo' => $newFileName1 ? 'file_user/' . $newFileName1 : null, 
             'users_email' => $request->users_email, 
             'users_password' => Hash::make($request->users_password), 
             'users_office_phone' => $request->users_office_phone, 
@@ -122,11 +160,17 @@ class UsersController extends Controller
             'users_bpjs_tk_number' => $request->users_bpjs_tk_number,
             'users_bpjs_number' => $request->users_bpjs_number,
             'users_ktp_number' => $request->users_ktp_number,
-            'users_ktp_picture' => $request->users_ktp_picture,
-            'users_signature' => $request->users_signature,
+            'users_ktp_picture' => $newFileName2 ? 'file_user/' . $newFileName2 : null,
+            'users_signature' => $newFileName3 ? 'file_user/' . $newFileName3 : null,
             'users_created_at' => date("Y-m-d h:i:s"),
             'users_created_by' => Session::get('user_code'),
+            'users_permission' => $request->users_permission,
         ]);
+
+        // Assign role to user
+        if ($request->filled('users_permission')) {
+            $user->assignRole($request->users_permission); // Spatie Permission
+        }
 
         session()->flash('success', __('User has been created.'));
         return $request;
@@ -152,11 +196,12 @@ class UsersController extends Controller
 			return response()->json($messages);
 		}
 
-        $result = $this->model->find($id)->update([
-            'users_name' => $request->users_name, 
-            // 'users_photo' => $request->users_photo, 
+        $result = [
+            'users_name' => $request->users_name,  
             'users_email' => $request->users_email, 
-            'users_password' => Hash::make($request->users_password), 
+            'users_password' => $request->users_password 
+                ? Hash::make($request->users_password) 
+                : $this->model->find($id)->users_password,
             'users_office_phone' => $request->users_office_phone, 
             'users_personal_phone' => $request->users_personal_phone, 
             'users_join_date' => $request->users_join_date, 
@@ -183,14 +228,47 @@ class UsersController extends Controller
             'users_bpjs_tk_number' => $request->users_bpjs_tk_number,
             'users_bpjs_number' => $request->users_bpjs_number,
             'users_ktp_number' => $request->users_ktp_number,
-            // 'users_ktp_picture' => $request->users_ktp_picture,
-            // 'users_signature' => $request->users_signature,
             'users_updated_at' => date("Y-m-d h:i:s"),
             'users_updated_by' => Session::get('user_code'),
-        ]);
+            'users_permission' => $request->users_permission,
+        ];
+
+        if ($request->hasFile('users_photo')) {
+			$file1 = $request->file('users_photo');
+			$newFileName1 = 'User_Image_' . time() . '_' . uniqid() . '.' . $file1->getClientOriginalExtension();
+			$file1->move(public_path('file_user'), $newFileName1);
+			$result['users_photo'] = 'file_user/' . $newFileName1;
+		}
+
+        if ($request->hasFile('users_ktp_picture')) {
+			$file2 = $request->file('users_ktp_picture');
+			$newFileName2 = 'User_Image_' . time() . '_' . uniqid() . '.' . $file2->getClientOriginalExtension();
+			$file2->move(public_path('file_user'), $newFileName2);
+			$result['users_ktp_picture'] = 'file_user/' . $newFileName2;
+		}
+
+        if ($request->hasFile('users_signature')) {
+			$file3 = $request->file('users_signature');
+			$newFileName3 = 'User_Image_' . time() . '_' . uniqid() . '.' . $file3->getClientOriginalExtension();
+			$file3->move(public_path('file_user'), $newFileName3);
+			$result['users_signature'] = 'file_user/' . $newFileName3;
+		}
+
+        // Update data di database
+        $admin = $this->model->find($id);
+        $admin->update($result);
+
+        // Update roles
+        $admin->roles()->detach(); // Hapus semua peran lama
+        if ($request->users_permission) {
+            $admin->assignRole($request->users_permission); // Tambahkan peran baru
+        }
 
         session()->flash('success', 'Admin has been updated.');
-        return $request;
+        return response()->json([
+            'status' => 200,
+            'message' => 'Admin updated successfully!',
+        ]);
     }
 
     public function destroy($id)

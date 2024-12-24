@@ -11,6 +11,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use DB;
 
 class RolesController extends Controller
 {
@@ -101,5 +102,16 @@ class RolesController extends Controller
         $role->delete();
         session()->flash('success', 'Role has been deleted.');
         return redirect()->route('admin.roles.index');
+    }
+
+    public function combo()
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = DB::table('roles')
+            ->select('name as id', 'name as text')
+            ->where('name', 'like', '%' . $search . '%')
+            ->get();
+
+        return response()->json($listdata);
     }
 }

@@ -28,13 +28,16 @@ class MenusController extends Controller
     public function index(): Renderable
     {        
         $this->checkAuthorization(auth()->user(), ['menus.view']);
+        $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
+        ->where('menus_name', 'like', '%' . $search . '%')
         ->where('menus_soft_delete', 0)
         ->paginate(15);
 
         return view('backend.pages.menus.index', [
             'menus' => $listdata,
+            'search' => $search,
         ]);
     }
 
