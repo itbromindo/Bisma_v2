@@ -28,17 +28,23 @@ class ParameterDuedateController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['parameter_duedate.view']);
         $search = $_GET['search'] ?? '';
 
-        $listdata = $this->model
+        $listdata = $this->model->with('user')
             ->where('param_duedate_name', 'like', '%' . $search . '%')
             ->where('param_duedate_soft_delete', 0)
             ->paginate(15);
 
         $users = User::select('user_code', 'users_name')->get();
+
+        if($request -> ajax()){
+            return response()->json([
+                'parameter_duedates' => $listdata,
+            ]);
+        }
 
         return view('backend.pages.parameter_duedates.index', [
             'parameter_duedates' => $listdata,
