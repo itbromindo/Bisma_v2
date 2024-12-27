@@ -1489,3 +1489,67 @@
 
   })();
 })(jQuery);
+
+
+function showAlert(type, message) {
+  // Peta jenis alert ke ikon dan kelas tema
+  const alertIcons = {
+    info: '/backend/assets/images/svg/info.svg',
+    success: '/backend/assets/images/svg/checkcircle.svg',
+    warning: '/backend/assets/images/svg/warningcircle.svg',
+    danger: '/backend/assets/images/svg/warning.svg',
+  };
+
+  // Tentukan kelas dan ikon berdasarkan jenis alert
+  const icon = alertIcons[type] || alertIcons.info; // Default ke info jika tipe tidak valid
+  const alertClass = type || 'info'; // Default ke info jika tipe tidak valid
+
+  // Buat elemen div untuk alert
+  const alertDiv = document.createElement('div');
+  alertDiv.className = `alert-item alert fade show ${alertClass}`;
+  alertDiv.setAttribute('role', 'alert');
+
+  // Buat elemen isi alert
+  const alertLeft = document.createElement('div');
+  alertLeft.className = 'alert-left';
+
+  const alertIcon = document.createElement('div');
+  alertIcon.className = 'alert-icon';
+  const img = document.createElement('img');
+  img.src = icon;
+  img.alt = `${type} icon`;
+  alertIcon.appendChild(img);
+
+  const alertData = document.createElement('div');
+  alertData.className = 'alert-data';
+  const h6 = document.createElement('h6');
+  h6.textContent = message;
+  alertData.appendChild(h6);
+
+  // Susun isi alert
+  alertLeft.appendChild(alertIcon);
+  alertLeft.appendChild(alertData);
+
+  // Tambahkan isi ke dalam alert utama
+  alertDiv.appendChild(alertLeft);
+
+  // Tambahkan tombol close
+  const closeButton = document.createElement('button');
+  closeButton.type = 'button';
+  closeButton.className = 'btn-close';
+  closeButton.setAttribute('data-bs-dismiss', 'alert');
+  closeButton.setAttribute('aria-label', 'Close');
+  alertDiv.appendChild(closeButton);
+
+  // Tambahkan alert ke container tertentu di halaman
+  const alertContainer = document.getElementById('alert-container');
+  if (alertContainer) {
+      alertContainer.appendChild(alertDiv);
+  }
+
+  // Hapus alert secara otomatis setelah beberapa detik (opsional)
+  setTimeout(() => {
+      alertDiv.remove();
+  }, 5000);
+}
+

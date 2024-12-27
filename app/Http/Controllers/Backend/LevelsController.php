@@ -63,7 +63,8 @@ class LevelsController extends Controller
 				'data' => $validator->errors()->first(),
 				'status' => 401,
 			];
-			return response()->json($messages);
+            session()->flash('error', $validator->errors()->first());
+            return response()->json($messages);
 		}
 
         $result = $this->model->create([
