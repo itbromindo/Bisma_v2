@@ -11,13 +11,13 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use DB;
 
 class RolesController extends Controller
 {
     public function index(): Renderable
     {
         $this->checkAuthorization(auth()->user(), ['role.view']);
-
         return view('backend.pages.roles.index', [
             'roles' => Role::all(),
         ]);
@@ -38,7 +38,7 @@ class RolesController extends Controller
         $this->checkAuthorization(auth()->user(), ['role.create']);
 
         // Process Data.
-        $role = Role::create(['name' => $request->name, 'guard_name' => 'admin']);
+        $role = Role::create(['name' => $request->name, 'guard_name' => 'web']);
 
         // $role = DB::table('roles')->where('name', $request->name)->first();
         $permissions = $request->input('permissions');
@@ -55,7 +55,7 @@ class RolesController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['role.edit']);
 
-        $role = Role::findById($id, 'admin');
+        $role = Role::findById($id, 'web');
         if (!$role) {
             session()->flash('error', 'Role not found.');
             return back();
@@ -72,7 +72,7 @@ class RolesController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['role.edit']);
 
-        $role = Role::findById($id, 'admin');
+        $role = Role::findById($id, 'web');
         if (!$role) {
             session()->flash('error', 'Role not found.');
             return back();
@@ -93,7 +93,7 @@ class RolesController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['role.delete']);
 
-        $role = Role::findById($id, 'admin');
+        $role = Role::findById($id, 'web');
         if (!$role) {
             session()->flash('error', 'Role not found.');
             return back();
@@ -102,5 +102,16 @@ class RolesController extends Controller
         $role->delete();
         session()->flash('success', 'Role has been deleted.');
         return redirect()->route('admin.roles.index');
+    }
+
+    public function combo()
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = DB::table('roles')
+            ->select('name as id', 'name as text')
+            ->where('name', 'like', '%' . $search . '%')
+            ->get();
+
+        return response()->json($listdata);
     }
 }

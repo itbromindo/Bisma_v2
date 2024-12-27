@@ -114,4 +114,16 @@ class DepartmentController extends Controller
         session()->flash('success', __('Department has been deleted.'));
         return $result;
     }
+
+    public function combo(Request $request)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->model
+            ->select('department_code as id', 'department_name as text')
+            ->where('department_name', 'like', '%' . $search . '%')
+            ->where('department_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
+    }
 }

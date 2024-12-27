@@ -115,7 +115,6 @@ class CompanyController extends Controller
     public function combo(Request $request)
     {
         $search = !empty($_GET['search']) ? $_GET['search'] : '%';
-
         $listdata = $this->model
             ->select('companies_code as id', 'companies_name as text')
             ->where('companies_name', 'like', '%' . $search . '%')

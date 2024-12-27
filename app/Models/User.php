@@ -66,7 +66,8 @@ class User extends Authenticatable
         'users_updated_by',
         'users_deleted_at',
         'users_deleted_by',
-        'users_soft_delete'
+        'users_soft_delete',
+        'users_permission'
     ];
 
     /**
