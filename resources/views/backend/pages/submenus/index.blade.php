@@ -5,6 +5,10 @@
 Sub Menu - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -39,7 +43,9 @@ Sub Menu - Admin Panel
                                         </div>
                                     </form>
                                 </div>
+                                @if ($usr->can('submenus.create'))
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput" onclick="clearform()">Tambah Data</button>
+                                @endif
                             </div>
                         </div>
 
@@ -67,12 +73,14 @@ Sub Menu - Admin Panel
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <!-- Tombol Delete -->
+                                                                        @if ($usr->can('submenus.delete'))
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $submenu->submenus_id }}')">
                                                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                                 <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                                 <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                             </svg>
                                                                         </button>
+                                                                        @endif
                                                                         <!-- Tombol Edit -->
                                                                         <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('{{ $submenu->submenus_id }}')">
                                                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -139,6 +147,7 @@ Sub Menu - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="submenus_id">
+                    <div id="alert-container"></div> <!-- Tempat Alert -->
                     <div class="fromGroup mb-3">
                         <label>Menu</Select></label>
                         <select class="form-control" id="menus_code" style="width: 100%;">
@@ -158,7 +167,9 @@ Sub Menu - Admin Panel
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @if ($usr->can('submenus.update') || $usr->can('submenus.create'))
                 <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                @endif
             </div>
         </div>
     </div>
@@ -232,13 +243,16 @@ Sub Menu - Admin Panel
                 // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
+                    showAlert('danger', data.data);
+                    // alert('Form Wajib Harus diisi');
                     return;
                 } else if (data.status == 501) {
-                    alert(data.message);
+                    showAlert('danger', data.data);
+                    // alert(data.message);
                     return;
                 } else {
-                    alert('Berhasil Disimpan');
+                    // alert('Berhasil Disimpan');
+                    showAlert('success', 'Berhasil disimpan');
                     setTimeout(function () {
                         window.open("/admin/submenus", "_self");
                     }, 500);
@@ -246,6 +260,7 @@ Sub Menu - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                showAlert('danger', ['Terjadi kesalahan pada server']);
             }
         });
 
@@ -302,13 +317,16 @@ Sub Menu - Admin Panel
                 // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
+                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', data.data);
                     return;
                 } else if (data.status == 501) {
-                    alert(data.message);
+                    // alert(data.message);
+                    showAlert('danger', data.data);
                     return;
                 } else {
-                    alert('Berhasil Diupdate');
+                    // alert('Berhasil Diupdate');
+                    showAlert('success', 'Berhasil disimpan');
                     setTimeout(function () {
                         window.open("/admin/submenus", "_self");
                     }, 500);
@@ -316,6 +334,7 @@ Sub Menu - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                showAlert('danger', ['Terjadi kesalahan pada server']);
             }
         });
 
@@ -334,13 +353,16 @@ Sub Menu - Admin Panel
                 async: false,
                 success: function (data) {
                     if (data.status == 401) {
-                        alert('Form Wajib Harus diisi');
+                        // alert('Form Wajib Harus diisi');
+                        showAlert('danger', data.data);
                         return;
                     } else if (data.status == 501) {
-                        alert(data.message);
+                        // alert(data.message);
+                        showAlert('danger', data.data);
                         return;
                     } else {
-                        alert('Data Berhasil Dihapus');
+                        // alert('Data Berhasil Dihapus');
+                        showAlert('success', 'Berhasil Dihapus');
                         setTimeout(function () {
                             window.open("/admin/submenus", "_self");
                         }, 500);
@@ -348,6 +370,7 @@ Sub Menu - Admin Panel
                 },
                 error: function (dataerror) {
                     console.log(dataerror);
+                    showAlert('danger', ['Terjadi kesalahan pada server']);
                 }
             });
         }

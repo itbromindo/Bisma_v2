@@ -5,6 +5,10 @@
 Level - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -39,7 +43,9 @@ Level - Admin Panel
                                         </div>
                                     </form>
                                 </div>
+                                @if ($usr->can('levels.create'))
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput" onclick="clearform()">Tambah Data</button>
+                                @endif
                             </div>
                         </div>
 
@@ -67,12 +73,14 @@ Level - Admin Panel
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <!-- Tombol Delete -->
+                                                                        @if ($usr->can('levels.delete'))
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $level->level_id }}')">
                                                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                                 <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                                 <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                             </svg>
                                                                         </button>
+                                                                        @endif
                                                                         <!-- Tombol Edit -->
                                                                         <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('{{ $level->level_id }}')">
                                                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -139,26 +147,29 @@ Level - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="level_id">
-                        <div class="fromGroup mb-3">
-                            <label>Departemen</label>
-                            <select class="form-control" id="department_code" style="width: 100%;">
-                                <option value="" disabled selected>Pilih Departemen</option>
-                            </select>
-                        </div>
-                        <div class="fromGroup mb-3">
-                            <label>Nama</label>
-                            <input class="form-control" type="text" id="level_name" placeholder="Nama Level" />
-                        </div>
-                        <div class="fromGroup mb-3">
-                            <label>Note</label>
-                            <textarea class="form-control" name="level_notes" id="level_notes" placeholder="Catatan"></textarea>
-                        </div>
+                    <div id="alert-container"></div> <!-- Tempat Alert -->
+                    <div class="fromGroup mb-3">
+                        <label>Departemen</label>
+                        <select class="form-control" id="department_code" style="width: 100%;">
+                            <option value="" disabled selected>Pilih Departemen</option>
+                        </select>
+                    </div>
+                    <div class="fromGroup mb-3">
+                        <label>Nama</label>
+                        <input class="form-control" type="text" id="level_name" placeholder="Nama Level" />
+                    </div>
+                    <div class="fromGroup mb-3">
+                        <label>Note</label>
+                        <textarea class="form-control" name="level_notes" id="level_notes" placeholder="Catatan"></textarea>
+                    </div>
                 </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @if ($usr->can('levels.update') || $usr->can('levels.create'))
                 <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                @endif
             </div>
         </div>
     </div>
@@ -229,16 +240,14 @@ Level - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
-                
                 if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
+                    showAlert('danger', data.data);
                     return;
                 } else if (data.status == 501) {
-                    alert(data.message);
+                    showAlert('danger', data.data);
                     return;
                 } else {
-                    alert('Berhasil Disimpan');
+                    showAlert('success', 'Berhasil disimpan');
                     setTimeout(function () {
                         window.open("/admin/levels", "_self");
                     }, 500);
@@ -246,6 +255,7 @@ Level - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                showAlert('danger', ['Terjadi kesalahan pada server']);
             }
         });
 
@@ -271,6 +281,7 @@ Level - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                showAlert('danger', ['Terjadi kesalahan pada server']);
             }
         });
     }
@@ -300,13 +311,16 @@ Level - Admin Panel
                 // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
+                    showAlert('danger', data.data);
+                    // alert('Form Wajib Harus diisi');
                     return;
                 } else if (data.status == 501) {
-                    alert(data.message);
+                    showAlert('danger', data.data);
+                    // alert(data.message);
                     return;
                 } else {
-                    alert('Berhasil Diupdate');
+                    // alert('Berhasil Diupdate');
+                    showAlert('success', 'Berhasil Diupdate');
                     setTimeout(function () {
                         window.open("/admin/levels", "_self");
                     }, 500);
@@ -314,6 +328,7 @@ Level - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                showAlert('danger', ['Terjadi kesalahan pada server']);
             }
         });
 
@@ -332,13 +347,16 @@ Level - Admin Panel
                 async: false,
                 success: function (data) {
                     if (data.status == 401) {
-                        alert('Form Wajib Harus diisi');
+                        // alert('Form Wajib Harus diisi');
+                        showAlert('danger', data.data);
                         return;
                     } else if (data.status == 501) {
-                        alert(data.message);
+                        // alert(data.message);
+                        showAlert('danger', data.data);
                         return;
                     } else {
-                        alert('Data Berhasil Dihapus');
+                        // alert('Data Berhasil Dihapus');
+                        showAlert('success', 'Berhasil Dihapus');
                         setTimeout(function () {
                             window.open("/admin/levels", "_self");
                         }, 500);
@@ -346,6 +364,7 @@ Level - Admin Panel
                 },
                 error: function (dataerror) {
                     console.log(dataerror);
+                    showAlert('danger', ['Terjadi kesalahan pada server']);
                 }
             });
         }

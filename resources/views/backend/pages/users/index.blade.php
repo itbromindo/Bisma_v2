@@ -5,6 +5,10 @@
 Users - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -39,7 +43,9 @@ Users - Admin Panel
                                         </div>
                                     </form>
                                 </div>
+                                @if ($usr->can('users.create'))
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput" onclick="clearform()">Tambah Data</button>
+                                @endif
                             </div>
                         </div>
 
@@ -69,12 +75,14 @@ Users - Admin Panel
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <!-- Tombol Delete -->
+                                                                        @if ($usr->can('users.delete'))
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $user->user_id }}')">
                                                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                                 <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                                 <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                             </svg>
                                                                         </button>
+                                                                        @endif
                                                                         <!-- Tombol Edit -->
                                                                         <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('{{ $user->user_id }}')">
                                                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -141,6 +149,7 @@ Users - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="user_id">
+                    <div id="alert-container"></div> <!-- Tempat Alert -->
                     <div class="row">
                         <div class="col-mb-3 col-lg-3">
                             <div class="fromGroup mb-3">
@@ -387,7 +396,9 @@ Users - Admin Panel
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @if ($usr->can('users.update') || $usr->can('users.create'))
                 <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                @endif
             </div>
         </div>
     </div>
@@ -655,13 +666,15 @@ Users - Admin Panel
                 // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
+                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', data.data);
                     return;
                 } else if (data.status == 501) {
                     alert(data.message);
                     return;
                 } else {
-                    alert('Berhasil Disimpan');
+                    // alert('Berhasil Disimpan');
+                    showAlert('danger', data.data);
                     setTimeout(function () {
                         window.open("/admin/users", "_self");
                     }, 500);
@@ -669,6 +682,7 @@ Users - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                showAlert('danger', ['Terjadi kesalahan pada server']);
             }
         });
 
@@ -786,13 +800,16 @@ Users - Admin Panel
                 // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
+                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', data.data);
                     return;
                 } else if (data.status == 501) {
-                    alert(data.message);
+                    // alert(data.message);
+                    showAlert('danger', data.data);
                     return;
                 } else {
-                    alert('Berhasil Diupdate');
+                    // alert('Berhasil Diupdate');
+                    showAlert('success', 'Berhasil Diupdate');
                     setTimeout(function () {
                         window.open("/admin/users", "_self");
                     }, 500);
@@ -800,6 +817,7 @@ Users - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                showAlert('danger', ['Terjadi kesalahan pada server']);
             }
         });
 
@@ -818,13 +836,16 @@ Users - Admin Panel
                 async: false,
                 success: function (data) {
                     if (data.status == 401) {
-                        alert('Form Wajib Harus diisi');
+                        // alert('Form Wajib Harus diisi');
+                        showAlert('danger', data.data);
                         return;
                     } else if (data.status == 501) {
-                        alert(data.message);
+                        showAlert('danger', data.data);
+                        // alert(data.message);
                         return;
                     } else {
-                        alert('Data Berhasil Dihapus');
+                        // alert('Data Berhasil Dihapus');
+                        showAlert('success', 'Berhasil Dihapus');
                         setTimeout(function () {
                             window.open("/admin/users", "_self");
                         }, 500);
@@ -832,6 +853,7 @@ Users - Admin Panel
                 },
                 error: function (dataerror) {
                     console.log(dataerror);
+                    showAlert('danger', ['Terjadi kesalahan pada server']);
                 }
             });
         }

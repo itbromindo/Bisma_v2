@@ -5,6 +5,10 @@
 Customer - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -39,7 +43,9 @@ Customer - Admin Panel
                                         </div>
                                     </form>
                                 </div>
+                                @if ($usr->can('customer.create'))
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput" onclick="clearform()">Tambah Data</button>
+                                @endif
                             </div>
                         </div>
                         <div class="card-body">
@@ -68,12 +74,14 @@ Customer - Admin Panel
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <!-- Tombol Delete -->
+                                                                        @if ($usr->can('customer.delete'))
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $csr->customer_id }}')">
                                                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                                 <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                                 <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                             </svg>
                                                                         </button>
+                                                                        @endif
                                                                         <!-- Tombol Edit -->
                                                                         <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('{{ $csr->customer_id }}')">
                                                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -141,6 +149,7 @@ Customer - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="customer_id">
+                    <div id="alert-container"></div> <!-- Tempat Alert -->
                     <div class="row">
                         <div class="col-mb-3 col-lg-3">
                             <div class="fromGroup mb-3">
@@ -268,7 +277,9 @@ Customer - Admin Panel
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @if ($usr->can('customer.update') || $usr->can('customer.create'))
                 <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                @endif
             </div>
         </div>
     </div>
@@ -412,7 +423,8 @@ Customer - Admin Panel
         postdata.append('cities_code', document.getElementById('cities_code').value);
         postdata.append('provinces_code', document.getElementById('provinces_code').value);
         postdata.append('customers_category', document.getElementById('customers_category').value);
-        postdata.append('customers_area', document.querySelector('input[name="customers_area"]:checked').value);
+        postdata.append('customers_area', document.querySelector('input[name="customers_area"]:checked') ? document.querySelector('input[name="customers_area"]:checked').value : '');
+        // postdata.append('customers_area', document.querySelector('input[name="customers_area"]:checked').value);
         postdata.append('customers_notes', document.getElementById('customers_notes').value);
 
         $.ajax({
@@ -427,13 +439,16 @@ Customer - Admin Panel
                 // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
+                    showAlert('danger', data.data);
+                    // alert('Form Wajib Harus diisi');
                     return;
                 } else if (data.status == 501) {
-                    alert(data.message);
+                    showAlert('danger', data.data);
+                    // alert(data.message);
                     return;
                 } else {
-                    alert('Berhasil Disimpan');
+                    showAlert('success', 'Berhasil disimpan');
+                    // alert('Berhasil Disimpan');
                     setTimeout(function () {
                         window.open("/admin/customer", "_self");
                     }, 500);
@@ -441,6 +456,7 @@ Customer - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                showAlert('danger', ['Terjadi kesalahan pada server']);
             }
         });
 
@@ -516,13 +532,16 @@ Customer - Admin Panel
                 // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    alert('Form Wajib Harus diisi');
+                    showAlert('danger', data.data);
+                    // alert('Form Wajib Harus diisi');
                     return;
                 } else if (data.status == 501) {
-                    alert(data.message);
+                    showAlert('danger', data.data);
+                    // alert(data.message);
                     return;
                 } else {
-                    alert('Berhasil Diupdate');
+                    // alert('Berhasil Diupdate');
+                    showAlert('success', 'Berhasil Diupdate');
                     setTimeout(function () {
                         window.open("/admin/customer", "_self");
                     }, 500);
@@ -530,6 +549,7 @@ Customer - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                showAlert('danger', ['Terjadi kesalahan pada server']);
             }
         });
 
@@ -549,13 +569,16 @@ Customer - Admin Panel
                 success: function (data) {
                     // console.log(data);
                     if (data.status == 401) {
-                        alert('Form Wajib Harus diisi');
+                        showAlert('danger', data.data);
+                        // alert('Form Wajib Harus diisi');
                         return;
                     } else if (data.status == 501) {
-                        alert(data.message);
+                        showAlert('danger', data.data);
+                        // alert(data.message);
                         return;
                     } else {
-                        alert('Data Berhasil Dihapus');
+                        // alert('Data Berhasil Dihapus');
+                        showAlert('success', 'Berhasil Dihapus');
                         setTimeout(function () {
                             window.open("/admin/customer", "_self");
                         }, 500);
@@ -563,6 +586,7 @@ Customer - Admin Panel
                 },
                 error: function (dataerror) {
                     console.log(dataerror);
+                    showAlert('danger', ['Terjadi kesalahan pada server']);
                 }
             });
         }

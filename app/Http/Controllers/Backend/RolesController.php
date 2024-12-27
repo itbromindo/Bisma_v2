@@ -38,7 +38,7 @@ class RolesController extends Controller
         $this->checkAuthorization(auth()->user(), ['role.create']);
 
         // Process Data.
-        $role = Role::create(['name' => $request->name, 'guard_name' => 'admin']);
+        $role = Role::create(['name' => $request->name, 'guard_name' => 'web']);
 
         // $role = DB::table('roles')->where('name', $request->name)->first();
         $permissions = $request->input('permissions');
@@ -72,7 +72,7 @@ class RolesController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['role.edit']);
 
-        $role = Role::findById($id, 'admin');
+        $role = Role::findById($id, 'web');
         if (!$role) {
             session()->flash('error', 'Role not found.');
             return back();
@@ -93,7 +93,7 @@ class RolesController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['role.delete']);
 
-        $role = Role::findById($id, 'admin');
+        $role = Role::findById($id, 'web');
         if (!$role) {
             session()->flash('error', 'Role not found.');
             return back();
