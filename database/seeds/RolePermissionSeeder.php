@@ -300,6 +300,7 @@ class RolePermissionSeeder extends Seeder
             ],
             [
                 'group_name' => 'Inquiry Good',
+                'menu_code' => 25,
                 'permissions' => [
                     'inquiry_goods.create',
                     'inquiry_goods.view',
@@ -310,6 +311,7 @@ class RolePermissionSeeder extends Seeder
             ],
             [
                 'group_name' => 'Origin Inquiry',
+                'menu_code' => 26,
                 'permissions' => [
                     'origin_inquiries.create',
                     'origin_inquiries.view',
@@ -320,6 +322,7 @@ class RolePermissionSeeder extends Seeder
             ],
             [
                 'group_name' => 'Pillar',
+                'menu_code' => 27,
                 'permissions' => [
                     'pillars.create',
                     'pillars.view',
@@ -330,6 +333,7 @@ class RolePermissionSeeder extends Seeder
             ],
             [
                 'group_name' => 'Checklist',
+                'menu_code' => 28,
                 'permissions' => [
                     'checklists.create',
                     'checklists.view',
@@ -340,6 +344,7 @@ class RolePermissionSeeder extends Seeder
             ],
             [
                 'group_name' => 'Option Checklist',
+                'menu_code' => 29,
                 'permissions' => [
                     'optionchecklists.create',
                     'optionchecklists.view',
@@ -350,6 +355,7 @@ class RolePermissionSeeder extends Seeder
             ],
             [
                 'group_name' => 'Template Win Or Loses',
+                'menu_code' => 30,
                 'permissions' => [
                     'template_win_loses.create',
                     'template_win_loses.view',
@@ -360,6 +366,7 @@ class RolePermissionSeeder extends Seeder
             ],
             [
                 'group_name' => 'Inquiry Status',
+                'menu_code' => 31,
                 'permissions' => [
                     'inquiry_statuses.create',
                     'inquiry_statuses.view',
@@ -370,6 +377,7 @@ class RolePermissionSeeder extends Seeder
             ],
             [
                 'group_name' => 'Parameter Duedate',
+                'menu_code' => 32,
                 'permissions' => [
                     'parameter_duedate.create',
                     'parameter_duedate.view',
@@ -380,6 +388,7 @@ class RolePermissionSeeder extends Seeder
             ],
             [
                 'group_name' => 'Decission Quotation',
+                'menu_code' => 33,
                 'permissions' => [
                     'decission_quotation.create',
                     'decission_quotation.view',
@@ -390,6 +399,7 @@ class RolePermissionSeeder extends Seeder
             ],
             [
                 'group_name' => 'Quotation Status',
+                'menu_code' => 34,
                 'permissions' => [
                     'quotation_statuses.create',
                     'quotation_statuses.view',
@@ -400,6 +410,7 @@ class RolePermissionSeeder extends Seeder
             ],
             [
                 'group_name' => 'Description Quotation',
+                'menu_code' => 35,
                 'permissions' => [
                     'description_quotations.create',
                     'description_quotations.view',
