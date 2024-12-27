@@ -15,7 +15,7 @@ class CompanySeeder extends Seeder
         $companies = [
             [
                 'companies_code' => 'C001',
-                'companies_name' => 'Company A',
+                'companies_name' => 'PMS',
                 'companies_created_at' => now(),
                 'companies_created_by' => 'admin',
                 'companies_updated_at' => now(),
@@ -27,7 +27,7 @@ class CompanySeeder extends Seeder
             ],
             [
                 'companies_code' => 'C002',
-                'companies_name' => 'Company B',
+                'companies_name' => 'BMM',
                 'companies_created_at' => now(),
                 'companies_created_by' => 'admin',
                 'companies_updated_at' => now(),

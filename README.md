@@ -9,7 +9,7 @@
 
 - Clone project :
 ```bash
-git https://github.com/itbromindo/Bisma_v2.git
+git clone https://github.com/itbromindo/Bisma_v2.git
 ```
 - jalankan perintah :
 ```bash

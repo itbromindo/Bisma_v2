@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\City;
 use App\Models\District;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Support\Renderable;
@@ -22,16 +23,26 @@ class DistrictController extends Controller
         ];
     }
 
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['districts.view']);
 
-        $listdata = $this->model
-            ->where('districts_soft_delete', 0)
-            ->paginate(15);
+        $search = $_GET['search'] ??'';
+
+        $listdata = $this->model->with('city')->where('districts_name', 'like', '%' . $search . '%')->where('districts_soft_delete', 0)->paginate(15);
+
+        $cities = City::select('cities_code', 'cities_name')->orderBy('cities_name', 'asc')->get();
+
+        if($request -> ajax()){
+            return response()->json([
+                'districts' => $listdata
+            ]);
+        }
 
         return view('backend.pages.districts.index', [
             'districts' => $listdata,
+            'search' => $search,
+            'cities'=> $cities
         ]);
     }
 

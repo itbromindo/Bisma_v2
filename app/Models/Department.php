@@ -27,6 +27,6 @@ class Department extends Model
     ];
     public function division()
     {
-        return $this->belongsTo(Company::class, 'division_code', 'division_code');
+        return $this->belongsTo(Division::class, 'division_code', 'division_code');
     }
 }

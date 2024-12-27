@@ -17,7 +17,7 @@ class LevelSeeder extends Seeder
             [
                 'level_code' => 'L001',
                 'department_code' => 'Dept001', 
-                'level_name' => 'Level 1',
+                'level_name' => 'staff',
                 'level_created_at' => now(),
                 'level_created_by' => 'admin',
                 'level_updated_at' => now(),
@@ -29,7 +29,7 @@ class LevelSeeder extends Seeder
             ],
             [
                 'level_code' => 'L002',
-                'department_code' => 'Dept002',
+                'department_code' => 'spv',
                 'level_name' => 'Level 2',
                 'level_created_at' => now(),
                 'level_created_by' => 'admin',

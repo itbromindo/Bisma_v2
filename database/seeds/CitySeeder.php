@@ -25,7 +25,7 @@ class CitySeeder extends Seeder
                 'cities_deleted_at' => null,
                 'cities_deleted_by' => null,
                 'cities_notes' => 'Notes for City A',
-                'cities_status' => 1,
+                'cities_status' => 'Active',
                 'cities_soft_delete' => 0,
             ],
             [
@@ -39,7 +39,7 @@ class CitySeeder extends Seeder
                 'cities_deleted_at' => null,
                 'cities_deleted_by' => null,
                 'cities_notes' => 'Notes for City B',
-                'cities_status' => 1,
+                'cities_status' => 'Active',
                 'cities_soft_delete' => 0,
             ],
             

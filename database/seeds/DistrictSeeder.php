@@ -25,7 +25,7 @@ class DistrictSeeder extends Seeder
                 'districts_deleted_at' => null,
                 'districts_deleted_by' => null,
                 'districts_notes' => 'Notes for District A',
-                'districts_status' => 1,
+                'districts_status' => 'Active',
                 'districts_soft_delete' => 0,
             ],
             [
@@ -39,7 +39,7 @@ class DistrictSeeder extends Seeder
                 'districts_deleted_at' => null,
                 'districts_deleted_by' => null,
                 'districts_notes' => 'Notes for District B',
-                'districts_status' => 1,
+                'districts_status' => 'Active',
                 'districts_soft_delete' => 0,
             ],
            

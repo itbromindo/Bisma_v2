@@ -21,16 +21,23 @@ class ProvinceController extends Controller
         ];
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        // $this->checkAuthorization(auth()->user(), ['provinces.view']);
+        $this->checkAuthorization(auth()->user(), ['provinces.view']);
 
-        $listdata = $this->model
-            ->where('provinces_soft_delete', 0)
-            ->paginate(15);
+        $search = $_GET['search'] ?? '';
 
+        $listdata = $this->model->where('provinces_name', 'like', '%' . $search . '%')->where('provinces_soft_delete', 0)->paginate(15);
+
+        if($request->ajax()){
+            return response()->json([
+                'provinces' => $listdata
+            ]);
+        }
+        
         return view('backend.pages.provinces.index', [
             'provinces' => $listdata,
+            'search' => $search,
         ]);
     }
 

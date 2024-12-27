@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Company;
 use App\Models\Homebase;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -21,16 +22,26 @@ class HomebaseController extends Controller
         ];
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['homebases.view']);
 
-        $listdata = $this->model
-            ->where('homebase_soft_delete', 0)
-            ->paginate(15);
+        $search = $_GET['search'] ?? '';
+
+        $listdata = $this->model->with('company')->where('homebase_name','like', '%'. $search. '%')->where('homebase_soft_delete', 0)->paginate(15);
+
+        $companies = Company::select('companies_code', 'companies_name')->orderBy('companies_name', 'asc')->get();
+
+        if($request -> ajax()){
+            return response()->json([
+                'homebases' => $listdata
+            ]);
+        }
 
         return view('backend.pages.homebases.index', [
             'homebases' => $listdata,
+            'companies' => $companies,
+            'search' => $search
         ]);
     }
 

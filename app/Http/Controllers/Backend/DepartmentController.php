@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Department;
+use App\Models\Division;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Session;
@@ -22,17 +23,26 @@ class DepartmentController extends Controller
         );
     }
 
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['department.view']);
+        $search = $_GET['search'] ?? '';
 
-        $listdata = $this->model
-            ->where('department_soft_delete', 0)
-            ->paginate(15);
+        $listdata = $this->model->with('division')->where('department_name', 'like', '%' . $search . '%')->where('department_soft_delete', 0)->paginate(15);
+
+        $division = Division::select('division_code', 'division_name')->orderBy('division_name', 'asc')->get();
+
+        if($request-> ajax()){
+            return response()->json([
+                'departments'=>$listdata
+                ]);
+        }
 
         return view('backend.pages.departments.index', [
             'departments' => $listdata,
+            'divisions'=>$division,
         ]);
+
     }
 
     public function show($id)

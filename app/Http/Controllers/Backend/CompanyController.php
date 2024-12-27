@@ -19,19 +19,28 @@ class CompanyController extends Controller
             'companies_notes' => 'nullable|string',
         ];
     }
-
-    public function index()
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['companies.view']);
-
+        $search = $request->search ?? '';
+    
         $listdata = $this->model
+            ->where('companies_name', 'like', '%' . $search . '%')
             ->where('companies_soft_delete', 0)
             ->paginate(15);
-
+    
+        if ($request->ajax()) {
+            return response()->json([
+                'companies' => $listdata,
+            ]);
+        }
+    
         return view('backend.pages.companies.index', [
             'companies' => $listdata,
+            'search' => $search,
         ]);
     }
+    
 
     public function show($id)
     {

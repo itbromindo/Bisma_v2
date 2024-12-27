@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Company;
 use App\Models\Shift;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -17,12 +18,12 @@ class ShiftController extends Controller
             'shift_code' => 'nullable|string|max:225',
             'companies_code' => 'required|string|max:225',
             'shift_name' => 'required|string|max:225',
-            'shift_start_time_before_break' => 'required|date_format:H:i',
-            'shift_end_time_before_break' => 'required|date_format:H:i',
+            'shift_start_time_before_break' => 'nullable|date_format:H:i',
+            'shift_end_time_before_break' => 'nullable|date_format:H:i',
             'shift_start_time_break' => 'nullable|date_format:H:i',
             'shift_end_time_break' => 'nullable|date_format:H:i',
-            'shift_start_time_after_break' => 'required|date_format:H:i',
-            'shift_end_time_after_break' => 'required|date_format:H:i',
+            'shift_start_time_after_break' => 'nullable|date_format:H:i',
+            'shift_end_time_after_break' => 'nullable|date_format:H:i',
             'shift_notes' => 'nullable|string',
         ];
     }
@@ -31,12 +32,16 @@ class ShiftController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['shifts.view']);
 
-        $listdata = $this->model
-            ->where('shift_soft_delete', 0)
-            ->paginate(15);
+        $search = $_GET['search'] ?? '';
+
+        $listdata = $this->model->where('shift_name', 'like', '%'. $search . '%')->where('shift_soft_delete', 0)->paginate(15);
+
+        $companies = Company::select("companies_code", "companies_name")->orderBy('companies_name', 'asc')->get();
 
         return view('backend.pages.shifts.index', [
             'shifts' => $listdata,
+            'search' => $search,
+            'companies' => $companies,
         ]);
     }
 

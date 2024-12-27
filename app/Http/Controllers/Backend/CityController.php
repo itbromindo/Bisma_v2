@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\City;
+use App\Models\Province;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Session;
@@ -17,20 +18,33 @@ class CityController extends Controller
         $this->mandatory = [
             'cities_name' => 'required',
             'cities_code' => 'nullable|string|max:225',
+            'cities_status' => 'nullable|string|max:225',
             'provinces_code' => 'required',
         ];
     }
 
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['cities.view']);
 
-        $listdata = $this->model
-            ->where('cities_soft_delete', 0)
-            ->paginate(15);
+        $search = $_GET['search'] ??'';
 
+        $listdata = $this->model->with('province') 
+        ->where('cities_name', 'like', '%' . $search . '%')
+        ->where('cities_soft_delete', 0)
+        ->paginate(15);
+
+        $provinces = Province::select('provinces_code', 'provinces_name')->orderBy('provinces_name', 'asc')->get();
+
+        if($request -> ajax()){
+            return response()->json([
+                'cities'=> $listdata,
+            ]);
+        }
+        
         return view('backend.pages.cities.index', [
             'cities' => $listdata,
+            'provinces' => $provinces
         ]);
     }
 

@@ -1,13 +1,26 @@
 <?php
 
+use App\Http\Controllers\Backend\ChecklistController;
 use App\Http\Controllers\Backend\CityController;
+use App\Http\Controllers\Backend\DecissionQuotationController;
 use App\Http\Controllers\Backend\DepartmentController;
+use App\Http\Controllers\Backend\DescriptionQuotationController;
 use App\Http\Controllers\Backend\DistrictController;
 use App\Http\Controllers\Backend\DivisionController;
 use App\Http\Controllers\Backend\HomebaseController;
+use App\Http\Controllers\Backend\InquiryGoodController;
+use App\Http\Controllers\Backend\InquiryStatusController;
 use App\Http\Controllers\Backend\MasterApprovalController;
+use App\Http\Controllers\Backend\OriginInquiryController;
+use App\Http\Controllers\Backend\ParameterDuedateController;
+use App\Http\Controllers\Backend\OptionChecklistController;
+use App\Http\Controllers\Backend\PillarController;
 use App\Http\Controllers\Backend\ProvinceController;
+use App\Http\Controllers\Backend\QuotationStatusController;
 use App\Http\Controllers\Backend\ShiftController;
+use App\Models\InquiryGood;
+use App\Models\OriginInquiry;
+use App\Http\Controllers\Backend\TemplateWinLoseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -102,7 +115,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     // Department Routes
     Route::resource('departments', DepartmentController::class);
-    Route::resource('departments', DepartmentController::class);
     Route::any('departments/{id}', [DepartmentController::class, 'update']);
     Route::get('combodepartments', [App\Http\Controllers\Backend\DepartmentController::class, 'combo']);
     
@@ -176,4 +188,46 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('company_type', App\Http\Controllers\Backend\CompanytypeController::class);
     Route::any('company_type/{id}', [App\Http\Controllers\Backend\CompanytypeController::class, 'update']);
 
+    
+    //Inquiry Good Routes
+    Route::resource('inquiry_goods', InquiryGoodController::class);
+    Route::any('inquiry_goods/{id}', [InquiryGoodController::class, 'update']);
+    
+    //Origin Inquiry Routes
+    Route::resource('origin_inquiries', OriginInquiryController::class);
+    Route::any('origin_inquiries/{id}', [OriginInquiryController::class, 'update']);
+    
+    //Description Quotation Routes
+    Route::resource('description_quotations', DescriptionQuotationController::class);
+    Route::any('description_quotations/{id}', [DescriptionQuotationController::class, 'update']);
+    
+    //Origin Parameter Duedate Routes
+    Route::resource('parameter_duedates', ParameterDuedateController::class);
+    Route::any('parameter_duedates/{id}', [ParameterDuedateController::class, 'update']);
+    
+    //Decission Quotation Routes
+    Route::resource('decission_quotations', DecissionQuotationController::class);
+    Route::any('decission_quotations/{id}', [DecissionQuotationController::class, 'update']);
+    
+    //Quotation Status Routes
+    Route::resource('quotation_statuses', QuotationStatusController::class);
+    Route::any('quotation_statuses/{id}', [QuotationStatusController::class, 'update']);
+   
+    Route::resource('pillars', PillarController::class);
+    Route::any('pillars/{id}', [PillarController::class, 'update']);
+
+    Route::resource('pillars', PillarController::class);
+    Route::any('pillars/{id}', [PillarController::class, 'update']);
+    
+    Route::resource('checklists', ChecklistController::class);
+    Route::any('checklists/{id}', [ChecklistController::class, 'update']);
+    
+    Route::resource('optionchecklists', OptionChecklistController::class);
+    Route::any('optionchecklists/{id}', [OptionChecklistController::class, 'update']);
+
+    Route::resource('template_win_loses', TemplateWinLoseController::class);
+    Route::any('template_win_loses/{id}', [TemplateWinLoseController::class, 'update']);
+    
+    Route::resource('inquiry_statuses', InquiryStatusController::class);
+    Route::any('inquiry_statuses/{id}', [InquiryStatusController::class, 'update']);
 })->middleware('auth:admin');

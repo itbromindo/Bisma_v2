@@ -298,6 +298,127 @@ class RolePermissionSeeder extends Seeder
                     'company_type.update',
                 ]
             ],
+            [
+                'group_name' => 'Inquiry Good',
+                'menu_code' => 25,
+                'permissions' => [
+                    'inquiry_goods.create',
+                    'inquiry_goods.view',
+                    'inquiry_goods.edit',
+                    'inquiry_goods.delete',
+                    'inquiry_goods.update',
+                ]
+            ],
+            [
+                'group_name' => 'Origin Inquiry',
+                'menu_code' => 26,
+                'permissions' => [
+                    'origin_inquiries.create',
+                    'origin_inquiries.view',
+                    'origin_inquiries.edit',
+                    'origin_inquiries.delete',
+                    'origin_inquiries.update',
+                ]
+            ],
+            [
+                'group_name' => 'Pillar',
+                'menu_code' => 27,
+                'permissions' => [
+                    'pillars.create',
+                    'pillars.view',
+                    'pillars.edit',
+                    'pillars.delete',
+                    'pillars.update',
+                ]
+            ],
+            [
+                'group_name' => 'Checklist',
+                'menu_code' => 28,
+                'permissions' => [
+                    'checklists.create',
+                    'checklists.view',
+                    'checklists.edit',
+                    'checklists.delete',
+                    'checklists.update',
+                ]
+            ],
+            [
+                'group_name' => 'Option Checklist',
+                'menu_code' => 29,
+                'permissions' => [
+                    'optionchecklists.create',
+                    'optionchecklists.view',
+                    'optionchecklists.edit',
+                    'optionchecklists.delete',
+                    'optionchecklists.update',
+                ]
+            ],
+            [
+                'group_name' => 'Template Win Or Loses',
+                'menu_code' => 30,
+                'permissions' => [
+                    'template_win_loses.create',
+                    'template_win_loses.view',
+                    'template_win_loses.edit',
+                    'template_win_loses.delete',
+                    'template_win_loses.update',
+                ]
+            ],
+            [
+                'group_name' => 'Inquiry Status',
+                'menu_code' => 31,
+                'permissions' => [
+                    'inquiry_statuses.create',
+                    'inquiry_statuses.view',
+                    'inquiry_statuses.edit',
+                    'inquiry_statuses.delete',
+                    'inquiry_statuses.update',
+                ]
+            ],
+            [
+                'group_name' => 'Parameter Duedate',
+                'menu_code' => 32,
+                'permissions' => [
+                    'parameter_duedate.create',
+                    'parameter_duedate.view',
+                    'parameter_duedate.edit',
+                    'parameter_duedate.delete',
+                    'parameter_duedate.update',
+                ]
+            ],
+            [
+                'group_name' => 'Decission Quotation',
+                'menu_code' => 33,
+                'permissions' => [
+                    'decission_quotation.create',
+                    'decission_quotation.view',
+                    'decission_quotation.edit',
+                    'decission_quotation.delete',
+                    'decission_quotation.update',
+                ]
+            ],
+            [
+                'group_name' => 'Quotation Status',
+                'menu_code' => 34,
+                'permissions' => [
+                    'quotation_statuses.create',
+                    'quotation_statuses.view',
+                    'quotation_statuses.edit',
+                    'quotation_statuses.delete',
+                    'quotation_statuses.update',
+                ]
+            ],
+            [
+                'group_name' => 'Description Quotation',
+                'menu_code' => 35,
+                'permissions' => [
+                    'description_quotations.create',
+                    'description_quotations.view',
+                    'description_quotations.edit',
+                    'description_quotations.delete',
+                    'description_quotations.update',
+                ]
+            ],
         ];
 
         // Do same for the admin guard for tutorial purposes.

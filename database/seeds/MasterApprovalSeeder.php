@@ -18,7 +18,7 @@ class MasterApprovalSeeder extends Seeder
         $masterApprovals = [
             [
                 'master_approvals_code' => 'MA001',
-                'master_approvals_name' => 'Approval A',
+                'master_approvals_approval_name' => 'Approval A',
                 'department_code' => 'Dept001', 
                 'division_code' => 'D001', 
                 'level_code' => 'L001',
@@ -33,7 +33,7 @@ class MasterApprovalSeeder extends Seeder
             ],
             [
                 'master_approvals_code' => 'MA002',
-                'master_approvals_name' => 'Approval B',
+                'master_approvals_approval_name' => 'Approval B',
                 'department_code' => 'Dept002', 
                 'division_code' => 'D002', 
                 'level_code' => 'L002', 
