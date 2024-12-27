@@ -22,7 +22,7 @@ class TemplateWinLoseController extends Controller
             'template_win_loses_notes' => 'nullable|string|max:225',
         );
     }
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['template_win_loses.view']);
         $search = $_GET['search'] ?? '';
@@ -31,6 +31,12 @@ class TemplateWinLoseController extends Controller
             ->where('template_win_loses_soft_delete', 0)
             ->where('template_win_loses_title', 'like', '%' . $search . '%')
             ->paginate(15);
+
+        if($request->ajax()){
+            return response()->json([
+                'template_win_loses'=>$listdata
+            ]);
+        }
 
         return view('backend.pages.template_win_loses.index', [
             'template_win_loses' => $listdata,

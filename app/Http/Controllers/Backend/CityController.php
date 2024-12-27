@@ -23,16 +23,25 @@ class CityController extends Controller
         ];
     }
 
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['cities.view']);
 
         $search = $_GET['search'] ??'';
 
-        $listdata = $this->model->where('cities_name', 'like', '%' . $search . '%')->where('cities_soft_delete', 0)->paginate(15);
+        $listdata = $this->model->with('province') 
+        ->where('cities_name', 'like', '%' . $search . '%')
+        ->where('cities_soft_delete', 0)
+        ->paginate(15);
 
         $provinces = Province::select('provinces_code', 'provinces_name')->orderBy('provinces_name', 'asc')->get();
 
+        if($request -> ajax()){
+            return response()->json([
+                'cities'=> $listdata,
+            ]);
+        }
+        
         return view('backend.pages.cities.index', [
             'cities' => $listdata,
             'provinces' => $provinces

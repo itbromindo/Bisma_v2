@@ -22,22 +22,27 @@ class DivisionController extends Controller
         ];
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['divisions.view']);
         $search = $_GET['search'] ?? '';
 
-        $listdata = $this->model
-        ->where('division_name', 'like', '%' . $search . '%')
-        ->where('division_soft_delete', 0)->paginate(15);
+        $listdata = $this->model->with('company')->where('division_name', 'like', '%' . $search . '%')->where('division_soft_delete', 0)->paginate(15);
 
         $companies = Company::select('companies_code', 'companies_name')->orderBy('companies_name', 'asc')->get();
+
+        if($request -> ajax()){
+            return response()->json([
+                'divisions' => $listdata,
+            ]);
+        }
 
         return view('backend.pages.divisions.index', [
             'divisions' => $listdata,
             'search' => $search,
             'companies' => $companies,
         ]);
+
     }
 
     public function show($id)

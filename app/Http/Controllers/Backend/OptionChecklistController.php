@@ -27,17 +27,23 @@ class OptionChecklistController extends Controller
     /**
      * Display a listing of the option checklist.
      */
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['optionchecklists.view']);
         $search = $_GET['search'] ?? '';
 
-        $listData = $this->model
+        $listData = $this->model->with('checklist')
             ->where('option_checklist_soft_delete', 0)
             ->where('option_checklist_items', 'like', '%' . $search . '%')
             ->paginate(15);
 
             $checklists = Checklist::select('checklist_code', 'checklist_items')->get();
+
+        if($request->ajax()){
+            return response()->json([
+                'option_checklist' => $listData,
+            ]);
+        }
 
         return view('backend.pages.optionchecklists.index', [
             'option_checklist' => $listData,

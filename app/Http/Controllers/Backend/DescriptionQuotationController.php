@@ -26,7 +26,7 @@ class DescriptionQuotationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['description_quotations.view']);
         $search = $_GET['search'] ?? '';
@@ -35,6 +35,12 @@ class DescriptionQuotationController extends Controller
             ->where('template_inquiry_desc_soft_delete', 0)
             ->where('template_inquiry_desc_title', 'like', '%' . $search . '%')
             ->paginate(15);
+
+            if($request -> ajax()){
+                return response()->json([
+                    'description_quotations' => $listdata
+                ]);
+            }
 
         return view('backend.pages.description_quotations.index', [
             'description_quotations' => $listdata,

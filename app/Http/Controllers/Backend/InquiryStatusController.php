@@ -22,7 +22,7 @@ class InquiryStatusController extends Controller
         );
     }
 
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['inquiry_statuses.view']);
         $search = $_GET['search'] ?? '';
@@ -31,6 +31,12 @@ class InquiryStatusController extends Controller
             ->where('inquiry_status_soft_delete', 0)
             ->where('inquiry_status_name', 'like', '%' . $search . '%')
             ->paginate(15);
+
+        if($request->ajax()){
+            return response()->json([
+                'inquiry_statuses'=>$listdata
+            ]);
+        }
 
         return view('backend.pages.inquiry_statuses.index', [
             'inquiry_statuses' => $listdata,

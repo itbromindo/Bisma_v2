@@ -25,7 +25,7 @@ class DecissionQuotationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['decission_quotation.view']);
         $search = $_GET['search'] ?? '';
@@ -34,6 +34,12 @@ class DecissionQuotationController extends Controller
             ->where('template_decission_quotation_soft_delete', 0)
             ->where('template_decission_quotation_title', 'like', '%' . $search . '%')
             ->paginate(15);
+
+        if($request -> ajax()){
+            return response()->json([
+                'decission_quotations' => $listdata
+            ]);
+        }
 
         return view('backend.pages.decission_quotations.index', [
             'decission_quotations' => $listdata,

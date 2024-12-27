@@ -22,7 +22,7 @@ class OriginInquiryController extends Controller
         );
     }
 
-    public function index(): Renderable
+    public function index(Request $request)
     {        
         $this->checkAuthorization(auth()->user(), ['origin_inquiries.view']);
         $search = $_GET['search'] ?? '';
@@ -31,6 +31,12 @@ class OriginInquiryController extends Controller
             ->where('origin_inquiry_soft_delete', 0)
             ->where('origin_inquiry_name', 'like', '%' . $search . '%')
             ->paginate(15);
+
+        if($request -> ajax()){
+             return response()->json([
+                'origin_inquiries'=> $listdata,
+            ]);
+         }
 
         return view('backend.pages.origin_inquiries.index', [
             'origin_inquiries' => $listdata,

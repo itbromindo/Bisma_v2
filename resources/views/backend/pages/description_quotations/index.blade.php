@@ -59,7 +59,7 @@ Description Quotations - Admin Panel
                                                             <th scope="col">Action</th>
                                                         </tr>
                                                     </thead>
-                                                    <tbody>
+                                                    <tbody id="tableBody">
                                                         @foreach ($description_quotations as $description_quotation)
                                                             <tr>
                                                             <td scope="row" class="text-center">
@@ -167,6 +167,58 @@ Description Quotations - Admin Panel
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
+$(document).ready(function () {
+    $('#search').on('keyup', function () {
+        let searchQuery = $(this).val();
+        $.ajax({
+            url: '/admin/description_quotations',
+            type: 'GET',
+            data: { search: searchQuery },
+            success: function (response) {
+                let tableBody = $('#tableBody');
+                tableBody.html('');  // Hapus isi tabel sebelumnya
+
+                if (response.description_quotations.data.length > 0) {
+                    response.description_quotations.data.forEach(function (description_quotation, index) {
+                        tableBody.append(`
+                            <tr>
+                                <td class="text-center">${(response.description_quotations.current_page - 1) * response.description_quotations.per_page + index + 1}</td>
+                                <td class="text-center">${description_quotation.template_inquiry_desc_title}</td>
+                                <td class="text-center">${description_quotation.template_inquiry_desc_code}</td>
+                                <td class="text-center">${description_quotation.template_inquiry_desc_text ?? '-'}</td>
+                                <td class="text-center">${description_quotation.template_inquiry_desc_notes}</td>
+                                <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                        <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${description_quotation.template_inquiry_desc_id}')">
+                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                        <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${description_quotation.template_inquiry_desc_id}')">
+                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    tableBody.append('<tr><td colspan="5" class="text-center">No results found</td></tr>');
+                }
+            },
+            error: function (xhr) {
+                alert('Error: ' + xhr.statusText);
+            }
+        });
+    });
+});
+
+
     function reload() {
         window.open("/admin/description_quotations", "_self");
     }

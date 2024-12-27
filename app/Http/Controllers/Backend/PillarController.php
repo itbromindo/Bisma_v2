@@ -22,7 +22,7 @@ class PillarController extends Controller
         );
     }
 
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['pillars.view']);
         $search = $_GET['search'] ?? '';
@@ -31,6 +31,12 @@ class PillarController extends Controller
             ->where('pillar_soft_delete', 0)
             ->where('pillar_items', 'like', '%' . $search . '%')
             ->paginate(15);
+
+        if($request -> ajax()){
+            return response()->json([
+                'pillars' => $listdata,
+            ]);
+        }
 
         return view('backend.pages.pillars.index', [
             'pillars' => $listdata,

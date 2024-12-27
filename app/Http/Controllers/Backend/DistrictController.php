@@ -23,15 +23,21 @@ class DistrictController extends Controller
         ];
     }
 
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['districts.view']);
 
         $search = $_GET['search'] ??'';
 
-        $listdata = $this->model->where('districts_name', 'like', '%' . $search . '%')->where('districts_soft_delete', 0)->paginate(15);
+        $listdata = $this->model->with('city')->where('districts_name', 'like', '%' . $search . '%')->where('districts_soft_delete', 0)->paginate(15);
 
         $cities = City::select('cities_code', 'cities_name')->orderBy('cities_name', 'asc')->get();
+
+        if($request -> ajax()){
+            return response()->json([
+                'districts' => $listdata
+            ]);
+        }
 
         return view('backend.pages.districts.index', [
             'districts' => $listdata,

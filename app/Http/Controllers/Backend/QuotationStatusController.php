@@ -24,7 +24,7 @@ class QuotationStatusController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['quotation_statuses.view']);
         $search = $_GET['search'] ?? '';
@@ -33,6 +33,12 @@ class QuotationStatusController extends Controller
             ->where('quotation_status_soft_delete', 0)
             ->where('quotation_status_name', 'like', '%' . $search . '%')
             ->paginate(15);
+
+        if($request->ajax()){
+            return response()->json([
+                'quotation_statuses' => $listdata
+            ]);
+        }
 
         return view('backend.pages.quotation_statuses.index', [
             'quotation_statuses' => $listdata,

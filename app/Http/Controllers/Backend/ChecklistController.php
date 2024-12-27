@@ -24,17 +24,23 @@ class ChecklistController extends Controller
         );
     }
 
-    public function index(): Renderable
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['checklists.view']);
         $search = $_GET['search'] ?? '';
     
-        $listdata = $this->model
+        $listdata = $this->model->with('pillar')
             ->where('checklist_soft_delete', 0)
             ->where('checklist_items', 'like', '%' . $search . '%')
             ->paginate(15);
     
         $pillars = Pillar::select('pillar_code', 'pillar_items')->get(); 
+
+        if($request->ajax()){
+            return response()->json([
+                'checklists' => $listdata,
+            ]);
+        }
     
         return view('backend.pages.checklists.index', [
             'checklists' => $listdata,

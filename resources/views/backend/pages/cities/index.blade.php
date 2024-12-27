@@ -31,14 +31,17 @@ Cities - Admin Panel
                                 <div class="app-main-search me-2">
                                     <form action="/admin/cities" method="GET" class="d-flex">
                                         <div class="input-box d-flex">
-                                            <input type="text" name="search" id="search" value="{{$search ?? ''}}" class="form-control" placeholder="Search Here">
+                                            <input type="text" name="search" id="search" value="{{$search ?? ''}}"
+                                                class="form-control" placeholder="Search Here">
                                             <button type="submit" class="btn btn-light ms-2">
-                                                <img src="{{ asset('backend/assets/images/svg/search.svg') }}" alt="Search" draggable="false">
+                                                <img src="{{ asset('backend/assets/images/svg/search.svg') }}"
+                                                    alt="Search" draggable="false">
                                             </button>
                                         </div>
                                     </form>
                                 </div>
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput">Tambah Data</button>
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal"
+                                    data-bs-target="#modalinput">Tambah Data</button>
                             </div>
                         </div>
 
@@ -66,23 +69,45 @@ Cities - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($cities->currentPage() - 1) * $cities->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                 <td class="text-center">{{ $city->cities_name }}</td>
-                                                                 <td class="text-center">{{ $city->cities_notes }}</td>
-                                                                 <td class="text-center">{{ $city->cities_code }}</td>
-                                                                 <td class="text-center">{{ $city->province->provinces_name ?? '-' }}</td>
-                                                                 <td class="text-center">{{ $city->cities_status }}</td>
+                                                                <td class="text-center">{{ $city->cities_name }}</td>
+                                                                <td class="text-center">{{ $city->cities_notes }}</td>
+                                                                <td class="text-center">{{ $city->cities_code }}</td>
+                                                                <td class="text-center">
+                                                                    {{ $city->province->provinces_name ?? '-' }}</td>
+                                                                <td class="text-center">{{ $city->cities_status }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
-                                                                        <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $city->cities_id }}')">
-                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                        <button
+                                                                            class="btn btn-light btn-sm border border-danger text-danger"
+                                                                            title="Delete"
+                                                                            onclick="delete_data('{{ $city->cities_id }}')">
+                                                                            <svg width="16" height="16" fill="none"
+                                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                                <path d="M12.5 3.5L3.5 12.5" stroke="red"
+                                                                                    stroke-width="1.25"
+                                                                                    stroke-linecap="round"
+                                                                                    stroke-linejoin="round" />
+                                                                                <path d="M12.5 12.5L3.5 3.5" stroke="red"
+                                                                                    stroke-width="1.25"
+                                                                                    stroke-linecap="round"
+                                                                                    stroke-linejoin="round" />
                                                                             </svg>
                                                                         </button>
-                                                                        <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('{{ $city->cities_id }}')">
-                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                        <button
+                                                                            class="btn btn-light btn-sm border border-success text-success"
+                                                                            title="Edit"
+                                                                            onclick="showedit('{{ $city->cities_id }}')">
+                                                                            <svg width="16" height="16" fill="none"
+                                                                                xmlns="http://www.w3.org/2000/svg">
+                                                                                <path
+                                                                                    d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z"
+                                                                                    stroke="green" stroke-width="1.25"
+                                                                                    stroke-linecap="round"
+                                                                                    stroke-linejoin="round" />
+                                                                                <path d="M11.5 2.5L13.5 4.5" stroke="green"
+                                                                                    stroke-width="1.25"
+                                                                                    stroke-linecap="round"
+                                                                                    stroke-linejoin="round" />
                                                                             </svg>
                                                                         </button>
                                                                     </div>
@@ -101,19 +126,23 @@ Cities - Admin Panel
                                         <nav aria-label="Page navigation">
                                             <ul class="pagination justify-content-end">
                                                 <li class="page-item {{ $cities->onFirstPage() ? 'disabled' : '' }}">
-                                                    <a class="page-link" href="{{ $cities->previousPageUrl() }}" aria-label="Previous">
+                                                    <a class="page-link" href="{{ $cities->previousPageUrl() }}"
+                                                        aria-label="Previous">
                                                         <i class="ph-arrow-left"></i>
                                                     </a>
                                                 </li>
 
                                                 @foreach ($cities->onEachSide(0)->links()->elements[0] as $page => $url)
-                                                    <li class="page-item {{ $cities->currentPage() == $page ? 'active' : '' }}">
-                                                        <a class="page-link" href="{{ $url }}">{{ sprintf('%02d', $page) }}</a>
+                                                    <li
+                                                        class="page-item {{ $cities->currentPage() == $page ? 'active' : '' }}">
+                                                        <a class="page-link"
+                                                            href="{{ $url }}">{{ sprintf('%02d', $page) }}</a>
                                                     </li>
                                                 @endforeach
 
                                                 <li class="page-item {{ $cities->hasMorePages() ? '' : 'disabled' }}">
-                                                    <a class="page-link" href="{{ $cities->nextPageUrl() }}" aria-label="Next">
+                                                    <a class="page-link" href="{{ $cities->nextPageUrl() }}"
+                                                        aria-label="Next">
                                                         <i class="ph-arrow-right"></i>
                                                     </a>
                                                 </li>
@@ -176,6 +205,58 @@ Cities - Admin Panel
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+
+    $(document).ready(function () {
+        $('#search').on('keyup', function () {
+            let searchQuery = $(this).val();
+            $.ajax({
+                url: '/admin/cities',
+                type: 'GET',
+                data: { search: searchQuery },
+                success: function (response) {
+
+                    $('#tableBody').html('');
+                    if (response.cities.data.length > 0) {
+                        response.cities.data.forEach(function (city, index) {
+                            $('#tableBody').append(`
+                                <tr>
+                                    <td class="text-center">${(response.cities.current_page - 1) * response.cities.per_page + index + 1}</td>
+                                    <td class="text-center">${city.cities_name}</td>
+                                    <td class="text-center">${city.cities_notes ?? '-'}</td>
+                                    <td class="text-center">${city.cities_code}</td>
+                                    <td class="text-center">${city.province ? city.province.provinces_name : '-'}</td>
+                                    <td class="text-center">${city.cities_status}</td>
+                                    <td class="text-center">
+                                                                    <div class="d-flex justify-content-center gap-2">
+                                                                        <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${city.cities_id}')">
+                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                            </svg>
+                                                                        </button>
+                                                                        <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${city.cities_id}')">
+                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                            </svg>
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                </tr>
+                            `);
+                        });
+                    } else {
+                        $('#tableBody').append('<tr><td colspan="5" class="text-center">No results found</td></tr>');
+                    }
+                },
+                error: function (xhr) {
+                    alert('Error: ' + xhr.statusText);
+                }
+            });
+        });
+    });
+
+
     function reload() {
         window.open("/admin/cities", "_self");
     }
@@ -194,7 +275,7 @@ Cities - Admin Panel
             _token: '{{ csrf_token() }}'
         };
 
-        $.post('/admin/cities', data, function(response) {
+        $.post('/admin/cities', data, function (response) {
             if (response.status === 401) {
                 Swal.fire({
                     icon: 'error',
@@ -206,7 +287,7 @@ Cities - Admin Panel
                     icon: 'success',
                     title: 'Success',
                     text: 'Data Saved!',
-                }).then(function() {
+                }).then(function () {
                     location.reload();
                 });
             }
@@ -226,7 +307,7 @@ Cities - Admin Panel
             url: `/admin/cities/${id}`,
             type: 'PUT',
             data: data,
-            success: function(response) {
+            success: function (response) {
                 if (response.status === 401) {
                     Swal.fire({
                         icon: 'error',
@@ -238,7 +319,7 @@ Cities - Admin Panel
                         icon: 'success',
                         title: 'Success',
                         text: 'Data Updated!',
-                    }).then(function() {
+                    }).then(function () {
                         location.reload();
                     });
                 }
@@ -261,12 +342,12 @@ Cities - Admin Panel
                     url: `/admin/cities/${id}`,
                     type: 'DELETE',
                     data: { _token: '{{ csrf_token() }}' },
-                    success: function(response) {
+                    success: function (response) {
                         Swal.fire({
                             icon: 'success',
                             title: 'Deleted!',
                             text: 'Data has been deleted.',
-                        }).then(function() {
+                        }).then(function () {
                             location.reload();
                         });
                     }
@@ -276,7 +357,7 @@ Cities - Admin Panel
     }
 
     function showedit(id) {
-        $.get(`/admin/cities/${id}`, function(data) {
+        $.get(`/admin/cities/${id}`, function (data) {
             document.getElementById('city_id').value = data.cities_id;
             document.getElementById('cities_name').value = data.cities_name;
             document.getElementById('cities_notes').value = data.cities_notes;
