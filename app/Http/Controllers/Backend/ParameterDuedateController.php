@@ -38,7 +38,7 @@ class ParameterDuedateController extends Controller
             ->where('param_duedate_soft_delete', 0)
             ->paginate(15);
 
-        $users = User::select('user_code', 'users_name')->get();
+        $users = User::select('user_code', 'users_name')->where('users_soft_delete', 0)->orderBy('users_name', 'asc')->get();
 
         if($request -> ajax()){
             return response()->json([
@@ -80,7 +80,7 @@ class ParameterDuedateController extends Controller
         }
 
         $result = $this->model->create([
-            'param_duedate_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'param_duedate_code' => 'PD' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'param_duedate_name' => $request->param_duedate_name,
             'param_duedate_time' => $request->param_duedate_time,
             'param_duedate_notes' => $request->param_duedate_notes,

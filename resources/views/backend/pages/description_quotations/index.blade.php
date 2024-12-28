@@ -4,6 +4,10 @@
 Description Quotations - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -15,8 +19,8 @@ Description Quotations - Admin Panel
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Setting</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Description Quotations</li>
+                                <li class="breadcrumb-item"><a href='/admin/description_quotations'>Origin</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href='/admin/description_quotations'>Description Quotation</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -52,9 +56,9 @@ Description Quotations - Admin Panel
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col">NO</th>
+                                                            <th scope="col">Code</th>
                                                             <th scope="col">Title</th>
                                                             <th scope="col">Text</th>
-                                                            <th scope="col">Code</th>
                                                             <th scope="col">Notes</th>
                                                             <th scope="col">Action</th>
                                                         </tr>
@@ -65,9 +69,9 @@ Description Quotations - Admin Panel
                                                             <td scope="row" class="text-center">
                                                                     {{ ($description_quotations->currentPage() - 1) * $description_quotations->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                <td class="text-center">{{ $description_quotation->template_inquiry_desc_code }}</td>
                                                                  <td class="text-center">{{ $description_quotation->template_inquiry_desc_title }}</td>
                                                                  <td class="text-center">{{ $description_quotation->template_inquiry_desc_text }}</td>
-                                                                 <td class="text-center">{{ $description_quotation->template_inquiry_desc_code }}</td>
                                                                  <td class="text-center">{{ $description_quotation->template_inquiry_desc_notes }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -158,8 +162,10 @@ Description Quotations - Admin Panel
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                            <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                                @if ($usr->can('description_quotations.update') || $usr->can('description_quotations.create'))
                             <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                            @endif
                         </div>
                 </div>
         </div>
@@ -221,6 +227,15 @@ $(document).ready(function () {
 
     function reload() {
         window.open("/admin/description_quotations", "_self");
+    }
+
+    function clearform() {
+        document.getElementById('template_inquiry_desc_id').value = '';
+        document.getElementById('template_inquiry_desc_title').value = '';
+        document.getElementById('template_inquiry_desc_text').value = '';
+        document.getElementById('template_inquiry_desc_notes').value = '';
+
+        document.getElementById('tittleform').innerHTML = 'Form Input';
     }
 
     function save() {

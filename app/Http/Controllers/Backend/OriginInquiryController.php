@@ -65,7 +65,7 @@ class OriginInquiryController extends Controller
         }
 
         $result = $this->model->create([
-            'origin_inquiry_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'origin_inquiry_code' => 'OI' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'origin_inquiry_name' => $request->origin_inquiry_name,
             'origin_inquiry_notes' => $request->origin_inquiry_notes, 
             'origin_inquiry_created_at' => date("Y-m-d h:i:s"),

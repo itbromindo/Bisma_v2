@@ -4,6 +4,10 @@
 Parameter Due Dates - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -15,8 +19,8 @@ Parameter Due Dates - Admin Panel
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Parameter Due Dates</li>
+                                <li class="breadcrumb-item"><a href='/admin/parameter_duedates'>Origin</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href='/admin/parameter_duedates'>Parameter Due Date</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -29,7 +33,7 @@ Parameter Due Dates - Admin Panel
                             <h5>Parameter Due Dates</h5>
                             <div class="d-flex align-items-center">
                                 <div class="app-main-search me-2">
-                                    <form action="/admin/parameter_duedates" method="GET" class="d-flex">
+                                    <form action="/admin/parameter_duedate" method="GET" class="d-flex">
                                         <div class="input-box d-flex">
                                             <input type="text" name="search" id="search" value="{{ $search ?? '' }}" class="form-control" placeholder="Search Here">
                                             <button type="submit" class="btn btn-light ms-2">
@@ -52,10 +56,11 @@ Parameter Due Dates - Admin Panel
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">TIME</th>
                                                             <th scope="col">NOTES</th>
-                                                            <th scope="col">CODE</th>
+                                                            
                                                             <th scope="col">USER CODE</th>
                                                             <th scope="col">Action</th>
                                                         </tr>
@@ -66,10 +71,11 @@ Parameter Due Dates - Admin Panel
                                                                 <td class="text-center">
                                                                     {{ ($parameter_duedates->currentPage() - 1) * $parameter_duedates->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                <td class="text-center">{{ $duedate->param_duedate_code }}</td>
                                                                  <td class="text-center">{{ $duedate->param_duedate_name }}</td>
                                                                  <td class="text-center">{{ $duedate->param_duedate_time }}</td>
                                                                  <td class="text-center">{{ $duedate->param_duedate_notes }}</td>
-                                                                 <td class="text-center">{{ $duedate->param_duedate_code }}</td>
+                                                                 
                                                                  <td class="text-center">{{ $duedate->user->users_name }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -167,8 +173,10 @@ Parameter Due Dates - Admin Panel
                     </select>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                        <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                                @if ($usr->can('parameter_duedate.update') || $usr->can('parameter_duedate.create'))
                         <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                        @endif
                     </div>
                 </form>
             </div>
@@ -233,6 +241,16 @@ $(document).ready(function () {
 
     function reload() {
         window.open("/admin/parameter_duedates", "_self");
+    }
+
+    function clearform() {
+        document.getElementById('param_duedate_id').value = '';
+        document.getElementById('param_duedate_name').value = '';
+        document.getElementById('param_duedate_time').value = '';
+        document.getElementById('param_duedate_notes').value = '';
+        document.getElementById('user_code').value = '';
+
+        document.getElementById('tittleform').innerHTML = 'Form Input';
     }
 
     function save() {
