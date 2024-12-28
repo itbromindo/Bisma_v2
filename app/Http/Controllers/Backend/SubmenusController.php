@@ -67,7 +67,7 @@ class SubmenusController extends Controller
 		}
 
         $result = $this->model->create([
-            'submenus_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'submenus_code' => $this->setcode($this->model->count() + 1, 'SMN', 4), // (@nomor_urut, @kode, @panjang_kode)
             'menus_code' => $request->menus_code, 
             'submenus_name' => $request->submenus_name, 
             'submenus_notes' => $request->submenus_notes, 

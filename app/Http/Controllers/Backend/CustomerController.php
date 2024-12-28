@@ -77,7 +77,7 @@ class CustomerController extends Controller
 		}
 
         $result = $this->model->create([
-            'customer_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'customer_code' => $this->setcode($this->model->count() + 1, 'CSR', 6), // (@nomor_urut, @kode, @panjang_kode)
             'customer_name' => $request->customer_name, 
             'customers_existing' => $request->customers_existing, 
             'customers_full_address' => $request->customers_full_address, 

@@ -64,7 +64,7 @@ class MenusController extends Controller
 		}
 
         $result = $this->model->create([
-            'menus_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'menus_code' => $this->setcode($this->model->count() + 1, 'MNC', 4), // (@nomor_urut, @kode, @panjang_kode)
             'moduls_code' => $request->moduls_code, 
             'menus_name' => $request->menus_name, 
             'menus_route' => $request->menus_route, 

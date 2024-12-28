@@ -13,4 +13,10 @@ use Illuminate\Routing\Controller as BaseController;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests, AuthorizationChecker;
+
+    public function setcode($nomor,$leftcode,$lengthcode)
+    {
+        $code = $leftcode . str_pad((string)$nomor, $lengthcode, '0', STR_PAD_LEFT);
+        return $code;
+    }
 }

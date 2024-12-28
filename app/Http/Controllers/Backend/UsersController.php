@@ -129,7 +129,7 @@ class UsersController extends Controller
 		}
 
         $user = $this->model->create([
-            'user_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'user_code' => $this->setcode($this->model->count() + 1, 'USR', 6), // (@nomor_urut, @kode, @panjang_kode)
             'users_name' => $request->users_name, 
             'users_photo' => $newFileName1 ? 'file_user/' . $newFileName1 : null, 
             'users_email' => $request->users_email, 

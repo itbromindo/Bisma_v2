@@ -93,7 +93,7 @@ class GoodsController extends Controller
 		}
 
         $result = $this->model->create([
-            'goods_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'goods_code' => $this->setcode($this->model->count() + 1, 'GDS', 6), // (@nomor_urut, @kode, @panjang_kode)
             'goods_name' => $request->goods_name, 
             'goods_photo' => $newFileName1 ? 'file_goods/' . $newFileName1 : null,
             'goods_usage' => $request->goods_usage, 

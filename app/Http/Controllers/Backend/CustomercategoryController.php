@@ -56,7 +56,7 @@ class CustomercategoryController extends Controller
 		}
 
         $result = $this->model->create([
-            'customer_category_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'customer_category_code' => $this->setcode($this->model->count() + 1, 'CSC', 4), // (@nomor_urut, @kode, @panjang_kode)
             'customer_category_name' => $request->customer_category_name, 
             'customer_category_notes' => $request->customer_category_notes, 
             'customer_category_created_at' => date("Y-m-d h:i:s"),

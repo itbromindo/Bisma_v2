@@ -56,7 +56,7 @@ class UomController extends Controller
 		}
 
         $result = $this->model->create([
-            'uom_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'uom_code' => $this->setcode($this->model->count() + 1, 'UOM', 4), // (@nomor_urut, @kode, @panjang_kode)
             'uom_name' => $request->uom_name, 
             'uom_notes' => $request->uom_notes, 
             'uom_created_at' => date("Y-m-d h:i:s"),
