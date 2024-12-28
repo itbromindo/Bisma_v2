@@ -63,12 +63,13 @@ class CompanyController extends Controller
         }
 
         $result = $this->model->create([
-            'companies_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'companies_code' => 'CO' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'companies_name' => $request->companies_name,
             'companies_notes' => $request->companies_notes,
             'companies_created_at' => date("Y-m-d h:i:s"),
             'companies_created_by' => Session::get('user_code'),
         ]);
+        
 
         session()->flash('success', __('Company has been created.'));
         return $result;

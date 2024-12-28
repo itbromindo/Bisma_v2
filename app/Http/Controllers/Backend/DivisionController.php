@@ -29,7 +29,7 @@ class DivisionController extends Controller
 
         $listdata = $this->model->with('company')->where('division_name', 'like', '%' . $search . '%')->where('division_soft_delete', 0)->paginate(15);
 
-        $companies = Company::select('companies_code', 'companies_name')->orderBy('companies_name', 'asc')->get();
+        $companies = Company::select('companies_code', 'companies_name')->where('companies_soft_delete', 0)->orderBy('companies_name', 'asc')->get(); //relasi soft_deletes
 
         if($request -> ajax()){
             return response()->json([
@@ -76,13 +76,14 @@ class DivisionController extends Controller
         }
 
         $result = $this->model->create([
-            'division_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'division_code' => 'DI' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT), //code
             'companies_code' => $request->companies_code,
             'division_name' => $request->division_name,
             'division_notes' => $request->division_notes,
             'division_created_at' => date("Y-m-d H:i:s"),
             'division_created_by' => Session::get('user_code'),
         ]);
+        
 
         session()->flash('success', __('Division has been created.'));
         return $result;
