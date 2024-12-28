@@ -56,7 +56,7 @@ class BrandController extends Controller
 		}
 
         $result = $this->model->create([
-            'brand_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'brand_code' => $this->setcode($this->model->count() + 1, 'BRD', 4), // (@nomor_urut, @kode, @panjang_kode)
             'brand_name' => $request->brand_name, 
             'brand_notes' => $request->brand_notes, 
             'brand_created_at' => date("Y-m-d h:i:s"),

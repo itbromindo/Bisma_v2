@@ -56,7 +56,7 @@ class CompanytypeController extends Controller
 		}
 
         $result = $this->model->create([
-            'company_type_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'company_type_code' => $this->setcode($this->model->count() + 1, 'CPT', 4), // (@nomor_urut, @kode, @panjang_kode)
             'company_type_name' => $request->company_type_name, 
             'company_type_notes' => $request->company_type_notes, 
             'company_type_created_at' => date("Y-m-d h:i:s"),

@@ -61,7 +61,7 @@ class ModulsController extends Controller
 		}
 
         $result = $this->model->create([
-            'moduls_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'moduls_code' => $this->setcode($this->model->count() + 1, 'MOD', 4),
             'moduls_name' => $request->moduls_name, 
             'moduls_icon' => $request->moduls_icon,
             'moduls_notes' => $request->moduls_notes, 

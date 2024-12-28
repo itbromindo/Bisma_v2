@@ -68,7 +68,7 @@ class LevelsController extends Controller
 		}
 
         $result = $this->model->create([
-            'level_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'level_code' => $this->setcode($this->model->count() + 1, 'LVL', 4), // (@nomor_urut, @kode, @panjang_kode)
             'department_code' => $request->department_code, 
             'level_name' => $request->level_name, 
             'level_notes' => $request->level_notes, 

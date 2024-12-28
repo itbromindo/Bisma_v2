@@ -395,7 +395,9 @@ Users - Admin Panel
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                @if ($usr->can('users.create'))
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @endif
                 @if ($usr->can('users.update') || $usr->can('users.create'))
                 <button type="button" class="btn btn-primary" onclick="save()">Save</button>
                 @endif
@@ -670,19 +672,32 @@ Users - Admin Panel
                     showAlert('danger', data.data);
                     return;
                 } else if (data.status == 501) {
-                    alert(data.message);
+                    // alert(data.message);
+                    showAlert('danger', data.data);
                     return;
                 } else {
                     // alert('Berhasil Disimpan');
-                    showAlert('danger', data.data);
-                    setTimeout(function () {
-                        window.open("/admin/users", "_self");
-                    }, 500);
+                    // showAlert('danger', data.data);
+                    // setTimeout(function () {
+                    //     window.open("/admin/users", "_self");
+                    // }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                showAlert('danger', ['Terjadi kesalahan pada server']);
+                // showAlert('danger', ['Terjadi kesalahan pada server']);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
 
@@ -738,6 +753,11 @@ Users - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
     }
@@ -809,15 +829,27 @@ Users - Admin Panel
                     return;
                 } else {
                     // alert('Berhasil Diupdate');
-                    showAlert('success', 'Berhasil Diupdate');
-                    setTimeout(function () {
-                        window.open("/admin/users", "_self");
-                    }, 500);
+                    // showAlert('success', 'Berhasil Diupdate');
+                    // setTimeout(function () {
+                    //     window.open("/admin/users", "_self");
+                    // }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Updated!',
+                    }).then(function() {
+                        location.reload();
+                    });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                showAlert('danger', ['Terjadi kesalahan pada server']);
+                // showAlert('danger', ['Terjadi kesalahan pada server']);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
 
@@ -827,36 +859,54 @@ Users - Admin Panel
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
         
-        if (confirm('Apakah Anda Yakin Menghapus Data Ini?')) {
-            $.ajax({
-                type: "DELETE",
-                url: "/admin/users/"+id,
-                data: (postdata),
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data.status == 401) {
-                        // alert('Form Wajib Harus diisi');
-                        showAlert('danger', data.data);
-                        return;
-                    } else if (data.status == 501) {
-                        showAlert('danger', data.data);
-                        // alert(data.message);
-                        return;
-                    } else {
-                        // alert('Data Berhasil Dihapus');
-                        showAlert('success', 'Berhasil Dihapus');
-                        setTimeout(function () {
-                            window.open("/admin/users", "_self");
-                        }, 500);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "/admin/users/"+id,
+                    data: (postdata),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.status == 401) {
+                            // alert('Form Wajib Harus diisi');
+                            showAlert('danger', data.data);
+                            return;
+                        } else if (data.status == 501) {
+                            showAlert('danger', data.data);
+                            // alert(data.message);
+                            return;
+                        } else {
+                            // alert('Data Berhasil Dihapus');
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: 'Data has been deleted.',
+                            }).then(function() {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (dataerror) {
+                        console.log(dataerror);
+                        // showAlert('danger', ['Terjadi kesalahan pada server']);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: dataerror.responseJSON.message
+                        });
                     }
-                },
-                error: function (dataerror) {
-                    console.log(dataerror);
-                    showAlert('danger', ['Terjadi kesalahan pada server']);
-                }
-            });
-        }
+                });
+            }
+        });
     }
 
 </script>
