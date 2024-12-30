@@ -31,7 +31,7 @@ class DistrictController extends Controller
 
         $listdata = $this->model->with('city')->where('districts_name', 'like', '%' . $search . '%')->where('districts_soft_delete', 0)->paginate(15);
 
-        $cities = City::select('cities_code', 'cities_name')->orderBy('cities_name', 'asc')->get();
+        $cities = City::select('cities_code', 'cities_name')->where('cities_soft_delete',0)->orderBy('cities_name', 'asc')->get();
 
         if($request -> ajax()){
             return response()->json([
@@ -67,11 +67,11 @@ class DistrictController extends Controller
         }
 
         $result = $this->model->create([
-            'districts_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'districts_code' => 'DC' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'cities_code' => $request->cities_code,
             'districts_name' => $request->districts_name,
             'districts_notes' => $request->districts_notes,
-            'districts_status' => $request->districts_status,
+            // 'districts_status' => $request->districts_status,
             'districts_created_at' => date("Y-m-d h:i:s"),
             'districts_created_by' => Session::get('user_code'),
         ]);
@@ -97,7 +97,7 @@ class DistrictController extends Controller
             'districts_name' => $request->districts_name,
             'cities_code' => $request->cities_code,
             'districts_notes' => $request->districts_notes,
-            'districts_status' => $request->districts_status,
+            // 'districts_status' => $request->districts_status,
             'districts_updated_at' => date("Y-m-d h:i:s"),
             'districts_updated_by' => Session::get('user_code'),
         ]);

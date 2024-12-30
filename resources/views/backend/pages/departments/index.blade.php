@@ -52,9 +52,9 @@ Departments - Admin Panel
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">NOTES</th>
-                                                            <th scope="col">CODE</th>
                                                             <th scope="col">DIVISION</th>
                                                             <th scope="col">Action</th>
                                                         </tr>
@@ -65,9 +65,9 @@ Departments - Admin Panel
                                                             <td scope="row" class="text-center">
                                                                     {{ ($departments->currentPage() - 1) * $departments->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                <td class="text-center">{{ $department->department_code }}</td>
                                                                  <td class="text-center">{{ $department->department_name }}</td>
                                                                  <td class="text-center">{{ $department->department_notes }}</td>
-                                                                 <td class="text-center">{{ $department->department_code }}</td>
                                                                  <td class="text-center">{{ $department->division->division_name ?? '-' }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -163,7 +163,7 @@ Departments - Admin Panel
                     </select>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                        <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
                         <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
                     </div>
                 </form>
@@ -175,6 +175,14 @@ Departments - Admin Panel
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+
+
+    function clearForm() {  // tambahan clear data
+        document.getElementById('department_id').value = '';
+        document.getElementById('department_name').value = '';
+        document.getElementById('department_notes').value = '';
+        document.getElementById('division_code').value = '';
+    }
 
 $(document).ready(function () {
         $('#search').on('keyup', function () {
@@ -191,9 +199,9 @@ $(document).ready(function () {
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.departments.current_page - 1) * response.departments.per_page + index + 1}</td>
+                                    <td class="text-center">${department.department_code}</td>
                                     <td class="text-center">${department.department_name}</td>
                                     <td class="text-center">${department.department_notes ?? '-'}</td>
-                                    <td class="text-center">${department.department_code}</td>
                                     <td class="text-center">${department.division ? department.division.division_name : '-'}</td>
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">

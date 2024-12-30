@@ -14,7 +14,7 @@ class InquiryGoodsStatusesSeeder extends Seeder
     {
         $inquiryGoodsStatuses = [
             [
-                'inquiry_goods_status_code' => 'GOOD001',
+                'inquiry_goods_status_code' => 'IG001',
                 'inquiry_goods_status_name' => 'Available',
                 'inquiry_goods_status_created_at' => now(),
                 'inquiry_goods_status_created_by' => 'admin',
@@ -26,7 +26,7 @@ class InquiryGoodsStatusesSeeder extends Seeder
                 'inquiry_goods_status_soft_delete' => false,
             ],
             [
-                'inquiry_goods_status_code' => 'GOOD002',
+                'inquiry_goods_status_code' => 'IG002',
                 'inquiry_goods_status_name' => 'Out of Stock',
                 'inquiry_goods_status_created_at' => now(),
                 'inquiry_goods_status_created_by' => 'admin',
@@ -38,7 +38,7 @@ class InquiryGoodsStatusesSeeder extends Seeder
                 'inquiry_goods_status_soft_delete' => false,
             ],
             [
-                'inquiry_goods_status_code' => 'GOOD003',
+                'inquiry_goods_status_code' => 'IG003',
                 'inquiry_goods_status_name' => 'Discontinued',
                 'inquiry_goods_status_created_at' => now(),
                 'inquiry_goods_status_created_by' => 'admin',

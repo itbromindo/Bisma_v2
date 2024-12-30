@@ -28,15 +28,21 @@ class ShiftController extends Controller
         ];
     }
 
-    public function index()
+    public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['shifts.view']);
 
         $search = $_GET['search'] ?? '';
 
-        $listdata = $this->model->where('shift_name', 'like', '%'. $search . '%')->where('shift_soft_delete', 0)->paginate(15);
+        $listdata = $this->model->with('company')->where('shift_name', 'like', '%'. $search . '%')->where('shift_soft_delete', 0)->paginate(15);
 
-        $companies = Company::select("companies_code", "companies_name")->orderBy('companies_name', 'asc')->get();
+        $companies = Company::select("companies_code", "companies_name")->where('companies_soft_delete', 0)->orderBy('companies_name', 'asc')->get();
+
+        if($request->ajax()){
+            return response()->json([
+                'shifts' => $listdata,
+            ]);
+        }
 
         return view('backend.pages.shifts.index', [
             'shifts' => $listdata,
@@ -66,7 +72,7 @@ class ShiftController extends Controller
         }
 
         $result = $this->model->create([
-            'shift_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'shift_code' => 'SI' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'companies_code' => $request->companies_code,
             'shift_name' => $request->shift_name,
             'shift_start_time_before_break' => $request->shift_start_time_before_break,

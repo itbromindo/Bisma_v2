@@ -19,8 +19,8 @@ class MasterApprovalSeeder extends Seeder
             [
                 'master_approvals_code' => 'MA001',
                 'master_approvals_approval_name' => 'Approval A',
-                'department_code' => 'Dept001', 
-                'division_code' => 'D001', 
+                'department_code' => 'DP001', 
+                'division_code' => 'DI001', 
                 'level_code' => 'L001',
                 'master_approvals_created_at' => now(),
                 'master_approvals_created_by' => 'admin',
@@ -34,8 +34,8 @@ class MasterApprovalSeeder extends Seeder
             [
                 'master_approvals_code' => 'MA002',
                 'master_approvals_approval_name' => 'Approval B',
-                'department_code' => 'Dept002', 
-                'division_code' => 'D002', 
+                'department_code' => 'DP002', 
+                'division_code' => 'DI002', 
                 'level_code' => 'L002', 
                 'master_approvals_created_at' => now(),
                 'master_approvals_created_by' => 'admin',

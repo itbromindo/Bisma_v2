@@ -216,9 +216,9 @@ Company - Admin Panel
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.companies.current_page - 1) * response.companies.per_page + index + 1}</td>
+                                    <td class="text-center">${company.companies_code}</td>
                                     <td class="text-center">${company.companies_name}</td>
                                     <td class="text-center">${company.companies_notes ?? '-'}</td>
-                                    <td class="text-center">${company.companies_code}</td>
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${company.companies_id}')">

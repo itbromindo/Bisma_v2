@@ -15,8 +15,8 @@ class DepartmentSeeder extends Seeder
     {
         $departments = [
             [
-                'department_code' => 'Dept001',
-                'division_code' => 'D001',
+                'department_code' => 'DP001',
+                'division_code' => 'DI001',
                 'department_name' => 'IT Dev',
                 'department_created_at' => now(),
                 'department_created_by' => 'admin',
@@ -28,8 +28,8 @@ class DepartmentSeeder extends Seeder
                 'department_soft_delete' => 0,
             ],
             [
-                'department_code' => 'Dept002',
-                'division_code' => 'D002', 
+                'department_code' => 'DP002',
+                'division_code' => 'DI002', 
                 'department_name' => 'IT Support',
                 'department_created_at' => now(),
                 'department_created_by' => 'admin',

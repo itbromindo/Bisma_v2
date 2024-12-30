@@ -55,6 +55,7 @@ Shifts - Admin Panel
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">SHIFT NAME</th>
                                                             <th scope="col">COMPANY</th>
                                                             <th scope="col">START BEFORE BREAK</th>
@@ -71,6 +72,7 @@ Shifts - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($shifts->currentPage() - 1) * $shifts->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                 <td class="text-center">{{ $shift->shift_code }}</td>
                                                                  <td class="text-center">{{ $shift->shift_name }}</td>
                                                                  <td class="text-center">{{ $shift->company->companies_name ?? '-' }}</td>
                                                                  <td class="text-center">{{ $shift->shift_start_time_before_break }}</td>
@@ -216,7 +218,7 @@ Shifts - Admin Panel
                     </select>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                        <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
                         <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
                     </div>
                 </form>
@@ -228,6 +230,76 @@ Shifts - Admin Panel
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+
+    function clearForm() {  // tambahan clear data
+        document.getElementById('shift_id').value = '';
+            document.getElementById('shift_name').value = '';
+            document.getElementById('shift_notes').value = '';
+            document.getElementById('shift_start_time_before_break').value = '';
+            document.getElementById('shift_end_time_before_break').value = '';
+            document.getElementById('shift_start_time_after_break').value = '';
+            document.getElementById('shift_end_time_after_break').value = '';
+            document.getElementById('companies_code').value = '';
+    }
+
+    $(document).ready(function () {
+        $('#search').on('keyup', function () {
+            let searchQuery = $(this).val();
+            $.ajax({
+                url: '/admin/shifts',
+                type: 'GET',
+                data: { search: searchQuery },
+                success: function (response) { 
+                    $('#tableBody').html('');
+                    if (response.shifts.data.length > 0) {
+                        response.shifts.data.forEach(function (shift, index) {
+                            $('#tableBody').append(`
+                                <tr>
+                                    <td class="text-center">${(response.shifts.current_page - 1) * response.shifts.per_page + index + 1}</td>
+                                    <td class="text-center">${shift.shift_code}</td>
+                                    <td class="text-center">${shift.shift_name}</td>
+                                    <td class="text-center">${shift.company ? shift.company.companies_name : '-'}</td>
+                                    <td class="text-center">${shift.shift_start_time_before_break}</td>
+                                    <td class="text-center">${shift.shift_end_time_before_break}</td>
+                                    <td class="text-center">${shift.shift_start_time_after_break}</td>
+                                    <td class="text-center">${shift.shift_end_time_after_break}</td>
+                                    <td class="text-center">${shift.shift_notes ?? '-'}</td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <button
+                                                class="btn btn-light btn-sm border border-danger text-danger"
+                                                title="Delete"
+                                                onclick="delete_data('${shift.shift_id}')">
+                                                <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                            <button
+                                                class="btn btn-light btn-sm border border-success text-success"
+                                                title="Edit"
+                                                onclick="showedit('${shift.shift_id}')">
+                                                <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `);
+                        });
+                    } else {
+                        $('#tableBody').append('<tr><td colspan="10" class="text-center">No results found</td></tr>');
+                    }
+                },
+                error: function (xhr) {
+                    alert('Error: ' + xhr.statusText);
+                }
+            });
+        });
+    });
+
     function reload() {
         window.open("/admin/shifts", "_self");
     }

@@ -52,11 +52,11 @@ Districts - Admin Panel
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">NOTES</th>
-                                                            <th scope="col">CODE</th>
                                                             <th scope="col">CITY</th>
-                                                            <th scope="col">STATUS</th>
+                                                            
                                                             <th scope="col">Action</th>
                                                         </tr>
                                                     </thead>
@@ -66,11 +66,11 @@ Districts - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($districts->currentPage() - 1) * $districts->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                <td class="text-center">{{ $district->districts_code }}</td>
                                                                  <td class="text-center">{{ $district->districts_name }}</td>
                                                                  <td class="text-center">{{ $district->districts_notes }}</td>
-                                                                 <td class="text-center">{{ $district->districts_code }}</td>
                                                                  <td class="text-center">{{ $district->city->cities_name ?? '-' }}</td>
-                                                                 <td class="text-center">{{ $district->districts_status }}</td>
+                                                                 
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $district->districts_id }}')">
@@ -155,16 +155,16 @@ Districts - Admin Panel
                             <option value="{{ $city->cities_code }}">{{ $city->cities_name }}</option>
                         @endforeach
                     </select>
-                    <div class="fromGroup mb-3">
+                    <!-- <div class="fromGroup mb-3">
                         <label>Status</label>
                         <select class="form-control" id="districts_status">
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
-                    </div>
+                    </div> -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                        <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
                         <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
                     </div>
                 </form>
@@ -176,6 +176,13 @@ Districts - Admin Panel
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+
+    function clearForm() {  // tambahan clear data
+        document.getElementById('districts_id').value = '';
+        document.getElementById('districts_name').value = '';
+        document.getElementById('districts_notes').value = '';
+        document.getElementById('cities_code').value = '';
+    }
 
 $(document).ready(function () {
         $('#search').on('keyup', function () {
@@ -192,11 +199,11 @@ $(document).ready(function () {
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.districts.current_page - 1) * response.districts.per_page + index + 1}</td>
+                                    <td class="text-center">${district.districts_code}</td>
                                     <td class="text-center">${district.districts_name}</td>
                                     <td class="text-center">${district.districts_notes ?? '-'}</td>
-                                    <td class="text-center">${district.districts_code}</td>
                                     <td class="text-center">${district.city ? district.city.cities_name : '-'}</td>
-                                    <td class="text-center">${district.districts_status}</td>
+                                    
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${district.districts_id}')">
@@ -243,7 +250,7 @@ $(document).ready(function () {
             districts_name: document.getElementById('districts_name').value,
             districts_notes: document.getElementById('districts_notes').value,
             cities_code: document.getElementById('cities_code').value,
-            districts_status: document.getElementById('districts_status').value,
+            // districts_status: document.getElementById('districts_status').value,
             _token: '{{ csrf_token() }}'
         };
 
@@ -271,7 +278,7 @@ $(document).ready(function () {
             districts_name: document.getElementById('districts_name').value,
             districts_notes: document.getElementById('districts_notes').value,
             cities_code: document.getElementById('cities_code').value,
-            districts_status: document.getElementById('districts_status').value,
+            // districts_status: document.getElementById('districts_status').value,
             _token: '{{ csrf_token() }}'
         };
 
@@ -334,7 +341,7 @@ $(document).ready(function () {
             document.getElementById('districts_name').value = data.districts_name;
             document.getElementById('districts_notes').value = data.districts_notes;
             document.getElementById('cities_code').value = data.cities_code;
-            document.getElementById('districts_status').value = data.districts_status;
+            // document.getElementById('districts_status').value = data.districts_status;
             $('#modalinput').modal('show');
         });
     }

@@ -30,7 +30,7 @@ class HomebaseController extends Controller
 
         $listdata = $this->model->with('company')->where('homebase_name','like', '%'. $search. '%')->where('homebase_soft_delete', 0)->paginate(15);
 
-        $companies = Company::select('companies_code', 'companies_name')->orderBy('companies_name', 'asc')->get();
+        $companies = Company::select('companies_code', 'companies_name')->where('companies_soft_delete',0)->orderBy('companies_name', 'asc')->get();
 
         if($request -> ajax()){
             return response()->json([
@@ -66,7 +66,7 @@ class HomebaseController extends Controller
         }
 
         $result = $this->model->create([
-            'homebase_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'homebase_code' => 'HB' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'companies_code' => $request->companies_code,
             'homebase_name' => $request->homebase_name,
             'homebase_notes' => $request->homebase_notes,

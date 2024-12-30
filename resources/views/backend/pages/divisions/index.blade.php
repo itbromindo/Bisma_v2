@@ -230,9 +230,9 @@ Divisions - Admin Panel
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.divisions.current_page - 1) * response.divisions.per_page + index + 1}</td>
+                                    <td class="text-center">${division.division_code}</td>
                                     <td class="text-center">${division.division_name}</td>
                                     <td class="text-center">${division.division_notes ?? '-'}</td>
-                                    <td class="text-center">${division.division_code}</td>
                                     <td class="text-center">${division.company ? division.company.companies_name : '-'}</td>
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">

@@ -23,7 +23,7 @@ class District extends Model
         'districts_deleted_at',
         'districts_deleted_by',
         'districts_notes',
-        'districts_status',
+        // 'districts_status',
         'districts_soft_delete'
     ];
 

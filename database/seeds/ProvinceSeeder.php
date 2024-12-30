@@ -14,7 +14,7 @@ class ProvinceSeeder extends Seeder
     {
         $provinces = [
             [
-                'provinces_code' => 'P001',
+                'provinces_code' => 'PV001',
                 'provinces_name' => 'Province A',
                 'provinces_created_at' => now(),
                 'provinces_created_by' => 'admin',
@@ -23,11 +23,11 @@ class ProvinceSeeder extends Seeder
                 'provinces_deleted_at' => null,
                 'provinces_deleted_by' => null,
                 'provinces_notes' => 'Notes for Province A',
-                'provinces_status' => 'Active',
+                // 'provinces_status' => 'Active',
                 'provinces_soft_delete' => 0,
             ],
             [
-                'provinces_code' => 'P002',
+                'provinces_code' => 'PV002',
                 'provinces_name' => 'Province B',
                 'provinces_created_at' => now(),
                 'provinces_created_by' => 'admin',
@@ -36,7 +36,7 @@ class ProvinceSeeder extends Seeder
                 'provinces_deleted_at' => null,
                 'provinces_deleted_by' => null,
                 'provinces_notes' => 'Notes for Province B',
-                'provinces_status' => 'Active',
+                // 'provinces_status' => 'Active',
                 'provinces_soft_delete' => 0,
             ],
             

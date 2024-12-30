@@ -55,11 +55,11 @@ Cities - Admin Panel
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">NOTES</th>
-                                                            <th scope="col">CODE</th>
                                                             <th scope="col">PROVINCE</th>
-                                                            <th scope="col">Status</th>
+                                                            <!-- <th scope="col">Status</th> -->
                                                             <th scope="col">Action</th>
                                                         </tr>
                                                     </thead>
@@ -69,12 +69,12 @@ Cities - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($cities->currentPage() - 1) * $cities->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                <td class="text-center">{{ $city->cities_code }}</td>
                                                                 <td class="text-center">{{ $city->cities_name }}</td>
                                                                 <td class="text-center">{{ $city->cities_notes }}</td>
-                                                                <td class="text-center">{{ $city->cities_code }}</td>
                                                                 <td class="text-center">
                                                                     {{ $city->province->provinces_name ?? '-' }}</td>
-                                                                <td class="text-center">{{ $city->cities_status }}</td>
+                                                                <!-- <td class="text-center">{{ $city->cities_status }}</td> -->
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button
@@ -184,16 +184,16 @@ Cities - Admin Panel
                             <option value="{{ $province->provinces_code }}">{{ $province->provinces_name }}</option>
                         @endforeach
                     </select>
-                    <div class="fromGroup mb-3">
+                    <!-- <div class="fromGroup mb-3">
                         <label>Status</label>
                         <select class="form-control" id="cities_status">
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
-                    </div>
+                    </div> -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                        <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
                         <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
                     </div>
                 </form>
@@ -205,6 +205,14 @@ Cities - Admin Panel
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+
+    function clearForm() {  // tambahan clear data
+        document.getElementById('city_id').value = '';
+        document.getElementById('cities_name').value = '';
+        document.getElementById('cities_notes').value = '';
+        document.getElementById('provinces_code').value = '';
+        
+    }
 
     $(document).ready(function () {
         $('#search').on('keyup', function () {
@@ -221,11 +229,11 @@ Cities - Admin Panel
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.cities.current_page - 1) * response.cities.per_page + index + 1}</td>
+                                    <td class="text-center">${city.cities_code}</td>
                                     <td class="text-center">${city.cities_name}</td>
                                     <td class="text-center">${city.cities_notes ?? '-'}</td>
-                                    <td class="text-center">${city.cities_code}</td>
                                     <td class="text-center">${city.province ? city.province.provinces_name : '-'}</td>
-                                    <td class="text-center">${city.cities_status}</td>
+                                    
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${city.cities_id}')">
@@ -271,7 +279,7 @@ Cities - Admin Panel
             cities_name: document.getElementById('cities_name').value,
             cities_notes: document.getElementById('cities_notes').value,
             provinces_code: document.getElementById('provinces_code').value,
-            cities_status: document.getElementById('cities_status').value,
+            // cities_status: document.getElementById('cities_status').value,
             _token: '{{ csrf_token() }}'
         };
 
@@ -299,7 +307,7 @@ Cities - Admin Panel
             cities_name: document.getElementById('cities_name').value,
             cities_notes: document.getElementById('cities_notes').value,
             provinces_code: document.getElementById('provinces_code').value,
-            cities_status: document.getElementById('cities_status').value,
+            // cities_status: document.getElementById('cities_status').value,
             _token: '{{ csrf_token() }}'
         };
 
@@ -362,7 +370,7 @@ Cities - Admin Panel
             document.getElementById('cities_name').value = data.cities_name;
             document.getElementById('cities_notes').value = data.cities_notes;
             document.getElementById('provinces_code').value = data.provinces_code;
-            document.getElementById('cities_status').value = data.cities_status;
+            // document.getElementById('cities_status').value = data.cities_status;
             $('#modalinput').modal('show');
         });
     }

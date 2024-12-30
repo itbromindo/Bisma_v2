@@ -15,8 +15,8 @@ class DivisionSeeder extends Seeder
     {
         $divisions = [
             [
-                'division_code' => 'D001',
-                'companies_code' => 'C001',
+                'division_code' => 'DI001',
+                'companies_code' => 'CO001',
                 'division_name' => 'IT',
                 'division_created_at' => now(),
                 'division_created_by' => 'admin',
@@ -28,8 +28,8 @@ class DivisionSeeder extends Seeder
                 'division_soft_delete' => 0,
             ],
             [
-                'division_code' => 'D002',
-                'companies_code' => 'C002', 
+                'division_code' => 'DI002',
+                'companies_code' => 'CO002', 
                 'division_name' => 'Sales',
                 'division_created_at' => now(),
                 'division_created_by' => 'admin',
