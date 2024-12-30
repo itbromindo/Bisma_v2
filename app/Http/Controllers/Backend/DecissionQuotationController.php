@@ -70,7 +70,7 @@ class DecissionQuotationController extends Controller
         }
 
         $result = $this->model->create([
-            'template_decission_quotation_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'template_decission_quotation_code' => 'DQ' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'template_decission_quotation_title' => $request->template_decission_quotation_title,
             'template_decission_quotation_text' => $request->template_decission_quotation_text,
             'template_decission_quotation_notes' => $request->template_decission_quotation_notes,

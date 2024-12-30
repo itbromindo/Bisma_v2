@@ -37,7 +37,7 @@ class OptionChecklistController extends Controller
             ->where('option_checklist_items', 'like', '%' . $search . '%')
             ->paginate(15);
 
-            $checklists = Checklist::select('checklist_code', 'checklist_items')->get();
+            $checklists = Checklist::select('checklist_code', 'checklist_items')->where('checklist_soft_delete', 0)->orderBy('checklist_items', 'asc')->get();
 
         if($request->ajax()){
             return response()->json([
@@ -79,7 +79,7 @@ class OptionChecklistController extends Controller
         }
 
         $result = $this->model->create([
-            'option_checklist_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT), // Generate unique code
+            'option_checklist_code' => 'OC' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'checklist_code' => $request->checklist_code,
             'option_checklist_items' => $request->option_checklist_items,
             'option_checklist_notes' => $request->option_checklist_notes,

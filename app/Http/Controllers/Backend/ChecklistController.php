@@ -18,7 +18,7 @@ class ChecklistController extends Controller
         $this->model = new Checklist();
         $this->mandatory = array(
             'checklist_code' => 'nullable|string|max:225',
-            'pillar_code' => 'required|string|max:225',  // Relasi dengan tabel Pillar
+            'pillar_code' => 'required|string|max:225',
             'checklist_items' => 'required|string|max:225',
             'checklist_notes' => 'nullable|string|max:1000',
         );
@@ -34,7 +34,7 @@ class ChecklistController extends Controller
             ->where('checklist_items', 'like', '%' . $search . '%')
             ->paginate(15);
     
-        $pillars = Pillar::select('pillar_code', 'pillar_items')->get(); 
+        $pillars = Pillar::select('pillar_code', 'pillar_items')->where('pillar_soft_delete', 0)->orderBy('pillar_items', 'asc')->get(); 
 
         if($request->ajax()){
             return response()->json([
@@ -77,7 +77,7 @@ class ChecklistController extends Controller
         }
 
         $result = $this->model->create([
-            'checklist_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'checklist_code' => 'CL' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'pillar_code' => $request->pillar_code,
             'checklist_items' => $request->checklist_items,
             'checklist_notes' => $request->checklist_notes,

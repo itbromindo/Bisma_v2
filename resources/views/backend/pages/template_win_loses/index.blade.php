@@ -4,6 +4,10 @@
 Template Win Lose - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -15,8 +19,8 @@ Template Win Lose - Admin Panel
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Setting</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Template Win Lose</li>
+                                <li class="breadcrumb-item"><a href='/admin/template_win_loses'>Pillars</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href='/admin/template_win_loses'>Template Win Lose</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -52,9 +56,9 @@ Template Win Lose - Admin Panel
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col">NO</th>
+                                                            <th scope="col">Code</th>
                                                             <th scope="col">Title</th>
                                                             <th scope="col">Text</th>
-                                                            <th scope="col">Code</th>
                                                             <th scope="col">Notes</th>
                                                             <th scope="col">Action</th>
                                                         </tr>
@@ -65,9 +69,9 @@ Template Win Lose - Admin Panel
                                                             <td scope="row" class="text-center">
                                                                     {{ ($template_win_loses->currentPage() - 1) * $template_win_loses->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                <td class="text-center">{{ $template_win_lose->template_win_loses_code }}</td>
                                                                  <td class="text-center">{{ $template_win_lose->template_win_loses_title }}</td>
                                                                  <td class="text-center">{{ $template_win_lose->template_win_loses_text }}</td>
-                                                                 <td class="text-center">{{ $template_win_lose->template_win_loses_code }}</td>
                                                                  <td class="text-center">{{ $template_win_lose->template_win_loses_notes }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -157,8 +161,10 @@ Template Win Lose - Admin Panel
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @if ($usr->can('template_win_loses.update') || $usr->can('template_win_loses.create'))
                 <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                @endif
             </div>
         </div>
     </div>
@@ -220,6 +226,15 @@ $(document).ready(function () {
 
     function reload() {
         window.open("/admin/template_win_loses", "_self");
+    }
+
+    function clearform() {
+        document.getElementById('template_win_loses_id').value = '';
+        document.getElementById('template_win_loses_title').value = '';
+        document.getElementById('template_win_loses_text').value = '';
+        document.getElementById('template_win_loses_notes').value = '';
+
+        document.getElementById('tittleform').innerHTML = 'Form Input';
     }
 
     function save() {

@@ -72,7 +72,7 @@ class QuotationStatusController extends Controller
         }
 
         $result = $this->model->create([
-            'quotation_status_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'quotation_status_code' => 'QS' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'quotation_status_name' => $request->quotation_status_name,
             'quotation_status_notes' => $request->quotation_status_notes,
             'quotation_status_created_at' => now(),

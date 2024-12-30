@@ -50,6 +50,7 @@ class TemplateWinLoseController extends Controller
         $model = $this->model->find($id);
         return $model;
     }
+
     public function store(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['template_win_loses.create']);
@@ -64,7 +65,7 @@ class TemplateWinLoseController extends Controller
         }
 
         $result = $this->model->create([
-            'template_win_loses_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'template_win_loses_code' => 'WL' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'template_win_loses_title' => $request->template_win_loses_title,
             'template_win_loses_text' => $request->template_win_loses_text,
             'template_win_loses_notes' => $request->template_win_loses_notes,
