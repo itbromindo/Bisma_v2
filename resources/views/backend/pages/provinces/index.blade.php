@@ -55,10 +55,10 @@ Provinces - Admin Panel
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col" width="5%">NO</th>
-                                                            <th scope="col">NAME</th>
                                                             <th scope="col">CODE</th>
+                                                            <th scope="col">NAME</th>
                                                             <th scope="col">NOTES</th>
-                                                            <th scope="col">STATUS</th>
+                                                            <!-- <th scope="col">STATUS</th> -->
                                                             <th scope="col">Action</th>
                                                         </tr>
                                                     </thead>
@@ -68,10 +68,10 @@ Provinces - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($provinces->currentPage() - 1) * $provinces->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                <td class="text-center">{{ $province->provinces_code }}</td>
                                                                  <td class="text-center">{{ $province->provinces_name }}</td>
-                                                                 <td class="text-center">{{ $province->provinces_code }}</td>
                                                                  <td class="text-center">{{ $province->provinces_notes }}</td>
-                                                                 <td class="text-center">{{ $province->provinces_status }}</td>
+                                                                 <!-- <td class="text-center">{{ $province->provinces_status }}</td> -->
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button
@@ -183,16 +183,16 @@ Provinces - Admin Panel
                         <textarea class="form-control" name="provinces_notes" id="provinces_notes"
                             placeholder="Notes"></textarea>
                     </div>
-                    <div class="fromGroup mb-3">
+                    <!-- <div class="fromGroup mb-3">
                         <label>Status</label>
                         <select class="form-control" id="provinces_status">
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
-                    </div>
+                    </div> -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                        <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
                         <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
                     </div>
                 </form>
@@ -204,6 +204,12 @@ Provinces - Admin Panel
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+
+    function clearForm() {  // tambahan clear data
+        document.getElementById('province_id').value = '';
+        document.getElementById('provinces_name').value = '';
+        document.getElementById('provinces_notes').value = '';
+    }
 
 $(document).ready(function () {
         $('#search').on('keyup', function () {
@@ -220,10 +226,9 @@ $(document).ready(function () {
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.provinces.current_page - 1) * response.provinces.per_page + index + 1}</td>
-                                    <td class="text-center">${province.provinces_name}</td>
                                     <td class="text-center">${province.provinces_code}</td>
+                                    <td class="text-center">${province.provinces_name}</td>
                                     <td class="text-center">${province.provinces_notes ?? '-'}</td>
-                                    <td class="text-center">${province.provinces_status}</td>
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${province.provinces_id}')">
@@ -268,7 +273,7 @@ $(document).ready(function () {
         const data = {
             provinces_name: document.getElementById('provinces_name').value,
             provinces_notes: document.getElementById('provinces_notes').value,
-            provinces_status: document.getElementById('provinces_status').value,
+            // provinces_status: document.getElementById('provinces_status').value,
             _token: '{{ csrf_token() }}'
         };
 
@@ -295,7 +300,7 @@ $(document).ready(function () {
         const data = {
             provinces_name: document.getElementById('provinces_name').value,
             provinces_notes: document.getElementById('provinces_notes').value,
-            provinces_status: document.getElementById('provinces_status').value,
+            // provinces_status: document.getElementById('provinces_status').value,
             _token: '{{ csrf_token() }}'
         };
 
@@ -357,7 +362,7 @@ $(document).ready(function () {
             document.getElementById('province_id').value = data.provinces_id;
             document.getElementById('provinces_name').value = data.provinces_name;
             document.getElementById('provinces_notes').value = data.provinces_notes;
-            document.getElementById('provinces_status').value = data.provinces_status;
+            // document.getElementById('provinces_status').value = data.provinces_status;
             $('#modalinput').modal('show');
         });
     }

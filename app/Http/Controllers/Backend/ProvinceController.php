@@ -17,7 +17,7 @@ class ProvinceController extends Controller
             'provinces_code' => 'nullable|string|max:225',
             'provinces_name' => 'required|string|max:225',
             'provinces_notes' => 'nullable|string',
-            'provinces_status' => 'nullable|string|max:225',
+            // 'provinces_status' => 'nullable|string|max:225',
         ];
     }
 
@@ -62,10 +62,10 @@ class ProvinceController extends Controller
         }
 
         $result = $this->model->create([
-            'provinces_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'provinces_code' => 'PV' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'provinces_name' => $request->provinces_name,
             'provinces_notes' => $request->provinces_notes,
-            'provinces_status' => $request->provinces_status,
+            // 'provinces_status' => $request->provinces_status,
             'provinces_created_at' => now(),
             'provinces_created_by' => Session::get('user_code'),
         ]);
@@ -91,7 +91,7 @@ class ProvinceController extends Controller
         $result = $this->model->find($id)->update([
             'provinces_name' => $request->provinces_name,
             'provinces_notes' => $request->provinces_notes,
-            'provinces_status' => $request->provinces_status,
+            // 'provinces_status' => $request->provinces_status,
             'provinces_updated_at' => now(),
             'provinces_updated_by' => Session::get('user_code'),
         ]);

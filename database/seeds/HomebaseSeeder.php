@@ -16,7 +16,7 @@ class HomebaseSeeder extends Seeder
         $homebases = [
             [
                 'homebase_code' => 'HB001',
-                'companies_code' => 'C001', 
+                'companies_code' => 'CO001', 
                 'homebase_name' => 'Homebase A',
                 'homebase_created_at' => now(),
                 'homebase_created_by' => 'admin',
@@ -29,7 +29,7 @@ class HomebaseSeeder extends Seeder
             ],
             [
                 'homebase_code' => 'HB002',
-                'companies_code' => 'C002',
+                'companies_code' => 'CO002',
                 'homebase_name' => 'Homebase B',
                 'homebase_created_at' => now(),
                 'homebase_created_by' => 'admin',

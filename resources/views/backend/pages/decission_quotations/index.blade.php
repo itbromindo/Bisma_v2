@@ -4,6 +4,10 @@
 Decission Quotation - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -11,12 +15,12 @@ Decission Quotation - Admin Panel
             <div class="row">
                 <div class="col-12 rt-mb-25">
                     <div class="breadcrumbs">
-                        <div class="breadcrumb-title">Master</div>
+                        <div class="breadcrumb-title">Master Decission Quotation</div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Master</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Decission Quotation</li>
+                                <li class="breadcrumb-item"><a href='/admin/decission_quotations'>Origin</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href='/admin/decission_quotations'>Decission Quotation</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -53,8 +57,8 @@ Decission Quotation - Admin Panel
                                                 <thead style="text-align: center">
                                                 <tr>
                                                     <th scope="col">NO</th>
-                                                    <th scope="col">TITLE</th>
                                                     <th scope="col">CODE</th>
+                                                    <th scope="col">TITLE</th>   
                                                     <th scope="col">TEXT</th>
                                                     <th scope="col">NOTE</th>
                                                     <th scope="col">Action</th>
@@ -66,8 +70,8 @@ Decission Quotation - Admin Panel
                                                     <td scope="row" class="text-center">
                                                                     {{ ($decission_quotations->currentPage() - 1) * $decission_quotations->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                <td class="text-center">{{ $quotation->template_decission_quotation_code }}</td>
                                                          <td class="text-center">{{ $quotation->template_decission_quotation_title }}</td>
-                                                         <td class="text-center">{{ $quotation->template_decission_quotation_code }}</td>
                                                          <td class="text-center">{{ $quotation->template_decission_quotation_text }}</td>
                                                          <td class="text-center">{{ $quotation->template_decission_quotation_notes }}</td>
                                                         <!-- <td>{{ $quotation->is_deleted ? 'Deleted' : 'Active' }}</td> -->
@@ -159,8 +163,10 @@ Decission Quotation - Admin Panel
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @if ($usr->can('decission_quotation.update') || $usr->can('decission_quotation.create'))
                 <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                @endif
             </div>
         </div>
     </div>
@@ -222,6 +228,15 @@ $(document).ready(function () {
 
     function reload() {
         window.open("/admin/decission_quotations", "_self");
+    }
+
+    function clearform() {
+        document.getElementById('template_decission_quotation_id').value = '';
+        document.getElementById('template_decission_quotation_title').value = '';
+        document.getElementById('template_decission_quotation_text').value = '';
+        document.getElementById('template_decission_quotation_notes').value = '';
+
+        document.getElementById('tittleform').innerHTML = 'Form Input';
     }
 
     function save() {

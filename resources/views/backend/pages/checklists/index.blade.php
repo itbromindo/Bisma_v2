@@ -4,6 +4,10 @@
 Checklists - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -15,8 +19,8 @@ Checklists - Admin Panel
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Checklists</li>
+                                <li class="breadcrumb-item"><a href='/admin/checklists'>Pillars</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href='/admin/checklists'>Checklist</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -52,10 +56,10 @@ Checklists - Admin Panel
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">CHECKLIST ITEMS</th>
                                                             <th scope="col">NOTES</th>
-                                                            <th scope="col">CODE</th>
-                                                            <th scope="col">PILLAR CODE</th>
+                                                            <th scope="col">PILLAR</th>
                                                             <th scope="col">ACTION</th>
                                                         </tr>
                                                     </thead>
@@ -65,10 +69,10 @@ Checklists - Admin Panel
                                                             <td scope="row" class="text-center">
                                                                     {{ ($checklists->currentPage() - 1) * $checklists->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td>{{ $checklist->checklist_items }}</td>
-                                                                <td>{{ $checklist->checklist_notes }}</td>
-                                                                <td>{{ $checklist->checklist_code }}</td>
-                                                                <td>{{ $checklist->pillar->pillar_items }}</td>
+                                                                <td class="text-center">{{ $checklist->checklist_code }}</td>
+                                                                <td class="text-center">{{ $checklist->checklist_items }}</td>
+                                                                <td class="text-center">{{ $checklist->checklist_notes }}</td>
+                                                                <td class="text-center">{{ $checklist->pillar->pillar_items }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $checklist->checklist_id }}')">
@@ -161,8 +165,10 @@ Checklists - Admin Panel
                     </select>
                     <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @if ($usr->can('checklists.update') || $usr->can('checklists.create'))
                 <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                @endif
             </div>
                 </form>
             </div>
@@ -223,6 +229,15 @@ $(document).ready(function () {
 
     function reload() {
         window.open("/admin/checklists", "_self");
+    }
+
+    function clearform() {
+        document.getElementById('checklist_id').value = '';
+        document.getElementById('checklist_items').value = '';
+        document.getElementById('checklist_notes').value = '';
+        document.getElementById('pillar_code').value = '';
+
+        document.getElementById('tittleform').innerHTML = 'Form Input';
     }
 
     function save() {

@@ -15,8 +15,8 @@ class ShiftSeeder extends Seeder
     {
         $shifts = [
             [
-                'shift_code' => 'S001',
-                'companies_code' => 'C001', 
+                'shift_code' => 'SI001',
+                'companies_code' => 'CO001', 
                 'shift_name' => 'Morning Shift',
                 'shift_start_time_before_break' => '08:00:00',
                 'shift_end_time_before_break' => '12:00:00',
@@ -34,8 +34,8 @@ class ShiftSeeder extends Seeder
                 'shift_soft_delete' => 0,
             ],
             [
-                'shift_code' => 'S002',
-                'companies_code' => 'C002', 
+                'shift_code' => 'SI002',
+                'companies_code' => 'CO002', 
                 'shift_name' => 'Night Shift',
                 'shift_start_time_before_break' => '20:00:00',
                 'shift_end_time_before_break' => '00:00:00',

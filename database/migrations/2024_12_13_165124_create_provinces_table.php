@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamp('provinces_deleted_at')->nullable();
             $table->string('provinces_deleted_by', 225)->nullable();
             $table->text('provinces_notes')->nullable();
-            $table->string('provinces_status', 225)->nullable();
+            // $table->string('provinces_status', 225)->nullable();
             $table->tinyInteger('provinces_soft_delete')->default(0); // 1: yes, 0: no
         });
     }

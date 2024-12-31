@@ -52,9 +52,9 @@ Inquiry Goods - Admin Panel
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">NOTE</th>
-                                                            <th scope="col">CODE</th>
                                                             <th scope="col">Action</th>
                                                         </tr>
                                                     </thead>
@@ -64,9 +64,9 @@ Inquiry Goods - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($inquiry_goods->currentPage() - 1) * $inquiry_goods->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                <td class="text-center">{{ $item->inquiry_goods_status_code }}</td>
                                                                  <td class="text-center">{{ $item->inquiry_goods_status_name }}</td>
                                                                  <td class="text-center">{{ $item->inquiry_goods_status_notes }}</td>
-                                                                 <td class="text-center">{{ $item->inquiry_goods_status_code }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $item->inquiry_goods_status_id }}')">
@@ -147,7 +147,7 @@ Inquiry Goods - Admin Panel
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
                 <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
             </div>
         </div>
@@ -157,6 +157,13 @@ Inquiry Goods - Admin Panel
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+
+    function clearForm() {  // tambahan clear data
+        document.getElementById('inquiry_goods_id').value = '';
+        document.getElementById('inquiry_goods_status_name').value = '';
+        document.getElementById('inquiry_goods_status_notes').value = '';
+    }
+
     $(document).ready(function () {
         $('#search').on('keyup', function () {
             let searchQuery = $(this).val();
@@ -172,9 +179,9 @@ Inquiry Goods - Admin Panel
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.inquiry_goods.current_page - 1) * response.inquiry_goods.per_page + index + 1}</td>
+                                    <td class="text-center">${item.inquiry_goods_status_code}</td>
                                     <td class="text-center">${item.inquiry_goods_status_name}</td>
                                     <td class="text-center">${item.inquiry_goods_status_notes ?? '-'}</td>
-                                    <td class="text-center">${item.inquiry_goods_status_code}</td>
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${item.inquiry_goods_status_id}')">

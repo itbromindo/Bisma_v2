@@ -18,7 +18,7 @@ class CityController extends Controller
         $this->mandatory = [
             'cities_name' => 'required',
             'cities_code' => 'nullable|string|max:225',
-            'cities_status' => 'nullable|string|max:225',
+            // 'cities_status' => 'nullable|string|max:225',
             'provinces_code' => 'required',
         ];
     }
@@ -34,7 +34,7 @@ class CityController extends Controller
         ->where('cities_soft_delete', 0)
         ->paginate(15);
 
-        $provinces = Province::select('provinces_code', 'provinces_name')->orderBy('provinces_name', 'asc')->get();
+        $provinces = Province::select('provinces_code', 'provinces_name')->where('provinces_soft_delete',0)->orderBy('provinces_name', 'asc')->get();
 
         if($request -> ajax()){
             return response()->json([
@@ -68,11 +68,11 @@ class CityController extends Controller
         }
 
         $result = $this->model->create([
-            'cities_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'cities_code' => 'CI' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'provinces_code' => $request->provinces_code,
             'cities_name' => $request->cities_name,
             'cities_notes' => $request->cities_notes,
-            'cities_status' => $request->cities_status,
+            // 'cities_status' => $request->cities_status,
             'cities_created_at' => now(),
             'cities_created_by' => Session::get('user_code'),
         ]);
@@ -97,7 +97,7 @@ class CityController extends Controller
             'cities_name' => $request->cities_name,
             'provinces_code' => $request->provinces_code,
             'cities_notes' => $request->cities_notes,
-            'cities_status' => $request->cities_status,
+            // 'cities_status' => $request->cities_status,
             'cities_updated_at' => now(),
             'cities_updated_by' => Session::get('user_code'),
         ]);

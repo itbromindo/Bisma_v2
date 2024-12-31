@@ -62,7 +62,7 @@ class InquiryGoodController extends Controller
         }
 
         $result = $this->model->create([
-            'inquiry_goods_status_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'inquiry_goods_status_code' => 'IG' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'inquiry_goods_status_name' => $request->inquiry_goods_status_name,
             'inquiry_goods_status_notes' => $request->inquiry_goods_status_notes,
             'inquiry_goods_status_created_at' => now(),

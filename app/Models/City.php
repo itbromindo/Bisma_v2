@@ -23,7 +23,7 @@ class City extends Model
         'cities_deleted_at',
         'cities_deleted_by',
         'cities_notes',
-        'cities_status',
+        // 'cities_status',
         'cities_soft_delete'
     ];
 

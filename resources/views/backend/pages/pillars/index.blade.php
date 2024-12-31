@@ -4,6 +4,10 @@
 Pillar - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -11,12 +15,12 @@ Pillar - Admin Panel
             <div class="row">
                 <div class="col-12 rt-mb-25">
                     <div class="breadcrumbs ">
-                        <div class="breadcrumb-title"> Master</div>
+                        <div class="breadcrumb-title"> Master Pillar</div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Master</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Pillars</li>
+                                <li class="breadcrumb-item"><a href='/admin/pillars'>Pillars</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href='/admin/pillars'>Pillar</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -26,7 +30,7 @@ Pillar - Admin Panel
                 <div class="col-xxl-12 col-xl-12 col-md-12">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5>Master Pillars</h5>
+                            <h5>Master Pillar</h5>
                             <div class="d-flex align-items-center">
                                 <div class="app-main-search me-2">
                                     <form action="/admin/pillars" method="GET" class="d-flex">
@@ -52,9 +56,9 @@ Pillar - Admin Panel
                                                 <thead style="text-align: center">
                                                 <tr>
                                                     <th scope="col">NO</th>
-                                                    <th scope="col">NAME</th>
-                                                    <th scope="col">NOTE</th>
                                                     <th scope="col">CODE</th>
+                                                    <th scope="col">ITEM</th>
+                                                    <th scope="col">NOTE</th>
                                                     <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
@@ -64,9 +68,9 @@ Pillar - Admin Panel
                                                     <td scope="row" class="text-center">
                                                                     {{ ($pillars->currentPage() - 1) * $pillars->perPage() + $loop->iteration }}
                                                                 </td>
-                                                        <td>{{ $pillar->pillar_items }}</td>
-                                                        <td>{{ $pillar->pillar_notes }}</td>
-                                                        <td>{{ $pillar->pillar_code }}</td>
+                                                                <td class="text-center">{{ $pillar->pillar_code }}</td>
+                                                        <td class="text-center">{{ $pillar->pillar_items }}</td>
+                                                        <td class="text-center">{{ $pillar->pillar_notes }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $pillar->pillar_id }}')">
@@ -149,8 +153,10 @@ Pillar - Admin Panel
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @if ($usr->can('pillars.update') || $usr->can('pillars.create'))
                 <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                @endif
             </div>
         </div>
     </div>
@@ -209,6 +215,15 @@ Pillar - Admin Panel
     function reload() {
         window.open("/admin/pillars", "_self");
     }
+
+    function clearform() {
+        document.getElementById('pillar_id').value = '';
+        document.getElementById('pillar_items').value = '';
+        document.getElementById('pillar_notes').value = '';
+
+        document.getElementById('tittleform').innerHTML = 'Form Input';
+    }
+
 
     function save() {
         const id = document.getElementById('pillar_id').value;

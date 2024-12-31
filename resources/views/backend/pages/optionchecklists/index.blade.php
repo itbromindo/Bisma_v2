@@ -4,6 +4,10 @@
 Option Checklists - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -15,8 +19,8 @@ Option Checklists - Admin Panel
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Option Checklists</li>
+                                <li class="breadcrumb-item"><a href='/admin/optionchecklists'>Pillars</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href='/admin/optionchecklists'>Option Checklists</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -52,10 +56,10 @@ Option Checklists - Admin Panel
                                                 <thead style="text-align: center">
                                                 <tr>
                                                     <th scope="col">NO</th>
+                                                    <th scope="col">CODE</th>
                                                     <th scope="col">ITEM</th>
                                                     <th scope="col">NOTE</th>
-                                                    <th scope="col">CODE</th>
-                                                    <th scope="col">CHECKLIST CODE</th>
+                                                    <th scope="col">CHECKLIST</th>
                                                     <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
@@ -65,9 +69,9 @@ Option Checklists - Admin Panel
                                                     <td scope="row" class="text-center">
                                                                     {{ ($option_checklist->currentPage() - 1) * $option_checklist->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                <td class="text-center">{{ $checklist->option_checklist_code }}</td>
                                                          <td class="text-center">{{ $checklist->option_checklist_items }}</td>
                                                          <td class="text-center">{{ $checklist->option_checklist_notes }}</td>
-                                                         <td class="text-center">{{ $checklist->option_checklist_code }}</td>
                                                          <td class="text-center">{{ $checklist->checklist->checklist_items }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -158,8 +162,10 @@ Option Checklists - Admin Panel
                     </select>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                        <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @if ($usr->can('optionchecklists.update') || $usr->can('optionchecklists.create'))
                         <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                        @endif
                     </div>
                 </form>
             </div>
@@ -221,6 +227,15 @@ $(document).ready(function () {
 
     function reload() {
         window.open("/admin/optionchecklists", "_self");
+    }
+
+    function clearform() {
+        document.getElementById('option_checklist_id').value = '';
+        document.getElementById('option_checklist_items').value = '';
+        document.getElementById('option_checklist_notes').value = '';
+        document.getElementById('checklist_code').value = '';
+
+        document.getElementById('tittleform').innerHTML = 'Form Input';
     }
 
     function save() {

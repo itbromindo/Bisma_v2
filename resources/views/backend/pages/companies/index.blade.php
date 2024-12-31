@@ -55,9 +55,9 @@ Company - Admin Panel
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">NOTE</th>
-                                                            <th scope="col">CODE</th>
                                                             <th scope="col">Action</th>
                                                         </tr>
                                                     </thead>
@@ -67,9 +67,9 @@ Company - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($companies->currentPage() - 1) * $companies->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                <td class="text-center">{{ $company->companies_code }}</td>
                                                                 <td class="text-center">{{ $company->companies_name }}</td>
                                                                 <td class="text-center">{{ $company->companies_notes }}</td>
-                                                                <td class="text-center">{{ $company->companies_code }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button
@@ -184,7 +184,7 @@ Company - Admin Panel
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button> 
                 <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
             </div>
         </div>
@@ -193,6 +193,14 @@ Company - Admin Panel
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
+    function clearForm() {  // tambahan clear data
+        document.getElementById('company_id').value = '';
+        document.getElementById('companies_name').value = '';
+        document.getElementById('companies_notes').value = '';
+    }
+
+
     $(document).ready(function () {
         $('#search').on('keyup', function () {
             let searchQuery = $(this).val();
@@ -208,9 +216,9 @@ Company - Admin Panel
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.companies.current_page - 1) * response.companies.per_page + index + 1}</td>
+                                    <td class="text-center">${company.companies_code}</td>
                                     <td class="text-center">${company.companies_name}</td>
                                     <td class="text-center">${company.companies_notes ?? '-'}</td>
-                                    <td class="text-center">${company.companies_code}</td>
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${company.companies_id}')">

@@ -55,9 +55,9 @@ Divisions - Admin Panel
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">NOTES</th>
-                                                            <th scope="col">CODE</th>
                                                             <th scope="col">COMPANY</th>
                                                             <th scope="col">Action</th>
                                                         </tr>
@@ -68,9 +68,9 @@ Divisions - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($divisions->currentPage() - 1) * $divisions->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                <td class="text-center">{{ $division->division_code }}</td>
                                                                 <td class="text-center">{{ $division->division_name }}</td>
                                                                 <td class="text-center">{{ $division->division_notes }}</td>
-                                                                <td class="text-center">{{ $division->division_code }}</td>
                                                                 <td class="text-center">
                                                                     {{ $division->company->companies_name ?? '-' }}</td>
                                                                 <td class="text-center">
@@ -196,7 +196,7 @@ Divisions - Admin Panel
                     </select>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                        <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
                         <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
                     </div>
                 </form>
@@ -207,6 +207,13 @@ Divisions - Admin Panel
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
+    function clearForm() {  // tambahan clear data
+        document.getElementById('division_id').value = '';
+        document.getElementById('division_name').value = '';
+        document.getElementById('division_notes').value = '';
+        document.getElementById('companies_code').value = '';
+    }
 
     $(document).ready(function () {
         $('#search').on('keyup', function () {
@@ -223,9 +230,9 @@ Divisions - Admin Panel
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.divisions.current_page - 1) * response.divisions.per_page + index + 1}</td>
+                                    <td class="text-center">${division.division_code}</td>
                                     <td class="text-center">${division.division_name}</td>
                                     <td class="text-center">${division.division_notes ?? '-'}</td>
-                                    <td class="text-center">${division.division_code}</td>
                                     <td class="text-center">${division.company ? division.company.companies_name : '-'}</td>
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">

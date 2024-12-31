@@ -14,7 +14,7 @@ class CompanySeeder extends Seeder
     {
         $companies = [
             [
-                'companies_code' => 'C001',
+                'companies_code' => 'CO001',
                 'companies_name' => 'PMS',
                 'companies_created_at' => now(),
                 'companies_created_by' => 'admin',
@@ -26,7 +26,7 @@ class CompanySeeder extends Seeder
                 'companies_soft_delete' => 0,
             ],
             [
-                'companies_code' => 'C002',
+                'companies_code' => 'CO002',
                 'companies_name' => 'BMM',
                 'companies_created_at' => now(),
                 'companies_created_by' => 'admin',

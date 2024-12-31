@@ -55,11 +55,11 @@ Master Approvals - Admin Panel
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">NOTES</th>
-                                                            <th scope="col">CODE</th>
-                                                            <th scope="col">DEPARTMENT</th>
                                                             <th scope="col">DIVISION</th>
+                                                            <th scope="col">DEPARTMENT</th>
                                                             <th scope="col">LEVEL</th>
                                                             <th scope="col">Action</th>
                                                         </tr>
@@ -70,9 +70,9 @@ Master Approvals - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($masterApprovals->currentPage() - 1) * $masterApprovals->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                <td class="text-center">{{ $approval->master_approvals_code }}</td>
                                                                  <td class="text-center">{{ $approval->master_approvals_approval_name }}</td>
                                                                  <td class="text-center">{{ $approval->master_approvals_notes }}</td>
-                                                                 <td class="text-center">{{ $approval->master_approvals_code }}</td>
                                                                  <td class="text-center">{{ $approval->division->division_name ?? '-' }}</td>
                                                                  <td class="text-center">{{ $approval->department->department_name ?? '-' }}</td>
                                                                  <td class="text-center">{{ $approval->level->level_name ?? '-' }}</td>
@@ -221,7 +221,7 @@ Master Approvals - Admin Panel
                     </select>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                        <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
                         <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
                     </div>
                 </form>
@@ -232,6 +232,68 @@ Master Approvals - Admin Panel
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    function clearForm() {  // tambahan clear data
+        document.getElementById('master_approvals_id').value = '';
+        document.getElementById('master_approvals_approval_name').value = '';
+        document.getElementById('master_approvals_notes').value = '';
+        document.getElementById('division_code').value = '';
+        document.getElementById('department_code').value = '';
+        document.getElementById('level_code').value = '';
+    }
+
+    $(document).ready(function () {
+        $('#search').on('keyup', function () {
+            let searchQuery = $(this).val();
+            $.ajax({
+                url: '/admin/master_approvals',
+                type: 'GET',
+                data: { search: searchQuery },
+                success: function (response) { 
+
+                    $('#tableBody').html('');
+                    if (response.masterApprovals.data.length > 0) {
+                        response.masterApprovals.data.forEach(function (approval, index) {
+                            $('#tableBody').append(`
+                                <tr>
+                                    <td class="text-center">${(response.masterApprovals.current_page - 1) * response.masterApprovals.per_page + index + 1}</td>
+                                    <td class="text-center">${approval.master_approvals_code}</td>
+                                    <td class="text-center">${approval.master_approvals_approval_name}</td>
+                                    <td class="text-center">${approval.master_approvals_notes ?? '-'}</td>
+                                    <td class="text-center">${approval.division ? approval.division.division_name : '-'}</td>
+                                    <td class="text-center">${approval.department ? approval.department.department_name : '-'}</td>
+                                    <td class="text-center">${approval.level ? approval.level.level_name : '-'}</td>
+                                    <td class="text-center">
+                                    <div class="d-flex justify-content-center gap-2">
+                                                                        <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${approval.master_approvals_id }')">
+                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                            </svg>
+                                                                        </button>
+                                                                        <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${approval.master_approvals_id }')">
+                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                                <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                                <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                            </svg>
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                </tr>
+                            `);
+                        });
+                    } else {
+                        $('#tableBody').append('<tr><td colspan="5" class="text-center">No results found</td></tr>');
+                    }
+                },
+                error: function (xhr) {
+                    alert('Error: ' + xhr.statusText);
+                }
+            });
+        });
+    });
+
+
+
     function reload() {
         window.open("/admin/master_approvals", "_self");
     }

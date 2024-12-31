@@ -23,7 +23,7 @@ class Province extends Model
         'provinces_deleted_at',
         'provinces_deleted_by',
         'provinces_notes',
-        'provinces_status',
+        // 'provinces_status',
         'provinces_soft_delete',
     ];
 }

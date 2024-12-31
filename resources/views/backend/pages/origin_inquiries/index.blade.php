@@ -4,6 +4,10 @@
 Origin Inquiries - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -15,8 +19,8 @@ Origin Inquiries - Admin Panel
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Setting</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Origin Inquiry</li>
+                                <li class="breadcrumb-item"><a href='/admin/origin_inquiries/'>Origin</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href='/admin/origin_inquiries/'>Origin Inquiry</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -52,34 +56,32 @@ Origin Inquiries - Admin Panel
                                             <thead style="text-align: center">
                                                 <tr>
                                                     <th scope="col" width="5%">NO</th>
+                                                    <th scope="col">CODE</th>
                                                     <th scope="col">Name</th>
                                                     <th scope="col">Notes</th>
-                                                    <th scope="col">CODE</th>
                                                     <th scope="col">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="tableBody">
                                                 @foreach ($origin_inquiries as $origin_inquiry)
                                                     <tr>
-                                                    <td scope="row" class="text-center">
-                                                                    {{ ($origin_inquiries->currentPage() - 1) * $origin_inquiries->perPage() + $loop->iteration }}
-                                                                </td>
-                                                         <td class="text-center">{{ $origin_inquiry->origin_inquiry_name }}</td>
-                                                         <td class="text-center">{{ $origin_inquiry->origin_inquiry_notes }}</td>
-                                                         <td class="text-center">{{ $origin_inquiry->origin_inquiry_code }}</td>
+                                                        <td scope="row" class="text-center">{{ ($origin_inquiries->currentPage() - 1) * $origin_inquiries->perPage() + $loop->iteration }}</td>
+                                                        <td class="text-center">{{ $origin_inquiry->origin_inquiry_code }}</td>
+                                                        <td class="text-center">{{ $origin_inquiry->origin_inquiry_name }}</td>
+                                                        <td class="text-center">{{ $origin_inquiry->origin_inquiry_notes }}</td>
                                                         <td class="text-center">
                                                             <div class="d-flex justify-content-center gap-2">
-                                                            <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $origin_inquiry->origin_inquiry_id }}')">
-                                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            </svg>
-                                                            </button>
+                                                                <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $origin_inquiry->origin_inquiry_id }}')">
+                                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                        <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                    </svg>
+                                                                </button>
                                                                 <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('{{ $origin_inquiry->origin_inquiry_id }}')">
-                                                                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            </svg>
+                                                                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                        <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                                    </svg>
                                                                 </button>
                                                             </div>   
                                                         </td>
@@ -152,8 +154,10 @@ Origin Inquiries - Admin Panel
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                            <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                                @if ($usr->can('origin_inquiries.update') || $usr->can('origin_inquiries.create'))
                             <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                                @endif
                         </div>
                 </div>
         </div>
@@ -212,6 +216,14 @@ $(document).ready(function () {
 
     function reload() {
         window.open("/admin/origin_inquiries", "_self");
+    }
+
+    function clearform() {
+        document.getElementById('origin_inquiry_id').value = '';
+        document.getElementById('origin_inquiry_name').value = '';
+        document.getElementById('origin_inquiry_notes').value = '';
+
+        document.getElementById('tittleform').innerHTML = 'Form Input';
     }
 
     function save() {

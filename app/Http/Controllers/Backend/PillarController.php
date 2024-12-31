@@ -65,7 +65,7 @@ class PillarController extends Controller
         }
 
         $result = $this->model->create([
-            'pillar_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'pillar_code' => 'PI' . str_pad((string)($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
             'pillar_items' => $request->pillar_items,
             'pillar_notes' => $request->pillar_notes,
             'pillar_created_at' => now(),

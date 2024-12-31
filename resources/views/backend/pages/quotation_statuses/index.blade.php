@@ -4,6 +4,10 @@
     Quotation Status Management - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -15,8 +19,8 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Setting</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Quotation Status</li>
+                                <li class="breadcrumb-item"><a href='/admin/quotation_statuses'>Pillars</a></li>
+                                <li class="breadcrumb-item active" aria-current="page" ><a href='/admin/quotation_statuses'>Quotation Status</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -53,9 +57,9 @@
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">Code</th>
                                                             <th scope="col">Name</th>
                                                             <th scope="col">Notes</th>
-                                                            <th scope="col">Code</th>
                                                             <th scope="col">Action</th>
                                                         </tr>
                                                     </thead>
@@ -65,9 +69,9 @@
                                                             <td scope="row" class="text-center">
                                                                     {{ ($quotation_statuses->currentPage() - 1) * $quotation_statuses->perPage() + $loop->iteration }}
                                                                 </td>
+                                                                <td class="text-center">{{ $status->quotation_status_code }}</td>
                                                                  <td class="text-center">{{ $status->quotation_status_name }}</td>
                                                                  <td class="text-center">{{ $status->quotation_status_notes }}</td>
-                                                                 <td class="text-center">{{ $status->quotation_status_code }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $status->quotation_status_id }}')">
@@ -154,8 +158,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-warning" onclick="reload()">New Data</button>
+                <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @if ($usr->can('quotation_statuses.update') || $usr->can('quotation_statuses.create'))
                 <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                @endif
             </div>
         </div>
     </div>
@@ -217,6 +223,14 @@ $(document).ready(function () {
 
     function reload() {
         window.location.reload();
+    }
+
+    function clearform() {
+        document.getElementById('quotation_status_id').value = '';
+        document.getElementById('quotation_status_name').value = '';
+        document.getElementById('quotation_status_notes').value = '';
+
+        document.getElementById('tittleform').innerHTML = 'Form Input';
     }
 
     function save() {
