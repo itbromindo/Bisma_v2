@@ -1492,7 +1492,7 @@
 
 const asset_url = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
   ? `${window.location.protocol}//${window.location.host}/`
-  : "/public";
+  : "/public/";
 
 function showAlert(type, message) {
   // Peta jenis alert ke ikon dan kelas tema
