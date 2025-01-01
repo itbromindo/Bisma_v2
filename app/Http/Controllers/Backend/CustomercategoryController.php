@@ -15,7 +15,7 @@ class CustomercategoryController extends Controller
         $this->model = new Customer_category();
         $this->mandatory = array(
             'customer_category_name' => 'required',
-            'customer_category_notes' => 'required',
+            // 'customer_category_notes' => 'required',
 		);
     }
 

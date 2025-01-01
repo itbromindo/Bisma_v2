@@ -15,7 +15,7 @@ class ProductcategoryController extends Controller
         $this->model = new Product_category();
         $this->mandatory = array(
             'product_category_name' => 'required',
-            'product_category_notes' => 'required',
+            // 'product_category_notes' => 'required',
 		);
     }
 

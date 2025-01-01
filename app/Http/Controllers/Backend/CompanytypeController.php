@@ -15,7 +15,7 @@ class CompanytypeController extends Controller
         $this->model = new Company_type();
         $this->mandatory = array(
             'company_type_name' => 'required',
-            'company_type_notes' => 'required',
+            // 'company_type_notes' => 'required',
 		);
     }
 

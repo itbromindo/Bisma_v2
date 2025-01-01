@@ -21,7 +21,7 @@ class MenusController extends Controller
             'moduls_code' => 'required', 
             'menus_name' => 'required', 
             'menus_route' => 'required',
-            'menus_notes' => 'required',
+            // 'menus_notes' => 'required',
 		);
     }
 

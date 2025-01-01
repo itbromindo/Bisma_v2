@@ -58,7 +58,8 @@ Brand - Admin Panel
                                                 <table class="table align-middle table-basic ">
                                                     <thead style="text-align: center">
                                                         <tr>
-                                                            <th scope="col">NO</th>
+                                                            <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">NOTE</th>
                                                             <th scope="col">Action</th>
@@ -68,6 +69,7 @@ Brand - Admin Panel
                                                         @foreach ($brand as $bdn)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
+                                                                <td>{{ $bdn->brand_code }}</td>
                                                                 <td>{{ $bdn->brand_name }}</td>
                                                                 <td>{{ $bdn->brand_notes }}</td>
                                                                 <td class="text-center">

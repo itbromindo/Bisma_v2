@@ -58,7 +58,8 @@ Kategori Customer - Admin Panel
                                                 <table class="table align-middle table-basic ">
                                                     <thead style="text-align: center">
                                                         <tr>
-                                                            <th scope="col">NO</th>
+                                                            <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">NOTE</th>
                                                             <th scope="col">Action</th>
@@ -68,6 +69,7 @@ Kategori Customer - Admin Panel
                                                         @foreach ($customer_category as $ccy)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
+                                                                <td>{{ $ccy->customer_category_code }}</td>
                                                                 <td>{{ $ccy->customer_category_name }}</td>
                                                                 <td>{{ $ccy->customer_category_notes }}</td>
                                                                 <td class="text-center">

@@ -15,7 +15,7 @@ class ProductdivisionController extends Controller
         $this->model = new Product_divisions();
         $this->mandatory = array(
             'product_divisions_name' => 'required',
-            'product_divisions_notes' => 'required',
+            // 'product_divisions_notes' => 'required',
 		);
     }
 

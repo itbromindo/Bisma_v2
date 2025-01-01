@@ -15,7 +15,7 @@ class WarehouseController extends Controller
         $this->model = new Warehouse();
         $this->mandatory = array(
             'warehouse_name' => 'required',
-            'warehouse_notes' => 'required',
+            // 'warehouse_notes' => 'required',
 		);
     }
 

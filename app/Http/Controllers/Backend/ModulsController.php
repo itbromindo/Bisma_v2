@@ -20,7 +20,7 @@ class ModulsController extends Controller
         $this->mandatory = array(
             'moduls_name' => 'required', 
             'moduls_icon' => 'required', 
-            'moduls_notes' => 'required',
+            // 'moduls_notes' => 'required',
 		);
     }
 
