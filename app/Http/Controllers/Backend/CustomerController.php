@@ -27,7 +27,7 @@ class CustomerController extends Controller
             'provinces_code' => 'required',
             'customers_category' => 'required',
             'customers_area' => 'required',
-            'customers_notes' => 'required',
+            // 'customers_notes' => 'required',
 		);
     }
 

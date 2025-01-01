@@ -58,7 +58,8 @@ Gudang - Admin Panel
                                                 <table class="table align-middle table-basic ">
                                                     <thead style="text-align: center">
                                                         <tr>
-                                                            <th scope="col">NO</th>
+                                                            <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">NOTE</th>
                                                             <th scope="col">Action</th>
@@ -67,7 +68,8 @@ Gudang - Admin Panel
                                                     <tbody>
                                                         @foreach ($warehouse as $gudang)
                                                             <tr>
-                                                                <td scope="row">{{ $loop->index+1 }}</td>
+                                                                <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
+                                                                <td>{{ $gudang->warehouse_code }}</td>
                                                                 <td>{{ $gudang->warehouse_name }}</td>
                                                                 <td>{{ $gudang->warehouse_notes }}</td>
                                                                 <td class="text-center">

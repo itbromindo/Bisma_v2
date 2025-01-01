@@ -59,6 +59,7 @@ Jenis Perusahaan - Admin Panel
                                                     <thead style="text-align: center">
                                                         <tr>
                                                             <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">NOTE</th>
                                                             <th scope="col">Action</th>
@@ -68,6 +69,7 @@ Jenis Perusahaan - Admin Panel
                                                         @foreach ($company_type as $ctype)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
+                                                                <td>{{ $ctype->company_type_code }}</td>
                                                                 <td>{{ $ctype->company_type_name }}</td>
                                                                 <td>{{ $ctype->company_type_notes }}</td>
                                                                 <td class="text-center">

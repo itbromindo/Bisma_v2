@@ -24,7 +24,7 @@ class SubmenusController extends Controller
         $this->mandatory = array(
             'menus_code' => 'required', 
             'submenus_name' => 'required',
-            'submenus_notes' => 'required', 
+            // 'submenus_notes' => 'required', 
 		);
     }
 

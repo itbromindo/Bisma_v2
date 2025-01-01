@@ -15,7 +15,7 @@ class UomController extends Controller
         $this->model = new Uom();
         $this->mandatory = array(
             'uom_name' => 'required',
-            'uom_notes' => 'required',
+            // 'uom_notes' => 'required',
 		);
     }
 

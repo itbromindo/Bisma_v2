@@ -57,7 +57,8 @@ Customer - Admin Panel
                                                 <table class="table align-middle table-basic ">
                                                     <thead style="text-align: center">
                                                         <tr>
-                                                            <th scope="col">NO</th>
+                                                            <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">PHONE</th>
                                                             <th scope="col">ADDRESS</th>
@@ -68,6 +69,7 @@ Customer - Admin Panel
                                                         @foreach ($customer as $csr)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
+                                                                <td>{{ $csr->customer_code }}</td>
                                                                 <td>{{ $csr->customer_name }}</td>
                                                                 <td>{{ $csr->customers_phone }}</td>
                                                                 <td>{{ $csr->customers_full_address }}</td>

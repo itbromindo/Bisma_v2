@@ -15,7 +15,7 @@ class BrandController extends Controller
         $this->model = new Brand();
         $this->mandatory = array(
             'brand_name' => 'required',
-            'brand_notes' => 'required',
+            // 'brand_notes' => 'required',
 		);
     }
 

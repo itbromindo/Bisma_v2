@@ -24,7 +24,7 @@ class LevelsController extends Controller
         $this->mandatory = array(
             'department_code' => 'required', 
             'level_name' => 'required',
-            'level_notes' => 'required',
+            // 'level_notes' => 'required',
 		);
     }
 

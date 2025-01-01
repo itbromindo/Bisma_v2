@@ -58,7 +58,8 @@ Users - Admin Panel
                                                 <table class="table align-middle table-basic ">
                                                     <thead style="text-align: center">
                                                         <tr>
-                                                            <th scope="col">NO</th>
+                                                            <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">E-MAIL</th>
                                                             <th scope="col">PHONE</th>
@@ -69,6 +70,7 @@ Users - Admin Panel
                                                         @foreach ($users as $user)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
+                                                                <td>{{ $user->user_code }}</td>
                                                                 <td>{{ $user->users_name }}</td>
                                                                 <td>{{ $user->users_email }}</td>
                                                                 <td>{{ $user->users_office_phone }}</td>
