@@ -1490,18 +1490,21 @@
   })();
 })(jQuery);
 
+const asset_url = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  ? `${window.location.protocol}//${window.location.host}/`
+  : "/public";
 
 function showAlert(type, message) {
   // Peta jenis alert ke ikon dan kelas tema
   const alertIcons = {
-    info: '/backend/assets/images/svg/info.svg',
-    success: '/backend/assets/images/svg/checkcircle.svg',
-    warning: '/backend/assets/images/svg/warningcircle.svg',
-    danger: '/backend/assets/images/svg/warning.svg',
+    info: 'backend/assets/images/svg/info.svg',
+    success: 'backend/assets/images/svg/checkcircle.svg',
+    warning: 'backend/assets/images/svg/warningcircle.svg',
+    danger: 'backend/assets/images/svg/warning.svg',
   };
 
   // Tentukan kelas dan ikon berdasarkan jenis alert
-  const icon = alertIcons[type] || alertIcons.info; // Default ke info jika tipe tidak valid
+  const icon = asset_url + (alertIcons[type] || alertIcons.info); // Default ke info jika tipe tidak valid
   const alertClass = type || 'info'; // Default ke info jika tipe tidak valid
 
   // Buat elemen div untuk alert
@@ -1552,6 +1555,7 @@ function showAlert(type, message) {
       alertDiv.remove();
   }, 5000);
 }
+
 
 function alertform(type, colum, message) {
   var inputElement = document.getElementById(colum);
