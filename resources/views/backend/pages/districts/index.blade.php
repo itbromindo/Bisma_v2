@@ -15,8 +15,8 @@ Districts - Admin Panel
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Districts</li>
+                                <li class="breadcrumb-item"><a href='/admin/districts'>Location</a></li>
+                                <li class="breadcrumb-item"><a href='/admin/districts'>District</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -165,7 +165,7 @@ Districts - Admin Panel
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
-                        <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                        <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                     </div>
                 </form>
             </div>
@@ -182,6 +182,7 @@ Districts - Admin Panel
         document.getElementById('districts_name').value = '';
         document.getElementById('districts_notes').value = '';
         document.getElementById('cities_code').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
     }
 
 $(document).ready(function () {
@@ -341,6 +342,7 @@ $(document).ready(function () {
             document.getElementById('districts_name').value = data.districts_name;
             document.getElementById('districts_notes').value = data.districts_notes;
             document.getElementById('cities_code').value = data.cities_code;
+            document.getElementById('saveButton').textContent = 'Save Changes';
             // document.getElementById('districts_status').value = data.districts_status;
             $('#modalinput').modal('show');
         });

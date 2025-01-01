@@ -15,8 +15,8 @@ Departments - Admin Panel
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Departments</li>
+                                <li class="breadcrumb-item"><a href='/admin/departments'>Master</a></li>
+                                <li class="breadcrumb-item"><a href='/admin/departments'>Department</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -164,7 +164,7 @@ Departments - Admin Panel
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
-                        <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                        <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                     </div>
                 </form>
             </div>
@@ -182,6 +182,7 @@ Departments - Admin Panel
         document.getElementById('department_name').value = '';
         document.getElementById('department_notes').value = '';
         document.getElementById('division_code').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
     }
 
 $(document).ready(function () {
@@ -337,6 +338,7 @@ $(document).ready(function () {
             document.getElementById('department_name').value = data.department_name;
             document.getElementById('department_notes').value = data.department_notes;
             document.getElementById('division_code').value = data.division_code;
+            document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });
     }

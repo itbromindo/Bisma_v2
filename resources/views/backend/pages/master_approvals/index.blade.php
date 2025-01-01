@@ -15,8 +15,8 @@ Master Approvals - Admin Panel
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Master Approvals</li>
+                                <li class="breadcrumb-item"><a href='/admin/master_approvals'>Master</a></li>
+                                <li class="breadcrumb-item"><a href='/admin/master_approvals'>Master Approval</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -222,7 +222,7 @@ Master Approvals - Admin Panel
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
-                        <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                        <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                     </div>
                 </form>
             </div>
@@ -239,6 +239,7 @@ Master Approvals - Admin Panel
         document.getElementById('division_code').value = '';
         document.getElementById('department_code').value = '';
         document.getElementById('level_code').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
     }
 
     $(document).ready(function () {
@@ -434,6 +435,7 @@ function updateInput(id) {
             document.getElementById('division_code').value = data.division_code;
             document.getElementById('department_code').value = data.department_code;
             document.getElementById('level_code').value = data.level_code;
+            document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });
     }

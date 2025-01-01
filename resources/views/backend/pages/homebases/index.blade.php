@@ -15,8 +15,8 @@ Homebases - Admin Panel
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Homebases</li>
+                                <li class="breadcrumb-item"><a href='/admin/homebases'>Master</a></li>
+                                <li class="breadcrumb-item"><a href='/admin/homebases'>Homebase</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -160,7 +160,7 @@ Homebases - Admin Panel
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
-                        <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                        <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                     </div>
                 </form>
             </div>
@@ -176,6 +176,7 @@ Homebases - Admin Panel
         document.getElementById('homebase_name').value = '';
         document.getElementById('homebase_notes').value = '';
         document.getElementById('companies_code').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
     }
 
 $(document).ready(function () {
@@ -331,6 +332,7 @@ $(document).ready(function () {
             document.getElementById('homebase_name').value = data.homebase_name;
             document.getElementById('homebase_notes').value = data.homebase_notes;
             document.getElementById('companies_code').value = data.companies_code;
+            document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });
     }

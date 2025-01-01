@@ -156,7 +156,7 @@ Origin Inquiries - Admin Panel
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                                 @if ($usr->can('origin_inquiries.update') || $usr->can('origin_inquiries.create'))
-                            <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                            <button type="button" id= "saveButton" class="btn btn-primary" onclick="save()">Save</button>
                                 @endif
                         </div>
                 </div>
@@ -180,9 +180,10 @@ $(document).ready(function () {
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.origin_inquiries.current_page - 1) * response.origin_inquiries.per_page + index + 1}</td>
+                                    <td class="text-center">${origin_inquiry.origin_inquiry_code}</td>
                                     <td class="text-center">${origin_inquiry.origin_inquiry_name}</td>
                                     <td class="text-center">${origin_inquiry.origin_inquiry_notes ?? '-'}</td>
-                                    <td class="text-center">${origin_inquiry.origin_inquiry_code}</td>
+                                    
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${origin_inquiry.origin_inquiry_id}')">
@@ -222,6 +223,7 @@ $(document).ready(function () {
         document.getElementById('origin_inquiry_id').value = '';
         document.getElementById('origin_inquiry_name').value = '';
         document.getElementById('origin_inquiry_notes').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
     }
@@ -282,6 +284,7 @@ $(document).ready(function () {
                 document.getElementById('origin_inquiry_id').value = data.origin_inquiry_id; 
                 document.getElementById('origin_inquiry_name').value = data.origin_inquiry_name; 
                 document.getElementById('origin_inquiry_notes').value = data.origin_inquiry_notes;
+                document.getElementById('saveButton').textContent = 'Save Changes';
                 $('#modalinput').modal('show');
             },
             error: function (dataerror) {

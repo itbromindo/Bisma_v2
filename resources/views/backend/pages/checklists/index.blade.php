@@ -167,7 +167,7 @@ Checklists - Admin Panel
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                 @if ($usr->can('checklists.update') || $usr->can('checklists.create'))
-                <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                 @endif
             </div>
                 </form>
@@ -193,9 +193,10 @@ $(document).ready(function () {
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.checklists.current_page - 1) * response.checklists.per_page + index + 1}</td>
+                                    <td class="text-center">${checklist.checklist_code}</td>
                                     <td class="text-center">${checklist.checklist_items}</td>
                                     <td class="text-center">${checklist.checklist_notes ?? '-'}</td>
-                                    <td class="text-center">${checklist.checklist_code}</td>
+                                    
                                     <td class="text-center">${checklist.pillar ? checklist.pillar.pillar_items : '-'}</td>
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -236,6 +237,7 @@ $(document).ready(function () {
         document.getElementById('checklist_items').value = '';
         document.getElementById('checklist_notes').value = '';
         document.getElementById('pillar_code').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
     }
@@ -343,6 +345,7 @@ $(document).ready(function () {
             document.getElementById('checklist_items').value = data.checklist_items;
             document.getElementById('checklist_notes').value = data.checklist_notes;
             document.getElementById('pillar_code').value = data.pillar_code;
+            document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });
     }

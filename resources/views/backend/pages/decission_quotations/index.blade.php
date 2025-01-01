@@ -165,7 +165,7 @@ Decission Quotation - Admin Panel
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                 @if ($usr->can('decission_quotation.update') || $usr->can('decission_quotation.create'))
-                <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                 @endif
             </div>
         </div>
@@ -191,8 +191,9 @@ $(document).ready(function () {
                         tableBody.append(`
                             <tr>
                                 <td class="text-center">${(response.decission_quotations.current_page - 1) * response.decission_quotations.per_page + index + 1}</td>
-                                <td class="text-center">${quotation.template_decission_quotation_title}</td>
                                 <td class="text-center">${quotation.template_decission_quotation_code}</td>
+                                <td class="text-center">${quotation.template_decission_quotation_title}</td>
+                                
                                 <td class="text-center">${quotation.template_decission_quotation_text ?? '-'}</td>
                                 <td class="text-center">${quotation.template_decission_quotation_notes}</td>
                                 <td class="text-center">
@@ -235,6 +236,7 @@ $(document).ready(function () {
         document.getElementById('template_decission_quotation_title').value = '';
         document.getElementById('template_decission_quotation_text').value = '';
         document.getElementById('template_decission_quotation_notes').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
     }
@@ -338,6 +340,7 @@ $(document).ready(function () {
             document.getElementById('template_decission_quotation_title').value = data.template_decission_quotation_title;
             document.getElementById('template_decission_quotation_text').value = data.template_decission_quotation_text;
             document.getElementById('template_decission_quotation_notes').value = data.template_decission_quotation_notes;
+            document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });
     }

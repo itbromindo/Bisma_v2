@@ -155,7 +155,7 @@ Pillar - Admin Panel
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                 @if ($usr->can('pillars.update') || $usr->can('pillars.create'))
-                <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                 @endif
             </div>
         </div>
@@ -179,9 +179,10 @@ Pillar - Admin Panel
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.pillars.current_page - 1) * response.pillars.per_page + index + 1}</td>
+                                    <td class="text-center">${pillar.pillar_code}</td>
                                     <td class="text-center">${pillar.pillar_items}</td>
                                     <td class="text-center">${pillar.pillar_notes ?? '-'}</td>
-                                    <td class="text-center">${pillar.pillar_code}</td>
+                                    
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${pillar.pillar_id}')">
@@ -220,6 +221,7 @@ Pillar - Admin Panel
         document.getElementById('pillar_id').value = '';
         document.getElementById('pillar_items').value = '';
         document.getElementById('pillar_notes').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
     }
@@ -325,6 +327,7 @@ Pillar - Admin Panel
             document.getElementById('pillar_id').value = data.pillar_id;
             document.getElementById('pillar_items').value = data.pillar_items;
             document.getElementById('pillar_notes').value = data.pillar_notes;
+            document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });
     }
