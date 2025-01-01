@@ -34,7 +34,11 @@ class SubmenusController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('submenus_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('submenus_name', 'like', '%' . $search . '%')
+            ->orWhere('submenus_notes', 'like', '%' . $search . '%')
+            ->orWhere('submenus_code', 'like', '%' . $search . '%');
+        })
         ->where('submenus_soft_delete', 0)
         ->paginate(15);
 
@@ -62,6 +66,7 @@ class SubmenusController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
@@ -100,6 +105,7 @@ class SubmenusController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

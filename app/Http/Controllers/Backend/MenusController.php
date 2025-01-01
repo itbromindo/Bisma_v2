@@ -31,7 +31,11 @@ class MenusController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('menus_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('menus_name', 'like', '%' . $search . '%')
+            ->orWhere('menus_notes', 'like', '%' . $search . '%')
+            ->orWhere('menus_code', 'like', '%' . $search . '%');
+        })
         ->where('menus_soft_delete', 0)
         ->paginate(15);
 
@@ -59,6 +63,7 @@ class MenusController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
@@ -87,6 +92,7 @@ class MenusController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

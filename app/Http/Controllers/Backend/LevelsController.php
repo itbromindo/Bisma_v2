@@ -34,7 +34,11 @@ class LevelsController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('level_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('level_name', 'like', '%' . $search . '%')
+            ->orWhere('level_notes', 'like', '%' . $search . '%')
+            ->orWhere('level_code', 'like', '%' . $search . '%');
+        })
         ->where('level_soft_delete', 0)
         ->paginate(15);
 
@@ -62,6 +66,7 @@ class LevelsController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
             session()->flash('error', $validator->errors()->first());
             return response()->json($messages);
@@ -90,6 +95,7 @@ class LevelsController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

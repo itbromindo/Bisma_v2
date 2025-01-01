@@ -25,7 +25,11 @@ class CompanytypeController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('company_type_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('company_type_name', 'like', '%' . $search . '%')
+            ->orWhere('company_type_notes', 'like', '%' . $search . '%')
+            ->orWhere('company_type_code', 'like', '%' . $search . '%');
+        })
         ->where('company_type_soft_delete', 0)
         ->paginate(15);
 
@@ -51,6 +55,7 @@ class CompanytypeController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
@@ -77,6 +82,7 @@ class CompanytypeController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

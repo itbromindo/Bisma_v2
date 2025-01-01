@@ -172,7 +172,7 @@ Level - Admin Panel
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                 @endif
                 @if ($usr->can('levels.update') || $usr->can('levels.create'))
-                <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                <button type="button" class="btn btn-primary" id="saveclick" onclick="save()">Save</button>
                 @endif
             </div>
         </div>
@@ -225,6 +225,7 @@ Level - Admin Panel
         document.getElementById('level_notes').value = '';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
+        document.getElementById('saveclick').innerHTML = 'Save';
     }
 
     function saveInput() {
@@ -245,17 +246,22 @@ Level - Admin Panel
             async: false,
             success: function (data) {
                 if (data.status == 401) {
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'department_code') {
+                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                    }
                     return;
                 } else if (data.status == 501) {
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'department_code') {
+                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                    }
                     return;
                 } else {
-                    // showAlert('success', 'Berhasil disimpan');
-                    // setTimeout(function () {
-                    //     window.open("/admin/levels", "_self");
-                    // }, 500);
-
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -267,7 +273,6 @@ Level - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                // showAlert('danger', ['Terjadi kesalahan pada server']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -285,20 +290,18 @@ Level - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 document.getElementById('level_id').value = data.level_id; 
-                // document.getElementById('department_code').value = data.department_code; 
                 $('#department_code').append(new Option(data.department_name, data.department_code, true, true)).trigger('change');
                 document.getElementById('level_name').value = data.level_name; 
                 document.getElementById('level_notes').value = data.level_notes;
                 
                 document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
+                document.getElementById('saveclick').innerHTML = 'Save Changes';
                 // Tampilkan modal
                 $('#modalinput').modal('show')
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                // showAlert('danger', ['Terjadi kesalahan pada server']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -330,22 +333,23 @@ Level - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
-                
                 if (data.status == 401) {
-                    showAlert('danger', data.data);
-                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'department_code') {
+                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                    }
                     return;
                 } else if (data.status == 501) {
-                    showAlert('danger', data.data);
-                    // alert(data.message);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'department_code') {
+                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                    }
                     return;
                 } else {
-                    // alert('Berhasil Diupdate');
-                    // showAlert('success', 'Berhasil Diupdate');
-                    // setTimeout(function () {
-                    //     window.open("/admin/levels", "_self");
-                    // }, 500);
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -357,7 +361,6 @@ Level - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                // showAlert('danger', ['Terjadi kesalahan pada server']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -390,19 +393,12 @@ Level - Admin Panel
                     async: false,
                     success: function (data) {
                         if (data.status == 401) {
-                            // alert('Form Wajib Harus diisi');
                             showAlert('danger', data.data);
                             return;
                         } else if (data.status == 501) {
-                            // alert(data.message);
                             showAlert('danger', data.data);
                             return;
                         } else {
-                            // alert('Data Berhasil Dihapus');
-                            // showAlert('success', 'Berhasil Dihapus');
-                            // setTimeout(function () {
-                            //     window.open("/admin/levels", "_self");
-                            // }, 500);
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Deleted!',
@@ -414,7 +410,6 @@ Level - Admin Panel
                     },
                     error: function (dataerror) {
                         console.log(dataerror);
-                        // showAlert('danger', ['Terjadi kesalahan pada server']);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',

@@ -25,7 +25,11 @@ class BrandController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('brand_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('brand_name', 'like', '%' . $search . '%')
+            ->orWhere('brand_notes', 'like', '%' . $search . '%')
+            ->orWhere('brand_code', 'like', '%' . $search . '%');
+        })
         ->where('brand_soft_delete', 0)
         ->paginate(15);
 
@@ -51,6 +55,7 @@ class BrandController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
@@ -77,6 +82,7 @@ class BrandController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

@@ -39,6 +39,7 @@ class CustomerController extends Controller
         $listdata = $this->model
         ->where(function($q) use ($search){
             $q->where('customer_name', 'like', '%' . $search . '%')
+            ->orWhere('customer_code', 'like', '%' . $search . '%')
             ->orWhere('customers_phone', 'like', '%' . $search . '%')
             ->orWhere('customers_full_address', 'like', '%' . $search . '%');
         })
@@ -72,6 +73,7 @@ class CustomerController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
@@ -110,6 +112,7 @@ class CustomerController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

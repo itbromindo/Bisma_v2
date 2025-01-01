@@ -25,7 +25,11 @@ class UomController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('uom_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('uom_name', 'like', '%' . $search . '%')
+            ->orWhere('uom_notes', 'like', '%' . $search . '%')
+            ->orWhere('uom_code', 'like', '%' . $search . '%');
+        })
         ->where('uom_soft_delete', 0)
         ->paginate(15);
 
@@ -51,6 +55,7 @@ class UomController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
@@ -77,6 +82,7 @@ class UomController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

@@ -65,6 +65,7 @@ class UsersController extends Controller
         $listdata = $this->model
         ->where(function($q) use ($search) {
             $q->where('users_name', 'like', '%' . $search . '%')
+            ->orWhere('user_code', 'like', '%' . $search . '%')
             ->orWhere('users_email', 'like', '%' . $search . '%')
             ->orWhere('users_office_phone', 'like', '%' . $search . '%');
         })
@@ -100,6 +101,7 @@ class UsersController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
@@ -192,6 +194,7 @@ class UsersController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

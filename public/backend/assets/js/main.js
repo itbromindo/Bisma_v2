@@ -1553,3 +1553,83 @@ function showAlert(type, message) {
   }, 5000);
 }
 
+function alertform(type, colum, message) {
+  var inputElement = document.getElementById(colum);
+
+  if (type === "text" || type === "password" || type === "textarea" || type === "number") {
+      // Logika untuk tipe text-like
+      $('#' + colum).addClass('border-danger');
+      $('#' + colum).tooltip('show');
+
+      var wrapperDiv = document.createElement("div");
+      wrapperDiv.className = "form-group-feedback form-group-feedback-right";
+
+      var feedbackDiv = document.createElement("div");
+      feedbackDiv.className = "form-control-feedback text-danger";
+      feedbackDiv.innerHTML = `<i class="icon-cancel-circle2">${message}</i>`;
+
+      inputElement.parentNode.insertBefore(wrapperDiv, inputElement);
+      wrapperDiv.appendChild(inputElement);
+      wrapperDiv.appendChild(feedbackDiv);
+
+      setTimeout(function () {
+          $('#' + colum).removeClass('border-danger');
+          feedbackDiv.hidden = true;
+          $('#' + colum).tooltip('hide');
+      }, 5000);
+  } else if (type === "select2" || type === "select") {
+      // Logika untuk select dan select2
+      var selectElement = $('#' + colum);
+      selectElement.next('.select2-container').find('.select2-selection').addClass('border-danger');
+
+      var feedbackDiv = document.createElement("div");
+      feedbackDiv.className = "text-danger mt-1";
+      feedbackDiv.innerHTML = `<i class="icon-cancel-circle2">${message}</i>`;
+      selectElement.parent().append(feedbackDiv);
+
+      setTimeout(function () {
+          selectElement.next('.select2-container').find('.select2-selection').removeClass('border-danger');
+          $(feedbackDiv).remove();
+      }, 5000);
+  } else if (type === "radio") {
+      // Logika untuk radio
+      var radioGroup = document.getElementsByName(colum);
+      var firstRadio = radioGroup[0];
+
+      if (firstRadio) {
+          var wrapperDiv = firstRadio.closest('.form-group');
+          var feedbackDiv = document.createElement("div");
+          feedbackDiv.className = "text-danger mt-1";
+          feedbackDiv.innerHTML = `<i class="icon-cancel-circle2">${message}</i>`;
+
+          wrapperDiv.appendChild(feedbackDiv);
+
+          radioGroup.forEach(function (radio) {
+              $(radio).addClass('border-danger');
+          });
+
+          setTimeout(function () {
+              radioGroup.forEach(function (radio) {
+                  $(radio).removeClass('border-danger');
+              });
+              $(feedbackDiv).remove();
+          }, 5000);
+      }
+  } else if (type === "file") {
+      // Logika untuk file input
+      $('#' + colum).addClass('border-danger');
+      $('#' + colum).tooltip('show');
+
+      var feedbackDiv = document.createElement("div");
+      feedbackDiv.className = "text-danger mt-1";
+      feedbackDiv.innerHTML = `<i class="icon-cancel-circle2">${message}</i>`;
+
+      inputElement.parentNode.appendChild(feedbackDiv);
+
+      setTimeout(function () {
+          $('#' + colum).removeClass('border-danger');
+          $('#' + colum).tooltip('hide');
+          $(feedbackDiv).remove();
+      }, 5000);
+  }
+}

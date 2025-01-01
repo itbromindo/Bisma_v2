@@ -172,7 +172,7 @@ Sub Menu - Admin Panel
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                 @endif
                 @if ($usr->can('submenus.update') || $usr->can('submenus.create'))
-                <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                <button type="button" class="btn btn-primary" id="saveclick" onclick="save()">Save</button>
                 @endif
             </div>
         </div>
@@ -216,6 +216,7 @@ Sub Menu - Admin Panel
         document.getElementById('submenus_notes').value = '';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
+        document.getElementById('saveclick').innerHTML = 'Save';
     }
 
     function save() {
@@ -244,23 +245,23 @@ Sub Menu - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
-                
                 if (data.status == 401) {
-                    showAlert('danger', data.data);
-                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'menus_code') {
+                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                    }
                     return;
                 } else if (data.status == 501) {
-                    showAlert('danger', data.data);
-                    // alert(data.message);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'menus_code') {
+                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                    }
                     return;
                 } else {
-                    // alert('Berhasil Disimpan');
-                    // showAlert('success', 'Berhasil disimpan');
-                    // setTimeout(function () {
-                    //     window.open("/admin/submenus", "_self");
-                    // }, 500);
-
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -272,8 +273,6 @@ Sub Menu - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                // showAlert('danger', ['Terjadi kesalahan pada server']);
-
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -291,9 +290,7 @@ Sub Menu - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 document.getElementById('submenus_id').value = data.submenus_id; 
-                // document.getElementById('menus_code').value = data.menus_code; 
                 document.getElementById('submenus_name').value = data.submenus_name; 
                 document.getElementById('submenus_notes').value = data.submenus_notes;
 
@@ -301,6 +298,7 @@ Sub Menu - Admin Panel
                 $('#menus_code').append(new Option(data.menus_name, data.menus_code, true, true)).trigger('change');
                 
                 document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
+                document.getElementById('saveclick').innerHTML = 'Save Changes';
                 // Tampilkan modal
                 $('#modalinput').modal('show')
             },
@@ -337,23 +335,23 @@ Sub Menu - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
-                
                 if (data.status == 401) {
-                    // alert('Form Wajib Harus diisi');
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'menus_code') {
+                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                    }
                     return;
                 } else if (data.status == 501) {
-                    // alert(data.message);
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'menus_code') {
+                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                    }
                     return;
                 } else {
-                    // alert('Berhasil Diupdate');
-                    // showAlert('success', 'Berhasil disimpan');
-                    // setTimeout(function () {
-                    //     window.open("/admin/submenus", "_self");
-                    // }, 500);
-
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -365,7 +363,6 @@ Sub Menu - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                // showAlert('danger', ['Terjadi kesalahan pada server']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -398,19 +395,12 @@ Sub Menu - Admin Panel
                     async: false,
                     success: function (data) {
                         if (data.status == 401) {
-                            // alert('Form Wajib Harus diisi');
                             showAlert('danger', data.data);
                             return;
                         } else if (data.status == 501) {
-                            // alert(data.message);
                             showAlert('danger', data.data);
                             return;
                         } else {
-                            // alert('Data Berhasil Dihapus');
-                            // showAlert('success', 'Berhasil Dihapus');
-                            // setTimeout(function () {
-                            //     window.open("/admin/submenus", "_self");
-                            // }, 500);
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Deleted!',
@@ -422,7 +412,6 @@ Sub Menu - Admin Panel
                     },
                     error: function (dataerror) {
                         console.log(dataerror);
-                        // showAlert('danger', ['Terjadi kesalahan pada server']);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',

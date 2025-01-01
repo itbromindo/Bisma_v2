@@ -30,7 +30,11 @@ class ModulsController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('moduls_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('moduls_name', 'like', '%' . $search . '%')
+            ->orWhere('moduls_notes', 'like', '%' . $search . '%')
+            ->orWhere('moduls_code', 'like', '%' . $search . '%');
+        })
         ->where('moduls_soft_delete', 0)
         ->paginate(15);
 
@@ -56,6 +60,7 @@ class ModulsController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
@@ -83,6 +88,7 @@ class ModulsController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
