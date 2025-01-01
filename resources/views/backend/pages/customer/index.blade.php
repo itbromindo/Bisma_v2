@@ -444,21 +444,21 @@ Customer - Admin Panel
                 if (data.status == 401) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'districts_code' || data.column == 'cities_code' || data.column == 'provinces_code' || data.column == 'customers_category') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'customers_area') {
-                        alertform('radio',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('radio',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else if (data.status == 501) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'districts_code' || data.column == 'cities_code' || data.column == 'provinces_code' || data.column == 'customers_category') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'customers_area') {
-                        alertform('radio',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('radio',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else {
@@ -557,21 +557,21 @@ Customer - Admin Panel
                 if (data.status == 401) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'districts_code' || data.column == 'cities_code' || data.column == 'provinces_code' || data.column == 'customers_category') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'customers_area') {
-                        alertform('radio',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('radio',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else if (data.status == 501) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'districts_code' || data.column == 'cities_code' || data.column == 'provinces_code' || data.column == 'customers_category') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'customers_area') {
-                        alertform('radio',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('radio',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else {

@@ -537,25 +537,25 @@ Goods - Admin Panel
                 if (data.status == 401) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'brand_code' || data.column == 'uom_code' || data.column == 'product_division_code' || data.column == 'product_category_code') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'goods_usage' || data.column == 'goods_specification' || data.column == 'goods_availability') {
-                        alertform('radio',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('radio',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'goods_photo') {
-                        alertform('file',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('file',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else if (data.status == 501) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'brand_code' || data.column == 'uom_code' || data.column == 'product_division_code' || data.column == 'product_category_code') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'goods_usage' || data.column == 'goods_specification' || data.column == 'goods_availability') {
-                        alertform('radio',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('radio',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'goods_photo') {
-                        alertform('file',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('file',data.column,"Form ini Tidak Boleh Kosong");
                     } else{
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else {
@@ -678,25 +678,25 @@ Goods - Admin Panel
                 if (data.status == 401) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'brand_code' || data.column == 'uom_code' || data.column == 'product_division_code' || data.column == 'product_category_code') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'goods_usage' || data.column == 'goods_specification' || data.column == 'goods_availability') {
-                        alertform('radio',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('radio',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'goods_photo') {
-                        alertform('file',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('file',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else if (data.status == 501) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'brand_code' || data.column == 'uom_code' || data.column == 'product_division_code' || data.column == 'product_category_code') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'goods_usage' || data.column == 'goods_specification' || data.column == 'goods_availability') {
-                        alertform('radio',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('radio',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'goods_photo') {
-                        alertform('file',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('file',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else {

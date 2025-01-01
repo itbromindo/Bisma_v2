@@ -217,11 +217,11 @@ Brand - Admin Panel
                 
                 if (data.status == 401) {
                     showAlert('danger', "Form Wajib Diisi");
-                    alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else if (data.status == 501) {
                     showAlert('danger', "Form Wajib Diisi");
-                    alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else {
                     Swal.fire({
@@ -296,11 +296,11 @@ Brand - Admin Panel
                 
                 if (data.status == 401) {
                     showAlert('danger', "Form Wajib Diisi");
-                    alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else if (data.status == 501) {
                     showAlert('danger', "Form Wajib Diisi");
-                    alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else {
                     Swal.fire({

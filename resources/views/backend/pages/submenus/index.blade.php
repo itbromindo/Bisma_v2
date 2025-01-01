@@ -248,17 +248,17 @@ Sub Menu - Admin Panel
                 if (data.status == 401) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'menus_code') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else if (data.status == 501) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'menus_code') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else {
@@ -338,17 +338,17 @@ Sub Menu - Admin Panel
                 if (data.status == 401) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'menus_code') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else if (data.status == 501) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'menus_code') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else {

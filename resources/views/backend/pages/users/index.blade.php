@@ -671,21 +671,21 @@ Users - Admin Panel
                 if (data.status == 401) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'users_level' || data.column == 'users_company' || data.column == 'users_homebase' || data.column == 'users_division' || data.column == 'users_department' || data.column == 'users_shift' || data.column == 'users_permission') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'users_ktp_picture' || data.column == 'users_signature' || data.column == 'users_photo') {
-                        alertform('file',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('file',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else if (data.status == 501) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'users_level' || data.column == 'users_company' || data.column == 'users_homebase' || data.column == 'users_division' || data.column == 'users_department' || data.column == 'users_shift' || data.column == 'users_permission') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'users_ktp_picture' || data.column == 'users_signature' || data.column == 'users_photo') {
-                        alertform('file',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('file',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else {
@@ -824,21 +824,21 @@ Users - Admin Panel
                 if (data.status == 401) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'users_level' || data.column == 'users_company' || data.column == 'users_homebase' || data.column == 'users_division' || data.column == 'users_department' || data.column == 'users_shift' || data.column == 'users_permission') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'users_ktp_picture' || data.column == 'users_signature' || data.column == 'users_photo') {
-                        alertform('file',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('file',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else if (data.status == 501) {
                     showAlert('danger', "Form Wajib Diisi");
                     if (data.column == 'users_level' || data.column == 'users_company' || data.column == 'users_homebase' || data.column == 'users_division' || data.column == 'users_department' || data.column == 'users_shift' || data.column == 'users_permission') {
-                        alertform('select2',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
                     } else if (data.column == 'users_ktp_picture' || data.column == 'users_signature' || data.column == 'users_photo') {
-                        alertform('file',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('file',data.column,"Form ini Tidak Boleh Kosong");
                     } else {
-                        alertform('text',data.column,"Form ini Tidka Boleh Kosong");
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     }
                     return;
                 } else {
