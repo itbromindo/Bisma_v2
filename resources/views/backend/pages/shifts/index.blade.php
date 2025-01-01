@@ -15,8 +15,8 @@ Shifts - Admin Panel
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Shifts</li>
+                                <li class="breadcrumb-item"><a href='/admin/shifts'>Master</a></li>
+                                <li class="breadcrumb-item"><a href='/admin/shifts'>Shift</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -219,7 +219,7 @@ Shifts - Admin Panel
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
-                        <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                        <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                     </div>
                 </form>
             </div>
@@ -240,6 +240,7 @@ Shifts - Admin Panel
             document.getElementById('shift_start_time_after_break').value = '';
             document.getElementById('shift_end_time_after_break').value = '';
             document.getElementById('companies_code').value = '';
+            document.getElementById('saveButton').textContent = 'Save';
     }
 
     $(document).ready(function () {
@@ -425,6 +426,7 @@ Shifts - Admin Panel
             document.getElementById('shift_start_time_after_break').value = data.shift_start_time_after_break;
             document.getElementById('shift_end_time_after_break').value = data.shift_end_time_after_break;
             document.getElementById('companies_code').value = data.companies_code;
+            document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });
     }

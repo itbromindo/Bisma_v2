@@ -11,12 +11,12 @@ Company - Admin Panel
             <div class="row">
                 <div class="col-12 rt-mb-25">
                     <div class="breadcrumbs ">
-                        <div class="breadcrumb-title"> Master</div>
+                        <div class="breadcrumb-title"> Company</div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Master</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Company</li>
+                                <li class="breadcrumb-item"><a href='/admin/companies'>Master</a></li>
+                                <li class="breadcrumb-item"><a href='/admin/companies'>Company</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -185,7 +185,7 @@ Company - Admin Panel
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button> 
-                <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                <button type="button" id= "saveButton" class="btn btn-primary" onclick="save()">Save</button>
             </div>
         </div>
     </div>
@@ -198,6 +198,7 @@ Company - Admin Panel
         document.getElementById('company_id').value = '';
         document.getElementById('companies_name').value = '';
         document.getElementById('companies_notes').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
     }
 
 
@@ -349,6 +350,7 @@ Company - Admin Panel
             document.getElementById('company_id').value = data.companies_id;
             document.getElementById('companies_name').value = data.companies_name;
             document.getElementById('companies_notes').value = data.companies_notes;
+            document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });
     }

@@ -15,8 +15,8 @@ Cities - Admin Panel
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Management</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Cities</li>
+                                <li class="breadcrumb-item"><a href='/admin/cities'>Location</a></li>
+                                <li class="breadcrumb-item"><a href='/admin/cities'>City</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -194,7 +194,7 @@ Cities - Admin Panel
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
-                        <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                        <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                     </div>
                 </form>
             </div>
@@ -211,6 +211,7 @@ Cities - Admin Panel
         document.getElementById('cities_name').value = '';
         document.getElementById('cities_notes').value = '';
         document.getElementById('provinces_code').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
         
     }
 
@@ -370,6 +371,7 @@ Cities - Admin Panel
             document.getElementById('cities_name').value = data.cities_name;
             document.getElementById('cities_notes').value = data.cities_notes;
             document.getElementById('provinces_code').value = data.provinces_code;
+            document.getElementById('saveButton').textContent = 'Save Changes';
             // document.getElementById('cities_status').value = data.cities_status;
             $('#modalinput').modal('show');
         });

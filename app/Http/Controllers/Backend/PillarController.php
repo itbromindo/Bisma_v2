@@ -18,7 +18,7 @@ class PillarController extends Controller
         $this->mandatory = array(
             'pillar_code' => 'nullable|string|max:225',
             'pillar_items' => 'required|string|max:225',
-            'pillar_notes' => 'required|string|max:225',
+            'pillar_notes' => 'nullable|string|max:225',
         );
     }
 

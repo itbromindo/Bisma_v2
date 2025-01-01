@@ -11,12 +11,12 @@ Provinces - Admin Panel
             <div class="row">
                 <div class="col-12 rt-mb-25">
                     <div class="breadcrumbs ">
-                        <div class="breadcrumb-title"> Master</div>
+                        <div class="breadcrumb-title"> Province Management </div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Master</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Provinces</li>
+                                <li class="breadcrumb-item"><a href='/admin/provinces'>Location</a></li>
+                                <li class="breadcrumb-item"><a href='/admin/provinces'>Province</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -193,7 +193,7 @@ Provinces - Admin Panel
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
-                        <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                        <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                     </div>
                 </form>
             </div>
@@ -209,6 +209,7 @@ Provinces - Admin Panel
         document.getElementById('province_id').value = '';
         document.getElementById('provinces_name').value = '';
         document.getElementById('provinces_notes').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
     }
 
 $(document).ready(function () {
@@ -362,6 +363,7 @@ $(document).ready(function () {
             document.getElementById('province_id').value = data.provinces_id;
             document.getElementById('provinces_name').value = data.provinces_name;
             document.getElementById('provinces_notes').value = data.provinces_notes;
+            document.getElementById('saveButton').textContent = 'Save Changes';
             // document.getElementById('provinces_status').value = data.provinces_status;
             $('#modalinput').modal('show');
         });

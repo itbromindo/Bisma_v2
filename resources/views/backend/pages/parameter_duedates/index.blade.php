@@ -175,7 +175,7 @@ Parameter Due Dates - Admin Panel
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                                 @if ($usr->can('parameter_duedate.update') || $usr->can('parameter_duedate.create'))
-                        <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                        <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                         @endif
                     </div>
                 </form>
@@ -202,10 +202,11 @@ $(document).ready(function () {
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.parameter_duedates.current_page - 1) * response.parameter_duedates.per_page + index + 1}</td>
+                                    <td class="text-center">${duedate.param_duedate_code}</td>
                                     <td class="text-center">${duedate.param_duedate_name}</td>
                                     <td class="text-center">${duedate.param_duedate_time}</td>
                                     <td class="text-center">${duedate.param_duedate_notes ?? '-'}</td>
-                                    <td class="text-center">${duedate.param_duedate_code}</td>
+                                    
                                     <td class="text-center">${duedate.user ? duedate.user.users_name : '-'}</td>
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -249,6 +250,7 @@ $(document).ready(function () {
         document.getElementById('param_duedate_time').value = '';
         document.getElementById('param_duedate_notes').value = '';
         document.getElementById('user_code').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
     }
@@ -355,6 +357,7 @@ $(document).ready(function () {
             document.getElementById('param_duedate_time').value = data.param_duedate_time;
             document.getElementById('param_duedate_notes').value = data.param_duedate_notes;
             document.getElementById('user_code').value = data.user_code;
+            document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });
     }

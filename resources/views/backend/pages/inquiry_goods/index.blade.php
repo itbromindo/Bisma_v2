@@ -11,12 +11,12 @@ Inquiry Goods - Admin Panel
             <div class="row">
                 <div class="col-12 rt-mb-25">
                     <div class="breadcrumbs">
-                        <div class="breadcrumb-title">Master</div>
+                        <div class="breadcrumb-title">Inquiry Goods Management</div>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item"><a href='/admin'>Home</a></li>
-                                <li class="breadcrumb-item"><a href='/admin'>Master</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Inquiry Goods</li>
+                                <li class="breadcrumb-item"><a href='/admin/inquiry_goods'>Origin</a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href='/admin/inquiry_goods'>Inquiry Goods</a></li>
                             </ol>
                         </nav>
                     </div>
@@ -148,7 +148,7 @@ Inquiry Goods - Admin Panel
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
-                <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
             </div>
         </div>
     </div>
@@ -162,6 +162,7 @@ Inquiry Goods - Admin Panel
         document.getElementById('inquiry_goods_id').value = '';
         document.getElementById('inquiry_goods_status_name').value = '';
         document.getElementById('inquiry_goods_status_notes').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
     }
 
     $(document).ready(function () {
@@ -314,6 +315,7 @@ Inquiry Goods - Admin Panel
             document.getElementById('inquiry_goods_id').value = data.inquiry_goods_status_id;
             document.getElementById('inquiry_goods_status_name').value = data.inquiry_goods_status_name;
             document.getElementById('inquiry_goods_status_notes').value = data.inquiry_goods_status_notes;
+            document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });
     }

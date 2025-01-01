@@ -18,7 +18,7 @@ class OriginInquiryController extends Controller
         $this->mandatory = array(
             'origin_inquiry_code' => 'nullable', 
             'origin_inquiry_name' => 'required', 
-            'origin_inquiry_notes' => 'required',
+            'origin_inquiry_notes' => 'nullable',
         );
     }
 
@@ -114,16 +114,16 @@ class OriginInquiryController extends Controller
         return $result;
     }
 
-    public function combo(Request $request)
-    {
-        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+    // public function combo(Request $request)
+    // {
+    //     $search = !empty($_GET['search']) ? $_GET['search'] : '%';
 
-        $listdata = $this->model
-            ->select('origin_inquiry_code as id', 'origin_inquiry_name as text')
-            ->where('origin_inquiry_name', 'like', '%' . $search . '%')
-            ->where('origin_inquiry_soft_delete', 0)
-            ->get();
+    //     $listdata = $this->model
+    //         ->select('origin_inquiry_code as id', 'origin_inquiry_name as text')
+    //         ->where('origin_inquiry_name', 'like', '%' . $search . '%')
+    //         ->where('origin_inquiry_soft_delete', 0)
+    //         ->get();
 
-        return response()->json($listdata);
-    }
+    //     return response()->json($listdata);
+    // }
 }

@@ -164,7 +164,7 @@ Description Quotations - Admin Panel
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                                 @if ($usr->can('description_quotations.update') || $usr->can('description_quotations.create'))
-                            <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                            <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                             @endif
                         </div>
                 </div>
@@ -190,8 +190,9 @@ $(document).ready(function () {
                         tableBody.append(`
                             <tr>
                                 <td class="text-center">${(response.description_quotations.current_page - 1) * response.description_quotations.per_page + index + 1}</td>
-                                <td class="text-center">${description_quotation.template_inquiry_desc_title}</td>
                                 <td class="text-center">${description_quotation.template_inquiry_desc_code}</td>
+                                <td class="text-center">${description_quotation.template_inquiry_desc_title}</td>
+                                
                                 <td class="text-center">${description_quotation.template_inquiry_desc_text ?? '-'}</td>
                                 <td class="text-center">${description_quotation.template_inquiry_desc_notes}</td>
                                 <td class="text-center">
@@ -234,6 +235,7 @@ $(document).ready(function () {
         document.getElementById('template_inquiry_desc_title').value = '';
         document.getElementById('template_inquiry_desc_text').value = '';
         document.getElementById('template_inquiry_desc_notes').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
     }
@@ -294,6 +296,7 @@ $(document).ready(function () {
                 document.getElementById('template_inquiry_desc_title').value = data.template_inquiry_desc_title;
                 document.getElementById('template_inquiry_desc_text').value = data.template_inquiry_desc_text;
                 document.getElementById('template_inquiry_desc_notes').value = data.template_inquiry_desc_notes;
+                document.getElementById('saveButton').textContent = 'Save Changes';
                 $('#modalinput').modal('show');
             },
             error: function (dataerror) {

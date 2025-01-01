@@ -163,7 +163,7 @@ Template Win Lose - Admin Panel
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                 @if ($usr->can('template_win_loses.update') || $usr->can('template_win_loses.create'))
-                <button type="button" class="btn btn-primary" onclick="save()">Save changes</button>
+                <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                 @endif
             </div>
         </div>
@@ -188,9 +188,10 @@ $(document).ready(function () {
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.template_win_loses.current_page - 1) * response.template_win_loses.per_page + index + 1}</td>
+                                    <td class="text-center">${template_win_lose.template_win_loses_code}</td>
                                     <td class="text-center">${template_win_lose.template_win_loses_title}</td>
                                     <td class="text-center">${template_win_lose.template_win_loses_text}</td>
-                                    <td class="text-center">${template_win_lose.template_win_loses_code}</td>
+                                    
                                     <td class="text-center">${template_win_lose.template_win_loses_notes ?? '-'}</td>
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -233,6 +234,7 @@ $(document).ready(function () {
         document.getElementById('template_win_loses_title').value = '';
         document.getElementById('template_win_loses_text').value = '';
         document.getElementById('template_win_loses_notes').value = '';
+        document.getElementById('saveButton').textContent = 'Save';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
     }
@@ -295,6 +297,7 @@ $(document).ready(function () {
                 document.getElementById('template_win_loses_title').value = data.template_win_loses_title;
                 document.getElementById('template_win_loses_text').value = data.template_win_loses_text;
                 document.getElementById('template_win_loses_notes').value = data.template_win_loses_notes;
+                document.getElementById('saveButton').textContent = 'Save Changes';
                 $('#modalinput').modal('show');
             },
             error: function (dataerror) {

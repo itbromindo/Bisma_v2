@@ -18,7 +18,7 @@ class InquiryStatusController extends Controller
         $this->mandatory = array(
             'inquiry_status_code' => 'nullable|string|max:225',
             'inquiry_status_name' => 'required|string|max:225',
-            'inquiry_status_notes' => 'required|string|max:225',
+            'inquiry_status_notes' => 'nullable|string|max:225',
         );
     }
 
