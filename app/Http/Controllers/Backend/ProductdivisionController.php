@@ -25,7 +25,11 @@ class ProductdivisionController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('product_divisions_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('product_divisions_name', 'like', '%' . $search . '%')
+            ->orWhere('product_divisions_notes', 'like', '%' . $search . '%')
+            ->orWhere('product_divisions_code', 'like', '%' . $search . '%');
+        })
         ->where('product_divisions_soft_delete', 0)
         ->paginate(15);
 
@@ -51,6 +55,7 @@ class ProductdivisionController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
@@ -77,6 +82,7 @@ class ProductdivisionController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

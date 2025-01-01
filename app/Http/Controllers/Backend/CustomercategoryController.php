@@ -25,7 +25,11 @@ class CustomercategoryController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('customer_category_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('customer_category_name', 'like', '%' . $search . '%')
+            ->orWhere('customer_category_notes', 'like', '%' . $search . '%')
+            ->orWhere('customer_category_code', 'like', '%' . $search . '%');
+        })
         ->where('customer_category_soft_delete', 0)
         ->paginate(15);
 
@@ -51,6 +55,7 @@ class CustomercategoryController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
@@ -77,6 +82,7 @@ class CustomercategoryController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

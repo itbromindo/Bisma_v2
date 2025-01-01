@@ -177,7 +177,7 @@ Menus - Admin Panel
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                 @endif
                 @if ($usr->can('menus.update') || $usr->can('menus.create'))
-                <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                <button type="button" class="btn btn-primary" id="saveclick" onclick="save()">Save</button>
                 @endif
             </div>
         </div>
@@ -221,6 +221,7 @@ Menus - Admin Panel
         document.getElementById('menus_notes').value = '';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
+        document.getElementById('saveclick').innerHTML = 'Save';
     }
 
     function save() {
@@ -253,19 +254,22 @@ Menus - Admin Panel
                 // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    showAlert('danger', data.data);
-                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'menus_code') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else if (data.status == 501) {
-                    showAlert('danger', data.data);
-                    // alert(data.message);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'menus_code') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else {
-                    // alert('Berhasil Disimpan');
-                    // showAlert('success', 'Berhasil disimpan');
-                    // setTimeout(function () {
-                    //     window.open("/admin/menus", "_self");
-                    // }, 500);
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -277,7 +281,6 @@ Menus - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                // showAlert('danger', ['Terjadi kesalahan pada server']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -295,7 +298,6 @@ Menus - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 document.getElementById('menus_id').value = data.menus_id; 
                 document.getElementById('menus_name').value = data.menus_name; 
                 document.getElementById('menus_notes').value = data.menus_notes;
@@ -305,6 +307,7 @@ Menus - Admin Panel
                 $('#moduls_code').append(new Option(data.moduls_name, data.moduls_code, true, true)).trigger('change');
                 
                 document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
+                document.getElementById('saveclick').innerHTML = 'Save Changes';
                 // Tampilkan modal
                 $('#modalinput').modal('show')
             },
@@ -342,22 +345,24 @@ Menus - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    // alert('Form Wajib Harus diisi');
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'menus_code') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else if (data.status == 501) {
-                    // alert(data.message);
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'menus_code') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else {
-                    // alert('Berhasil Diupdate');
-                    // showAlert('success', 'Berhasil Diupdate');
-                    // setTimeout(function () {
-                    //     window.open("/admin/menus", "_self");
-                    // }, 500);
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -369,7 +374,6 @@ Menus - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                // showAlert('danger', ['Terjadi kesalahan pada server']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -402,19 +406,12 @@ Menus - Admin Panel
                     async: false,
                     success: function (data) {
                         if (data.status == 401) {
-                            // alert('Form Wajib Harus diisi');
                             showAlert('danger', data.data);
                             return;
                         } else if (data.status == 501) {
-                            // alert(data.message);
                             showAlert('danger', data.data);
                             return;
                         } else {
-                            // alert('Data Berhasil Dihapus');
-                            // showAlert('success', 'Berhasil Dihapus');
-                            // setTimeout(function () {
-                            //     window.open("/admin/menus", "_self");
-                            // }, 500);
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Deleted!',
@@ -426,7 +423,6 @@ Menus - Admin Panel
                     },
                     error: function (dataerror) {
                         console.log(dataerror);
-                        // showAlert('danger', ['Terjadi kesalahan pada server']);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',

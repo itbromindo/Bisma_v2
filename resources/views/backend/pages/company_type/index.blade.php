@@ -168,7 +168,7 @@ Jenis Perusahaan - Admin Panel
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                 @endif
                 @if ($usr->can('company_type.update') || $usr->can('company_type.create'))
-                <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                <button type="button" class="btn btn-primary" id="saveclick" onclick="save()">Save</button>
                 @endif
             </div>
         </div>
@@ -197,6 +197,7 @@ Jenis Perusahaan - Admin Panel
         document.getElementById('company_type_notes').value = '';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
+        document.getElementById('saveclick').innerHTML = 'Save';
     }
 
     function saveInput() {
@@ -215,22 +216,15 @@ Jenis Perusahaan - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
-                
                 if (data.status == 401) {
-                    showAlert('danger', data.data);
-                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else if (data.status == 501) {
-                    showAlert('danger', data.data);
-                    // alert(data.message);
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else {
-                    // alert('Berhasil Disimpan');
-                    // showAlert('success', 'Berhasil disimpan');
-                    // setTimeout(function () {
-                    //     window.open("/admin/company_type", "_self");
-                    // }, 500);
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -242,7 +236,6 @@ Jenis Perusahaan - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                // showAlert('danger', ['Terjadi kesalahan pada server']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -266,6 +259,8 @@ Jenis Perusahaan - Admin Panel
                 document.getElementById('company_type_notes').value = data.company_type_notes;
                 
                 document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
+                document.getElementById('saveclick').innerHTML = 'Save changes';
+
                 // Tampilkan modal
                 $('#modalinput').modal('show')
             },
@@ -301,22 +296,16 @@ Jenis Perusahaan - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    showAlert('danger', data.data);
-                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else if (data.status == 501) {
-                    showAlert('danger', data.data);
-                    // alert(data.message);
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else {
-                    // alert('Berhasil Diupdate');
-                    // showAlert('success', 'Berhasil Diupdate');
-                    // setTimeout(function () {
-                    //     window.open("/admin/company_type", "_self");
-                    // }, 500);
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -328,7 +317,6 @@ Jenis Perusahaan - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                // showAlert('danger', ['Terjadi kesalahan pada server']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -361,19 +349,12 @@ Jenis Perusahaan - Admin Panel
                     async: false,
                     success: function (data) {
                         if (data.status == 401) {
-                            // alert('Form Wajib Harus diisi');
                             showAlert('danger', data.data);
                             return;
                         } else if (data.status == 501) {
                             showAlert('danger', data.data);
-                            // alert(data.message);
                             return;
                         } else {
-                            // alert('Data Berhasil Dihapus');
-                            // showAlert('success', 'Berhasil Dihapus');
-                            // setTimeout(function () {
-                            //     window.open("/admin/company_type", "_self");
-                            // }, 500);
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Deleted!',
@@ -385,7 +366,6 @@ Jenis Perusahaan - Admin Panel
                     },
                     error: function (dataerror) {
                         console.log(dataerror);
-                        // showAlert('danger', ['Terjadi kesalahan pada server']);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',

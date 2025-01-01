@@ -166,7 +166,7 @@ Brand - Admin Panel
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                 @endif
                 @if ($usr->can('brand.update') || $usr->can('brand.create'))
-                <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                <button type="button" class="btn btn-primary" id="saveclick" onclick="save()">Save</button>
                 @endif
             </div>
         </div>
@@ -195,6 +195,7 @@ Brand - Admin Panel
         document.getElementById('brand_notes').value = '';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
+        document.getElementById('saveclick').innerHTML = 'Save';
     }
 
     function saveInput() {
@@ -213,22 +214,16 @@ Brand - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    showAlert('danger', data.data);
-                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else if (data.status == 501) {
-                    showAlert('danger', data.data);
-                    // alert(data.message);
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else {
-                    // alert('Berhasil Disimpan');
-                    // showAlert('success', 'Berhasil disimpan');
-                    // setTimeout(function () {
-                    //     window.open("/admin/brand", "_self");
-                    // }, 500);
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -240,7 +235,6 @@ Brand - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                // showAlert('danger', ['Terjadi kesalahan pada server']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -258,12 +252,12 @@ Brand - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 document.getElementById('brand_id').value = data.brand_id; 
                 document.getElementById('brand_name').value = data.brand_name; 
                 document.getElementById('brand_notes').value = data.brand_notes;
                 
                 document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
+                document.getElementById('saveclick').innerHTML = 'Save Changes';
                 // Tampilkan modal
                 $('#modalinput').modal('show')
             },
@@ -299,22 +293,16 @@ Brand - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    showAlert('danger', data.data);
-                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else if (data.status == 501) {
-                    showAlert('danger', data.data);
-                    // alert(data.message);
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else {
-                    // alert('Berhasil Diupdate');
-                    // showAlert('success', 'Berhasil Diupdate');
-                    // setTimeout(function () {
-                    //     window.open("/admin/brand", "_self");
-                    // }, 500);
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -326,7 +314,6 @@ Brand - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                // showAlert('danger', ['Terjadi kesalahan pada server']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -360,18 +347,11 @@ Brand - Admin Panel
                     success: function (data) {
                         if (data.status == 401) {
                             showAlert('danger', data.data);
-                            // alert('Form Wajib Harus diisi');
                             return;
                         } else if (data.status == 501) {
                             showAlert('danger', data.data);
-                            // alert(data.message);
                             return;
                         } else {
-                            // alert('Data Berhasil Dihapus');
-                            // showAlert('success', 'Berhasil Dihapus');
-                            // setTimeout(function () {
-                            //     window.open("/admin/brand", "_self");
-                            // }, 500);
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Deleted!',
@@ -383,7 +363,6 @@ Brand - Admin Panel
                     },
                     error: function (dataerror) {
                         console.log(dataerror);
-                        // showAlert('danger', ['Terjadi kesalahan pada server']);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',

@@ -166,7 +166,7 @@ Satuan - Admin Panel
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                 @endif
                 @if ($usr->can('uom.update') || $usr->can('uom.create'))
-                <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                <button type="button" class="btn btn-primary" id="saveclick" onclick="save()">Save</button>
                 @endif
             </div>
         </div>
@@ -195,6 +195,7 @@ Satuan - Admin Panel
         document.getElementById('uom_notes').value = '';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
+        document.getElementById('saveclick').innerHTML = 'Save';
     }
 
     function saveInput() {
@@ -213,22 +214,15 @@ Satuan - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
-                
                 if (data.status == 401) {
-                    showAlert('danger', data.data);
-                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else if (data.status == 501) {
-                    showAlert('danger', data.data);
-                    // alert(data.message);
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else {
-                    // alert('Berhasil Disimpan');
-                    // showAlert('success', 'Berhasil disimpan');
-                    // setTimeout(function () {
-                    //     window.open("/admin/uom", "_self");
-                    // }, 500);
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -240,7 +234,6 @@ Satuan - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                // showAlert('danger', ['Terjadi kesalahan pada server']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -258,12 +251,12 @@ Satuan - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 document.getElementById('uom_id').value = data.uom_id; 
                 document.getElementById('uom_name').value = data.uom_name; 
                 document.getElementById('uom_notes').value = data.uom_notes;
                 
                 document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
+                document.getElementById('saveclick').innerHTML = 'Save Changes';
                 // Tampilkan modal
                 $('#modalinput').modal('show')
             },
@@ -299,22 +292,15 @@ Satuan - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
-                
                 if (data.status == 401) {
-                    // alert('Form Wajib Harus diisi');
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else if (data.status == 501) {
-                    // alert(data.message);
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else {
-                    // alert('Berhasil Diupdate');
-                    // showAlert('success', 'Berhasil Diupdate');
-                    // setTimeout(function () {
-                    //     window.open("/admin/uom", "_self");
-                    // }, 500);
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
@@ -326,7 +312,6 @@ Satuan - Admin Panel
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                // showAlert('danger', ['Terjadi kesalahan pada server']);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -359,19 +344,12 @@ Satuan - Admin Panel
                     async: false,
                     success: function (data) {
                         if (data.status == 401) {
-                            // alert('Form Wajib Harus diisi');
                             showAlert('danger', data.data);
                             return;
                         } else if (data.status == 501) {
-                            // alert(data.message);
                             showAlert('danger', data.data);
                             return;
                         } else {
-                            // alert('Data Berhasil Dihapus');
-                            // showAlert('success', 'Berhasil Dihapus');
-                            // setTimeout(function () {
-                            //     window.open("/admin/uom", "_self");
-                            // }, 500);
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Deleted!',
@@ -383,7 +361,6 @@ Satuan - Admin Panel
                     },
                     error: function (dataerror) {
                         console.log(dataerror);
-                        // showAlert('danger', ['Terjadi kesalahan pada server']);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
