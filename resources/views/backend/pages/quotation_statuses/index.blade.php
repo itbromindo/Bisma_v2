@@ -337,8 +337,8 @@ $(document).ready(function () {
 
     function updateInput(id) {
         const data = {
-            pillar_items: document.getElementById('pillar_items').value,
-            pillar_notes: document.getElementById('pillar_notes').value,
+            quotation_status_name: document.getElementById('quotation_status_name').value,
+            quotation_status_notes: document.getElementById('quotation_status_notes').value,
             _token: '{{ csrf_token() }}'
         };
 
