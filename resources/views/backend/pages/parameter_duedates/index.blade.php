@@ -33,7 +33,7 @@ Parameter Due Dates - Admin Panel
                             <h5>Parameter Due Dates</h5>
                             <div class="d-flex align-items-center">
                                 <div class="app-main-search me-2">
-                                    <form action="/admin/parameter_duedate" method="GET" class="d-flex">
+                                    <form action="/admin/parameter_duedates" method="GET" class="d-flex">
                                         <div class="input-box d-flex">
                                             <input type="text" name="search" id="search" value="{{ $search ?? '' }}" class="form-control" placeholder="Search Here">
                                             <button type="submit" class="btn btn-light ms-2">
