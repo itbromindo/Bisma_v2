@@ -244,43 +244,68 @@ $(document).ready(function () {
         }
     }
 
-    function saveInput() {
-        var postdata = new FormData();
-        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('quotation_status_name', document.getElementById('quotation_status_name').value);
-        postdata.append('quotation_status_notes', document.getElementById('quotation_status_notes').value);
+    // function saveInput() {
+    //     var postdata = new FormData();
+    //     postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+    //     postdata.append('quotation_status_name', document.getElementById('quotation_status_name').value);
+    //     postdata.append('quotation_status_notes', document.getElementById('quotation_status_notes').value);
 
-        $.ajax({
-            type: "POST",
-            url: "/admin/quotation_statuses/",
-            data: postdata,
-            processData: false,
-            contentType: false,
-            dataType: "json",
-            async: false,
-            success: function (data) {
-                if (data.status == 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Form is required!'
-                    });
-                } else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: 'Successfully saved!'
-                    }).then(() => {
-                        reload();
-                    });
-                }
-            },
-            error: function (dataerror) {
-                console.log(dataerror);
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "/admin/quotation_statuses/",
+    //         data: postdata,
+    //         processData: false,
+    //         contentType: false,
+    //         dataType: "json",
+    //         async: false,
+    //         success: function (data) {
+    //             if (data.status == 401) {
+    //                 Swal.fire({
+    //                     icon: 'error',
+    //                     title: 'Error',
+    //                     text: 'Form is required!'
+    //                 });
+    //             } else {
+    //                 Swal.fire({
+    //                     icon: 'success',
+    //                     title: 'Success',
+    //                     text: 'Successfully saved!'
+    //                 }).then(() => {
+    //                     reload();
+    //                 });
+    //             }
+    //         },
+    //         error: function (dataerror) {
+    //             console.log(dataerror);
+    //             Swal.fire({
+    //                 icon: 'error',
+    //                 title: 'Error',
+    //                 text: 'An error occurred while saving data.'
+    //             });
+    //         }
+    //     });
+    // }
+
+    function saveInput() {
+        const data = {
+            quotation_status_name: document.getElementById('quotation_status_name').value,
+            quotation_status_notes: document.getElementById('quotation_status_notes').value,
+            _token: '{{ csrf_token() }}'
+        };
+
+        $.post('/admin/quotation_statuses', data, function(response) {
+            if (response.status === 401) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: 'An error occurred while saving data.'
+                    text: response.data
+                });
+            } else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Data Saved!',
+                }).then(() => {
+                    location.reload();
                 });
             }
         });
@@ -311,46 +336,31 @@ $(document).ready(function () {
     }
 
     function updateInput(id) {
-        var postdata = new FormData();
-        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
-        postdata.append('quotation_status_name', document.getElementById('quotation_status_name').value);
-        postdata.append('quotation_status_notes', document.getElementById('quotation_status_notes').value);
+        const data = {
+            pillar_items: document.getElementById('pillar_items').value,
+            pillar_notes: document.getElementById('pillar_notes').value,
+            _token: '{{ csrf_token() }}'
+        };
 
         $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': '{{ csrf_token() }}'
-            },
-            type: "POST",
-            url: "/admin/quotation_statuses/" + id,
-            data: postdata,
-            processData: false,
-            contentType: false,
-            dataType: "json",
-            async: false,
-            success: function (data) {
-                if (data.status == 401) {
+            url: `/admin/quotation_statuses/${id}`,
+            type: 'PUT',
+            data: data,
+            success: function(response) {
+                if (response.status === 401) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'Form is required!'
+                        text: response.data
                     });
                 } else {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Success',
-                        text: 'Successfully updated!'
+                        title: 'Data Updated!',
                     }).then(() => {
-                        reload();
+                        location.reload();
                     });
                 }
-            },
-            error: function (dataerror) {
-                console.log(dataerror);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'An error occurred while updating data.'
-                });
             }
         });
     }

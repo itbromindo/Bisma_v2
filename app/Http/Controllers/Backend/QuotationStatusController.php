@@ -15,7 +15,7 @@ class QuotationStatusController extends Controller
     {
         $this->model = new QuotationStatus();
         $this->mandatory = array(
-            'quotation_status_code' => 'nullable|unique:quotation_statuses,quotation_status_code|max:225',
+            'quotation_status_code' => 'nullable|string|max:225',
             'quotation_status_name' => 'required|max:225',
             'quotation_status_notes' => 'nullable',
         );
@@ -65,10 +65,11 @@ class QuotationStatusController extends Controller
         $validator = Validator::make($request->all(), $this->mandatory);
 
         if ($validator->fails()) {
-            return response()->json([
+            $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
-            ]);
+            ];
+            return response()->json($messages);
         }
 
         $result = $this->model->create([
@@ -92,10 +93,11 @@ class QuotationStatusController extends Controller
         $validator = Validator::make($request->all(), $this->mandatory);
 
         if ($validator->fails()) {
-            return response()->json([
+            $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
-            ]);
+            ];
+            return response()->json($messages);
         }
 
         $this->model->find($id)->update([
@@ -128,27 +130,27 @@ class QuotationStatusController extends Controller
     /**
      * Restore a soft-deleted resource.
      */
-    public function restore($id)
-    {
-        $this->model->find($id)->update([
-            'quotation_status_deleted_at' => null,
-            'quotation_status_deleted_by' => null,
-            'quotation_status_soft_delete' => 0,
-        ]);
+    // public function restore($id)
+    // {
+    //     $this->model->find($id)->update([
+    //         'quotation_status_deleted_at' => null,
+    //         'quotation_status_deleted_by' => null,
+    //         'quotation_status_soft_delete' => 0,
+    //     ]);
 
-        session()->flash('success', 'Quotation Status has been restored.');
-        return redirect()->route('quotation_statuses.index');
-    }
+    //     session()->flash('success', 'Quotation Status has been restored.');
+    //     return redirect()->route('quotation_statuses.index');
+    // }
 
-    /**
-     * Permanently delete the resource from storage.
-     */
-    public function permanentDelete($id)
-    {
-        $this->checkAuthorization(auth()->user(), ['quotation_statuses.delete']);
-        $this->model->find($id)->delete();
+    // /**
+    //  * Permanently delete the resource from storage.
+    //  */
+    // public function permanentDelete($id)
+    // {
+    //     $this->checkAuthorization(auth()->user(), ['quotation_statuses.delete']);
+    //     $this->model->find($id)->delete();
 
-        session()->flash('success', 'Quotation Status has been permanently deleted.');
-        return redirect()->route('quotation_statuses.index');
-    }
+    //     session()->flash('success', 'Quotation Status has been permanently deleted.');
+    //     return redirect()->route('quotation_statuses.index');
+    // }
 }
