@@ -58,7 +58,8 @@ Users - Admin Panel
                                                 <table class="table align-middle table-basic ">
                                                     <thead style="text-align: center">
                                                         <tr>
-                                                            <th scope="col">NO</th>
+                                                            <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">E-MAIL</th>
                                                             <th scope="col">PHONE</th>
@@ -69,6 +70,7 @@ Users - Admin Panel
                                                         @foreach ($users as $user)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
+                                                                <td>{{ $user->user_code }}</td>
                                                                 <td>{{ $user->users_name }}</td>
                                                                 <td>{{ $user->users_email }}</td>
                                                                 <td>{{ $user->users_office_phone }}</td>
@@ -395,9 +397,11 @@ Users - Admin Panel
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                @if ($usr->can('users.create'))
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @endif
                 @if ($usr->can('users.update') || $usr->can('users.create'))
-                <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                <button type="button" class="btn btn-primary" id="saveclick" onclick="save()">Save</button>
                 @endif
             </div>
         </div>
@@ -614,6 +618,7 @@ Users - Admin Panel
         $('#users_permission').append(new Option('', '', true, true)).trigger('change');
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
+        document.getElementById('saveclick').innerHTML = 'Save';
     }
 
     function saveInput() {
@@ -663,26 +668,43 @@ Users - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
-                
                 if (data.status == 401) {
-                    // alert('Form Wajib Harus diisi');
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'users_level' || data.column == 'users_company' || data.column == 'users_homebase' || data.column == 'users_division' || data.column == 'users_department' || data.column == 'users_shift' || data.column == 'users_permission') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else if (data.column == 'users_ktp_picture' || data.column == 'users_signature' || data.column == 'users_photo') {
+                        alertform('file',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else if (data.status == 501) {
-                    alert(data.message);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'users_level' || data.column == 'users_company' || data.column == 'users_homebase' || data.column == 'users_division' || data.column == 'users_department' || data.column == 'users_shift' || data.column == 'users_permission') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else if (data.column == 'users_ktp_picture' || data.column == 'users_signature' || data.column == 'users_photo') {
+                        alertform('file',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else {
-                    // alert('Berhasil Disimpan');
-                    showAlert('danger', data.data);
-                    setTimeout(function () {
-                        window.open("/admin/users", "_self");
-                    }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                showAlert('danger', ['Terjadi kesalahan pada server']);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
 
@@ -695,7 +717,6 @@ Users - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 document.getElementById('user_id').value = data.user_id;
                 document.getElementById('users_name').value = data.users_name; 
                 // document.getElementById('users_photo').value = data.users_photo; 
@@ -733,11 +754,17 @@ Users - Admin Panel
                 $('#users_permission').append(new Option(data.users_permission, data.users_permission, true, true)).trigger('change');
                 
                 document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
+                document.getElementById('saveclick').innerHTML = 'Save Changes';
                 // Tampilkan modal
                 $('#modalinput').modal('show')
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
     }
@@ -747,7 +774,6 @@ Users - Admin Panel
         // Tambahkan token CSRF
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('users_name', document.getElementById('users_name').value); 
-        // postdata.append('users_photo', document.getElementById('users_photo').value); 
         postdata.append('users_photo', document.getElementById('users_photo').files[0]); 
         postdata.append('users_email', document.getElementById('users_email').value); 
         postdata.append('users_password', document.getElementById('users_password').value); 
@@ -777,8 +803,6 @@ Users - Admin Panel
         postdata.append('users_bpjs_tk_number', document.getElementById('users_bpjs_tk_number').value);
         postdata.append('users_bpjs_number', document.getElementById('users_bpjs_number').value);
         postdata.append('users_ktp_number', document.getElementById('users_ktp_number').value);
-        // postdata.append('users_ktp_picture', document.getElementById('users_ktp_picture').value);
-        // postdata.append('users_signature', document.getElementById('users_signature').value);
         postdata.append('users_ktp_picture', document.getElementById('users_ktp_picture').files[0]); 
         postdata.append('users_signature', document.getElementById('users_signature').files[0]); 
         postdata.append('users_permission', document.getElementById('users_permission').value);
@@ -797,27 +821,43 @@ Users - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
-                
                 if (data.status == 401) {
-                    // alert('Form Wajib Harus diisi');
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'users_level' || data.column == 'users_company' || data.column == 'users_homebase' || data.column == 'users_division' || data.column == 'users_department' || data.column == 'users_shift' || data.column == 'users_permission') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else if (data.column == 'users_ktp_picture' || data.column == 'users_signature' || data.column == 'users_photo') {
+                        alertform('file',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else if (data.status == 501) {
-                    // alert(data.message);
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'users_level' || data.column == 'users_company' || data.column == 'users_homebase' || data.column == 'users_division' || data.column == 'users_department' || data.column == 'users_shift' || data.column == 'users_permission') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else if (data.column == 'users_ktp_picture' || data.column == 'users_signature' || data.column == 'users_photo') {
+                        alertform('file',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else {
-                    // alert('Berhasil Diupdate');
-                    showAlert('success', 'Berhasil Diupdate');
-                    setTimeout(function () {
-                        window.open("/admin/users", "_self");
-                    }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Updated!',
+                    }).then(function() {
+                        location.reload();
+                    });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                showAlert('danger', ['Terjadi kesalahan pada server']);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
 
@@ -827,36 +867,50 @@ Users - Admin Panel
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
         
-        if (confirm('Apakah Anda Yakin Menghapus Data Ini?')) {
-            $.ajax({
-                type: "DELETE",
-                url: "/admin/users/"+id,
-                data: (postdata),
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data.status == 401) {
-                        // alert('Form Wajib Harus diisi');
-                        showAlert('danger', data.data);
-                        return;
-                    } else if (data.status == 501) {
-                        showAlert('danger', data.data);
-                        // alert(data.message);
-                        return;
-                    } else {
-                        // alert('Data Berhasil Dihapus');
-                        showAlert('success', 'Berhasil Dihapus');
-                        setTimeout(function () {
-                            window.open("/admin/users", "_self");
-                        }, 500);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "/admin/users/"+id,
+                    data: (postdata),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.status == 401) {
+                            showAlert('danger', data.data);
+                            return;
+                        } else if (data.status == 501) {
+                            showAlert('danger', data.data);
+                            return;
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: 'Data has been deleted.',
+                            }).then(function() {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (dataerror) {
+                        console.log(dataerror);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: dataerror.responseJSON.message
+                        });
                     }
-                },
-                error: function (dataerror) {
-                    console.log(dataerror);
-                    showAlert('danger', ['Terjadi kesalahan pada server']);
-                }
-            });
-        }
+                });
+            }
+        });
     }
 
 </script>

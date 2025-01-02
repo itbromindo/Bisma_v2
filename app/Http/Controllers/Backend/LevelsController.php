@@ -24,7 +24,7 @@ class LevelsController extends Controller
         $this->mandatory = array(
             'department_code' => 'required', 
             'level_name' => 'required',
-            'level_notes' => 'required',
+            // 'level_notes' => 'required',
 		);
     }
 
@@ -34,7 +34,11 @@ class LevelsController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('level_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('level_name', 'like', '%' . $search . '%')
+            ->orWhere('level_notes', 'like', '%' . $search . '%')
+            ->orWhere('level_code', 'like', '%' . $search . '%');
+        })
         ->where('level_soft_delete', 0)
         ->paginate(15);
 
@@ -62,13 +66,14 @@ class LevelsController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
             session()->flash('error', $validator->errors()->first());
             return response()->json($messages);
 		}
 
         $result = $this->model->create([
-            'level_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'level_code' => $this->setcode($this->model->count() + 1, 'LVL', 4), // (@nomor_urut, @kode, @panjang_kode)
             'department_code' => $request->department_code, 
             'level_name' => $request->level_name, 
             'level_notes' => $request->level_notes, 
@@ -90,6 +95,7 @@ class LevelsController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

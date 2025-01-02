@@ -24,7 +24,7 @@ class SubmenusController extends Controller
         $this->mandatory = array(
             'menus_code' => 'required', 
             'submenus_name' => 'required',
-            'submenus_notes' => 'required', 
+            // 'submenus_notes' => 'required', 
 		);
     }
 
@@ -34,7 +34,11 @@ class SubmenusController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('submenus_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('submenus_name', 'like', '%' . $search . '%')
+            ->orWhere('submenus_notes', 'like', '%' . $search . '%')
+            ->orWhere('submenus_code', 'like', '%' . $search . '%');
+        })
         ->where('submenus_soft_delete', 0)
         ->paginate(15);
 
@@ -62,12 +66,13 @@ class SubmenusController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
 
         $result = $this->model->create([
-            'submenus_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'submenus_code' => $this->setcode($this->model->count() + 1, 'SMN', 4), // (@nomor_urut, @kode, @panjang_kode)
             'menus_code' => $request->menus_code, 
             'submenus_name' => $request->submenus_name, 
             'submenus_notes' => $request->submenus_notes, 
@@ -100,6 +105,7 @@ class SubmenusController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

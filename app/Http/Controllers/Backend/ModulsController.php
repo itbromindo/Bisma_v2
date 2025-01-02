@@ -20,7 +20,7 @@ class ModulsController extends Controller
         $this->mandatory = array(
             'moduls_name' => 'required', 
             'moduls_icon' => 'required', 
-            'moduls_notes' => 'required',
+            // 'moduls_notes' => 'required',
 		);
     }
 
@@ -30,7 +30,11 @@ class ModulsController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('moduls_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('moduls_name', 'like', '%' . $search . '%')
+            ->orWhere('moduls_notes', 'like', '%' . $search . '%')
+            ->orWhere('moduls_code', 'like', '%' . $search . '%');
+        })
         ->where('moduls_soft_delete', 0)
         ->paginate(15);
 
@@ -56,12 +60,13 @@ class ModulsController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
 
         $result = $this->model->create([
-            'moduls_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'moduls_code' => $this->setcode($this->model->count() + 1, 'MOD', 4),
             'moduls_name' => $request->moduls_name, 
             'moduls_icon' => $request->moduls_icon,
             'moduls_notes' => $request->moduls_notes, 
@@ -83,6 +88,7 @@ class ModulsController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

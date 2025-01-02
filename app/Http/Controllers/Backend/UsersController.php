@@ -65,6 +65,7 @@ class UsersController extends Controller
         $listdata = $this->model
         ->where(function($q) use ($search) {
             $q->where('users_name', 'like', '%' . $search . '%')
+            ->orWhere('user_code', 'like', '%' . $search . '%')
             ->orWhere('users_email', 'like', '%' . $search . '%')
             ->orWhere('users_office_phone', 'like', '%' . $search . '%');
         })
@@ -100,6 +101,7 @@ class UsersController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
@@ -129,7 +131,7 @@ class UsersController extends Controller
 		}
 
         $user = $this->model->create([
-            'user_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'user_code' => $this->setcode($this->model->count() + 1, 'USR', 6), // (@nomor_urut, @kode, @panjang_kode)
             'users_name' => $request->users_name, 
             'users_photo' => $newFileName1 ? 'file_user/' . $newFileName1 : null, 
             'users_email' => $request->users_email, 
@@ -192,6 +194,7 @@ class UsersController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

@@ -12,7 +12,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh; /* Tinggi penuh layar */
-            background-color: #c2c2c4; /* Warna latar belakang opsional */
+            background-color: #f5f6f7; /* Warna latar belakang opsional */
         }
 
         .login-card {
@@ -45,9 +45,9 @@
             background-color: #0056b3;
         }
 
-        .form-gp label {
+        /* .form-gp label {
             font-weight: bold;
-        }
+        } */
 
         .form-gp input {
             border-radius: 4px;
@@ -62,12 +62,12 @@
             <form method="POST" action="{{ route('admin.login.submit') }}">
                 @csrf
                 <img src="{{ asset('images/bromindo.jpg') }}" alt="Logo" class="logo">
-                <h4 class="text-center mb-4">Login</h4>
+                <h4 class="text-center mb-4">Login to your account</h4>
                 @include('backend.layouts.partials.messages')
 
                 <div class="form-gp mb-3">
-                    <label for="email">Email Address</label>
-                    <input type="text" id="email" name="email" class="@error('email') is-invalid @enderror">
+                    <label for="email">Email</label>
+                    <input type="text" id="email" name="email" class="@error('email') is-invalid @enderror" placeholder="Email address">
                     @error('email')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -77,7 +77,7 @@
 
                 <div class="form-gp mb-3">
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" class="@error('password') is-invalid @enderror">
+                    <input type="password" id="password" name="password" class="@error('password') is-invalid @enderror" placeholder="Password">
                     @error('password')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>

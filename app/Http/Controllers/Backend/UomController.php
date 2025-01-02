@@ -15,7 +15,7 @@ class UomController extends Controller
         $this->model = new Uom();
         $this->mandatory = array(
             'uom_name' => 'required',
-            'uom_notes' => 'required',
+            // 'uom_notes' => 'required',
 		);
     }
 
@@ -25,7 +25,11 @@ class UomController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('uom_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('uom_name', 'like', '%' . $search . '%')
+            ->orWhere('uom_notes', 'like', '%' . $search . '%')
+            ->orWhere('uom_code', 'like', '%' . $search . '%');
+        })
         ->where('uom_soft_delete', 0)
         ->paginate(15);
 
@@ -51,12 +55,13 @@ class UomController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
 
         $result = $this->model->create([
-            'uom_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'uom_code' => $this->setcode($this->model->count() + 1, 'UOM', 4), // (@nomor_urut, @kode, @panjang_kode)
             'uom_name' => $request->uom_name, 
             'uom_notes' => $request->uom_notes, 
             'uom_created_at' => date("Y-m-d h:i:s"),
@@ -77,6 +82,7 @@ class UomController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

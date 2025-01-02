@@ -15,7 +15,7 @@ class ProductcategoryController extends Controller
         $this->model = new Product_category();
         $this->mandatory = array(
             'product_category_name' => 'required',
-            'product_category_notes' => 'required',
+            // 'product_category_notes' => 'required',
 		);
     }
 
@@ -25,7 +25,11 @@ class ProductcategoryController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('product_category_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('product_category_name', 'like', '%' . $search . '%')
+            ->orWhere('product_category_notes', 'like', '%' . $search . '%')
+            ->orWhere('product_category_code', 'like', '%' . $search . '%');
+        })
         ->where('product_category_soft_delete', 0)
         ->paginate(15);
 
@@ -51,12 +55,13 @@ class ProductcategoryController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
 
         $result = $this->model->create([
-            'product_category_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'product_category_code' => $this->setcode($this->model->count() + 1, 'PRC', 4), // (@nomor_urut, @kode, @panjang_kode)
             'product_category_name' => $request->product_category_name, 
             'product_category_notes' => $request->product_category_notes, 
             'product_category_created_at' => date("Y-m-d h:i:s"),
@@ -77,6 +82,7 @@ class ProductcategoryController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

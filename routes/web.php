@@ -212,7 +212,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     //Quotation Status Routes
     Route::resource('quotation_statuses', QuotationStatusController::class);
     Route::any('quotation_statuses/{id}', [QuotationStatusController::class, 'update']);
-   
+
     Route::resource('pillars', PillarController::class);
     Route::any('pillars/{id}', [PillarController::class, 'update']);
 

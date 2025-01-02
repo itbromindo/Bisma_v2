@@ -57,7 +57,8 @@ Customer - Admin Panel
                                                 <table class="table align-middle table-basic ">
                                                     <thead style="text-align: center">
                                                         <tr>
-                                                            <th scope="col">NO</th>
+                                                            <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">PHONE</th>
                                                             <th scope="col">ADDRESS</th>
@@ -68,6 +69,7 @@ Customer - Admin Panel
                                                         @foreach ($customer as $csr)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
+                                                                <td>{{ $csr->customer_code }}</td>
                                                                 <td>{{ $csr->customer_name }}</td>
                                                                 <td>{{ $csr->customers_phone }}</td>
                                                                 <td>{{ $csr->customers_full_address }}</td>
@@ -276,9 +278,11 @@ Customer - Admin Panel
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                @if ($usr->can('customer.create'))
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @endif
                 @if ($usr->can('customer.update') || $usr->can('customer.create'))
-                <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                <button type="button" class="btn btn-primary" id="saveclick" onclick="save()">Save</button>
                 @endif
             </div>
         </div>
@@ -405,6 +409,7 @@ Customer - Admin Panel
         document.getElementById('customers_notes').value = '';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
+        document.getElementById('saveclick').innerHTML = 'Save';
     }
 
     function saveInput() {
@@ -424,7 +429,6 @@ Customer - Admin Panel
         postdata.append('provinces_code', document.getElementById('provinces_code').value);
         postdata.append('customers_category', document.getElementById('customers_category').value);
         postdata.append('customers_area', document.querySelector('input[name="customers_area"]:checked') ? document.querySelector('input[name="customers_area"]:checked').value : '');
-        // postdata.append('customers_area', document.querySelector('input[name="customers_area"]:checked').value);
         postdata.append('customers_notes', document.getElementById('customers_notes').value);
 
         $.ajax({
@@ -436,27 +440,44 @@ Customer - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    showAlert('danger', data.data);
-                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'districts_code' || data.column == 'cities_code' || data.column == 'provinces_code' || data.column == 'customers_category') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else if (data.column == 'customers_area') {
+                        alertform('radio',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else if (data.status == 501) {
-                    showAlert('danger', data.data);
-                    // alert(data.message);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'districts_code' || data.column == 'cities_code' || data.column == 'provinces_code' || data.column == 'customers_category') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else if (data.column == 'customers_area') {
+                        alertform('radio',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else {
-                    showAlert('success', 'Berhasil disimpan');
-                    // alert('Berhasil Disimpan');
-                    setTimeout(function () {
-                        window.open("/admin/customer", "_self");
-                    }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                showAlert('danger', ['Terjadi kesalahan pada server']);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
 
@@ -469,7 +490,6 @@ Customer - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 document.getElementById('customer_id').value = data.customer_id; 
                 document.getElementById('customer_name').value = data.customer_name; 
                 document.getElementById('customers_existing').value = data.customers_existing; 
@@ -487,11 +507,17 @@ Customer - Admin Panel
                 document.getElementById('customers_notes').value = data.customers_notes;
                 
                 document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
+                document.getElementById('saveclick').innerHTML = 'Save Changes';
                 // Tampilkan modal
                 $('#modalinput').modal('show')
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
     }
@@ -513,9 +539,7 @@ Customer - Admin Panel
         postdata.append('provinces_code', document.getElementById('provinces_code').value);
         postdata.append('customers_category', document.getElementById('customers_category').value);
         postdata.append('customers_area', document.querySelector('input[name="customers_area"]:checked').value);
-        postdata.append('customers_notes', document.getElementById('customers_notes').value);
-        // console.log('Data FormData: ', Array.from(postdata.entries()));
-        
+        postdata.append('customers_notes', document.getElementById('customers_notes').value);        
 
         $.ajax({
             headers: {
@@ -529,27 +553,44 @@ Customer - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    showAlert('danger', data.data);
-                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'districts_code' || data.column == 'cities_code' || data.column == 'provinces_code' || data.column == 'customers_category') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else if (data.column == 'customers_area') {
+                        alertform('radio',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else if (data.status == 501) {
-                    showAlert('danger', data.data);
-                    // alert(data.message);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'districts_code' || data.column == 'cities_code' || data.column == 'provinces_code' || data.column == 'customers_category') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else if (data.column == 'customers_area') {
+                        alertform('radio',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else {
-                    // alert('Berhasil Diupdate');
-                    showAlert('success', 'Berhasil Diupdate');
-                    setTimeout(function () {
-                        window.open("/admin/customer", "_self");
-                    }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Updated!',
+                    }).then(function() {
+                        location.reload();
+                    });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                showAlert('danger', ['Terjadi kesalahan pada server']);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
 
@@ -559,37 +600,50 @@ Customer - Admin Panel
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
         
-        if (confirm('Apakah Anda Yakin Menghapus Data Ini?')) {
-            $.ajax({
-                type: "DELETE",
-                url: "/admin/customer/"+id,
-                data: (postdata),
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    // console.log(data);
-                    if (data.status == 401) {
-                        showAlert('danger', data.data);
-                        // alert('Form Wajib Harus diisi');
-                        return;
-                    } else if (data.status == 501) {
-                        showAlert('danger', data.data);
-                        // alert(data.message);
-                        return;
-                    } else {
-                        // alert('Data Berhasil Dihapus');
-                        showAlert('success', 'Berhasil Dihapus');
-                        setTimeout(function () {
-                            window.open("/admin/customer", "_self");
-                        }, 500);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "/admin/customer/"+id,
+                    data: (postdata),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.status == 401) {
+                            showAlert('danger', data.data);
+                            return;
+                        } else if (data.status == 501) {
+                            showAlert('danger', data.data);
+                            return;
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: 'Data has been deleted.',
+                            }).then(function() {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (dataerror) {
+                        console.log(dataerror);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: dataerror.responseJSON.message
+                        });
                     }
-                },
-                error: function (dataerror) {
-                    console.log(dataerror);
-                    showAlert('danger', ['Terjadi kesalahan pada server']);
-                }
-            });
-        }
+                });
+            }
+        });
     }
 
 </script>

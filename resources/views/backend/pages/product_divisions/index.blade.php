@@ -58,7 +58,8 @@ Divisi Produk - Admin Panel
                                                 <table class="table align-middle table-basic ">
                                                     <thead style="text-align: center">
                                                         <tr>
-                                                            <th scope="col">NO</th>
+                                                            <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">NOTE</th>
                                                             <th scope="col">Action</th>
@@ -68,6 +69,7 @@ Divisi Produk - Admin Panel
                                                         @foreach ($product_divisions as $pds)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
+                                                                <td>{{ $pds->product_divisions_code }}</td>
                                                                 <td>{{ $pds->product_divisions_name }}</td>
                                                                 <td>{{ $pds->product_divisions_notes }}</td>
                                                                 <td class="text-center">
@@ -160,9 +162,11 @@ Divisi Produk - Admin Panel
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                @if ($usr->can('product_divisions.create'))
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @endif
                 @if ($usr->can('product_divisions.update') || $usr->can('product_divisions.create'))
-                <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                <button type="button" class="btn btn-primary" id="saveclick" onclick="save()">Save</button>
                 @endif
             </div>
         </div>
@@ -191,6 +195,7 @@ Divisi Produk - Admin Panel
         document.getElementById('product_divisions_notes').value = '';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
+        document.getElementById('saveclick').innerHTML = 'Save';
     }
 
     function saveInput() {
@@ -209,27 +214,31 @@ Divisi Produk - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
-                
                 if (data.status == 401) {
-                    showAlert('danger', data.data);
-                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else if (data.status == 501) {
-                    showAlert('danger', data.data);
-                    // alert(data.message);
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else {
-                    // alert('Berhasil Disimpan');
-                    showAlert('success', 'Berhasil disimpan');
-                    setTimeout(function () {
-                        window.open("/admin/product_divisions", "_self");
-                    }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                showAlert('danger', ['Terjadi kesalahan pada server']);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
 
@@ -242,17 +251,22 @@ Divisi Produk - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 document.getElementById('product_divisions_id').value = data.product_divisions_id; 
                 document.getElementById('product_divisions_name').value = data.product_divisions_name; 
                 document.getElementById('product_divisions_notes').value = data.product_divisions_notes;
                 
                 document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
+                document.getElementById('saveclick').innerHTML = 'Save Changes';
                 // Tampilkan modal
                 $('#modalinput').modal('show')
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
     }
@@ -278,27 +292,32 @@ Divisi Produk - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    // alert('Form Wajib Harus diisi');
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else if (data.status == 501) {
-                    // alert(data.message);
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
                     return;
                 } else {
-                    showAlert('success', 'Berhasil Diupdate');
-                    // alert('Berhasil Diupdate');
-                    setTimeout(function () {
-                        window.open("/admin/product_divisions", "_self");
-                    }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Updated!',
+                    }).then(function() {
+                        location.reload();
+                    });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                showAlert('danger', ['Terjadi kesalahan pada server']);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
 
@@ -308,36 +327,50 @@ Divisi Produk - Admin Panel
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
         
-        if (confirm('Apakah Anda Yakin Menghapus Data Ini?')) {
-            $.ajax({
-                type: "DELETE",
-                url: "/admin/product_divisions/"+id,
-                data: (postdata),
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data.status == 401) {
-                        // alert('Form Wajib Harus diisi');
-                        showAlert('danger', data.data);
-                        return;
-                    } else if (data.status == 501) {
-                        showAlert('danger', data.data);
-                        // alert(data.message);
-                        return;
-                    } else {
-                        // alert('Data Berhasil Dihapus');
-                        showAlert('success', 'Berhasil Dihapus');
-                        setTimeout(function () {
-                            window.open("/admin/product_divisions", "_self");
-                        }, 500);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "/admin/product_divisions/"+id,
+                    data: (postdata),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.status == 401) {
+                            showAlert('danger', data.data);
+                            return;
+                        } else if (data.status == 501) {
+                            showAlert('danger', data.data);
+                            return;
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: 'Data has been deleted.',
+                            }).then(function() {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (dataerror) {
+                        console.log(dataerror);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: dataerror.responseJSON.message
+                        });
                     }
-                },
-                error: function (dataerror) {
-                    console.log(dataerror);
-                    showAlert('danger', ['Terjadi kesalahan pada server']);
-                }
-            });
-        }
+                });
+            }
+        });
     }
 
 </script>

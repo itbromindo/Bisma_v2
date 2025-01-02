@@ -16,7 +16,7 @@ class GoodsController extends Controller
         $this->mandatory = array(
             'goods_name' => 'required',
             'goods_usage' => 'required',
-            'goods_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            // 'goods_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'goods_specification' => 'required',
             'brand_code' => 'required',
             'goods_price' => 'required',
@@ -45,6 +45,7 @@ class GoodsController extends Controller
         $listdata = $this->model
         ->where(function($q) use ($search){
             $q->where('goods_name', 'like', '%' . $search . '%')
+            ->orWhere('goods_code', 'like', '%' . $search . '%')
             ->orWhere('goods_usage', 'like', '%' . $search . '%')
             ->orWhere('goods_specification', 'like', '%' . $search . '%')  
             ->orWhere('goods_price', 'like', '%' . $search . '%');
@@ -80,6 +81,7 @@ class GoodsController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
@@ -93,7 +95,7 @@ class GoodsController extends Controller
 		}
 
         $result = $this->model->create([
-            'goods_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'goods_code' => $this->setcode($this->model->count() + 1, 'GDS', 6), // (@nomor_urut, @kode, @panjang_kode)
             'goods_name' => $request->goods_name, 
             'goods_photo' => $newFileName1 ? 'file_goods/' . $newFileName1 : null,
             'goods_usage' => $request->goods_usage, 
@@ -133,6 +135,7 @@ class GoodsController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

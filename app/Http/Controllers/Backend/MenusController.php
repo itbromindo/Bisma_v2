@@ -21,7 +21,7 @@ class MenusController extends Controller
             'moduls_code' => 'required', 
             'menus_name' => 'required', 
             'menus_route' => 'required',
-            'menus_notes' => 'required',
+            // 'menus_notes' => 'required',
 		);
     }
 
@@ -31,7 +31,11 @@ class MenusController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('menus_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('menus_name', 'like', '%' . $search . '%')
+            ->orWhere('menus_notes', 'like', '%' . $search . '%')
+            ->orWhere('menus_code', 'like', '%' . $search . '%');
+        })
         ->where('menus_soft_delete', 0)
         ->paginate(15);
 
@@ -59,12 +63,13 @@ class MenusController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
 
         $result = $this->model->create([
-            'menus_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'menus_code' => $this->setcode($this->model->count() + 1, 'MNC', 4), // (@nomor_urut, @kode, @panjang_kode)
             'moduls_code' => $request->moduls_code, 
             'menus_name' => $request->menus_name, 
             'menus_route' => $request->menus_route, 
@@ -87,6 +92,7 @@ class MenusController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

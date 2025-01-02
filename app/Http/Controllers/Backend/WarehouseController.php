@@ -15,7 +15,7 @@ class WarehouseController extends Controller
         $this->model = new Warehouse();
         $this->mandatory = array(
             'warehouse_name' => 'required',
-            'warehouse_notes' => 'required',
+            // 'warehouse_notes' => 'required',
 		);
     }
 
@@ -25,7 +25,11 @@ class WarehouseController extends Controller
         $search = $_GET['search'] ?? '';
 
         $listdata = $this->model
-        ->where('warehouse_name', 'like', '%' . $search . '%')
+        ->where(function($query) use ($search) {
+            $query->where('warehouse_name', 'like', '%' . $search . '%')
+            ->orWhere('warehouse_notes', 'like', '%' . $search . '%')
+            ->orWhere('warehouse_code', 'like', '%' . $search . '%');
+        })
         ->where('warehouse_soft_delete', 0)
         ->paginate(15);
 
@@ -51,12 +55,13 @@ class WarehouseController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
 
         $result = $this->model->create([
-            'warehouse_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'warehouse_code' => $this->setcode($this->model->count() + 1, 'WRH', 4), // (@nomor_urut, @kode, @panjang_kode)
             'warehouse_name' => $request->warehouse_name, 
             'warehouse_notes' => $request->warehouse_notes, 
             'warehouse_created_at' => date("Y-m-d h:i:s"),
@@ -77,6 +82,7 @@ class WarehouseController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

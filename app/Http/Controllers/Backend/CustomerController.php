@@ -27,7 +27,7 @@ class CustomerController extends Controller
             'provinces_code' => 'required',
             'customers_category' => 'required',
             'customers_area' => 'required',
-            'customers_notes' => 'required',
+            // 'customers_notes' => 'required',
 		);
     }
 
@@ -39,6 +39,7 @@ class CustomerController extends Controller
         $listdata = $this->model
         ->where(function($q) use ($search){
             $q->where('customer_name', 'like', '%' . $search . '%')
+            ->orWhere('customer_code', 'like', '%' . $search . '%')
             ->orWhere('customers_phone', 'like', '%' . $search . '%')
             ->orWhere('customers_full_address', 'like', '%' . $search . '%');
         })
@@ -72,12 +73,13 @@ class CustomerController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}
 
         $result = $this->model->create([
-            'customer_code' => str_pad((string)mt_rand(0, 9999), 4, '0', STR_PAD_LEFT),
+            'customer_code' => $this->setcode($this->model->count() + 1, 'CSR', 6), // (@nomor_urut, @kode, @panjang_kode)
             'customer_name' => $request->customer_name, 
             'customers_existing' => $request->customers_existing, 
             'customers_full_address' => $request->customers_full_address, 
@@ -110,6 +112,7 @@ class CustomerController extends Controller
 			$messages = [
 				'data' => $validator->errors()->first(),
 				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
 			];
 			return response()->json($messages);
 		}

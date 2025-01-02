@@ -58,7 +58,8 @@ Menus - Admin Panel
                                                 <table class="table align-middle table-basic ">
                                                     <thead style="text-align: center">
                                                         <tr>
-                                                            <th scope="col">NO</th>
+                                                            <th scope="col" width="5%">NO</th>
+                                                            <th scope="col">CODE</th>
                                                             <th scope="col">NAME</th>
                                                             <th scope="col">NOTE</th>
                                                             <th scope="col">Action</th>
@@ -68,6 +69,7 @@ Menus - Admin Panel
                                                         @foreach ($menus as $menu)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
+                                                                <td>{{ $menu->menus_code }}</td>
                                                                 <td>{{ $menu->menus_name }}</td>
                                                                 <td>{{ $menu->menus_notes }}</td>
                                                                 <td class="text-center">
@@ -171,9 +173,11 @@ Menus - Admin Panel
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                @if ($usr->can('menus.create'))
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @endif
                 @if ($usr->can('menus.update') || $usr->can('menus.create'))
-                <button type="button" class="btn btn-primary" onclick="save()">Save</button>
+                <button type="button" class="btn btn-primary" id="saveclick" onclick="save()">Save</button>
                 @endif
             </div>
         </div>
@@ -217,6 +221,7 @@ Menus - Admin Panel
         document.getElementById('menus_notes').value = '';
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
+        document.getElementById('saveclick').innerHTML = 'Save';
     }
 
     function save() {
@@ -249,24 +254,38 @@ Menus - Admin Panel
                 // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    showAlert('danger', data.data);
-                    // alert('Form Wajib Harus diisi');
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'menus_code') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else if (data.status == 501) {
-                    showAlert('danger', data.data);
-                    // alert(data.message);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'menus_code') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else {
-                    showAlert('success', 'Berhasil disimpan');
-                    // alert('Berhasil Disimpan');
-                    setTimeout(function () {
-                        window.open("/admin/menus", "_self");
-                    }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                showAlert('danger', ['Terjadi kesalahan pada server']);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
 
@@ -279,7 +298,6 @@ Menus - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 document.getElementById('menus_id').value = data.menus_id; 
                 document.getElementById('menus_name').value = data.menus_name; 
                 document.getElementById('menus_notes').value = data.menus_notes;
@@ -289,11 +307,17 @@ Menus - Admin Panel
                 $('#moduls_code').append(new Option(data.moduls_name, data.moduls_code, true, true)).trigger('change');
                 
                 document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
+                document.getElementById('saveclick').innerHTML = 'Save Changes';
                 // Tampilkan modal
                 $('#modalinput').modal('show')
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
     }
@@ -321,27 +345,40 @@ Menus - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
-                // console.log('hasil => ',data);
                 
                 if (data.status == 401) {
-                    // alert('Form Wajib Harus diisi');
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'menus_code') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else if (data.status == 501) {
-                    // alert(data.message);
-                    showAlert('danger', data.data);
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'menus_code') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
                     return;
                 } else {
-                    showAlert('success', 'Berhasil Diupdate');
-                    // alert('Berhasil Diupdate');
-                    setTimeout(function () {
-                        window.open("/admin/menus", "_self");
-                    }, 500);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Updated!',
+                    }).then(function() {
+                        location.reload();
+                    });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
-                showAlert('danger', ['Terjadi kesalahan pada server']);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
 
@@ -351,36 +388,50 @@ Menus - Admin Panel
         var postdata = {};
         postdata._token = document.getElementsByName('_token')[0].defaultValue;
         
-        if (confirm('Apakah Anda Yakin Menghapus Data Ini?')) {
-            $.ajax({
-                type: "DELETE",
-                url: "/admin/menus/"+id,
-                data: (postdata),
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data.status == 401) {
-                        // alert('Form Wajib Harus diisi');
-                        showAlert('danger', data.data);
-                        return;
-                    } else if (data.status == 501) {
-                        // alert(data.message);
-                        showAlert('danger', data.data);
-                        return;
-                    } else {
-                        // alert('Data Berhasil Dihapus');
-                        showAlert('success', 'Berhasil Dihapus');
-                        setTimeout(function () {
-                            window.open("/admin/menus", "_self");
-                        }, 500);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'You will not be able to revert this!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    type: "DELETE",
+                    url: "/admin/menus/"+id,
+                    data: (postdata),
+                    dataType: "json",
+                    async: false,
+                    success: function (data) {
+                        if (data.status == 401) {
+                            showAlert('danger', data.data);
+                            return;
+                        } else if (data.status == 501) {
+                            showAlert('danger', data.data);
+                            return;
+                        } else {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Deleted!',
+                                text: 'Data has been deleted.',
+                            }).then(function() {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (dataerror) {
+                        console.log(dataerror);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: dataerror.responseJSON.message
+                        });
                     }
-                },
-                error: function (dataerror) {
-                    console.log(dataerror);
-                    showAlert('danger', ['Terjadi kesalahan pada server']);
-                }
-            });
-        }
+                });
+            }
+        });
     }
 
 </script>

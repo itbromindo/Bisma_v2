@@ -9,6 +9,7 @@
         <div class="sidebar-menu">
             <ul id="side-menu">
                 <!-- <li class="menu-title no-margin">Dashboard</li> -->
+                @if($usr->can('dashboard.view'))
                 <li>
                     <a style="text-decoration:none" href="{{ route('admin.dashboard') }}" aria-expanded="false" class="waves-effect primary-light">
                         <span class="icon-box"><i class="ph-house-line"></i></span>
@@ -17,6 +18,7 @@
                         </div>
                     </a>
                 </li>
+                @endif
                 @if($menuData)
                     @foreach($menuData as $modul)
                         <li class="has-child">

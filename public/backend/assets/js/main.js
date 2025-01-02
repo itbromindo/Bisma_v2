@@ -1490,18 +1490,21 @@
   })();
 })(jQuery);
 
+const asset_url = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1"
+  ? `${window.location.protocol}//${window.location.host}/`
+  : "/public/";
 
 function showAlert(type, message) {
   // Peta jenis alert ke ikon dan kelas tema
   const alertIcons = {
-    info: '/backend/assets/images/svg/info.svg',
-    success: '/backend/assets/images/svg/checkcircle.svg',
-    warning: '/backend/assets/images/svg/warningcircle.svg',
-    danger: '/backend/assets/images/svg/warning.svg',
+    info: 'backend/assets/images/svg/info.svg',
+    success: 'backend/assets/images/svg/checkcircle.svg',
+    warning: 'backend/assets/images/svg/warningcircle.svg',
+    danger: 'backend/assets/images/svg/warning.svg',
   };
 
   // Tentukan kelas dan ikon berdasarkan jenis alert
-  const icon = alertIcons[type] || alertIcons.info; // Default ke info jika tipe tidak valid
+  const icon = asset_url + (alertIcons[type] || alertIcons.info); // Default ke info jika tipe tidak valid
   const alertClass = type || 'info'; // Default ke info jika tipe tidak valid
 
   // Buat elemen div untuk alert
@@ -1553,3 +1556,84 @@ function showAlert(type, message) {
   }, 5000);
 }
 
+
+function alertform(type, colum, message) {
+  var inputElement = document.getElementById(colum);
+
+  if (type === "text" || type === "password" || type === "textarea" || type === "number") {
+      // Logika untuk tipe text-like
+      $('#' + colum).addClass('border-danger');
+      $('#' + colum).tooltip('show');
+
+      var wrapperDiv = document.createElement("div");
+      wrapperDiv.className = "form-group-feedback form-group-feedback-right";
+
+      var feedbackDiv = document.createElement("div");
+      feedbackDiv.className = "form-control-feedback text-danger";
+      feedbackDiv.innerHTML = `<i class="icon-cancel-circle2">${message}</i>`;
+
+      inputElement.parentNode.insertBefore(wrapperDiv, inputElement);
+      wrapperDiv.appendChild(inputElement);
+      wrapperDiv.appendChild(feedbackDiv);
+
+      setTimeout(function () {
+          $('#' + colum).removeClass('border-danger');
+          feedbackDiv.hidden = true;
+          $('#' + colum).tooltip('hide');
+      }, 5000);
+  } else if (type === "select2" || type === "select") {
+      // Logika untuk select dan select2
+      var selectElement = $('#' + colum);
+      selectElement.next('.select2-container').find('.select2-selection').addClass('border-danger');
+
+      var feedbackDiv = document.createElement("div");
+      feedbackDiv.className = "text-danger mt-1";
+      feedbackDiv.innerHTML = `<i class="icon-cancel-circle2">${message}</i>`;
+      selectElement.parent().append(feedbackDiv);
+
+      setTimeout(function () {
+          selectElement.next('.select2-container').find('.select2-selection').removeClass('border-danger');
+          $(feedbackDiv).remove();
+      }, 5000);
+  } else if (type === "radio") {
+      // Logika untuk radio
+      var radioGroup = document.getElementsByName(colum);
+      var firstRadio = radioGroup[0];
+
+      if (firstRadio) {
+          var wrapperDiv = firstRadio.closest('.form-group');
+          var feedbackDiv = document.createElement("div");
+          feedbackDiv.className = "text-danger mt-1";
+          feedbackDiv.innerHTML = `<i class="icon-cancel-circle2">${message}</i>`;
+
+          wrapperDiv.appendChild(feedbackDiv);
+
+          radioGroup.forEach(function (radio) {
+              $(radio).addClass('border-danger');
+          });
+
+          setTimeout(function () {
+              radioGroup.forEach(function (radio) {
+                  $(radio).removeClass('border-danger');
+              });
+              $(feedbackDiv).remove();
+          }, 5000);
+      }
+  } else if (type === "file") {
+      // Logika untuk file input
+      $('#' + colum).addClass('border-danger');
+      $('#' + colum).tooltip('show');
+
+      var feedbackDiv = document.createElement("div");
+      feedbackDiv.className = "text-danger mt-1";
+      feedbackDiv.innerHTML = `<i class="icon-cancel-circle2">${message}</i>`;
+
+      inputElement.parentNode.appendChild(feedbackDiv);
+
+      setTimeout(function () {
+          $('#' + colum).removeClass('border-danger');
+          $('#' + colum).tooltip('hide');
+          $(feedbackDiv).remove();
+      }, 5000);
+  }
+}
