@@ -172,6 +172,7 @@ Company - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="company_id">
+                    <div id="alert-container"></div> 
                     <div class="fromGroup mb-3">
                         <label>Nama</label>
                         <input class="form-control" type="text" id="companies_name" placeholder="Nama Perusahaan" />
@@ -191,7 +192,7 @@ Company - Admin Panel
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 
     function clearForm() {  // tambahan clear data
@@ -260,61 +261,103 @@ Company - Admin Panel
     }
 
     function saveInput() {
-        const data = {
-            companies_name: document.getElementById('companies_name').value,
-            companies_notes: document.getElementById('companies_notes').value,
-            _token: '{{ csrf_token() }}'
-        };
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+        postdata.append('companies_name', document.getElementById('companies_name').value); 
+        postdata.append('companies_notes', document.getElementById('companies_notes').value); 
 
-        $.post('/admin/companies', data, function (response) {
-            if (response.status === 401) {
+        $.ajax({
+            type: "POST",
+            url: "/admin/companies",
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: response.data
-                });
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Data Saved!',
-                }).then(function () {
-                    location.reload();
+                    text: dataerror.responseJSON.message
                 });
             }
         });
     }
 
+   
     function updateInput(id) {
-        const data = {
-            companies_name: document.getElementById('companies_name').value,
-            companies_notes: document.getElementById('companies_notes').value,
-            _token: '{{ csrf_token() }}'
-        };
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+        postdata.append('companies_name', document.getElementById('companies_name').value); 
+        postdata.append('companies_notes', document.getElementById('companies_notes').value); 
+        // console.log('Data FormData: ', Array.from(postdata.entries()));
+        
 
         $.ajax({
-            url: `/admin/companies/${id}`,
-            type: 'PUT',
-            data: data,
-            success: function (response) {
-                if (response.status === 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.data
-                    });
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            type: "POST",
+            url: "/admin/companies/"+id,
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
                         text: 'Data Updated!',
-                    }).then(function () {
+                    }).then(function() {
                         location.reload();
                     });
                 }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
+
     }
+
 
     function delete_data(id) {
         Swal.fire({
