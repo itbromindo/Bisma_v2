@@ -162,7 +162,27 @@ Customer - Admin Panel
                         <div class="col-mb-3 col-lg-3">
                             <div class="fromGroup mb-3">
                                 <label>EXISTING</label>
-                                <input class="form-control" type="number" id="customers_existing" placeholder="Harga Existing" />
+                                {{-- <input class="form-control" type="number" id="customers_existing" placeholder="Harga Existing" /> --}}
+                                <div class="row" id="customers_existing">
+                                    <!-- Radio Option 1 -->
+                                    <div class="col-4">
+                                        <div class="form-check from-radio-custom mb-3">
+                                            <input class="form-check-input" type="radio" name="customers_existing" id="yes" value="1">
+                                            <label class="form-check-label" for="yes">
+                                                Yes
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <!-- Radio Option 2 -->
+                                    <div class="col-4">
+                                        <div class="form-check from-radio-custom mb-3">
+                                            <input class="form-check-input" type="radio" name="customers_existing" id="no" value="0">
+                                            <label class="form-check-label" for="no">
+                                                No
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-mb-3 col-lg-3">
@@ -394,7 +414,8 @@ Customer - Admin Panel
     function clearform() {
         document.getElementById('customer_id').value = '';
         document.getElementById('customer_name').value = ''; 
-        document.getElementById('customers_existing').value = ''; 
+        // document.getElementById('customers_existing').value = ''; 
+        document.querySelectorAll('input[name="customers_existing"]').forEach(radio => radio.checked = false);
         document.getElementById('customers_full_address').value = '';
         document.getElementById('customers_phone').value = '';
         document.getElementById('customers_email').value = '';
@@ -417,7 +438,8 @@ Customer - Admin Panel
         // Tambahkan token CSRF
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('customer_name', document.getElementById('customer_name').value); 
-        postdata.append('customers_existing', document.getElementById('customers_existing').value); 
+        // postdata.append('customers_existing', document.getElementById('customers_existing').value); 
+        postdata.append('customers_existing', document.querySelector('input[name="customers_existing"]:checked') ? document.querySelector('input[name="customers_existing"]:checked').value : '');
         postdata.append('customers_full_address', document.getElementById('customers_full_address').value);
         postdata.append('customers_phone', document.getElementById('customers_phone').value);
         postdata.append('customers_email', document.getElementById('customers_email').value);
@@ -490,9 +512,15 @@ Customer - Admin Panel
             dataType: "json",
             async: false,
             success: function (data) {
+                if(data.customers_existing == '1'){
+                    var cname = 'yes';
+                } else {
+                    var cname = 'no';
+                }
                 document.getElementById('customer_id').value = data.customer_id; 
                 document.getElementById('customer_name').value = data.customer_name; 
-                document.getElementById('customers_existing').value = data.customers_existing; 
+                // document.getElementById('customers_existing').value = data.customers_existing; 
+                document.querySelector(`input[name="customers_existing"][id="${cname}"]`).checked = true;
                 document.getElementById('customers_full_address').value = data.customers_full_address;
                 document.getElementById('customers_phone').value = data.customers_phone;
                 document.getElementById('customers_email').value = data.customers_email;
@@ -503,7 +531,7 @@ Customer - Admin Panel
                 $('#cities_code').append(new Option(data.cities_name, data.cities_code, true, true)).trigger('change');
                 $('#provinces_code').append(new Option(data.provinces_name, data.provinces_code, true, true)).trigger('change');
                 $('#customers_category').append(new Option(data.customer_category_name, data.customers_category, true, true)).trigger('change');
-                document.querySelector(`input[name="customers_area"][id="${data.customers_area}"]`).checked = true
+                document.querySelector(`input[name="customers_area"][id="${data.customers_area}"]`).checked = true;
                 document.getElementById('customers_notes').value = data.customers_notes;
                 
                 document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
@@ -527,7 +555,8 @@ Customer - Admin Panel
         // Tambahkan token CSRF
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
         postdata.append('customer_name', document.getElementById('customer_name').value); 
-        postdata.append('customers_existing', document.getElementById('customers_existing').value); 
+        // postdata.append('customers_existing', document.getElementById('customers_existing').value); 
+        postdata.append('customers_existing', document.querySelector('input[name="customers_existing"]:checked').value);
         postdata.append('customers_full_address', document.getElementById('customers_full_address').value);
         postdata.append('customers_phone', document.getElementById('customers_phone').value);
         postdata.append('customers_email', document.getElementById('customers_email').value);
