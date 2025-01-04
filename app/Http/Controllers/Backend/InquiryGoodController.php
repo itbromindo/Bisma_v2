@@ -57,6 +57,7 @@ class InquiryGoodController extends Controller
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0]
             ];
             return response()->json($messages);
         }
@@ -83,6 +84,7 @@ class InquiryGoodController extends Controller
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0]
             ];
             return response()->json($messages);
         }

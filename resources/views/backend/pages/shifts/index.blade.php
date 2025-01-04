@@ -60,6 +60,8 @@ Shifts - Admin Panel
                                                             <th scope="col">COMPANY</th>
                                                             <th scope="col">START BEFORE BREAK</th>
                                                             <th scope="col">END BEFORE BREAK</th>
+                                                            <th scope="col">START BREAK</th>
+                                                            <th scope="col">END BREAK</th>
                                                             <th scope="col">START AFTER BREAK</th>
                                                             <th scope="col">END AFTER BREAK</th>
                                                             <th scope="col">NOTES</th>
@@ -77,6 +79,8 @@ Shifts - Admin Panel
                                                                  <td class="text-center">{{ $shift->company->companies_name ?? '-' }}</td>
                                                                  <td class="text-center">{{ $shift->shift_start_time_before_break }}</td>
                                                                  <td class="text-center">{{ $shift->shift_end_time_before_break }}</td>
+                                                                 <td class="text-center">{{ $shift->shift_start_time_break }}</td>
+                                                                 <td class="text-center">{{ $shift->shift_end_time_break }}</td>
                                                                  <td class="text-center">{{ $shift->shift_start_time_after_break }}</td>
                                                                  <td class="text-center">{{ $shift->shift_end_time_after_break }}</td>
                                                                  <td class="text-center">{{ $shift->shift_notes }}</td>
@@ -177,6 +181,7 @@ Shifts - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="shift_id">
+                    <div id="alert-container"></div>
                     <div class="formGroup mb-3">
                         <label>Shift Name</label>
                         <input class="form-control" type="text" id="shift_name" placeholder="Shift Name" />
@@ -194,6 +199,16 @@ Shifts - Admin Panel
                     <div class="formGroup mb-3">
                         <label>End Time Before Break</label>
                         <input class="form-control" type="time" id="shift_end_time_before_break"
+                            placeholder="End Time Before Break" />
+                    </div>
+                    <div class="formGroup mb-3">
+                        <label>Start Time Break</label>
+                        <input class="form-control" type="time" id="shift_start_time_break"
+                            placeholder="End Time Before Break" />
+                    </div>
+                    <div class="formGroup mb-3">
+                        <label>End Time Break</label>
+                        <input class="form-control" type="time" id="shift_end_time_break"
                             placeholder="End Time Before Break" />
                     </div>
                     <div class="formGroup mb-3">
@@ -227,7 +242,6 @@ Shifts - Admin Panel
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 
@@ -237,6 +251,8 @@ Shifts - Admin Panel
             document.getElementById('shift_notes').value = '';
             document.getElementById('shift_start_time_before_break').value = '';
             document.getElementById('shift_end_time_before_break').value = '';
+            document.getElementById('shift_start_time_break').value = '';
+            document.getElementById('shift_end_time_break').value = '';
             document.getElementById('shift_start_time_after_break').value = '';
             document.getElementById('shift_end_time_after_break').value = '';
             document.getElementById('companies_code').value = '';
@@ -262,6 +278,8 @@ Shifts - Admin Panel
                                     <td class="text-center">${shift.company ? shift.company.companies_name : '-'}</td>
                                     <td class="text-center">${shift.shift_start_time_before_break}</td>
                                     <td class="text-center">${shift.shift_end_time_before_break}</td>
+                                    <td class="text-center">${shift.shift_start_time_break}</td>
+                                    <td class="text-center">${shift.shift_end_time_break}</td>
                                     <td class="text-center">${shift.shift_start_time_after_break}</td>
                                     <td class="text-center">${shift.shift_end_time_after_break}</td>
                                     <td class="text-center">${shift.shift_notes ?? '-'}</td>
@@ -316,76 +334,103 @@ Shifts - Admin Panel
     }
 
     function saveInput() {
-        const data = {
-            shift_name: document.getElementById('shift_name').value,
-            shift_notes: document.getElementById('shift_notes').value,
-            shift_start_time_before_break: document.getElementById('shift_start_time_before_break').value,
-            shift_end_time_before_break: document.getElementById('shift_end_time_before_break').value,
-            shift_start_time_after_break: document.getElementById('shift_start_time_after_break').value,
-            shift_end_time_after_break: document.getElementById('shift_end_time_after_break').value,
-            companies_code: document.getElementById('companies_code').value,
-            _token: '{{ csrf_token() }}'
-        };
-
-        $.post('/admin/shifts', data, function (response) {
-            if (response.status === 401) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: response.data
-                });
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Data Saved!',
-                }).then(function () {
-                    location.reload();
-                });
-            }
-        });
-    }
-
-    function updateInput(id) {
-        const shiftStartBeforeBreak = document.getElementById('shift_start_time_before_break').value;
-        const shiftEndBeforeBreak = document.getElementById('shift_end_time_before_break').value;
-        const shiftStartAfterBreak = document.getElementById('shift_start_time_after_break').value;
-        const shiftEndAfterBreak = document.getElementById('shift_end_time_after_break').value;
-
-        const data = {
-            shift_name: document.getElementById('shift_name').value,
-            shift_notes: document.getElementById('shift_notes').value,
-            shift_start_time_before_break: formatTime(shiftStartBeforeBreak),
-            shift_end_time_before_break: formatTime(shiftEndBeforeBreak),
-            shift_start_time_after_break: formatTime(shiftStartAfterBreak),
-            shift_end_time_after_break: formatTime(shiftEndAfterBreak),
-            companies_code: document.getElementById('companies_code').value,
-            _token: '{{ csrf_token() }}'
-        };
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+        postdata.append('shift_name', document.getElementById('shift_name').value); 
+        postdata.append('shift_notes', document.getElementById('shift_notes').value); 
+        postdata.append('shift_start_time_before_break', document.getElementById('shift_start_time_before_break').value); 
+        postdata.append('shift_end_time_before_break', document.getElementById('shift_end_time_before_break').value); 
+        postdata.append('shift_start_time_break', document.getElementById('shift_start_time_break').value); 
+        postdata.append('shift_end_time_break', document.getElementById('shift_end_time_break').value); 
+        postdata.append('shift_start_time_after_break', document.getElementById('shift_start_time_after_break').value); 
+        postdata.append('shift_end_time_after_break', document.getElementById('shift_end_time_after_break').value); 
+        postdata.append('companies_code', document.getElementById('companies_code').value); 
 
         $.ajax({
-            url: `/admin/shifts/${id}`,
-            type: 'PUT',
-            data: data,
-            success: function (response) {
-                if (response.status === 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.data
-                    });
+            type: "POST",
+            url: "/admin/shifts",
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
-                        text: 'Data Updated!',
-                    }).then(function () {
+                        text: 'Data Saved!',
+                    }).then(function() {
                         location.reload();
                     });
                 }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
     }
+
+   
+    function updateInput(id) {
+    const shiftStartBeforeBreak = document.getElementById('shift_start_time_before_break').value;
+    const shiftEndBeforeBreak = document.getElementById('shift_end_time_before_break').value;
+    const shiftStartBreak = document.getElementById('shift_start_time_break').value;
+    const shiftEndBreak = document.getElementById('shift_end_time_break').value;
+    const shiftStartAfterBreak = document.getElementById('shift_start_time_after_break').value;
+    const shiftEndAfterBreak = document.getElementById('shift_end_time_after_break').value;
+
+    const data = {
+        shift_name: document.getElementById('shift_name').value,
+        shift_notes: document.getElementById('shift_notes').value,
+        shift_start_time_before_break: formatTime(shiftStartBeforeBreak),
+        shift_end_time_before_break: formatTime(shiftEndBeforeBreak),
+        shift_start_time_break: formatTime(shiftStartBreak),
+        shift_end_time_break: formatTime(shiftEndBreak),
+        shift_start_time_after_break: formatTime(shiftStartAfterBreak),
+        shift_end_time_after_break: formatTime(shiftEndAfterBreak),
+        companies_code: document.getElementById('companies_code').value,
+        _token: '{{ csrf_token() }}'
+    };
+
+    $.ajax({
+        url: `/admin/shifts/${id}`,
+        type: 'PUT',
+        data: data,
+        success: function (response) {
+            if (response.status === 401 || response.status === 501) {
+                showAlert('danger', "Form Wajib Diisi");
+                alertform('text', response.column, "Form ini Tidak Boleh Kosong");
+            }  else {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    text: 'Data Updated!',
+                }).then(function () {
+                    location.reload();
+                });
+            }
+        },
+        error: function (dataerror) {
+            showAlert('danger', dataerror.responseJSON.message || 'An error occurred while updating data.');
+        }
+    });
+}
+
 
     function delete_data(id) {
         Swal.fire({
@@ -423,6 +468,8 @@ Shifts - Admin Panel
             document.getElementById('shift_notes').value = data.shift_notes;
             document.getElementById('shift_start_time_before_break').value = data.shift_start_time_before_break;
             document.getElementById('shift_end_time_before_break').value = data.shift_end_time_before_break;
+            document.getElementById('shift_start_time_break').value = data.shift_start_time_break;
+            document.getElementById('shift_end_time_break').value = data.shift_end_time_break;
             document.getElementById('shift_start_time_after_break').value = data.shift_start_time_after_break;
             document.getElementById('shift_end_time_after_break').value = data.shift_end_time_after_break;
             document.getElementById('companies_code').value = data.companies_code;

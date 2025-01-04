@@ -141,6 +141,7 @@ Districts - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="districts_id">
+                    <div id="alert-container"></div>
                     <div class="form-group mb-3">
                         <label>District Name</label>
                         <input class="form-control" type="text" id="districts_name" placeholder="District Name" />
@@ -173,7 +174,7 @@ Districts - Admin Panel
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <script>
 
@@ -202,7 +203,7 @@ $(document).ready(function () {
                                     <td class="text-center">${(response.districts.current_page - 1) * response.districts.per_page + index + 1}</td>
                                     <td class="text-center">${district.districts_code}</td>
                                     <td class="text-center">${district.districts_name}</td>
-                                    <td class="text-center">${district.districts_notes ?? '-'}</td>
+                                    <td class="text-center">${district.districts_notes ?? ''}</td>
                                     <td class="text-center">${district.city ? district.city.cities_name : '-'}</td>
                                     
                                     <td class="text-center">
@@ -247,53 +248,83 @@ $(document).ready(function () {
     }
 
     function saveInput() {
-        const data = {
-            districts_name: document.getElementById('districts_name').value,
-            districts_notes: document.getElementById('districts_notes').value,
-            cities_code: document.getElementById('cities_code').value,
-            // districts_status: document.getElementById('districts_status').value,
-            _token: '{{ csrf_token() }}'
-        };
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+        postdata.append('districts_name', document.getElementById('districts_name').value); 
+        postdata.append('districts_notes', document.getElementById('districts_notes').value); 
+        postdata.append('cities_code', document.getElementById('cities_code').value); 
 
-        $.post('/admin/districts', data, function(response) {
-            if (response.status === 401) {
+        $.ajax({
+            type: "POST",
+            url: "/admin/districts",
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: response.data
-                });
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Data Saved!',
-                }).then(function() {
-                    location.reload();
+                    text: dataerror.responseJSON.message
                 });
             }
         });
     }
 
+   
     function updateInput(id) {
-        const data = {
-            districts_name: document.getElementById('districts_name').value,
-            districts_notes: document.getElementById('districts_notes').value,
-            cities_code: document.getElementById('cities_code').value,
-            // districts_status: document.getElementById('districts_status').value,
-            _token: '{{ csrf_token() }}'
-        };
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+        postdata.append('districts_name', document.getElementById('districts_name').value); 
+        postdata.append('districts_notes', document.getElementById('districts_notes').value); 
+        postdata.append('cities_code', document.getElementById('cities_code').value); 
+        // console.log('Data FormData: ', Array.from(postdata.entries()));
+        
 
         $.ajax({
-            url: `/admin/districts/${id}`,
-            type: 'PUT',
-            data: data,
-            success: function(response) {
-                if (response.status === 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.data
-                    });
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            type: "POST",
+            url: "/admin/districts/"+id,
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
@@ -303,10 +334,18 @@ $(document).ready(function () {
                         location.reload();
                     });
                 }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
-    }
 
+    }
     function delete_data(id) {
         Swal.fire({
             title: 'Are you sure?',

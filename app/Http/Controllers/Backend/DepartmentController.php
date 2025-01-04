@@ -58,10 +58,12 @@ class DepartmentController extends Controller
         $validator = Validator::make($request->all(), $this->mandatory);
 
         if ($validator->fails()) {
-            return response()->json([
+            $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
-            ]);
+                'column' => $validator->errors()->keys()[0],
+            ];
+            return response()->json($messages);
         }
 
         $result = $this->model->create([
@@ -83,10 +85,12 @@ class DepartmentController extends Controller
         $validator = Validator::make($request->all(), $this->mandatory);
 
         if ($validator->fails()) {
-            return response()->json([
+            $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
-            ]);
+                'column' => $validator->errors()->keys()[0],
+            ];
+            return response()->json($messages);
         }
 
         $result = $this->model->find($id)->update([

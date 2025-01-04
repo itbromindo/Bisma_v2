@@ -179,6 +179,7 @@ Master Approvals - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="master_approvals_id">
+                    <div id="alert-container"></div>
                     <div class="fromGroup mb-3">
                         <label>Master Approval Name</label>
                         <input class="form-control" type="text" id="master_approvals_approval_name"
@@ -305,81 +306,108 @@ Master Approvals - Admin Panel
     }
 
     function saveInput() {
-    const data = {
-        master_approvals_approval_name: document.getElementById('master_approvals_approval_name').value,
-        master_approvals_notes: document.getElementById('master_approvals_notes').value,
-        division_code: document.getElementById('division_code').value,
-        department_code: document.getElementById('department_code').value,
-        level_code: document.getElementById('level_code').value,
-        _token: '{{ csrf_token() }}'
-    };
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+        postdata.append('master_approvals_approval_name', document.getElementById('master_approvals_approval_name').value); 
+        postdata.append('master_approvals_notes', document.getElementById('master_approvals_notes').value); 
+        postdata.append('division_code', document.getElementById('division_code').value); 
+        postdata.append('department_code', document.getElementById('department_code').value); 
+        postdata.append('level_code', document.getElementById('level_code').value); 
 
-    $.post('/admin/master_approvals', data, function (response) {
-        if (response.status === 401) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: response.data || 'Failed to save data.'
-            });
-        } else {
-            Swal.fire({
-                icon: 'success',
-                title: 'Saved!',
-                text: 'Data has been saved successfully.'
-            }).then(() => {
-                location.reload();
-            });
-        }
-    }).fail(function (xhr) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: xhr.responseJSON?.message || 'Failed to save data.'
-        });
-    });
-}
-
-function updateInput(id) {
-    const data = {
-        master_approvals_approval_name: document.getElementById('master_approvals_approval_name').value,
-        master_approvals_notes: document.getElementById('master_approvals_notes').value,
-        division_code: document.getElementById('division_code').value,
-        department_code: document.getElementById('department_code').value,
-        level_code: document.getElementById('level_code').value,
-        _token: '{{ csrf_token() }}'
-    };
-
-    $.ajax({
-        url: `/admin/master_approvals/${id}`,
-        type: 'PUT',
-        data: data,
-        success: function (response) {
-            if (response.status === 401) {
+        $.ajax({
+            type: "POST",
+            url: "/admin/master_approvals",
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error!',
-                    text: response.data || 'Failed to update data.'
-                });
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Updated!',
-                    text: 'Data has been updated successfully.'
-                }).then(() => {
-                    location.reload();
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
                 });
             }
-        },
-        error: function (xhr) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: xhr.responseJSON?.message || 'Failed to update data.'
-            });
-        }
-    });
-}
+        });
+    }
 
+   
+    function updateInput(id) {
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+        postdata.append('master_approvals_approval_name', document.getElementById('master_approvals_approval_name').value); 
+        postdata.append('master_approvals_notes', document.getElementById('master_approvals_notes').value); 
+        postdata.append('division_code', document.getElementById('division_code').value); 
+        postdata.append('department_code', document.getElementById('department_code').value); 
+        postdata.append('level_code', document.getElementById('level_code').value); 
+        // console.log('Data FormData: ', Array.from(postdata.entries()));
+        
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            type: "POST",
+            url: "/admin/master_approvals/"+id,
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Updated!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
+            }
+        });
+
+    }
     function delete_data(id) {
         Swal.fire({
             title: 'Are you sure?',

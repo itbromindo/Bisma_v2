@@ -135,6 +135,7 @@ Inquiry Goods - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="inquiry_goods_id">
+                    <div id="alert-container"></div>
                     <div class="fromGroup mb-3">
                         <label>Name</label>
                         <input class="form-control" type="text" id="inquiry_goods_status_name" placeholder="Name" />
@@ -154,7 +155,6 @@ Inquiry Goods - Admin Panel
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 
@@ -182,7 +182,7 @@ Inquiry Goods - Admin Panel
                                     <td class="text-center">${(response.inquiry_goods.current_page - 1) * response.inquiry_goods.per_page + index + 1}</td>
                                     <td class="text-center">${item.inquiry_goods_status_code}</td>
                                     <td class="text-center">${item.inquiry_goods_status_name}</td>
-                                    <td class="text-center">${item.inquiry_goods_status_notes ?? '-'}</td>
+                                    <td class="text-center">${item.inquiry_goods_status_notes ?? ''}</td>
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${item.inquiry_goods_status_id}')">
@@ -225,49 +225,81 @@ Inquiry Goods - Admin Panel
     }
 
     function saveInput() {
-        const data = {
-            inquiry_goods_status_name: document.getElementById('inquiry_goods_status_name').value,
-            inquiry_goods_status_notes: document.getElementById('inquiry_goods_status_notes').value,
-            _token: '{{ csrf_token() }}'
-        };
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+        postdata.append('inquiry_goods_status_name', document.getElementById('inquiry_goods_status_name').value); 
+        postdata.append('inquiry_goods_status_notes', document.getElementById('inquiry_goods_status_notes').value); 
 
-        $.post('/admin/inquiry_goods', data, function(response) {
-            if (response.status === 401) {
+        $.ajax({
+            type: "POST",
+            url: "/admin/inquiry_goods",
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: response.data
-                });
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Data Saved!',
-                }).then(function() {
-                    location.reload();
+                    text: dataerror.responseJSON.message
                 });
             }
         });
     }
 
+   
     function updateInput(id) {
-        const data = {
-            inquiry_goods_status_name: document.getElementById('inquiry_goods_status_name').value,
-            inquiry_goods_status_notes: document.getElementById('inquiry_goods_status_notes').value,
-            _token: '{{ csrf_token() }}'
-        };
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+        postdata.append('inquiry_goods_status_name', document.getElementById('inquiry_goods_status_name').value); 
+        postdata.append('inquiry_goods_status_notes', document.getElementById('inquiry_goods_status_notes').value); 
+        // console.log('Data FormData: ', Array.from(postdata.entries()));
+        
 
         $.ajax({
-            url: `/admin/inquiry_goods/${id}`,
-            type: 'PUT',
-            data: data,
-            success: function(response) {
-                if (response.status === 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.data
-                    });
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            type: "POST",
+            url: "/admin/inquiry_goods/"+id,
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
@@ -277,10 +309,18 @@ Inquiry Goods - Admin Panel
                         location.reload();
                     });
                 }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
-    }
 
+    }
     function delete_data(id) {
         Swal.fire({
             title: 'Are you sure?',

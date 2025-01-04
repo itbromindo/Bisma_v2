@@ -143,6 +143,7 @@ Departments - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="department_id">
+                    <div id="alert-container"></div> 
                     <div class="fromGroup mb-3">
                         <label>Department Name</label>
                         <input class="form-control" type="text" id="department_name" placeholder="Department Name" />
@@ -172,7 +173,7 @@ Departments - Admin Panel
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
 <script>
 
@@ -185,7 +186,7 @@ Departments - Admin Panel
         document.getElementById('saveButton').textContent = 'Save';
     }
 
-$(document).ready(function () {
+    $(document).ready(function () {
         $('#search').on('keyup', function () {
             let searchQuery = $(this).val();
             $.ajax({
@@ -202,7 +203,7 @@ $(document).ready(function () {
                                     <td class="text-center">${(response.departments.current_page - 1) * response.departments.per_page + index + 1}</td>
                                     <td class="text-center">${department.department_code}</td>
                                     <td class="text-center">${department.department_name}</td>
-                                    <td class="text-center">${department.department_notes ?? '-'}</td>
+                                    <td class="text-center">${department.department_notes ?? ''}</td>
                                     <td class="text-center">${department.division ? department.division.division_name : '-'}</td>
                                     <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -245,51 +246,83 @@ $(document).ready(function () {
     }
 
     function saveInput() {
-        const data = {
-            department_name: document.getElementById('department_name').value,
-            department_notes: document.getElementById('department_notes').value,
-            division_code: document.getElementById('division_code').value,
-            _token: '{{ csrf_token() }}'
-        };
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+        postdata.append('department_name', document.getElementById('department_name').value); 
+        postdata.append('department_notes', document.getElementById('department_notes').value); 
+        postdata.append('division_code', document.getElementById('division_code').value); 
 
-        $.post('/admin/departments', data, function(response) {
-            if (response.status === 401) {
+        $.ajax({
+            type: "POST",
+            url: "/admin/departments",
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: response.data
-                });
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success',
-                    text: 'Data Saved!',
-                }).then(function() {
-                    location.reload();
+                    text: dataerror.responseJSON.message
                 });
             }
         });
     }
 
+   
     function updateInput(id) {
-        const data = {
-            department_name: document.getElementById('department_name').value,
-            department_notes: document.getElementById('department_notes').value,
-            division_code: document.getElementById('division_code').value,
-            _token: '{{ csrf_token() }}'
-        };
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+        postdata.append('department_name', document.getElementById('department_name').value); 
+        postdata.append('department_notes', document.getElementById('department_notes').value); 
+        postdata.append('division_code', document.getElementById('division_code').value); 
+        // console.log('Data FormData: ', Array.from(postdata.entries()));
+        
 
         $.ajax({
-            url: `/admin/departments/${id}`,
-            type: 'PUT',
-            data: data,
-            success: function(response) {
-                if (response.status === 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.data
-                    });
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            type: "POST",
+            url: "/admin/departments/"+id,
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
@@ -299,8 +332,17 @@ $(document).ready(function () {
                         location.reload();
                     });
                 }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
+
     }
 
     function delete_data(id) {
