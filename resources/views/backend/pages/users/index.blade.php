@@ -410,159 +410,43 @@ Users - Admin Panel
 
 <script>
 
-    $(document).ready(function() {       
-        // level 
-        $('#users_level').select2({
-            placeholder: "Pilih Level",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combolevels',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
+    $(document).ready(function() {     
+        $('#modalinput').on('shown.bs.modal', function () {
+            // Inisialisasi Select2
+            $('#users_level, #users_company, #users_homebase, #users_division, #users_department, #users_shift, #users_permission').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Data",
+                allowClear: true,
+                ajax: {
+                    url: function () {
+                        // Tentukan URL berdasarkan ID elemen
+                        if ($(this).attr('id') === 'users_level') return '/admin/combolevels';
+                        if ($(this).attr('id') === 'users_company') return '/admin/combocompanies';
+                        if ($(this).attr('id') === 'users_homebase') return '/admin/combohomebases';
+                        if ($(this).attr('id') === 'users_division') return '/admin/combodivisions';
+                        if ($(this).attr('id') === 'users_department') return '/admin/combodepartments';
+                        if ($(this).attr('id') === 'users_shift') return '/admin/comboshifts';
+                        if ($(this).attr('id') === 'users_permission') return '/admin/comboroles';
+                    },
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return { search: params.term };
+                    },
+                    processResults: function (data) {
+                        return { results: data };
+                    },
+                    cache: true
+                }
+            });
+            
         });
 
-        // company 
-        $('#users_company').select2({
-            placeholder: "Pilih company",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combocompanies',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
-        });
-
-        // homebase 
-        $('#users_homebase').select2({
-            placeholder: "Pilih Homebase",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combohomebases',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
-        });
-
-        // devisi 
-        $('#users_division').select2({
-            placeholder: "Pilih Devisi",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combodivisions',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
-        });
-
-        // departemen 
-        $('#users_department').select2({
-            placeholder: "Pilih Departemen",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combodepartments',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
-        });
-
-        // shift 
-        $('#users_shift').select2({
-            placeholder: "Pilih Shift",
-            allowClear: true,
-            ajax: {
-                url: '/admin/comboshifts',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
-        });
-
-        // shift 
-        $('#users_permission').select2({
-            placeholder: "Pilih Role",
-            allowClear: true,
-            ajax: {
-                url: '/admin/comboroles',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
+        $('#modalinput').on('select2:open', function (e) {
+            // Fokus pada kolom pencarian Select2 yang baru dibuka
+            setTimeout(function() {
+                document.querySelector('.select2-search__field').focus();
+            }, 1);
         });
     });
 
