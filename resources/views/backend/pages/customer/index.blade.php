@@ -217,23 +217,9 @@ Customer - Admin Panel
                         </div>
                         <div class="col-mb-3 col-lg-3">
                             <div class="fromGroup mb-3">
-                                <label>KELURAHAN</label>
-                                <input class="form-control" type="text" id="customers_village" placeholder="Kelurahan" />
-                            </div>
-                        </div>
-                        <div class="col-mb-3 col-lg-3">
-                            <div class="fromGroup mb-3">
-                                <label>KECAMATAN</label>
-                                <select class="form-control" id="districts_code" style="width: 100%;">
-                                    <option value="" disabled selected>Pilih Kecamatan</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-mb-3 col-lg-3">
-                            <div class="fromGroup mb-3">
-                                <label>KOTA / KABUPATEN</label>
-                                <select class="form-control" id="cities_code" style="width: 100%;">
-                                    <option value="" disabled selected>Pilih Kabupaten/Kota</option>
+                                <label>KATEGORI</label>
+                                <select class="form-control" id="customers_category" style="width: 100%;">
+                                    <option value="" disabled selected>Pilih Kategori</option>
                                 </select>
                             </div>
                         </div>
@@ -247,10 +233,24 @@ Customer - Admin Panel
                         </div>
                         <div class="col-mb-3 col-lg-3">
                             <div class="fromGroup mb-3">
-                                <label>KATEGORI</label>
-                                <select class="form-control" id="customers_category" style="width: 100%;">
-                                    <option value="" disabled selected>Pilih Kategori</option>
+                                <label>KOTA / KABUPATEN</label>
+                                <select class="form-control" id="cities_code" style="width: 100%;">
+                                    <option value="" disabled selected>Pilih Kabupaten/Kota</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>KECAMATAN</label>
+                                <select class="form-control" id="districts_code" style="width: 100%;">
+                                    <option value="" disabled selected>Pilih Kecamatan</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>KELURAHAN</label>
+                                <input class="form-control" type="text" id="customers_village" placeholder="Kelurahan" />
                             </div>
                         </div>
                         <div class="col-mb-4 col-lg-4">
@@ -311,88 +311,104 @@ Customer - Admin Panel
 <script>
 
     $(document).ready(function() {        
-        $('#districts_code').select2({
-            placeholder: "Pilih Kecamatan",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combodistricts',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
+        $('#modalinput').on('shown.bs.modal', function () {
+            $('#districts_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Kecamatan",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combodistricts',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term,
+                            data: $('#cities_code').val()
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $('#cities_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Kota/Kabupaten",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combocities',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term,
+                            data: $('#provinces_code').val()
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $('#provinces_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Provinsi",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/comboprovinces',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
+
+            $('#customers_category').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Kategori",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combokategoricustomer',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
+            
         });
 
-        $('#cities_code').select2({
-            placeholder: "Pilih Kota/Kabupaten",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combocities',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
-        });
-
-        $('#provinces_code').select2({
-            placeholder: "Pilih Provinsi",
-            allowClear: true,
-            ajax: {
-                url: '/admin/comboprovinces',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
-        });
-
-        $('#customers_category').select2({
-            placeholder: "Pilih Kategori",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combokategoricustomer',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
+        $('#modalinput').on('select2:open', function (e) {
+            // Fokus pada kolom pencarian Select2 yang baru dibuka
+            setTimeout(function() {
+                document.querySelector('.select2-search__field').focus();
+            }, 1);
         });
     });
 

@@ -151,7 +151,7 @@ Sub Menu - Admin Panel
                     <input type="hidden" id="submenus_id">
                     <div id="alert-container"></div> <!-- Tempat Alert -->
                     <div class="fromGroup mb-3">
-                        <label>Menu</Select></label>
+                        <label>Menu</label>
                         <select class="form-control" id="menus_code" style="width: 100%;">
                             <option value="" disabled selected>Pilih Menu</option>
                         </select>
@@ -181,25 +181,33 @@ Sub Menu - Admin Panel
 <script>
 
     $(document).ready(function() {        
-        $('#menus_code').select2({
-            placeholder: "Pilih Menu",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combomenu',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
+        $('#modalinput').on('shown.bs.modal', function () {
+            $('#menus_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Menu",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combomenu',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+
+        // Fokuskan input pencarian Select2
+        $('#menus_code').on('select2:open', function () {
+            document.querySelector('.select2-search__field').focus();
         });
     });
 
