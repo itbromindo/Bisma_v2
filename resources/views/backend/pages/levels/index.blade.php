@@ -181,25 +181,33 @@ Level - Admin Panel
 <script>
 
     $(document).ready(function() {        
-        $('#department_code').select2({
-            placeholder: "Pilih Departemen",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combodepartments',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
+        $('#modalinput').on('shown.bs.modal', function () {
+            $('#department_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Departemen",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combodepartments',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
+        });
+
+        // Fokuskan input pencarian Select2
+        $('#department_code').on('select2:open', function () {
+            document.querySelector('.select2-search__field').focus();
         });
     });
 

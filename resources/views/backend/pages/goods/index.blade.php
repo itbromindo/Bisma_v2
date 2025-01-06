@@ -364,91 +364,44 @@ Goods - Admin Panel
 </div>
 <script>
 
-    $(document).ready(function() {        
-        $('#brand_code').select2({
-            placeholder: "Pilih Brand",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combobrand',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
+    $(document).ready(function () {        
+        $('#modalinput').on('shown.bs.modal', function () {
+            // Inisialisasi Select2
+            $('#brand_code, #uom_code, #product_division_code, #product_category_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Data",
+                allowClear: true,
+                ajax: {
+                    url: function () {
+                        // Tentukan URL berdasarkan ID elemen
+                        if ($(this).attr('id') === 'brand_code') return '/admin/combobrand';
+                        if ($(this).attr('id') === 'uom_code') return '/admin/combosatuan';
+                        if ($(this).attr('id') === 'product_division_code') return '/admin/comboproductdivision';
+                        if ($(this).attr('id') === 'product_category_code') return '/admin/combokategori';
+                    },
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return { search: params.term };
+                    },
+                    processResults: function (data) {
+                        return { results: data };
+                    },
+                    cache: true
+                }
+            });
+            
         });
 
-        $('#uom_code').select2({
-            placeholder: "Pilih Satuan",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combosatuan',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
+        $('#modalinput').on('select2:open', function (e) {
+            // Fokus pada kolom pencarian Select2 yang baru dibuka
+            setTimeout(function() {
+                document.querySelector('.select2-search__field').focus();
+            }, 1);
         });
-
-        $('#product_division_code').select2({
-            placeholder: "Pilih Type",
-            allowClear: true,
-            ajax: {
-                url: '/admin/comboproductdivision',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
-        });
-
-        $('#product_category_code').select2({
-            placeholder: "Pilih Kategori",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combokategori',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
-        });
+        
     });
+
 
     function reload(){
         // setTimeout(function () {

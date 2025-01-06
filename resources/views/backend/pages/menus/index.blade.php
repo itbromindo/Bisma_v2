@@ -151,7 +151,7 @@ Menus - Admin Panel
                     <input type="hidden" id="menus_id">
                     <div id="alert-container"></div> <!-- Tempat Alert -->
                     <div class="fromGroup mb-3">
-                        <label>Modul</Select></label>
+                        <label>Modul</label>
                         {{-- <input class="form-control" type="text" id="moduls_code" placeholder="Code Modul" /> --}}
                         <select class="form-control" id="moduls_code" style="width: 100%;">
                             <option value="" disabled selected>Pilih Modul</option>
@@ -185,25 +185,32 @@ Menus - Admin Panel
 </div>
 <script>
     $(document).ready(function() {        
-        $('#moduls_code').select2({
-            placeholder: "Pilih Modul",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combomodul',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            }
+        $('#modalinput').on('shown.bs.modal', function () {
+            $('#moduls_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Modul",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combomodul',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term // Parameter pencarian
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+        });
+
+        // Fokuskan input pencarian Select2
+        $('#moduls_code').on('select2:open', function () {
+            document.querySelector('.select2-search__field').focus();
         });
     });
 

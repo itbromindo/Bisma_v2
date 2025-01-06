@@ -125,9 +125,11 @@ class DistrictController extends Controller
     public function combo(Request $request)
     {
         $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $data = !empty($_GET['data']) ? $_GET['data'] : '';
         $listdata = $this->model
             ->select('districts_code as id', 'districts_name as text')
             ->where('districts_name', 'like', '%' . $search . '%')
+            ->where('cities_code','like', '%' . $data . '%')
             ->where('districts_soft_delete', 0)
             ->get();
 

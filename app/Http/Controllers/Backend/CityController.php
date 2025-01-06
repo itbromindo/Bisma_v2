@@ -127,9 +127,11 @@ class CityController extends Controller
     public function combo(Request $request)
     {
         $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $data = !empty($_GET['data']) ? $_GET['data'] : '';
         $listdata = $this->model
             ->select('cities_code as id', 'cities_name as text')
             ->where('cities_name', 'like', '%' . $search . '%')
+            ->where('provinces_code','like', '%' . $data . '%')
             ->where('cities_soft_delete', 0)
             ->get();
 
