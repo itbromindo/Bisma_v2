@@ -48,16 +48,9 @@ class DivisionController extends Controller
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['divisions.view']);
-
-        $model = $this->model->find($id);
-
-        if (!$model) {
-            return response()->json([
-                'data' => 'Division not found.',
-                'status' => 404,
-            ]);
-        }
-
+        $model = $this->model
+        ->leftjoin('companies', 'divisions.companies_code', '=', 'companies.companies_code')
+        ->find($id);
         return $model;
     }
 

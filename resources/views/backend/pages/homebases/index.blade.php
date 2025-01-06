@@ -127,7 +127,7 @@ Homebases - Admin Panel
         </div>
     </div>
 </div>
-<div class="modal fade" id="modalinput" role="dialog">
+<div class="modal fade" id="modalinput" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -148,16 +148,13 @@ Homebases - Admin Panel
                         <label>Notes</label>
                         <textarea class="form-control" name="homebase_notes" id="homebase_notes" placeholder="Notes"></textarea>
                     </div>
-                    <select class="form-control mb-3" id="companies_code">
-                        <option value="">Select Company</option>
-                        @if($companies)
-                            @foreach ($companies as $company)
-                                <option value="{{ $company->companies_code }}">{{ $company->companies_name }}</option>
-                            @endforeach
-                        @else
-                            <option value="" disabled>No Companies Available</option>
-                        @endif
-                    </select>
+                    <div class="fromGroup mb-3">
+                    <label>Company</label>
+                        {{-- <input class="form-control" type="text" id="moduls_code" placeholder="Code Modul" /> --}}
+                        <select class="form-control" id="companies_code" style="width: 100%;">
+                            <option value="" disabled selected>Pilih Company</option>
+                        </select>
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
@@ -171,15 +168,45 @@ Homebases - Admin Panel
 
 <script>
 
+    $(document).ready(function() {        
+        $('#modalinput').on('shown.bs.modal', function () {
+            $('#companies_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Company",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combocompanies',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term // Parameter pencarian
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+        });
+
+        // Fokuskan input pencarian Select2
+        $('#companies_code').on('select2:open', function () {
+            document.querySelector('.select2-search__field').focus();
+        });
+    });
+
     function clearForm() {  // tambahan clear data
         document.getElementById('homebase_id').value = '';
         document.getElementById('homebase_name').value = '';
         document.getElementById('homebase_notes').value = '';
-        document.getElementById('companies_code').value = '';
+        $('#companies_code').append(new Option('', '', true, true)).trigger('change');
         document.getElementById('saveButton').textContent = 'Save';
     }
 
-$(document).ready(function () {
+    $(document).ready(function () {
         $('#search').on('keyup', function () {
             let searchQuery = $(this).val();
             $.ajax({
@@ -372,7 +399,7 @@ $(document).ready(function () {
             document.getElementById('homebase_id').value = data.homebase_id;
             document.getElementById('homebase_name').value = data.homebase_name;
             document.getElementById('homebase_notes').value = data.homebase_notes;
-            document.getElementById('companies_code').value = data.companies_code;
+            $('#companies_code').append(new Option(data.companies_name, data.companies_code, true, true)).trigger('change');
             document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });

@@ -45,10 +45,19 @@ class DepartmentController extends Controller
 
     }
 
+    // public function show($id)
+    // {
+    //     $this->checkAuthorization(auth()->user(), ['department.view']);
+    //     $model = $this->model->find($id);
+    //     return $model;
+    // }
+
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['department.view']);
-        $model = $this->model->find($id);
+        $model = $this->model
+        ->leftjoin('divisions', 'departments.division_code', '=', 'divisions.division_code')
+        ->find($id);
         return $model;
     }
 
@@ -130,4 +139,5 @@ class DepartmentController extends Controller
 
         return response()->json($listdata);
     }
+
 }

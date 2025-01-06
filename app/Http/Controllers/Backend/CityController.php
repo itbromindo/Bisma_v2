@@ -51,7 +51,9 @@ class CityController extends Controller
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['cities.view']);
-        $model = $this->model->find($id);
+        $model = $this->model
+        ->leftjoin('provinces', 'cities.provinces_code', '=', 'provinces.provinces_code')
+        ->find($id);
         return $model;
     }
 

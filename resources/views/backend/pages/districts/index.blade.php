@@ -129,7 +129,7 @@ Districts - Admin Panel
         </div>
     </div>
 </div>
-<div class="modal fade" id="modalinput" role="dialog">
+<div class="modal fade" id="modalinput" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -150,12 +150,13 @@ Districts - Admin Panel
                         <label>Notes</label>
                         <textarea class="form-control" id="districts_notes" placeholder="Notes"></textarea>
                     </div>
-                    <select class="form-control mb-3" id="cities_code">
-                        <option value="">Select City</option>
-                        @foreach ($cities as $city)
-                            <option value="{{ $city->cities_code }}">{{ $city->cities_name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="fromGroup mb-3">
+                        <label>City</label>
+                        {{-- <input class="form-control" type="text" id="moduls_code" placeholder="Code Modul" /> --}}
+                            <select class="form-control" id="cities_code" style="width: 100%;">
+                                <option value="" disabled selected>Pilih City</option>
+                            </select>
+                    </div>
                     <!-- <div class="fromGroup mb-3">
                         <label>Status</label>
                         <select class="form-control" id="districts_status">
@@ -178,11 +179,41 @@ Districts - Admin Panel
 
 <script>
 
+    $(document).ready(function() {        
+        $('#modalinput').on('shown.bs.modal', function () {
+            $('#cities_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih City",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combocities',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term // Parameter pencarian
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+        });
+
+        // Fokuskan input pencarian Select2
+        $('#cities_code').on('select2:open', function () {
+            document.querySelector('.select2-search__field').focus();
+        });
+    });
+
     function clearForm() {  // tambahan clear data
         document.getElementById('districts_id').value = '';
         document.getElementById('districts_name').value = '';
         document.getElementById('districts_notes').value = '';
-        document.getElementById('cities_code').value = '';
+        $('#cities_code').append(new Option('', '', true, true)).trigger('change');
         document.getElementById('saveButton').textContent = 'Save';
     }
 
@@ -380,7 +411,7 @@ $(document).ready(function () {
             document.getElementById('districts_id').value = data.districts_id;
             document.getElementById('districts_name').value = data.districts_name;
             document.getElementById('districts_notes').value = data.districts_notes;
-            document.getElementById('cities_code').value = data.cities_code;
+            $('#cities_code').append(new Option(data.cities_name, data.cities_code, true, true)).trigger('change');
             document.getElementById('saveButton').textContent = 'Save Changes';
             // document.getElementById('districts_status').value = data.districts_status;
             $('#modalinput').modal('show');

@@ -48,7 +48,9 @@ class HomebaseController extends Controller
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['homebases.view']);
-        $model = $this->model->find($id);
+        $model = $this->model
+        ->leftjoin('companies', 'homebases.companies_code', '=', 'companies.companies_code')
+        ->find($id);
         return $model;
     }
 

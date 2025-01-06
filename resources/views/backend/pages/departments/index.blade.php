@@ -131,7 +131,7 @@ Departments - Admin Panel
         </div>
     </div>
 </div>
-<div class="modal fade" id="modalinput" role="dialog">
+<div class="modal fade" id="modalinput" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -152,16 +152,13 @@ Departments - Admin Panel
                         <label>Notes</label>
                         <textarea class="form-control" name="department_notes" id="department_notes" placeholder="Notes"></textarea>
                     </div>
-                    <select class="form-control mb-3" id="division_code">
-                        <option value="">Select Division</option>
-                        @if($divisions)
-                            @foreach ($divisions as $division)
-                                <option value="{{ $division->division_code }}">{{ $division->division_name }}</option>
-                            @endforeach
-                        @else
-                            <option value="" disabled>No Divisions Available</option>
-                        @endif
-                    </select>
+                    <div class="fromGroup mb-3">
+                        <label>Divsion</label>
+                        {{-- <input class="form-control" type="text" id="moduls_code" placeholder="Code Modul" /> --}}
+                        <select class="form-control" id="division_code" style="width: 100%;">
+                            <option value="" disabled selected>Pilih Division</option>
+                        </select>
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
@@ -177,12 +174,41 @@ Departments - Admin Panel
 
 <script>
 
+    $(document).ready(function() {        
+        $('#modalinput').on('shown.bs.modal', function () {
+            $('#division_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Divisi",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combodivisions',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term // Parameter pencarian
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+        });
+
+        // Fokuskan input pencarian Select2
+        $('#division_code').on('select2:open', function () {
+            document.querySelector('.select2-search__field').focus();
+        });
+    });
 
     function clearForm() {  // tambahan clear data
         document.getElementById('department_id').value = '';
         document.getElementById('department_name').value = '';
         document.getElementById('department_notes').value = '';
-        document.getElementById('division_code').value = '';
+        $('#division_code').append(new Option('', '', true, true)).trigger('change');
         document.getElementById('saveButton').textContent = 'Save';
     }
 
@@ -379,7 +405,7 @@ Departments - Admin Panel
             document.getElementById('department_id').value = data.department_id;
             document.getElementById('department_name').value = data.department_name;
             document.getElementById('department_notes').value = data.department_notes;
-            document.getElementById('division_code').value = data.division_code;
+            $('#division_code').append(new Option(data.division_name, data.division_code, true, true)).trigger('change');
             document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });

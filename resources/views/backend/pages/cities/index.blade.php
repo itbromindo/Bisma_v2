@@ -158,7 +158,7 @@ Cities - Admin Panel
         </div>
     </div>
 </div>
-<div class="modal fade" id="modalinput" role="dialog">
+<div class="modal fade" id="modalinput" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true"aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -179,12 +179,13 @@ Cities - Admin Panel
                         <label>Notes</label>
                         <textarea class="form-control" id="cities_notes" placeholder="Notes"></textarea>
                     </div>
-                    <select class="form-control mb-3" id="provinces_code">
-                        <option value="">Select Province</option>
-                        @foreach ($provinces as $province)
-                            <option value="{{ $province->provinces_code }}">{{ $province->provinces_name }}</option>
-                        @endforeach
-                    </select>
+                    <div class="fromGroup mb-3">
+                        <label>Province</label>
+                        {{-- <input class="form-control" type="text" id="moduls_code" placeholder="Code Modul" /> --}}
+                            <select class="form-control" id="provinces_code" style="width: 100%;">
+                                <option value="" disabled selected>Pilih Province</option>
+                            </select>
+                    </div>
                     <!-- <div class="fromGroup mb-3">
                         <label>Status</label>
                         <select class="form-control" id="cities_status">
@@ -205,11 +206,41 @@ Cities - Admin Panel
 
 <script>
 
+    $(document).ready(function() {        
+        $('#modalinput').on('shown.bs.modal', function () {
+            $('#provinces_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Province",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/comboprovinces',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term // Parameter pencarian
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+        });
+
+        // Fokuskan input pencarian Select2
+        $('#provinces_code').on('select2:open', function () {
+            document.querySelector('.select2-search__field').focus();
+        });
+    });
+
     function clearForm() {  // tambahan clear data
         document.getElementById('city_id').value = '';
         document.getElementById('cities_name').value = '';
         document.getElementById('cities_notes').value = '';
-        document.getElementById('provinces_code').value = '';
+        $('#provinces_code').append(new Option('', '', true, true)).trigger('change');
         document.getElementById('saveButton').textContent = 'Save';
         
     }
@@ -408,7 +439,7 @@ Cities - Admin Panel
             document.getElementById('city_id').value = data.cities_id;
             document.getElementById('cities_name').value = data.cities_name;
             document.getElementById('cities_notes').value = data.cities_notes;
-            document.getElementById('provinces_code').value = data.provinces_code;
+            $('#provinces_code').append(new Option(data.provinces_name, data.provinces_code, true, true)).trigger('change');
             document.getElementById('saveButton').textContent = 'Save Changes';
             // document.getElementById('cities_status').value = data.cities_status;
             $('#modalinput').modal('show');

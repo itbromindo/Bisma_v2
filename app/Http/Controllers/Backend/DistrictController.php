@@ -49,7 +49,9 @@ class DistrictController extends Controller
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['districts.view']);
-        $model = $this->model->find($id);
+        $model = $this->model
+        ->leftjoin('cities', 'districts.cities_code', '=', 'cities.cities_code')
+        ->find($id);
         return $model;
     }
 

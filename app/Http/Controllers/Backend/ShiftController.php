@@ -54,7 +54,9 @@ class ShiftController extends Controller
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['shifts.view']);
-        $model = $this->model->find($id);
+        $model = $this->model
+        ->leftjoin('companies', 'shifts.companies_code', '=', 'companies.companies_code')
+        ->find($id);
         return $model;
     }
 
