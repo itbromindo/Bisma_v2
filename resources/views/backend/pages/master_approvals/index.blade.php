@@ -190,36 +190,27 @@ Master Approvals - Admin Panel
                         <textarea class="form-control" name="master_approvals_notes" id="master_approvals_notes"
                             placeholder="Notes"></textarea>
                     </div>
-                    <select class="form-control mb-3" id="division_code">
-                        <option value="">Select Division</option>
-                        @if($divisions)
-                            @foreach ($divisions as $division)
-                                <option value="{{ $division->division_code }}">{{ $division->division_name }}</option>
-                            @endforeach
-                        @else
-                            <option value="" disabled>No Divisions Available</option>
-                        @endif
-                    </select>
-                    <select class="form-control mb-3" id="department_code">
-                        <option value="">Select Department</option>
-                        @if($departments)
-                            @foreach ($departments as $department)
-                                <option value="{{ $department->department_code }}">{{ $department->department_name }}</option>
-                            @endforeach
-                        @else
-                            <option value="" disabled>No Deparment Available</option>
-                        @endif
-                    </select>
-                    <select class="form-control mb-3" id="level_code">
-                        <option value="">Select Level</option>
-                        @if($levels)
-                            @foreach ($levels as $level)
-                                <option value="{{ $level->level_code }}">{{ $level->level_name }}</option>
-                            @endforeach
-                        @else
-                            <option value="" disabled>No Levels Available</option>
-                        @endif
-                    </select>
+                    <div class="fromGroup mb-3">
+                        <label>Divsion</label>
+                        {{-- <input class="form-control" type="text" id="moduls_code" placeholder="Code Modul" /> --}}
+                        <select class="form-control" id="division_code" style="width: 100%;">
+                            <option value="" disabled selected>Pilih Division</option>
+                        </select>
+                    </div>
+                    <div class="fromGroup mb-3">
+                        <label>Department</label>
+                        {{-- <input class="form-control" type="text" id="moduls_code" placeholder="Code Modul" /> --}}
+                        <select class="form-control" id="department_code" style="width: 100%;">
+                            <option value="" disabled selected>Pilih Department</option>
+                        </select>
+                    </div>
+                    <div class="fromGroup mb-3">
+                        <label>Level</label>
+                        {{-- <input class="form-control" type="text" id="moduls_code" placeholder="Code Modul" /> --}}
+                        <select class="form-control" id="level_code" style="width: 100%;">
+                            <option value="" disabled selected>Pilih Level</option>
+                        </select>
+                    </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
@@ -231,14 +222,94 @@ Master Approvals - Admin Panel
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+    $(document).ready(function() {
+        $('#modalinput').on('shown.bs.modal', function () {
+            $('#division_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Select Division",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combodivisions', 
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term 
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+
+            $('#department_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Select Department",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combodepartments', 
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+
+            $('#level_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Select Level",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combolevels', 
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+        });
+
+        $('#division_code').on('select2:open', function () {
+            document.querySelector('.select2-search__field').focus();
+        });
+
+        $('#department_code').on('select2:open', function () {
+            document.querySelector('.select2-search__field').focus();
+        });
+
+        $('#level_code').on('select2:open', function () {
+            document.querySelector('.select2-search__field').focus();
+        });
+    });
+
+
     function clearForm() {  // tambahan clear data
         document.getElementById('master_approvals_id').value = '';
         document.getElementById('master_approvals_approval_name').value = '';
         document.getElementById('master_approvals_notes').value = '';
-        document.getElementById('division_code').value = '';
-        document.getElementById('department_code').value = '';
+        $('#division_code').append(new Option('', '', true, true)).trigger('change');
+        $('#department_code').append(new Option('', '', true, true)).trigger('change');
+        $('#level_code').append(new Option('', '', true, true)).trigger('change');
         document.getElementById('level_code').value = '';
         document.getElementById('saveButton').textContent = 'Save';
     }
@@ -460,9 +531,9 @@ Master Approvals - Admin Panel
             document.getElementById('master_approvals_id').value = data.master_approvals_id;
             document.getElementById('master_approvals_approval_name').value = data.master_approvals_approval_name;
             document.getElementById('master_approvals_notes').value = data.master_approvals_notes;
-            document.getElementById('division_code').value = data.division_code;
-            document.getElementById('department_code').value = data.department_code;
-            document.getElementById('level_code').value = data.level_code;
+            $('#division_code').append(new Option(data.division_name, data.division_code, true, true)).trigger('change');
+            $('#department_code').append(new Option(data.department_name, data.department_code, true, true)).trigger('change');
+            $('#level_code').append(new Option(data.level_name, data.level_code, true, true)).trigger('change');
             document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });
