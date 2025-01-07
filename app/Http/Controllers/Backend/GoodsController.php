@@ -37,10 +37,10 @@ class GoodsController extends Controller
 		);
     }
 
-    public function index()
+    public function index(Request $request)
     {      
         $this->checkAuthorization(auth()->user(), ['goods.view']);
-        $search = $_GET['search'] ?? '';
+        $search = $request->search ?? '';
 
         $listdata = $this->model
         ->where(function($q) use ($search){
@@ -53,6 +53,13 @@ class GoodsController extends Controller
         ->where('goods_soft_delete', 0)
         ->orderBy('goods_created_at', 'desc')
         ->paginate(15);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'barang' => $listdata,
+                'search' => $search,
+            ]);
+        }
 
         return view('backend.pages.goods.index', [
             'barang' => $listdata,

@@ -19,10 +19,10 @@ class CompanytypeController extends Controller
 		);
     }
 
-    public function index()
+    public function index(Request $request)
     {      
         $this->checkAuthorization(auth()->user(), ['company_type.view']);
-        $search = $_GET['search'] ?? '';
+        $search = $request->search ?? '';
 
         $listdata = $this->model
         ->where(function($query) use ($search) {
@@ -32,6 +32,13 @@ class CompanytypeController extends Controller
         })
         ->where('company_type_soft_delete', 0)
         ->paginate(15);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'company_type' => $listdata,
+                'search' => $search,
+            ]);
+        }
 
         return view('backend.pages.company_type.index', [
             'company_type' => $listdata,

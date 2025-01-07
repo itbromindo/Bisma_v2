@@ -28,10 +28,10 @@ class SubmenusController extends Controller
 		);
     }
 
-    public function index(): Renderable
+    public function index(Request $request)
     {        
         $this->checkAuthorization(auth()->user(), ['submenus.view']);
-        $search = $_GET['search'] ?? '';
+        $search = $request->search ?? '';
 
         $listdata = $this->model
         ->where(function($query) use ($search) {
@@ -41,6 +41,13 @@ class SubmenusController extends Controller
         })
         ->where('submenus_soft_delete', 0)
         ->paginate(15);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'submenus' => $listdata,
+                'search' => $search,
+            ]);
+        }
 
         return view('backend.pages.submenus.index', [
             'submenus' => $listdata,

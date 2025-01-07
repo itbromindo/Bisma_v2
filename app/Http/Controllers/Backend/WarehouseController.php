@@ -19,10 +19,10 @@ class WarehouseController extends Controller
 		);
     }
 
-    public function index()
+    public function index(Request $request)
     {      
         $this->checkAuthorization(auth()->user(), ['warehouse.view']);
-        $search = $_GET['search'] ?? '';
+        $search = $request->search ?? '';
 
         $listdata = $this->model
         ->where(function($query) use ($search) {
@@ -32,6 +32,13 @@ class WarehouseController extends Controller
         })
         ->where('warehouse_soft_delete', 0)
         ->paginate(15);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'warehouse' => $listdata,
+                'search' => $search,
+            ]);
+        }
 
         return view('backend.pages.warehouse.index', [
             'warehouse' => $listdata,

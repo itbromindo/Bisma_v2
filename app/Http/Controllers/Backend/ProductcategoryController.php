@@ -19,10 +19,10 @@ class ProductcategoryController extends Controller
 		);
     }
 
-    public function index()
+    public function index(Request $request)
     {      
         $this->checkAuthorization(auth()->user(), ['product_category.view']);
-        $search = $_GET['search'] ?? '';
+        $search = $request->search ?? '';
 
         $listdata = $this->model
         ->where(function($query) use ($search) {
@@ -32,6 +32,13 @@ class ProductcategoryController extends Controller
         })
         ->where('product_category_soft_delete', 0)
         ->paginate(15);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'product_category' => $listdata,
+                'search' => $search,
+            ]);
+        }
 
         return view('backend.pages.product_category.index', [
             'product_category' => $listdata,

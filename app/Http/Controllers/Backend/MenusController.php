@@ -25,10 +25,10 @@ class MenusController extends Controller
 		);
     }
 
-    public function index(): Renderable
+    public function index(Request $request)
     {        
         $this->checkAuthorization(auth()->user(), ['menus.view']);
-        $search = $_GET['search'] ?? '';
+        $search = $request->search ?? '';
 
         $listdata = $this->model
         ->where(function($query) use ($search) {
@@ -38,6 +38,13 @@ class MenusController extends Controller
         })
         ->where('menus_soft_delete', 0)
         ->paginate(15);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'menus' => $listdata,
+                'search' => $search,
+            ]);
+        }
 
         return view('backend.pages.menus.index', [
             'menus' => $listdata,
