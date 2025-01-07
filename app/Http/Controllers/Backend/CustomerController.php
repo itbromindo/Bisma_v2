@@ -31,10 +31,10 @@ class CustomerController extends Controller
 		);
     }
 
-    public function index()
+    public function index(Request $request)
     {      
         $this->checkAuthorization(auth()->user(), ['customer.view']);
-        $search = $_GET['search'] ?? '';
+        $search = $request->search ?? '';
 
         $listdata = $this->model
         ->where(function($q) use ($search){
@@ -45,6 +45,13 @@ class CustomerController extends Controller
         })
         ->where('customers_soft_delete', 0)
         ->paginate(15);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'customer' => $listdata,
+                'search' => $search,
+            ]);
+        }
 
         return view('backend.pages.customer.index', [
             'customer' => $listdata,

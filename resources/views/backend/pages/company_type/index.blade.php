@@ -104,7 +104,7 @@ Jenis Perusahaan - Admin Panel
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <nav aria-label="Page navigation">
-                                            <ul class="pagination justify-content-end">
+                                            <ul class="pagination justify-content-end" id="pagination">
                                                 <!-- Previous Page Link -->
                                                 <li class="page-item {{ $company_type->onFirstPage() ? 'disabled' : '' }}">
                                                     <a class="page-link" href="{{ $company_type->appends(['search' => $search ?? request('search')])->previousPageUrl() }}" aria-label="Previous">
@@ -175,6 +175,81 @@ Jenis Perusahaan - Admin Panel
     </div>
 </div>
 <script>
+
+    $(document).ready(function() {
+        $('#search').on('keyup', function () {
+            let searchQuery = $(this).val();
+            fetchSubmenus(searchQuery, 1); // Panggil fungsi dengan searchQuery dan halaman pertama
+        });
+
+        $(document).on('click', '.page-link', function (e) {
+            e.preventDefault(); // Mencegah reload halaman
+            let page = $(this).data('page'); // Ambil nomor halaman dari data atribut
+            let searchQuery = $('#search').val(); // Ambil nilai pencarian
+            fetchSubmenus(searchQuery, page); // Panggil fungsi dengan searchQuery dan nomor halaman
+        });
+
+        function fetchSubmenus(searchQuery, page) {
+            $.ajax({
+                url: '/admin/company_type',
+                type: 'GET',
+                data: { 
+                    search: searchQuery,
+                    page: page
+                },
+                success: function (response) {
+                    // Update table body
+                    $('#tableBody').html('');
+                    if (response.company_type.data.length > 0) {
+                        response.company_type.data.forEach(function (company_type, index) {
+                            $('#tableBody').append(`
+                                <tr>
+                                    <td class="text-center">${(response.company_type.current_page - 1) * response.company_type.per_page + index + 1}</td>
+                                    <td>${ company_type.company_type_code }</td>
+                                    <td>${ company_type.company_type_name }</td>
+                                    <td>${ company_type.company_type_notes }</td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <!-- Tombol Delete -->
+                                            @if ($usr->can('company_type.delete'))
+                                            <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${company_type.company_type_id}')">
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                            @endif
+                                            <!-- Tombol Edit -->
+                                            <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${company_type.company_type_id}')">
+                                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            `);
+                        });
+                    } else {
+                        $('#tableBody').append('<tr><td colspan="5" class="text-center">No results found</td></tr>');
+                    }
+
+                    // Update pagination
+                    $('#pagination').html('');
+                    response.company_type.links.forEach(function (link) {
+                        let activeClass = link.active ? 'active' : '';
+                        let url = link.url ? link.url + `&search=${searchQuery}` : ''; // Tambahkan parameter search ke URL
+                        let pageLink = link.url ? `<a class="page-link ${activeClass}" href="#" data-page="${link.label}">${link.label}</a>` : '';
+                        $('#pagination').append(`<li class="page-item ${activeClass}">${pageLink}</li>`);
+                    });
+                },
+                error: function (xhr) {
+                    alert('Error: ' + xhr.statusText);
+                }
+            });
+        }
+    });
 
     function reload(){
         // setTimeout(function () {

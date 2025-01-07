@@ -28,10 +28,10 @@ class LevelsController extends Controller
 		);
     }
 
-    public function index()
+    public function index(Request $request)
     {      
         $this->checkAuthorization(auth()->user(), ['levels.view']);
-        $search = $_GET['search'] ?? '';
+        $search = $request->search ?? '';
 
         $listdata = $this->model
         ->where(function($query) use ($search) {
@@ -41,6 +41,13 @@ class LevelsController extends Controller
         })
         ->where('level_soft_delete', 0)
         ->paginate(15);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'levels' => $listdata,
+                'search' => $search,
+            ]);
+        }
 
         return view('backend.pages.levels.index', [
             'levels' => $listdata,

@@ -57,10 +57,11 @@ class UsersController extends Controller
 		);
     }
 
-    public function index()
+    public function index(Request $request)
     {        
         $this->checkAuthorization(auth()->user(), ['users.view']);
-        $search = $_GET['search'] ?? '';
+        // $search = $_GET['search'] ?? '';
+        $search = $request->get('search') ?? '';
 
         $listdata = $this->model
         ->where(function($q) use ($search) {
@@ -71,6 +72,13 @@ class UsersController extends Controller
         })
         ->where('users_soft_delete', 0)
         ->paginate(15);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'users' => $listdata,
+                'search' => $search,
+            ]);
+        }
 
         return view('backend.pages.users.index', [
             'users' => $listdata,

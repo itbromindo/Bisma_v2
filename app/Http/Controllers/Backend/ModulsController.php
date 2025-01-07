@@ -24,10 +24,10 @@ class ModulsController extends Controller
 		);
     }
 
-    public function index(): Renderable
+    public function index(Request $request)
     {        
         $this->checkAuthorization(auth()->user(), ['moduls.view']);
-        $search = $_GET['search'] ?? '';
+        $search = $request->search ?? '';
 
         $listdata = $this->model
         ->where(function($query) use ($search) {
@@ -37,6 +37,13 @@ class ModulsController extends Controller
         })
         ->where('moduls_soft_delete', 0)
         ->paginate(15);
+
+        if ($request->ajax()) {
+            return response()->json([
+                'moduls' => $listdata,
+                'search' => $search,
+            ]);
+        }
 
         return view('backend.pages.moduls.index', [
             'moduls' => $listdata,
