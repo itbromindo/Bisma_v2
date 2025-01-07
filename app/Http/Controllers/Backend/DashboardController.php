@@ -15,8 +15,8 @@ class DashboardController extends Controller
     public function index()
     {
         $this->checkAuthorization(auth()->user(), ['dashboard.view']);
-
-        // return Session::all();
+        
+        // return $this->getsetmenu();
 
         return view(
             'backend.pages.dashboard.index',
