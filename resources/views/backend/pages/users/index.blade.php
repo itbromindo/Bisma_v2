@@ -172,15 +172,23 @@ Users - Admin Panel
                             </div>
                         </div>
                         <div class="col-mb-3 col-lg-3">
-                            <div class="fromGroup eye mb-3">
-                                <label>Password</label>
+                            <label>Password</label>
+                            <div class="fromGroup eye">
+                                <div class="form-control-icon">
+                                    <input id="password-hide_show" class="form-control" type="password" placeholder="password">
+                                    <div class="has-badge">
+                                        <i class="ph-eye"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- <div class="fromGroup eye mb-3">
                                 <div class="form-control-icon">
                                     <input class="form-control" type="password" id="users_password" placeholder="password" />
                                     <div class="has-badge select-icon__three">
                                         <i class="ph-eye"></i>
                                     </div>
                                 </div>
-                            </div>
+                            </div> --}}
                         </div>
                         <div class="col-mb-3 col-lg-3">
                             <div class="fromGroup mb-3">
@@ -545,7 +553,8 @@ Users - Admin Panel
         document.getElementById('users_name').value = ''; 
         document.getElementById('users_photo').value = ''; 
         document.getElementById('users_email').value = ''; 
-        document.getElementById('users_password').value = ''; 
+        // document.getElementById('users_password').value = ''; 
+        document.getElementById('password-hide_show').value = ''; 
         document.getElementById('users_office_phone').value = ''; 
         document.getElementById('users_personal_phone').value = ''; 
         document.getElementById('users_join_date').value = ''; 
@@ -587,7 +596,8 @@ Users - Admin Panel
         postdata.append('users_name', document.getElementById('users_name').value); 
         postdata.append('users_photo', document.getElementById('users_photo').files[0]); 
         postdata.append('users_email', document.getElementById('users_email').value); 
-        postdata.append('users_password', document.getElementById('users_password').value); 
+        // postdata.append('users_password', document.getElementById('users_password').value); 
+        postdata.append('users_password', document.getElementById('password-hide_show').value); 
         postdata.append('users_office_phone', document.getElementById('users_office_phone').value); 
         postdata.append('users_personal_phone', document.getElementById('users_personal_phone').value); 
         postdata.append('users_join_date', document.getElementById('users_join_date').value); 
@@ -735,7 +745,8 @@ Users - Admin Panel
         postdata.append('users_name', document.getElementById('users_name').value); 
         postdata.append('users_photo', document.getElementById('users_photo').files[0]); 
         postdata.append('users_email', document.getElementById('users_email').value); 
-        postdata.append('users_password', document.getElementById('users_password').value); 
+        // postdata.append('users_password', document.getElementById('users_password').value); 
+        postdata.append('users_password', document.getElementById('password-hide_show').value); 
         postdata.append('users_office_phone', document.getElementById('users_office_phone').value); 
         postdata.append('users_personal_phone', document.getElementById('users_personal_phone').value); 
         postdata.append('users_join_date', document.getElementById('users_join_date').value); 
