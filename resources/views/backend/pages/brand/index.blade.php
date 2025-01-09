@@ -162,7 +162,7 @@ Brand - Admin Panel
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                @if ($usr->can('brand.create'))
+                endif
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                 @endif
                 @if ($usr->can('brand.update') || $usr->can('brand.create'))

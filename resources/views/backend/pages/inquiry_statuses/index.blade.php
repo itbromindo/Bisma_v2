@@ -145,6 +145,7 @@ Inquiry Status Management - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="inquiry_status_id">
+                    <div id="alert-container"></div>
                     <div class="formGroup mb-3">
                         <label for="inquiry_status_name">Name</label>
                         <input class="form-control" type="text" id="inquiry_status_name" placeholder="Enter Status Name" />
@@ -165,9 +166,6 @@ Inquiry Status Management - Admin Panel
         </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
 
 $(document).ready(function () {
@@ -257,20 +255,22 @@ $(document).ready(function () {
             contentType: false,
             dataType: "json",
             async: false,
-            success: function (data) {
-                if (data.status == 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Form is required',
-                    });
+            success: function (response) {
+                if (response.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (response.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
-                        text: 'Successfully saved',
-                    }).then(() => {
-                        reload();
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
                     });
                 }
             },
@@ -316,20 +316,22 @@ $(document).ready(function () {
             contentType: false,
             dataType: "json",
             async: false,
-            success: function (data) {
-                if (data.status == 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Form is required',
-                    });
+            success: function (response) {
+                if (response.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (response.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
-                        text: 'Successfully updated',
-                    }).then(() => {
-                        reload();
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
                     });
                 }
             },

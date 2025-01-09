@@ -74,6 +74,7 @@ class OptionChecklistController extends Controller
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0],
             ];
             return response()->json($messages);
         }
@@ -103,6 +104,7 @@ class OptionChecklistController extends Controller
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0],
             ];
             return response()->json($messages);
         }
@@ -134,5 +136,18 @@ class OptionChecklistController extends Controller
 
         session()->flash('success', 'Option Checklist has been deleted.');
         return response()->json(['status' => 200, 'message' => 'Success']);
+    }
+
+    public function combo(Request $request)
+    {
+        $this->checkAuthorization(auth()->user(), ['optionchecklists.view']);
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->model
+            ->select('option_checklist_code as id', 'checklist_items as text')
+            ->where('option_checklist_items', 'like', '%' . $search . '%')
+            ->where('option_checklist_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
     }
 }

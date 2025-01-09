@@ -145,6 +145,7 @@ Template Win Lose - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="template_win_loses_id">
+                    <div id="alert-container"></div>
                     <div class="formGroup mb-3">
                         <label>Title</label>
                         <input class="form-control" type="text" id="template_win_loses_title" placeholder="Enter Template Title" />
@@ -169,8 +170,6 @@ Template Win Lose - Admin Panel
         </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 
 $(document).ready(function () {
@@ -263,20 +262,22 @@ $(document).ready(function () {
             contentType: false,
             dataType: "json",
             async: false,
-            success: function (data) {
-                if (data.status == 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Form fields are required'
-                    });
+            success: function (response) {
+                if (response.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (response.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Saved',
-                        text: 'Data has been saved successfully'
-                    }).then(() => {
-                        reload();
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
                     });
                 }
             },
@@ -321,20 +322,22 @@ $(document).ready(function () {
             contentType: false,
             dataType: "json",
             async: false,
-            success: function (data) {
-                if (data.status == 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Form fields are required'
-                    });
+            success: function (response) {
+                if (response.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (response.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Updated',
-                        text: 'Data has been updated successfully'
-                    }).then(() => {
-                        reload();
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
                     });
                 }
             },

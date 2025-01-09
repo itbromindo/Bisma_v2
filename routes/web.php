@@ -67,6 +67,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     // User Routes
     Route::resource('users', UsersController::class);
     Route::any('users/{id}', [UsersController::class, 'update']);
+    Route::get('combousers', [UsersController::class, 'combo']);
 
     // Modul Routes
     Route::resource('moduls', ModulsController::class);
@@ -215,12 +216,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::resource('pillars', PillarController::class);
     Route::any('pillars/{id}', [PillarController::class, 'update']);
-
-    Route::resource('pillars', PillarController::class);
-    Route::any('pillars/{id}', [PillarController::class, 'update']);
+    Route::get('combopillars', [PillarController::class, 'combo']);
     
     Route::resource('checklists', ChecklistController::class);
     Route::any('checklists/{id}', [ChecklistController::class, 'update']);
+    Route::get('combochecklists', [ChecklistController::class, 'combo']);
     
     Route::resource('optionchecklists', OptionChecklistController::class);
     Route::any('optionchecklists/{id}', [OptionChecklistController::class, 'update']);

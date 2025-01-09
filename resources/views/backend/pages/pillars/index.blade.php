@@ -141,6 +141,7 @@ Pillar - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="pillar_id">
+                    <div id="alert-container"></div>
                     <div class="fromGroup mb-3">
                         <label>Nama Item</label>
                         <input class="form-control" type="text" id="pillar_items" placeholder="Nama Item" />
@@ -161,7 +162,6 @@ Pillar - Admin Panel
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 
     $(document).ready(function () {
@@ -240,20 +240,23 @@ Pillar - Admin Panel
         };
 
         $.post('/admin/pillars', data, function(response) {
-            if (response.status === 401) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: response.data
-                });
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Data Saved!',
-                }).then(() => {
-                    location.reload();
-                });
-            }
+            if (response.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (response.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                }
         });
     }
 
@@ -269,17 +272,20 @@ Pillar - Admin Panel
             type: 'PUT',
             data: data,
             success: function(response) {
-                if (response.status === 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.data
-                    });
+                if (response.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (response.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Data Updated!',
-                    }).then(() => {
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
                         location.reload();
                     });
                 }

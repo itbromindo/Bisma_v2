@@ -145,6 +145,7 @@ Checklists - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="checklist_id">
+                    <div id="alert-container"></div>
                     <div class="fromGroup mb-3">
                         <label>Checklist Items</label>
                         <input class="form-control" type="text" id="checklist_items" placeholder="Checklist Items" />
@@ -175,8 +176,37 @@ Checklists - Admin Panel
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
+$(document).ready(function() {        
+        $('#modalinput').on('shown.bs.modal', function () {
+            $('#pillar_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Pllar",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combopillars',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term // Parameter pencarian
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+        });
+
+        // Fokuskan input pencarian Select2
+        $('#pillar_code').on('select2:open', function () {
+            document.querySelector('.select2-search__field').focus();
+        });
+    });
 
 $(document).ready(function () {
         $('#search').on('keyup', function () {
@@ -256,20 +286,23 @@ $(document).ready(function () {
         };
 
         $.post('/admin/checklists', data, function(response) {
-            if (response.status === 401) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: response.data
-                });
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Data Saved!',
-                }).then(() => {
-                    location.reload();
-                });
-            }
+            if (response.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (response.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                }
         });
     }
 
@@ -286,17 +319,20 @@ $(document).ready(function () {
             type: 'PUT',
             data: data,
             success: function(response) {
-                if (response.status === 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.data
-                    });
+                if (response.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (response.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Data Updated!',
-                    }).then(() => {
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
                         location.reload();
                     });
                 }
