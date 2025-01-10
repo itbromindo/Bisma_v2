@@ -142,6 +142,7 @@ Option Checklists - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="option_checklist_id">
+                    <div id="alert-container"></div>
                     <div class="fromGroup mb-3">
                         <label>Option Checklist Items</label>
                         <input class="form-control" type="text" id="option_checklist_items" placeholder="Option Checklist Items" />
@@ -172,9 +173,38 @@ Option Checklists - Admin Panel
         </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
+$(document).ready(function() {        
+        $('#modalinput').on('shown.bs.modal', function () {
+            $('#checklist_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Checklist",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combochecklists',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term // Parameter pencarian
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+        });
+
+        // Fokuskan input pencarian Select2
+        $('checklist_code').on('select2:open', function () {
+            document.querySelector('.select2-search__field').focus();
+        });
+    });
+
 
 $(document).ready(function () {
         $('#search').on('keyup', function () {
@@ -253,23 +283,25 @@ $(document).ready(function () {
             _token: '{{ csrf_token() }}'
         };
 
-        $.post('/admin/optionchecklists', data)
-            .done(function(response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Saved!',
-                    text: 'Data has been saved successfully.'
-                }).then(() => {
-                    location.reload();
-                });
-            })
-            .fail(function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: xhr.responseJSON?.message || 'Failed to save data.'
-                });
-            });
+        $.post('/admin/optionchecklists', data, function(response) {
+            if (response.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (response.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                }
+        });
     }
 
     function updateInput(id) {
@@ -283,24 +315,27 @@ $(document).ready(function () {
         $.ajax({
             url: `/admin/optionchecklists/${id}`,
             type: 'PUT',
-            data: data
-        })
-            .done(function(response) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Updated!',
-                    text: 'Data has been updated successfully.'
-                }).then(() => {
-                    location.reload();
-                });
-            })
-            .fail(function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: xhr.responseJSON?.message || 'Failed to update data.'
-                });
-            });
+            data: data,
+            success: function(response) {
+                if (response.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (response.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                }
+            }
+        });
     }
 
     function delete_data(id) {
@@ -340,22 +375,13 @@ $(document).ready(function () {
     }
 
     function showedit(id) {
-        $.get(`/admin/optionchecklists/${id}`)
-            .done(function(data) {
+        $.get(`/admin/optionchecklists/${id}`, function(data) {
                 document.getElementById('option_checklist_id').value = data.option_checklist_id;
                 document.getElementById('option_checklist_items').value = data.option_checklist_items;
                 document.getElementById('option_checklist_notes').value = data.option_checklist_notes;
                 document.getElementById('checklist_code').value = data.checklist_code;
                 document.getElementById('saveButton').textContent = 'Save Changes';
-                // Tampilkan modal tanpa notifikasi
                 $('#modalinput').modal('show');
-            })
-            .fail(function(xhr) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error!',
-                    text: xhr.responseJSON?.message || 'Failed to fetch data.'
-                });
             });
     }
 </script>

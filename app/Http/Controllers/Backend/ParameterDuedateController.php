@@ -59,7 +59,9 @@ class ParameterDuedateController extends Controller
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['parameter_duedate.view']);
-        $model = $this->model->find($id);
+        $model = $this->model
+        ->leftjoin('users', 'parameter_duedates.user_code', '=', 'users.user_code')
+        ->find($id);
         return $model;
     }
 
@@ -75,6 +77,7 @@ class ParameterDuedateController extends Controller
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0],
             ];
             return response()->json($messages);
         }
@@ -105,6 +108,7 @@ class ParameterDuedateController extends Controller
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0],
             ];
             return response()->json($messages);
         }

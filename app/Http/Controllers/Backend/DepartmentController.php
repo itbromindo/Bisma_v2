@@ -45,10 +45,19 @@ class DepartmentController extends Controller
 
     }
 
+    // public function show($id)
+    // {
+    //     $this->checkAuthorization(auth()->user(), ['department.view']);
+    //     $model = $this->model->find($id);
+    //     return $model;
+    // }
+
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['department.view']);
-        $model = $this->model->find($id);
+        $model = $this->model
+        ->leftjoin('divisions', 'departments.division_code', '=', 'divisions.division_code')
+        ->find($id);
         return $model;
     }
 
@@ -58,10 +67,12 @@ class DepartmentController extends Controller
         $validator = Validator::make($request->all(), $this->mandatory);
 
         if ($validator->fails()) {
-            return response()->json([
+            $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
-            ]);
+                'column' => $validator->errors()->keys()[0],
+            ];
+            return response()->json($messages);
         }
 
         $result = $this->model->create([
@@ -83,10 +94,12 @@ class DepartmentController extends Controller
         $validator = Validator::make($request->all(), $this->mandatory);
 
         if ($validator->fails()) {
-            return response()->json([
+            $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
-            ]);
+                'column' => $validator->errors()->keys()[0],
+            ];
+            return response()->json($messages);
         }
 
         $result = $this->model->find($id)->update([
@@ -126,4 +139,5 @@ class DepartmentController extends Controller
 
         return response()->json($listdata);
     }
+
 }

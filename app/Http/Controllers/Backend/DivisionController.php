@@ -48,16 +48,9 @@ class DivisionController extends Controller
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['divisions.view']);
-
-        $model = $this->model->find($id);
-
-        if (!$model) {
-            return response()->json([
-                'data' => 'Division not found.',
-                'status' => 404,
-            ]);
-        }
-
+        $model = $this->model
+        ->leftjoin('companies', 'divisions.companies_code', '=', 'companies.companies_code')
+        ->find($id);
         return $model;
     }
 
@@ -71,6 +64,7 @@ class DivisionController extends Controller
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0],
             ];
             return response()->json($messages);
         }
@@ -99,6 +93,7 @@ class DivisionController extends Controller
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0],
             ];
             return response()->json($messages);
         }

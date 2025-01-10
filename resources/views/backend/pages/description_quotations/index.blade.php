@@ -146,6 +146,7 @@ Description Quotations - Admin Panel
                             <div class="modal-body">
                             <form>
                                 <input type="hidden" id="template_inquiry_desc_id">
+                                <div id="alert-container"></div>
                                 <div class="fromGroup mb-3">
                                 <label>Title</label>
                                 <input class="form-control" type="text" id="template_inquiry_desc_title" placeholder="Enter Inquiry Name" />
@@ -171,7 +172,6 @@ Description Quotations - Admin Panel
         </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 
 $(document).ready(function () {
@@ -265,22 +265,32 @@ $(document).ready(function () {
             dataType: "json",
             async: false,
             success: function (data) {
+                
                 if (data.status == 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Form fields are required',
-                    });
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Saved successfully',
-                    }).then(() => {
-                        reload();
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
                     });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
     }
@@ -321,22 +331,32 @@ $(document).ready(function () {
             dataType: "json",
             async: false,
             success: function (data) {
+                
                 if (data.status == 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Form fields are required',
-                    });
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Updated successfully',
-                    }).then(() => {
-                        reload();
+                        title: 'Success',
+                        text: 'Data Updated!',
+                    }).then(function() {
+                        location.reload();
                     });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
     }
@@ -350,8 +370,8 @@ $(document).ready(function () {
             text: 'Do you want to delete this data?',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {

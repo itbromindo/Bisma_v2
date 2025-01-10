@@ -147,6 +147,7 @@ Decission Quotation - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="template_decission_quotation_id">
+                    <div id="alert-container"></div> 
                     <div class="fromGroup mb-3">
                         <label>Title</label>
                         <input class="form-control" type="text" id="template_decission_quotation_title" placeholder="Title">
@@ -171,8 +172,6 @@ Decission Quotation - Admin Panel
         </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 
 $(document).ready(function () {
@@ -247,27 +246,46 @@ $(document).ready(function () {
     }
 
     function saveInput() {
-        const data = {
-            template_decission_quotation_title: document.getElementById('template_decission_quotation_title').value,
-            template_decission_quotation_text: document.getElementById('template_decission_quotation_text').value,
-            template_decission_quotation_notes: document.getElementById('template_decission_quotation_notes').value,
-            _token: '{{ csrf_token() }}'
-        };
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+        postdata.append('template_decission_quotation_title', document.getElementById('template_decission_quotation_title').value);
+        postdata.append('template_decission_quotation_text', document.getElementById('template_decission_quotation_text').value);
+        postdata.append('template_decission_quotation_notes', document.getElementById('template_decission_quotation_notes').value); 
 
-        $.post('/admin/decission_quotations', data, function(response) {
-            if (response.status === 401) {
+        $.ajax({
+            type: "POST",
+            url: "/admin/decission_quotations",
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
-                    text: response.data
-                });
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Saved',
-                    text: 'Data has been saved successfully!'
-                }).then(() => {
-                    location.reload();
+                    text: dataerror.responseJSON.message
                 });
             }
         });
@@ -286,18 +304,20 @@ $(document).ready(function () {
             type: 'PUT',
             data: data,
             success: function(response) {
-                if (response.status === 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.data
-                    });
+                if (response.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (response.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Updated',
-                        text: 'Data has been updated successfully!'
-                    }).then(() => {
+                        title: 'Success',
+                        text: 'Data Updated!',
+                    }).then(function() {
                         location.reload();
                     });
                 }

@@ -33,7 +33,7 @@ Parameter Due Dates - Admin Panel
                             <h5>Parameter Due Dates</h5>
                             <div class="d-flex align-items-center">
                                 <div class="app-main-search me-2">
-                                    <form action="/admin/parameter_duedate" method="GET" class="d-flex">
+                                    <form action="/admin/parameter_duedates" method="GET" class="d-flex">
                                         <div class="input-box d-flex">
                                             <input type="text" name="search" id="search" value="{{ $search ?? '' }}" class="form-control" placeholder="Search Here">
                                             <button type="submit" class="btn btn-light ms-2">
@@ -149,6 +149,7 @@ Parameter Due Dates - Admin Panel
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="param_duedate_id">
+                    <div id="alert-container"></div> 
                     <div class="fromGroup mb-3">
                         <label>Name</label>
                         <input class="form-control" type="text" id="param_duedate_name" placeholder="Name" />
@@ -183,9 +184,37 @@ Parameter Due Dates - Admin Panel
         </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
+$(document).ready(function() {        
+        $('#modalinput').on('shown.bs.modal', function () {
+            $('#user_code').select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih User",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combousers',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term // Parameter pencarian
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    }
+                }
+            });
+        });
+
+        // Fokuskan input pencarian Select2
+        $('#user_code').on('select2:open', function () {
+            document.querySelector('.select2-search__field').focus();
+        });
+    });
 
 $(document).ready(function () {
         $('#search').on('keyup', function () {
@@ -261,28 +290,47 @@ $(document).ready(function () {
     }
 
     function saveInput() {
-        const data = {
-            param_duedate_name: document.getElementById('param_duedate_name').value,
-            param_duedate_time: document.getElementById('param_duedate_time').value,
-            param_duedate_notes: document.getElementById('param_duedate_notes').value,
-            user_code: document.getElementById('user_code').value,
-            _token: '{{ csrf_token() }}'
-        };
-
-        $.post('/admin/parameter_duedates', data, function(response) {
-            if (response.status === 401) {
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+        postdata.append('param_duedate_name', document.getElementById('param_duedate_name').value);
+        postdata.append('param_duedate_time', document.getElementById('param_duedate_time').value);
+        postdata.append('param_duedate_notes', document.getElementById('param_duedate_notes').value); 
+        postdata.append('user_code', document.getElementById('user_code').value);
+        
+        $.ajax({
+            type: "POST",
+            url: "/admin/parameter_duedates",
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
                 Swal.fire({
                     icon: 'error',
-                    title: 'Oops...',
-                    text: response.data
-                });
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Saved!',
-                    text: 'Data has been saved successfully.'
-                }).then(() => {
-                    location.reload();
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
                 });
             }
         });
@@ -302,18 +350,20 @@ $(document).ready(function () {
             type: 'PUT',
             data: data,
             success: function(response) {
-                if (response.status === 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops...',
-                        text: response.data
-                    });
+                if (response.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (response.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Updated!',
-                        text: 'Data has been updated successfully.'
-                    }).then(() => {
+                        title: 'Success',
+                        text: 'Data Updated!',
+                    }).then(function() {
                         location.reload();
                     });
                 }

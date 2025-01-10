@@ -63,9 +63,28 @@ class MasterApprovalController extends Controller
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['master_approvals.view']);
-        $model = $this->model->find($id);
-        return $model;
+    
+        $model = $this->model
+            ->leftJoin('divisions', 'master_approvals.division_code', '=', 'divisions.division_code')
+            ->leftJoin('departments', 'master_approvals.department_code', '=', 'departments.department_code')
+            ->leftJoin('level', 'master_approvals.level_code', '=', 'level.level_code')
+            ->select(
+                'master_approvals.*',
+                'divisions.division_name',
+                'departments.department_name',
+                'level.level_name'
+            )
+            ->where('master_approvals.master_approvals_soft_delete', 0)
+            ->find($id);
+    
+        if (!$model) {
+            return response()->json(['message' => 'Master Approval not found'], 404);
+        }
+    
+        return response()->json($model);
     }
+    
+    
 
     public function store(Request $request)
     {
@@ -76,6 +95,7 @@ class MasterApprovalController extends Controller
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0]
             ];
             return response()->json($messages);
         }
@@ -116,6 +136,7 @@ class MasterApprovalController extends Controller
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0]
             ];
             return response()->json($messages);
         }
@@ -125,6 +146,7 @@ class MasterApprovalController extends Controller
         if (!$masterApproval) {
             return response()->json(['data' => 'Master Approval not found', 'status' => 404]);
         }
+        
 
         $result = $masterApproval->update([
             'master_approvals_approval_name' => $request->master_approvals_approval_name,

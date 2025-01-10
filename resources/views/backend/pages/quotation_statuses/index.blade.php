@@ -146,6 +146,7 @@
             <div class="modal-body">
                 <form>
                     <input type="hidden" id="quotation_status_id">
+                    <div id="alert-container"></div>
                     <div class="formGroup mb-3">
                         <label for="quotation_status_name">Name</label>
                         <input class="form-control" type="text" id="quotation_status_name" placeholder="Enter Status Name" />
@@ -166,9 +167,6 @@
         </div>
     </div>
 </div>
-
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
 
 $(document).ready(function () {
@@ -294,20 +292,23 @@ $(document).ready(function () {
         };
 
         $.post('/admin/quotation_statuses', data, function(response) {
-            if (response.status === 401) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: response.data
-                });
-            } else {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Data Saved!',
-                }).then(() => {
-                    location.reload();
-                });
-            }
+            if (response.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (response.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                }
         });
     }
 
@@ -347,17 +348,20 @@ $(document).ready(function () {
             type: 'PUT',
             data: data,
             success: function(response) {
-                if (response.status === 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.data
-                    });
+                if (response.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (response.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',response.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
-                        title: 'Data Updated!',
-                    }).then(() => {
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
                         location.reload();
                     });
                 }

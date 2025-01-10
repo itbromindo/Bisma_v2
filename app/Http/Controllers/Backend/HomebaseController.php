@@ -48,7 +48,9 @@ class HomebaseController extends Controller
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['homebases.view']);
-        $model = $this->model->find($id);
+        $model = $this->model
+        ->leftjoin('companies', 'homebases.companies_code', '=', 'companies.companies_code')
+        ->find($id);
         return $model;
     }
 
@@ -61,6 +63,7 @@ class HomebaseController extends Controller
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0],
             ];
             return response()->json($messages);
         }
@@ -88,6 +91,7 @@ class HomebaseController extends Controller
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0],
             ];
             return response()->json($messages);
         }

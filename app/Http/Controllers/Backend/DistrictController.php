@@ -49,7 +49,9 @@ class DistrictController extends Controller
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['districts.view']);
-        $model = $this->model->find($id);
+        $model = $this->model
+        ->leftjoin('cities', 'districts.cities_code', '=', 'cities.cities_code')
+        ->find($id);
         return $model;
     }
 
@@ -58,10 +60,11 @@ class DistrictController extends Controller
         $this->checkAuthorization(auth()->user(), ['districts.create']);
         $validator = Validator::make($request->all(), $this->mandatory);
 
-        if ($validator->fails()) {
+        if($validator->fails()){
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0]
             ];
             return response()->json($messages);
         }
@@ -85,10 +88,11 @@ class DistrictController extends Controller
         $this->checkAuthorization(auth()->user(), ['districts.edit']);
         $validator = Validator::make($request->all(), $this->mandatory);
 
-        if ($validator->fails()) {
+        if($validator->fails()){
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0]
             ];
             return response()->json($messages);
         }

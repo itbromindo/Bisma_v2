@@ -142,6 +142,7 @@ Origin Inquiries - Admin Panel
                             <div class="modal-body">
                             <form>
                                 <input type="hidden" id="origin_inquiry_id">
+                                <div id="alert-container"></div>
                                 <div class="fromGroup mb-3">
                                     <label>Name</label>
                                     <input class="form-control" type="text" id="origin_inquiry_name" placeholder="Enter Inquiry Name" />
@@ -154,15 +155,17 @@ Origin Inquiries - Admin Panel
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            @if ($usr->can('origin_inquiries.create'))
                             <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
-                                @if ($usr->can('origin_inquiries.update') || $usr->can('origin_inquiries.create'))
+                             @endif   
+                            @if ($usr->can('origin_inquiries.update') || $usr->can('origin_inquiries.create'))
                             <button type="button" id= "saveButton" class="btn btn-primary" onclick="save()">Save</button>
                                 @endif
                         </div>
                 </div>
         </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script>
 
 $(document).ready(function () {
@@ -253,23 +256,30 @@ $(document).ready(function () {
             async: false,
             success: function (data) {
                 if (data.status == 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Form is required'
-                    });
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
-                        text: 'Successfully saved',
-                    }).then(function () {
-                        reload();
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        location.reload();
                     });
                 }
             },
             error: function (dataerror) {
                 console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
     }
@@ -312,23 +322,30 @@ $(document).ready(function () {
             async: false,
             success: function (data) {
                 if (data.status == 401) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Form is required'
-                    });
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    return;
                 } else {
                     Swal.fire({
                         icon: 'success',
                         title: 'Success',
-                        text: 'Successfully updated',
-                    }).then(function () {
-                        reload();
+                        text: 'Data Updated!',
+                    }).then(function() {
+                        location.reload();
                     });
                 }
             },
-            error: function (dataerror) {
+            eerror: function (dataerror) {
                 console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
             }
         });
     }
@@ -350,34 +367,15 @@ $(document).ready(function () {
                 $.ajax({
                     type: "DELETE",
                     url: "/admin/origin_inquiries/" + id,
-                    data: postdata,
-                    dataType: "json",
-                    async: false,
-                    success: function (data) {
-                        if (data.status == 401) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'Form is required'
-                            });
-                        } else if (data.status == 501) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: data.message
-                            });
-                        } else {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Deleted!',
-                                text: 'Your data has been deleted.',
-                            }).then(function () {
-                                reload();
-                            });
-                        }
-                    },
-                    error: function (dataerror) {
-                        console.log(dataerror);
+                    data: { _token: '{{ csrf_token() }}' },
+                    success: function (response) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            text: 'Data has been deleted.',
+                        }).then(function () {
+                            location.reload();
+                        });
                     }
                 });
             }

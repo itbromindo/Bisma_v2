@@ -66,6 +66,7 @@ class ChecklistController extends Controller
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0],
             ];
             return response()->json($messages);
         }
@@ -99,6 +100,7 @@ class ChecklistController extends Controller
             $messages = [
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0],
             ];
             return response()->json($messages);
         }
@@ -139,4 +141,18 @@ class ChecklistController extends Controller
         session()->flash('success', 'Checklist has been deleted.');
         return $result;
     }
+
+    public function combo(Request $request)
+    {
+        // $this->checkAuthorization(auth()->user(), ['checklists.view']);
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->model
+            ->select('checklist_code as id', 'checklist_items as text')
+            ->where('checklist_items', 'like', '%' . $search . '%')
+            ->where('checklist_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
+    }
+    
 }

@@ -66,6 +66,7 @@ class DecissionQuotationController extends Controller
             return response()->json([
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0],
             ]);
         }
 
@@ -94,6 +95,7 @@ class DecissionQuotationController extends Controller
             return response()->json([
                 'data' => $validator->errors()->first(),
                 'status' => 401,
+                'column' => $validator->errors()->keys()[0],
             ]);
         }
 
