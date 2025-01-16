@@ -69,8 +69,8 @@ Jenis Perusahaan - Admin Panel
                                                         @foreach ($company_type as $ctype)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                                <td>{{ $ctype->company_type_code }}</td>
-                                                                <td>{{ $ctype->company_type_name }}</td>
+                                                                <td>{{ Str::words($ctype->company_type_code, 10, '...') }}</td>
+                                                                <td>{{ Str::words($ctype->company_type_name, 10, '...') }}</td>
                                                                 <td>{{ Str::words($ctype->company_type_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -211,8 +211,8 @@ Jenis Perusahaan - Admin Panel
                         $('#tableBody').append(`
                             <tr>
                                 <td class="text-center">${(response.company_type.current_page - 1) * response.company_type.per_page + index + 1}</td>
-                                <td>${ company_type.company_type_code }</td>
-                                <td>${ company_type.company_type_name }</td>
+                                <td>${ truncateText(company_type.company_type_code, 10, '...') }</td>
+                                <td>${ truncateText(company_type.company_type_name, 10, '...') }</td>
                                 <td>${ truncateText(company_type.company_type_notes, 10, '...') }</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">

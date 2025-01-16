@@ -69,8 +69,8 @@ Gudang - Admin Panel
                                                         @foreach ($warehouse as $gudang)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                                <td>{{ $gudang->warehouse_code }}</td>
-                                                                <td>{{ $gudang->warehouse_name }}</td>
+                                                                <td>{{ Str::words($gudang->warehouse_code, 10, '...') }}</td>
+                                                                <td>{{ Str::words($gudang->warehouse_name, 10, '...') }}</td>
                                                                 <td>{{ Str::words($gudang->warehouse_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -210,9 +210,9 @@ Gudang - Admin Panel
                         $('#tableBody').append(`
                             <tr>
                                 <td class="text-center">${(response.warehouse.current_page - 1) * response.warehouse.per_page + index + 1}</td>
-                                <td>${ warehouse.warehouse_code }</td>
-                                <td>${ warehouse.warehouse_name }</td>
-                                <td>${ warehouse.warehouse_notes }</td>
+                                <td>${ truncateText(warehouse.warehouse_code, 10, '...') }</td>
+                                <td>${ truncateText(warehouse.warehouse_name, 10, '...') }</td>
+                                <td>${ truncateText(warehouse.warehouse_notes, 10, '...') }</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">
                                         <!-- Tombol Delete -->

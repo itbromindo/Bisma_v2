@@ -69,8 +69,8 @@ Divisi Produk - Admin Panel
                                                         @foreach ($product_divisions as $pds)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                                <td>{{ $pds->product_divisions_code }}</td>
-                                                                <td>{{ $pds->product_divisions_name }}</td>
+                                                                <td>{{ Str::words($pds->product_divisions_code, 10, '...') }}</td>
+                                                                <td>{{ Str::words($pds->product_divisions_name, 10, '...') }}</td>
                                                                 <td>{{ Str::words($pds->product_divisions_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -209,8 +209,8 @@ Divisi Produk - Admin Panel
                         $('#tableBody').append(`
                             <tr>
                                 <td class="text-center">${(response.product_divisions.current_page - 1) * response.product_divisions.per_page + index + 1}</td>
-                                <td>${ product_divisions.product_divisions_code }</td>
-                                <td>${ product_divisions.product_divisions_name }</td>
+                                <td>${ truncateText(product_divisions.product_divisions_code, 10, '...') }</td>
+                                <td>${ truncateText(product_divisions.product_divisions_name, 10, '...') }</td>
                                 <td>${ truncateText(product_divisions.product_divisions_notes, 10, '...') }</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">

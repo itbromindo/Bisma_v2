@@ -69,8 +69,8 @@ Goods - Admin Panel
                                                         @foreach ($barang as $brg)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                                <td>{{ $brg->goods_code }}</td>
-                                                                <td>{{ $brg->goods_name }}</td>
+                                                                <td>{{ Str::words($brg->goods_code, 10, '...') }}</td>
+                                                                <td>{{ Str::words($brg->goods_name, 10, '...') }}</td>
                                                                 <td>{{ $brg->goods_price }}</td>
                                                                 <td>{{ Str::words($brg->goods_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
@@ -434,8 +434,8 @@ Goods - Admin Panel
                         $('#tableBody').append(`
                             <tr>
                                 <td class="text-center">${(response.barang.current_page - 1) * response.barang.per_page + index + 1}</td>
-                                <td>${ barang.goods_code }</td>
-                                <td>${ barang.goods_name }</td>
+                                <td>${ truncateText(barang.goods_code, 10, '...') }</td>
+                                <td>${ truncateText(barang.goods_name, 10, '...') }</td>
                                 <td>${ barang.goods_price }</td>
                                 <td>${ truncateText(barang.goods_notes, 10, '...') }</td>
                                 <td class="text-center">

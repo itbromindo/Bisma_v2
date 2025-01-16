@@ -69,8 +69,8 @@ Sub Menu - Admin Panel
                                                         @foreach ($submenus as $submenu)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                                <td>{{ $submenu->submenus_code }}</td>
-                                                                <td>{{ $submenu->submenus_name }}</td>
+                                                                <td>{{ Str::words($submenu->submenus_code, 10, '...') }}</td>
+                                                                <td>{{ Str::words($submenu->submenus_name, 10, '...') }}</td>
                                                                 <td>{{ Str::words($submenu->submenus_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -244,8 +244,8 @@ Sub Menu - Admin Panel
                         $('#tableBody').append(`
                             <tr>
                                 <td class="text-center">${(response.submenus.current_page - 1) * response.submenus.per_page + index + 1}</td>
-                                <td>${ submenus.submenus_code }</td>
-                                <td>${ submenus.submenus_name }</td>
+                                <td>${ truncateText(submenus.submenus_code, 10, '...') }</td>
+                                <td>${ truncateText(submenus.submenus_name, 10, '...') }</td>
                                 <td>${ truncateText(submenus.submenus_notes, 10, '...') }</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">

@@ -69,8 +69,8 @@ Brand - Admin Panel
                                                         @foreach ($brand as $bdn)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                                <td>{{ $bdn->brand_code }}</td>
-                                                                <td>{{ $bdn->brand_name }}</td>
+                                                                <td>{{ Str::words($bdn->brand_code, 10, '...') }}</td>
+                                                                <td>{{ Str::words($bdn->brand_name, 10, '...') }}</td>
                                                                 <td>{{ Str::words($bdn->brand_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -209,8 +209,8 @@ Brand - Admin Panel
                         $('#tableBody').append(`
                             <tr>
                                 <td class="text-center">${(response.brand.current_page - 1) * response.brand.per_page + index + 1}</td>
-                                <td>${ brand.brand_code }</td>
-                                <td>${ brand.brand_name }</td>
+                                <td>${ truncateText(brand.brand_code, 10, '...') }</td>
+                                <td>${ truncateText(brand.brand_name, 10, '...') }</td>
                                 <td>${ truncateText(brand.brand_notes, 10, '...') }</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">

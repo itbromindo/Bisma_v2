@@ -70,9 +70,9 @@ Users - Admin Panel
                                                         @foreach ($users as $user)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                                <td>{{ $user->user_code }}</td>
-                                                                <td>{{ $user->users_name }}</td>
-                                                                <td>{{ $user->users_email }}</td>
+                                                                <td>{{ Str::words($user->user_code, 10, '...') }}</td>
+                                                                <td>{{ Str::words($user->users_name, 10, '...') }}</td>
+                                                                <td>{{ Str::words($user->users_email, 10, '...') }}</td>
                                                                 <td>{{ Str::words($user->users_office_phone, 10,'...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -491,9 +491,9 @@ Users - Admin Panel
                         $('#tableBody').append(`
                             <tr>
                                 <td class="text-center">${(response.users.current_page - 1) * response.users.per_page + index + 1}</td>
-                                <td>${user.user_code}</td>
-                                <td>${user.users_name}</td>
-                                <td>${user.users_email}</td>
+                                <td>${truncateText(user.user_code, 10, '...')}</td>
+                                <td>${truncateText(user.users_name, 10, '...')}</td>
+                                <td>${truncateText(user.users_email, 10, '...')}</td>
                                 <td>${truncateText(user.users_office_phone, 10, '...')}</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">

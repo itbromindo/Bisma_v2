@@ -69,8 +69,8 @@ Customer - Admin Panel
                                                         @foreach ($customer as $csr)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                                <td>{{ $csr->customer_code }}</td>
-                                                                <td>{{ $csr->customer_name }}</td>
+                                                                <td>{{ Str::words($csr->customer_code, 10, '...') }}</td>
+                                                                <td>{{ Str::words($csr->customer_name, 10, '...') }}</td>
                                                                 <td>{{ $csr->customers_phone }}</td>
                                                                 <td>{{ Str::words($csr->customers_full_address, 10, '...') }}</td>
                                                                 <td class="text-center">
@@ -445,8 +445,8 @@ Customer - Admin Panel
                         $('#tableBody').append(`
                             <tr>
                                 <td class="text-center">${(response.customer.current_page - 1) * response.customer.per_page + index + 1}</td>
-                                <td>${ customer.customer_code }</td>
-                                <td>${ customer.customer_name }</td>
+                                <td>${ truncateText(customer.customer_code, 10, '...') }</td>
+                                <td>${ truncateText(customer.customer_name, 10, '...') }</td>
                                 <td>${ customer.customers_phone }</td>
                                 <td>${ truncateText(customer.customers_full_address, 10, '...') }</td>
                                 <td class="text-center">
