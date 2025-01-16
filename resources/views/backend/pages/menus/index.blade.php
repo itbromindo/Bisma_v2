@@ -229,7 +229,6 @@ Menus - Admin Panel
             }
         });
 
-        
     });
 
     function fetchSubmenus(searchQuery, page) {
