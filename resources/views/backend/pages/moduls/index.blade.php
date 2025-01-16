@@ -69,8 +69,8 @@ Moduls - Admin Panel
                                                         @foreach ($moduls as $modul)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                                <td>{{ $modul->moduls_code }}</td>
-                                                                <td>{{ $modul->moduls_name }}</td>
+                                                                <td>{{ Str::words($modul->moduls_code, 10, '...') }}</td>
+                                                                <td>{{ Str::words($modul->moduls_name, 10, '...') }}</td>
                                                                 <td>{{ Str::words($modul->moduls_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -213,8 +213,8 @@ Moduls - Admin Panel
                         $('#tableBody').append(`
                             <tr>
                                 <td class="text-center">${(response.moduls.current_page - 1) * response.moduls.per_page + index + 1}</td>
-                                <td>${ moduls.moduls_code }</td>
-                                <td>${ moduls.moduls_name }</td>
+                                <td>${ truncateText(moduls.moduls_code, 10, '...') }</td>
+                                <td>${ truncateText(moduls.moduls_name, 10, '...') }</td>
                                 <td>${ truncateText(moduls.moduls_notes, 10, '...') }</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">

@@ -69,8 +69,8 @@ Satuan - Admin Panel
                                                         @foreach ($uom as $satuan)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                                <td>{{ $satuan->uom_code }}</td>
-                                                                <td>{{ $satuan->uom_name }}</td>
+                                                                <td>{{ Str::words($satuan->uom_code, 10, '...') }}</td>
+                                                                <td>{{ Str::words($satuan->uom_name, 10, '...') }}</td>
                                                                 <td>{{ Str::words($satuan->uom_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -209,8 +209,8 @@ Satuan - Admin Panel
                         $('#tableBody').append(`
                             <tr>
                                 <td class="text-center">${(response.uom.current_page - 1) * response.uom.per_page + index + 1}</td>
-                                <td>${ uom.uom_code }</td>
-                                <td>${ uom.uom_name }</td>
+                                <td>${ truncateText(uom.uom_code, 10, '...') }</td>
+                                <td>${ truncateText(uom.uom_name, 10, '...') }</td>
                                 <td>${ truncateText(uom.uom_notes, 10, '...') }</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">

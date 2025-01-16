@@ -69,8 +69,8 @@ Kategori - Admin Panel
                                                         @foreach ($product_category as $pcy)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                                <td>{{ $pcy->product_category_code }}</td>
-                                                                <td>{{ $pcy->product_category_name }}</td>
+                                                                <td>{{ Str::words($pcy->product_category_code, 10, '...') }}</td>
+                                                                <td>{{ Str::words($pcy->product_category_name, 10, '...') }}</td>
                                                                 <td>{{ Str::words($pcy->product_category_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -209,8 +209,8 @@ Kategori - Admin Panel
                         $('#tableBody').append(`
                             <tr>
                                 <td class="text-center">${(response.product_category.current_page - 1) * response.product_category.per_page + index + 1}</td>
-                                <td>${ product_category.product_category_code }</td>
-                                <td>${ product_category.product_category_name }</td>
+                                <td>${ truncateText(product_category.product_category_code, 10, '...') }</td>
+                                <td>${ truncateText(product_category.product_category_name, 10, '...') }</td>
                                 <td>${ truncateText(product_category.product_category_notes, 10, '...') }</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">

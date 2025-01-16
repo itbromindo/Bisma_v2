@@ -69,8 +69,8 @@ Level - Admin Panel
                                                         @foreach ($levels as $level)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                                <td>{{ $level->level_code }}</td>
-                                                                <td>{{ $level->level_name }}</td>
+                                                                <td>{{ Str::words($level->level_code, 10, '...') }}</td>
+                                                                <td>{{ Str::words($level->level_name, 10, '...') }}</td>
                                                                 <td>{{ Str::words($level->level_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -244,8 +244,8 @@ Level - Admin Panel
                         $('#tableBody').append(`
                             <tr>
                                 <td class="text-center">${(response.levels.current_page - 1) * response.levels.per_page + index + 1}</td>
-                                <td>${ levels.level_code }</td>
-                                <td>${ levels.level_name }</td>
+                                <td>${ truncateText(levels.level_code, 10, '...') }</td>
+                                <td>${ truncateText(levels.level_name, 10, '...') }</td>
                                 <td>${ truncateText(levels.level_notes, 10, '...') }</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">

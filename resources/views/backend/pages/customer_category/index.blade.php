@@ -69,8 +69,8 @@ Kategori Customer - Admin Panel
                                                         @foreach ($customer_category as $ccy)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                                <td>{{ $ccy->customer_category_code }}</td>
-                                                                <td>{{ $ccy->customer_category_name }}</td>
+                                                                <td>{{ Str::words($ccy->customer_category_code, 10, '...') }}</td>
+                                                                <td>{{ Str::words($ccy->customer_category_name, 10, '...') }}</td>
                                                                 <td>{{ Str::words($ccy->customer_category_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -210,8 +210,8 @@ Kategori Customer - Admin Panel
                         $('#tableBody').append(`
                             <tr>
                                 <td class="text-center">${(response.customer_category.current_page - 1) * response.customer_category.per_page + index + 1}</td>
-                                <td>${ customer_category.customer_category_code }</td>
-                                <td>${ customer_category.customer_category_name }</td>
+                                <td>${ truncateText(customer_category.customer_category_code, 10, '...') }</td>
+                                <td>${ truncateText(customer_category.customer_category_name, 10, '...') }</td>
                                 <td>${ truncateText(customer_category.customer_category_notes, 10, '...') }</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">

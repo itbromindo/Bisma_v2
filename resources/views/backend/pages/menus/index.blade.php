@@ -69,8 +69,8 @@ Menus - Admin Panel
                                                         @foreach ($menus as $menu)
                                                             <tr>
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
-                                                                <td>{{ $menu->menus_code }}</td>
-                                                                <td>{{ $menu->menus_name }}</td>
+                                                                <td>{{ Str::words($menu->menus_code, 10, '...') }}</td>
+                                                                <td>{{ Str::words($menu->menus_name, 10, '...') }}</td>
                                                                 <td>{{ Str::words($menu->menus_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
@@ -247,8 +247,8 @@ Menus - Admin Panel
                         $('#tableBody').append(`
                             <tr>
                                 <td class="text-center">${(response.menus.current_page - 1) * response.menus.per_page + index + 1}</td>
-                                <td>${menus.menus_code}</td>
-                                <td>${menus.menus_name}</td>
+                                <td>${truncateText(menus.menus_code, 10, '...')}</td>
+                                <td>${truncateText(menus.menus_name, 10, '...')}</td>
                                 <td>${truncateText(menus.menus_notes, 10, '...')}</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">
