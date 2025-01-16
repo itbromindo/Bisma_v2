@@ -1637,3 +1637,77 @@ function alertform(type, colum, message) {
       }, 5000);
   }
 }
+
+function truncateText(text, maxWords, ellipsis = '...') {
+  if (!text) {
+      return ''; // Jika null atau undefined, kembalikan string kosong
+  }
+  const words = text.split(' ');
+  if (words.length > maxWords) {
+      return words.slice(0, maxWords).join(' ') + ellipsis;
+  }
+  return text;
+}
+
+function paginemain(response,link){
+  // Update pagination
+  $('#pagination').html(''); // Bersihkan elemen pagination sebelumnya
+
+  // Previous Page Link
+  if (response[link].prev_page_url) {
+      $('#pagination').append(`
+          <li class="page-item">
+              <a class="page-link" href="#" onclick="showpaginate(${parseInt(response[link].current_page) - 1})" data-page="${response[link].current_page - 1}" aria-label="Previous">
+                  <i class="ph-arrow-left"></i>
+              </a>
+          </li>
+      `);
+  } else {
+      $('#pagination').append(`
+          <li class="page-item disabled">
+              <a class="page-link" href="#" aria-label="Previous">
+                  <i class="ph-arrow-left"></i>
+              </a>
+          </li>
+      `);
+  }
+
+  // Page Number Links
+  response[link].links.forEach(function (linkItem) {
+      if (linkItem.label !== '&laquo; Previous' && linkItem.label !== 'Next &raquo;') {
+          let activeClass = linkItem.active ? 'active' : '';
+          let pageNumber = parseInt(linkItem.label) ? `${parseInt(linkItem.label)}`.padStart(2, '0') : linkItem.label;
+
+          $('#pagination').append(`
+              <li class="page-item ${activeClass}">
+                  <a class="page-link" href="#" onclick="showpaginate(${pageNumber})" data-page="${pageNumber}">${pageNumber}</a>
+              </li>
+          `);
+      }
+  });
+
+  // Next Page Link
+  if (response[link].next_page_url) {
+      $('#pagination').append(`
+          <li class="page-item">
+              <a class="page-link" href="#" onclick="showpaginate(${parseInt(response[link].current_page) + 1})" data-page="${response[link].current_page + 1}" aria-label="Next">
+                  <i class="ph-arrow-right"></i>
+              </a>
+          </li>
+      `);
+  } else {
+      $('#pagination').append(`
+          <li class="page-item disabled">
+              <a class="page-link" href="#" aria-label="Next">
+                  <i class="ph-arrow-right"></i>
+              </a>
+          </li>
+      `);
+  }
+}
+
+function showpaginate(page) {
+  let searchQuery = $('#search').val(); // Ambil nilai pencarian saat ini
+  
+  fetchSubmenus(searchQuery, page);
+}

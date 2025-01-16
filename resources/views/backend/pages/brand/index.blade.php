@@ -71,7 +71,7 @@ Brand - Admin Panel
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
                                                                 <td>{{ $bdn->brand_code }}</td>
                                                                 <td>{{ $bdn->brand_name }}</td>
-                                                                <td>{{ $bdn->brand_notes }}</td>
+                                                                <td>{{ Str::words($bdn->brand_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <!-- Tombol Delete -->
@@ -162,7 +162,7 @@ Brand - Admin Panel
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                endif
+                @if ($usr->can('brand.create'))
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
                 @endif
                 @if ($usr->can('brand.update') || $usr->can('brand.create'))
@@ -205,7 +205,7 @@ Brand - Admin Panel
                                     <td class="text-center">${(response.brand.current_page - 1) * response.brand.per_page + index + 1}</td>
                                     <td>${ brand.brand_code }</td>
                                     <td>${ brand.brand_name }</td>
-                                    <td>${ brand.brand_notes }</td>
+                                    <td>${ truncateText(brand.brand_notes, 10, '...') }</td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Tombol Delete -->

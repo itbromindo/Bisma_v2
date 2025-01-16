@@ -71,7 +71,7 @@ Moduls - Admin Panel
                                                                 <td scope="row" class="text-center">{{ $loop->index+1 }}</td>
                                                                 <td>{{ $modul->moduls_code }}</td>
                                                                 <td>{{ $modul->moduls_name }}</td>
-                                                                <td>{{ $modul->moduls_notes }}</td>
+                                                                <td>{{ Str::words($modul->moduls_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
                                                                         <!-- Tombol Delete -->
@@ -209,7 +209,7 @@ Moduls - Admin Panel
                                     <td class="text-center">${(response.moduls.current_page - 1) * response.moduls.per_page + index + 1}</td>
                                     <td>${ moduls.moduls_code }</td>
                                     <td>${ moduls.moduls_name }</td>
-                                    <td>${ moduls.moduls_notes }</td>
+                                    <td>${ truncateText(moduls.moduls_notes, 10, '...') }</td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
                                             <!-- Tombol Delete -->

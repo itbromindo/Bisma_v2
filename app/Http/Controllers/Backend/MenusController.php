@@ -37,7 +37,7 @@ class MenusController extends Controller
             ->orWhere('menus_code', 'like', '%' . $search . '%');
         })
         ->where('menus_soft_delete', 0)
-        ->paginate(15);
+        ->paginate(5);
 
         if ($request->ajax()) {
             return response()->json([
