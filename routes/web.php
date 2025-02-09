@@ -1,23 +1,15 @@
 <?php
 
 use App\Http\Controllers\Backend\ChecklistController;
-use App\Http\Controllers\Backend\CityController;
 use App\Http\Controllers\Backend\DecissionQuotationController;
-use App\Http\Controllers\Backend\DepartmentController;
 use App\Http\Controllers\Backend\DescriptionQuotationController;
-use App\Http\Controllers\Backend\DistrictController;
-use App\Http\Controllers\Backend\DivisionController;
-use App\Http\Controllers\Backend\HomebaseController;
 use App\Http\Controllers\Backend\InquiryGoodController;
 use App\Http\Controllers\Backend\InquiryStatusController;
-use App\Http\Controllers\Backend\MasterApprovalController;
 use App\Http\Controllers\Backend\OriginInquiryController;
 use App\Http\Controllers\Backend\ParameterDuedateController;
 use App\Http\Controllers\Backend\OptionChecklistController;
 use App\Http\Controllers\Backend\PillarController;
-use App\Http\Controllers\Backend\ProvinceController;
 use App\Http\Controllers\Backend\QuotationStatusController;
-use App\Http\Controllers\Backend\ShiftController;
 use App\Models\InquiryGood;
 use App\Models\OriginInquiry;
 use App\Http\Controllers\Backend\TemplateWinLoseController;
@@ -35,7 +27,6 @@ use App\Http\Controllers\Backend\MenusController;
 use App\Http\Controllers\Backend\SubmenusController;
 use App\Http\Controllers\Backend\LevelsController;
 use App\Http\Controllers\Backend\PendudukController;
-use App\Http\Controllers\Backend\CompanyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -105,47 +96,47 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('penduduk', PendudukController::class);
 
     // Company routes
-    Route::resource('companies', CompanyController::class);
-    Route::any('companies/{id}', [CompanyController::class, 'update']);
-    Route::get('combocompanies', [CompanyController::class, 'combo']);
+    Route::resource('companies', App\Http\Controllers\Backend\CompanyController::class);
+    Route::any('companies/{id}', [App\Http\Controllers\Backend\CompanyController::class, 'update']);
+    Route::get('combocompanies', [App\Http\Controllers\Backend\CompanyController::class, 'combo']);
 
     // Division routes
-    Route::resource('divisions', DivisionController::class);
-    Route::any('divisions/{id}', [DivisionController::class, 'update']);
-    Route::get('combodivisions', [DivisionController::class, 'combo']);
+    Route::resource('divisions', App\Http\Controllers\Backend\DivisionController::class);
+    Route::any('divisions/{id}', [App\Http\Controllers\Backend\DivisionController::class, 'update']);
+    Route::get('combodivisions', [App\Http\Controllers\Backend\DivisionController::class, 'combo']);
 
     // Department Routes
-    Route::resource('departments', DepartmentController::class);
-    Route::any('departments/{id}', [DepartmentController::class, 'update']);
+    Route::resource('departments', App\Http\Controllers\Backend\DepartmentController::class);
+    Route::any('departments/{id}', [App\Http\Controllers\Backend\DepartmentController::class, 'update']);
     Route::get('combodepartments', [App\Http\Controllers\Backend\DepartmentController::class, 'combo']);
     
     // Homebase Routes
-    Route::resource('homebases', HomebaseController::class);
-    Route::any('homebases/{id}', [HomebaseController::class, 'update']);
-    Route::get('combohomebases', [HomebaseController::class, 'combo']);
+    Route::resource('homebases', App\Http\Controllers\Backend\HomebaseController::class);
+    Route::any('homebases/{id}', [App\Http\Controllers\Backend\HomebaseController::class, 'update']);
+    Route::get('combohomebases', [App\Http\Controllers\Backend\HomebaseController::class, 'combo']);
 
     // Shift Routes
-    Route::resource('shifts', ShiftController::class);
-    Route::any('shifts/{id}', [ShiftController::class, 'update']);
-    Route::get('comboshifts', [ShiftController::class, 'combo']);
+    Route::resource('shifts', App\Http\Controllers\Backend\ShiftController::class);
+    Route::any('shifts/{id}', [App\Http\Controllers\Backend\ShiftController::class, 'update']);
+    Route::get('comboshifts', [App\Http\Controllers\Backend\ShiftController::class, 'combo']);
 
     // Master Approval Routes
-    Route::resource('master_approvals', MasterApprovalController::class);
-    Route::any('master_approvals/{id}', [MasterApprovalController::class, 'update']);
+    Route::resource('master_approvals', App\Http\Controllers\Backend\MasterApprovalController::class);
+    Route::any('master_approvals/{id}', [App\Http\Controllers\Backend\MasterApprovalController::class, 'update']);
 
     //Province Routes
-    Route::resource('provinces', ProvinceController::class);
-    Route::any('provinces/{id}', [ProvinceController::class, 'update']);
+    Route::resource('provinces', App\Http\Controllers\Backend\ProvinceController::class);
+    Route::any('provinces/{id}', [App\Http\Controllers\Backend\ProvinceController::class, 'update']);
     Route::get('comboprovinces', [App\Http\Controllers\Backend\ProvinceController::class, 'combo']);
     
     //City Routes
-    Route::resource('cities', CityController::class);
-    Route::any('cities/{id}', [CityController::class, 'update']);
+    Route::resource('cities', App\Http\Controllers\Backend\CityController::class);
+    Route::any('cities/{id}', [App\Http\Controllers\Backend\CityController::class, 'update']);
     Route::get('combocities', [App\Http\Controllers\Backend\CityController::class, 'combo']);
 
     //District Routes
-    Route::resource('districts', DistrictController::class);
-    Route::any('districts/{id}', [DistrictController::class, 'update']);
+    Route::resource('districts', App\Http\Controllers\Backend\DistrictController::class);
+    Route::any('districts/{id}', [App\Http\Controllers\Backend\DistrictController::class, 'update']);
     Route::get('combodistricts', [App\Http\Controllers\Backend\DistrictController::class, 'combo']);
 
     // Goods Routes

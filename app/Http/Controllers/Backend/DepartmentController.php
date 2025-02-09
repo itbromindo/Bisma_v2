@@ -16,7 +16,7 @@ class DepartmentController extends Controller
     {
         $this->model = new Department();
         $this->mandatory = array(
-            'department_name' => 'required',
+            'department_name' => 'required|max:225',
             // 'department_code' => 'nullable|unique:departments,department_code',
             'department_code' => 'nullable|string|max:225',
             'division_code' => 'required',

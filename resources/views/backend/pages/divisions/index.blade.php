@@ -4,6 +4,10 @@
 Divisions - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -40,8 +44,9 @@ Divisions - Admin Panel
                                         </div>
                                     </form>
                                 </div>
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#modalinput">Tambah Data</button>
+                                @if ($usr->can('divisions.create'))
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput" onclick="clearForm()">Tambah Data</button>
+                                @endif
                             </div>
                         </div>
 
@@ -68,13 +73,14 @@ Divisions - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($divisions->currentPage() - 1) * $divisions->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td class="text-center">{{ $division->division_code }}</td>
-                                                                <td class="text-center">{{ $division->division_name }}</td>
-                                                                <td class="text-center">{{ $division->division_notes }}</td>
+                                                                <td class="text-center">{{ Str::words($division->division_code, 10, '...') }}</td>
+                                                                <td class="text-center">{{ Str::words($division->division_name, 10, '...') }}</td>
+                                                                <td class="text-left">{{ Str::words($division->division_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     {{ $division->company->companies_name ?? '-' }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
+                                                                        @if ($usr->can('divisions.delete'))
                                                                         <button
                                                                             class="btn btn-light btn-sm border border-danger text-danger"
                                                                             title="Delete"
@@ -91,6 +97,7 @@ Divisions - Admin Panel
                                                                                     stroke-linejoin="round" />
                                                                             </svg>
                                                                         </button>
+                                                                        @endif
                                                                         <button
                                                                             class="btn btn-light btn-sm border border-success text-success"
                                                                             title="Edit"
@@ -167,7 +174,7 @@ Divisions - Admin Panel
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Form Input</h5>
+                <h5 class="modal-title" id="tittleform">Form Input</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -177,6 +184,12 @@ Divisions - Admin Panel
                     <input type="hidden" id="division_id">
                     <div id="alert-container"></div> 
                     <div class="fromGroup mb-3">
+                        <label>Company</label>
+                        <select class="form-control" id="companies_code" style="width: 100%;">
+                            <option value="" disabled selected>Pilih Company</option>
+                        </select>
+                    </div>
+                    <div class="fromGroup mb-3">
                         <label>Division Name</label>
                         <input class="form-control" type="text" id="division_name" placeholder="Division Name" />
                     </div>
@@ -185,18 +198,16 @@ Divisions - Admin Panel
                         <textarea class="form-control" name="division_notes" id="division_notes"
                             placeholder="Notes"></textarea>
                     </div>
-                    <div class="fromGroup mb-3">
-                        <label>Company</label>
-                        {{-- <input class="form-control" type="text" id="moduls_code" placeholder="Code Modul" /> --}}
-                            <select class="form-control" id="companies_code" style="width: 100%;">
-                                <option value="" disabled selected>Pilih Company</option>
-                            </select>
-                    </div>
+                    
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        @if ($usr->can('divisions.create'))
                         <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
+                        @endif
+                        @if ($usr->can('divisions.update') || $usr->can('divisions.create'))
                         <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
+                        @endif
                     </div>
                 </form>
             </div>
@@ -241,6 +252,8 @@ Divisions - Admin Panel
         document.getElementById('division_name').value = '';
         document.getElementById('division_notes').value = '';
         $('#companies_code').append(new Option('', '', true, true)).trigger('change');
+
+        document.getElementById('tittleform').innerHTML = 'Form Input';
         document.getElementById('saveButton').textContent = 'Save';
     }
 
@@ -259,26 +272,28 @@ Divisions - Admin Panel
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.divisions.current_page - 1) * response.divisions.per_page + index + 1}</td>
-                                    <td class="text-center">${division.division_code}</td>
-                                    <td class="text-center">${division.division_name}</td>
-                                    <td class="text-center">${division.division_notes ?? ''}</td>
+                                    <td class="text-center">${ truncateText(division.division_code, 10, '...')}</td>
+                                    <td class="text-center">${ truncateText(division.division_name, 10, '...')}</td>
+                                    <td class="text-center">${ truncateText(division.division_notes, 10, '...')?? ''}</td>
                                     <td class="text-center">${division.company ? division.company.companies_name : '-'}</td>
                                     <td class="text-center">
-                                                                    <div class="d-flex justify-content-center gap-2">
-                                                                        <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${division.division_id}')">
-                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            </svg>
-                                                                        </button>
-                                                                        <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${division.division_id}')">
-                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            </svg>
-                                                                        </button>
-                                                                    </div>
-                                                                </td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            @if ($usr->can('divisions.delete'))
+                                            <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${division.division_id}')">
+                                                <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                            @endif
+                                            <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${division.division_id}')">
+                                                <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             `);
                         });
@@ -434,11 +449,12 @@ Divisions - Admin Panel
 
     function showedit(id) {
         $.get(`/admin/divisions/${id}`, function (data) {
-            console.log(data);
+            // console.log(data);
             document.getElementById('division_id').value = data.division_id;
             document.getElementById('division_name').value = data.division_name;
             document.getElementById('division_notes').value = data.division_notes;
             $('#companies_code').append(new Option(data.companies_name, data.companies_code, true, true)).trigger('change');
+            document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
             document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });
