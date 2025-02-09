@@ -1,18 +1,4 @@
 <?php
-
-use App\Http\Controllers\Backend\ChecklistController;
-use App\Http\Controllers\Backend\DecissionQuotationController;
-use App\Http\Controllers\Backend\DescriptionQuotationController;
-use App\Http\Controllers\Backend\InquiryGoodController;
-use App\Http\Controllers\Backend\InquiryStatusController;
-use App\Http\Controllers\Backend\OriginInquiryController;
-use App\Http\Controllers\Backend\ParameterDuedateController;
-use App\Http\Controllers\Backend\OptionChecklistController;
-use App\Http\Controllers\Backend\PillarController;
-use App\Http\Controllers\Backend\QuotationStatusController;
-use App\Models\InquiryGood;
-use App\Models\OriginInquiry;
-use App\Http\Controllers\Backend\TemplateWinLoseController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -182,43 +168,43 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     
     //Inquiry Good Routes
-    Route::resource('inquiry_goods', InquiryGoodController::class);
-    Route::any('inquiry_goods/{id}', [InquiryGoodController::class, 'update']);
+    Route::resource('inquiry_goods', App\Http\Controllers\Backend\InquiryGoodController::class);
+    Route::any('inquiry_goods/{id}', [App\Http\Controllers\Backend\InquiryGoodController::class, 'update']);
     
     //Origin Inquiry Routes
-    Route::resource('origin_inquiries', OriginInquiryController::class);
-    Route::any('origin_inquiries/{id}', [OriginInquiryController::class, 'update']);
+    Route::resource('origin_inquiries', App\Http\Controllers\Backend\OriginInquiryController::class);
+    Route::any('origin_inquiries/{id}', [App\Http\Controllers\Backend\OriginInquiryController::class, 'update']);
     
     //Description Quotation Routes
-    Route::resource('description_quotations', DescriptionQuotationController::class);
-    Route::any('description_quotations/{id}', [DescriptionQuotationController::class, 'update']);
+    Route::resource('description_quotations', App\Http\Controllers\Backend\DescriptionQuotationController::class);
+    Route::any('description_quotations/{id}', [App\Http\Controllers\Backend\DescriptionQuotationController::class, 'update']);
     
     //Origin Parameter Duedate Routes
-    Route::resource('parameter_duedates', ParameterDuedateController::class);
-    Route::any('parameter_duedates/{id}', [ParameterDuedateController::class, 'update']);
+    Route::resource('parameter_duedates', App\Http\Controllers\Backend\ParameterDuedateController::class);
+    Route::any('parameter_duedates/{id}', [App\Http\Controllers\Backend\ParameterDuedateController::class, 'update']);
     
     //Decission Quotation Routes
-    Route::resource('decission_quotations', DecissionQuotationController::class);
-    Route::any('decission_quotations/{id}', [DecissionQuotationController::class, 'update']);
+    Route::resource('decission_quotations', App\Http\Controllers\Backend\DecissionQuotationController::class);
+    Route::any('decission_quotations/{id}', [App\Http\Controllers\Backend\DecissionQuotationController::class, 'update']);
     
     //Quotation Status Routes
-    Route::resource('quotation_statuses', QuotationStatusController::class);
-    Route::any('quotation_statuses/{id}', [QuotationStatusController::class, 'update']);
+    Route::resource('quotation_statuses', App\Http\Controllers\Backend\QuotationStatusController::class);
+    Route::any('quotation_statuses/{id}', [App\Http\Controllers\Backend\QuotationStatusController::class, 'update']);
 
-    Route::resource('pillars', PillarController::class);
-    Route::any('pillars/{id}', [PillarController::class, 'update']);
-    Route::get('combopillars', [PillarController::class, 'combo']);
+    Route::resource('pillars', App\Http\Controllers\Backend\PillarController::class);
+    Route::any('pillars/{id}', [App\Http\Controllers\Backend\PillarController::class, 'update']);
+    Route::get('combopillars', [App\Http\Controllers\Backend\PillarController::class, 'combo']);
     
-    Route::resource('checklists', ChecklistController::class);
-    Route::any('checklists/{id}', [ChecklistController::class, 'update']);
-    Route::get('combochecklists', [ChecklistController::class, 'combo']);
+    Route::resource('checklists', App\Http\Controllers\Backend\ChecklistController::class);
+    Route::any('checklists/{id}', [App\Http\Controllers\Backend\ChecklistController::class, 'update']);
+    Route::get('combochecklists', [App\Http\Controllers\Backend\ChecklistController::class, 'combo']);
     
-    Route::resource('optionchecklists', OptionChecklistController::class);
-    Route::any('optionchecklists/{id}', [OptionChecklistController::class, 'update']);
+    Route::resource('optionchecklists', App\Http\Controllers\Backend\OptionChecklistController::class);
+    Route::any('optionchecklists/{id}', [App\Http\Controllers\Backend\OptionChecklistController::class, 'update']);
 
-    Route::resource('template_win_loses', TemplateWinLoseController::class);
-    Route::any('template_win_loses/{id}', [TemplateWinLoseController::class, 'update']);
+    Route::resource('template_win_loses', App\Http\Controllers\Backend\TemplateWinLoseController::class);
+    Route::any('template_win_loses/{id}', [App\Http\Controllers\Backend\TemplateWinLoseController::class, 'update']);
     
-    Route::resource('inquiry_statuses', InquiryStatusController::class);
-    Route::any('inquiry_statuses/{id}', [InquiryStatusController::class, 'update']);
+    Route::resource('inquiry_statuses', App\Http\Controllers\Backend\InquiryStatusController::class);
+    Route::any('inquiry_statuses/{id}', [App\Http\Controllers\Backend\InquiryStatusController::class, 'update']);
 })->middleware('auth:admin');

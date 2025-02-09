@@ -18,7 +18,7 @@ class OptionChecklistController extends Controller
         $this->model = new OptionChecklist();
         $this->mandatory = array(
             'option_checklist_code' => 'nullable|string|max:225',
-            'checklist_code' => 'nullable|string|max:225',
+            'checklist_code' => 'required|string|max:225',
             'option_checklist_items' => 'required|string|max:225',
             'option_checklist_notes' => 'nullable|string',
         );

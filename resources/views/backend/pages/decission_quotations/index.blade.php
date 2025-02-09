@@ -43,7 +43,9 @@ Decission Quotation - Admin Panel
                                         </div>
                                     </form>
                                 </div>
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput">Tambah Data</button>
+                                @if ($usr->can('decission_quotation.create'))
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput" onclick="clearform()">Tambah Data</button>
+                                @endif
                             </div>
                         </div>
 
@@ -67,23 +69,25 @@ Decission Quotation - Admin Panel
                                             <tbody id="tableBody" >
                                                 @foreach ($decission_quotations as $quotation)
                                                     <tr>
-                                                    <td scope="row" class="text-center">
-                                                                    {{ ($decission_quotations->currentPage() - 1) * $decission_quotations->perPage() + $loop->iteration }}
-                                                                </td>
-                                                                <td class="text-center">{{ $quotation->template_decission_quotation_code }}</td>
-                                                         <td class="text-center">{{ $quotation->template_decission_quotation_title }}</td>
-                                                         <td class="text-center">{{ $quotation->template_decission_quotation_text }}</td>
-                                                         <td class="text-center">{{ $quotation->template_decission_quotation_notes }}</td>
+                                                        <td scope="row" class="text-center">
+                                                            {{ ($decission_quotations->currentPage() - 1) * $decission_quotations->perPage() + $loop->iteration }}
+                                                        </td>
+                                                        <td class="text-center">{{ Str::words($quotation->template_decission_quotation_code, 10, '...') }}</td>
+                                                        <td class="text-center">{{ Str::words($quotation->template_decission_quotation_title, 10, '...') }}</td>
+                                                        <td class="text-center">{{ Str::words($quotation->template_decission_quotation_text, 10, '...') }}</td>
+                                                        <td class="text-left">{{ Str::words($quotation->template_decission_quotation_notes, 10, '...') }}</td>
                                                         <!-- <td>{{ $quotation->is_deleted ? 'Deleted' : 'Active' }}</td> -->
                                                         
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
+                                                                        @if ($usr->can('decission_quotation.delete'))
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $quotation->template_decission_quotation_id }}')">
                                                                             <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                                 <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                                 <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                             </svg>
                                                                         </button>
+                                                                        @endif
                                                                         <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('{{ $quotation->template_decission_quotation_id }}')">
                                                                             <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                                 <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
@@ -139,7 +143,7 @@ Decission Quotation - Admin Panel
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Form Input</h5>
+                <h5 class="modal-title" id="tittleform">Form Input</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -164,7 +168,9 @@ Decission Quotation - Admin Panel
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                @if ($usr->can('decission_quotation.create'))
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @endif
                 @if ($usr->can('decission_quotation.update') || $usr->can('decission_quotation.create'))
                 <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                 @endif
@@ -190,19 +196,21 @@ $(document).ready(function () {
                         tableBody.append(`
                             <tr>
                                 <td class="text-center">${(response.decission_quotations.current_page - 1) * response.decission_quotations.per_page + index + 1}</td>
-                                <td class="text-center">${quotation.template_decission_quotation_code}</td>
-                                <td class="text-center">${quotation.template_decission_quotation_title}</td>
+                                <td class="text-center">${ truncateText(quotation.template_decission_quotation_code, 10, '...')}</td>
+                                <td class="text-center">${ truncateText(quotation.template_decission_quotation_title, 10, '...')}</td>
                                 
-                                <td class="text-center">${quotation.template_decission_quotation_text ?? '-'}</td>
-                                <td class="text-center">${quotation.template_decission_quotation_notes}</td>
+                                <td class="text-center">${ truncateText(quotation.template_decission_quotation_text, 10, '...') ?? '-'}</td>
+                                <td class="text-left">${ truncateText(quotation.template_decission_quotation_notes, 10, '...')}</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">
+                                        @if ($usr->can('decission_quotation.delete'))
                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${quotation.template_decission_quotation_id}')">
                                             <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                 <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                             </svg>
                                         </button>
+                                        @endif
                                         <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${quotation.template_decission_quotation_id}')">
                                             <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
@@ -360,6 +368,7 @@ $(document).ready(function () {
             document.getElementById('template_decission_quotation_title').value = data.template_decission_quotation_title;
             document.getElementById('template_decission_quotation_text').value = data.template_decission_quotation_text;
             document.getElementById('template_decission_quotation_notes').value = data.template_decission_quotation_notes;
+            document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
             document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });

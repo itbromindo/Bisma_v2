@@ -43,7 +43,9 @@
                                         </div>
                                     </form>
                                 </div>
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput">Tambah Data</button>
+                                @if ($usr->can('quotation_statuses.create'))
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput" onclick="clearform()">Tambah Data</button>
+                                @endif
                             </div>
                         </div>
 
@@ -69,17 +71,19 @@
                                                             <td scope="row" class="text-center">
                                                                     {{ ($quotation_statuses->currentPage() - 1) * $quotation_statuses->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td class="text-center">{{ $status->quotation_status_code }}</td>
-                                                                 <td class="text-center">{{ $status->quotation_status_name }}</td>
-                                                                 <td class="text-center">{{ $status->quotation_status_notes }}</td>
+                                                                <td class="text-center">{{ Str::words($status->quotation_status_code, 10, '...') }}</td>
+                                                                 <td class="text-center">{{ Str::words($status->quotation_status_name, 10, '...') }}</td>
+                                                                 <td class="text-left">{{ Str::words($status->quotation_status_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
+                                                                        @if ($usr->can('quotation_statuses.delete'))
                                                                         <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $status->quotation_status_id }}')">
                                                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                                 <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                                 <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                             </svg>
                                                                         </button>
+                                                                        @endif
                                                                         <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('{{ $status->quotation_status_id }}')">
                                                                             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                                 <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
@@ -138,7 +142,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Quotation Status Form</h5>
+                <h5 class="modal-title" id="tittleform">Quotation Status Form</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -159,7 +163,9 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                @if ($usr->can('quotation_statuses.create'))
                 <button type="button" class="btn btn-warning" onclick="clearform()">Clear Data</button>
+                @endif
                 @if ($usr->can('quotation_statuses.update') || $usr->can('quotation_statuses.create'))
                 <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
                 @endif
@@ -184,26 +190,28 @@ $(document).ready(function () {
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.quotation_statuses.current_page - 1) * response.quotation_statuses.per_page + index + 1}</td>
-                                    <td class="text-center">${status.quotation_status_code}</td>
-                                    <td class="text-center">${status.quotation_status_name}</td>
-                                    <td class="text-center">${status.quotation_status_notes ?? '-'}</td>
+                                    <td class="text-center">${ truncateText(status.quotation_status_code, 10, '...')}</td>
+                                    <td class="text-center">${ truncateText(status.quotation_status_name, 10, '...')}</td>
+                                    <td class="text-left">${ truncateText(status.quotation_status_notes, 10, '...') ?? '-'}</td>
                                     
                                     <td class="text-center">
-                                                                    <div class="d-flex justify-content-center gap-2">
-                                                                        <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${status.quotation_status}')">
-                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            </svg>
-                                                                        </button>
-                                                                        <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${status.quotation_status}')">
-                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            </svg>
-                                                                        </button>
-                                                                    </div>
-                                                                </td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            @if ($usr->can('quotation_statuses.delete'))
+                                            <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${status.quotation_status}')">
+                                                <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                            @endif
+                                            <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${status.quotation_status}')">
+                                                <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             `);
                         });
@@ -322,6 +330,7 @@ $(document).ready(function () {
                 document.getElementById('quotation_status_id').value = data.quotation_status_id;
                 document.getElementById('quotation_status_name').value = data.quotation_status_name;
                 document.getElementById('quotation_status_notes').value = data.quotation_status_notes;
+                document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
                 document.getElementById('saveButton').textContent = 'Save Changes';
                 $('#modalinput').modal('show');
             },

@@ -42,7 +42,9 @@ Origin Inquiries - Admin Panel
                                         </div>
                                     </form>
                                 </div>
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput">Tambah Data</button>
+                                @if ($usr->can('origin_inquiries.create'))
+                                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalinput" onclick="clearform()">Tambah Data</button>
+                                @endif
                             </div>
                         </div>
 
@@ -66,17 +68,19 @@ Origin Inquiries - Admin Panel
                                                 @foreach ($origin_inquiries as $origin_inquiry)
                                                     <tr>
                                                         <td scope="row" class="text-center">{{ ($origin_inquiries->currentPage() - 1) * $origin_inquiries->perPage() + $loop->iteration }}</td>
-                                                        <td class="text-center">{{ $origin_inquiry->origin_inquiry_code }}</td>
-                                                        <td class="text-center">{{ $origin_inquiry->origin_inquiry_name }}</td>
-                                                        <td class="text-center">{{ $origin_inquiry->origin_inquiry_notes }}</td>
+                                                        <td class="text-center">{{ Str::words($origin_inquiry->origin_inquiry_code, 10, '...') }}</td>
+                                                        <td class="text-center">{{ Str::words($origin_inquiry->origin_inquiry_name, 10, '...') }}</td>
+                                                        <td class="text-left">{{ Str::words($origin_inquiry->origin_inquiry_notes, 10, '...') }}</td>
                                                         <td class="text-center">
                                                             <div class="d-flex justify-content-center gap-2">
+                                                                @if ($usr->can('origin_inquiries.delete'))
                                                                 <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('{{ $origin_inquiry->origin_inquiry_id }}')">
                                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                         <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                         <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
                                                                     </svg>
                                                                 </button>
+                                                                @endif
                                                                 <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('{{ $origin_inquiry->origin_inquiry_id }}')">
                                                                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                         <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
@@ -134,7 +138,7 @@ Origin Inquiries - Admin Panel
                     <div class="modal-dialog modal-dialog-centered" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Form Input</h5>
+                                <h5 class="modal-title" id="tittleform">Form Input</h5>
                                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -160,7 +164,7 @@ Origin Inquiries - Admin Panel
                              @endif   
                             @if ($usr->can('origin_inquiries.update') || $usr->can('origin_inquiries.create'))
                             <button type="button" id= "saveButton" class="btn btn-primary" onclick="save()">Save</button>
-                                @endif
+                            @endif
                         </div>
                 </div>
         </div>
@@ -183,26 +187,28 @@ $(document).ready(function () {
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.origin_inquiries.current_page - 1) * response.origin_inquiries.per_page + index + 1}</td>
-                                    <td class="text-center">${origin_inquiry.origin_inquiry_code}</td>
-                                    <td class="text-center">${origin_inquiry.origin_inquiry_name}</td>
-                                    <td class="text-center">${origin_inquiry.origin_inquiry_notes ?? '-'}</td>
+                                    <td class="text-center">${ truncateText(origin_inquiry.origin_inquiry_code, 10, '...')}</td>
+                                    <td class="text-center">${ truncateText(origin_inquiry.origin_inquiry_name, 10, '...')}</td>
+                                    <td class="text-left">${ truncateText(origin_inquiry.origin_inquiry_notes, 10, '...') ?? '-'}</td>
                                     
                                     <td class="text-center">
-                                                                    <div class="d-flex justify-content-center gap-2">
-                                                                        <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${origin_inquiry.origin_inquiry_id}')">
-                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            </svg>
-                                                                        </button>
-                                                                        <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${origin_inquiry.origin_inquiry_id}')">
-                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            </svg>
-                                                                        </button>
-                                                                    </div>
-                                                                </td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            @if ($usr->can('origin_inquiries.delete'))
+                                            <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${origin_inquiry.origin_inquiry_id}')">
+                                                <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                            @endif
+                                            <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${origin_inquiry.origin_inquiry_id}')">
+                                                <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             `);
                         });
@@ -294,6 +300,7 @@ $(document).ready(function () {
                 document.getElementById('origin_inquiry_id').value = data.origin_inquiry_id; 
                 document.getElementById('origin_inquiry_name').value = data.origin_inquiry_name; 
                 document.getElementById('origin_inquiry_notes').value = data.origin_inquiry_notes;
+                document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
                 document.getElementById('saveButton').textContent = 'Save Changes';
                 $('#modalinput').modal('show');
             },
