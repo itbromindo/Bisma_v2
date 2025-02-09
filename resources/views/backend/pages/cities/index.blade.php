@@ -4,6 +4,10 @@
 Cities - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -40,8 +44,10 @@ Cities - Admin Panel
                                         </div>
                                     </form>
                                 </div>
+                                @if ($usr->can('cities.create'))
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#modalinput">Tambah Data</button>
+                                    data-bs-target="#modalinput" onclick="clearForm()">Tambah Data</button>
+                                @endif
                             </div>
                         </div>
 
@@ -69,14 +75,15 @@ Cities - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($cities->currentPage() - 1) * $cities->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td class="text-center">{{ $city->cities_code }}</td>
-                                                                <td class="text-center">{{ $city->cities_name }}</td>
-                                                                <td class="text-center">{{ $city->cities_notes }}</td>
+                                                                <td class="text-center">{{ Str::words($city->cities_code, 10, '...') }}</td>
+                                                                <td class="text-center">{{ Str::words($city->cities_name, 10, '...') }}</td>
+                                                                <td class="text-left">{{ Str::words($city->cities_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     {{ $city->province->provinces_name ?? '-' }}</td>
                                                                 <!-- <td class="text-center">{{ $city->cities_status }}</td> -->
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
+                                                                        @if ($usr->can('cities.delete'))
                                                                         <button
                                                                             class="btn btn-light btn-sm border border-danger text-danger"
                                                                             title="Delete"
@@ -93,6 +100,7 @@ Cities - Admin Panel
                                                                                     stroke-linejoin="round" />
                                                                             </svg>
                                                                         </button>
+                                                                        @endif
                                                                         <button
                                                                             class="btn btn-light btn-sm border border-success text-success"
                                                                             title="Edit"
@@ -162,7 +170,7 @@ Cities - Admin Panel
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Form Input</h5>
+                <h5 class="modal-title" id="tittleform">Form Input</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -195,8 +203,12 @@ Cities - Admin Panel
                     </div> -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        @if ($usr->can('cities.create'))
                         <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
+                        @endif
+                        @if ($usr->can('cities.update') || $usr->can('cities.create'))
                         <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
+                        @endif
                     </div>
                 </form>
             </div>
@@ -241,6 +253,7 @@ Cities - Admin Panel
         document.getElementById('cities_name').value = '';
         document.getElementById('cities_notes').value = '';
         $('#provinces_code').append(new Option('', '', true, true)).trigger('change');
+        document.getElementById('tittleform').innerHTML = 'Form Input';
         document.getElementById('saveButton').textContent = 'Save';
         
     }
@@ -260,27 +273,28 @@ Cities - Admin Panel
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.cities.current_page - 1) * response.cities.per_page + index + 1}</td>
-                                    <td class="text-center">${city.cities_code}</td>
-                                    <td class="text-center">${city.cities_name}</td>
-                                    <td class="text-center">${city.cities_notes ?? ''}</td>
-                                    <td class="text-center">${city.province ? city.province.provinces_name : ''}</td>
-                                    
+                                    <td class="text-center">${ truncateText(city.cities_code, 10, '...')}</td>
+                                    <td class="text-center">${ truncateText(city.cities_name, 10, '...')}</td>
+                                    <td class="text-left">${ truncateText(city.cities_notes, 10, '...') ?? ''}</td>
+                                    <td class="text-center">${ truncateText(city.province, 10, '...') ? city.province.provinces_name : ''}</td>
                                     <td class="text-center">
-                                                                    <div class="d-flex justify-content-center gap-2">
-                                                                        <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${city.cities_id}')">
-                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            </svg>
-                                                                        </button>
-                                                                        <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${city.cities_id}')">
-                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            </svg>
-                                                                        </button>
-                                                                    </div>
-                                                                </td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            @if ($usr->can('cities.delete'))
+                                            <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${city.cities_id}')">
+                                                <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                            @endif
+                                            <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${city.cities_id}')">
+                                                <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             `);
                         });
@@ -440,6 +454,7 @@ Cities - Admin Panel
             document.getElementById('cities_name').value = data.cities_name;
             document.getElementById('cities_notes').value = data.cities_notes;
             $('#provinces_code').append(new Option(data.provinces_name, data.provinces_code, true, true)).trigger('change');
+            document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
             document.getElementById('saveButton').textContent = 'Save Changes';
             // document.getElementById('cities_status').value = data.cities_status;
             $('#modalinput').modal('show');

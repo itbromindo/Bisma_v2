@@ -4,6 +4,10 @@
 Shifts - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -40,8 +44,10 @@ Shifts - Admin Panel
                                         </div>
                                     </form>
                                 </div>
+                                @if ($usr->can('shifts.create'))
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#modalinput">Tambah Data</button>
+                                    data-bs-target="#modalinput" onclick="clearForm()">Tambah Data</button>
+                                @endif
                             </div>
                         </div>
 
@@ -74,18 +80,19 @@ Shifts - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($shifts->currentPage() - 1) * $shifts->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                 <td class="text-center">{{ $shift->shift_code }}</td>
-                                                                 <td class="text-center">{{ $shift->shift_name }}</td>
-                                                                 <td class="text-center">{{ $shift->company->companies_name ?? '-' }}</td>
-                                                                 <td class="text-center">{{ $shift->shift_start_time_before_break }}</td>
-                                                                 <td class="text-center">{{ $shift->shift_end_time_before_break }}</td>
-                                                                 <td class="text-center">{{ $shift->shift_start_time_break }}</td>
-                                                                 <td class="text-center">{{ $shift->shift_end_time_break }}</td>
-                                                                 <td class="text-center">{{ $shift->shift_start_time_after_break }}</td>
-                                                                 <td class="text-center">{{ $shift->shift_end_time_after_break }}</td>
-                                                                 <td class="text-center">{{ $shift->shift_notes }}</td>
+                                                                 <td class="text-center">{{ Str::words($shift->shift_code, 10, '...') }}</td>
+                                                                 <td class="text-center">{{ Str::words($shift->shift_name, 10, '...') }}</td>
+                                                                 <td class="text-center">{{ Str::words($shift->company->companies_name, 10, '...') ?? '-' }}</td>
+                                                                 <td class="text-center">{{ Str::words($shift->shift_start_time_before_break, 10, '...') }}</td>
+                                                                 <td class="text-center">{{ Str::words($shift->shift_end_time_before_break, 10, '...') }}</td>
+                                                                 <td class="text-center">{{ Str::words($shift->shift_start_time_break, 10, '...') }}</td>
+                                                                 <td class="text-center">{{ Str::words($shift->shift_end_time_break, 10, '...') }}</td>
+                                                                 <td class="text-center">{{ Str::words($shift->shift_start_time_after_break, 10, '...') }}</td>
+                                                                 <td class="text-center">{{ Str::words($shift->shift_end_time_after_break, 10, '...') }}</td>
+                                                                 <td class="text-left">{{ Str::words($shift->shift_notes, 10, '...') }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
+                                                                        @if ($usr->can('shifts.delete'))
                                                                         <button
                                                                             class="btn btn-light btn-sm border border-danger text-danger"
                                                                             title="Delete"
@@ -102,6 +109,7 @@ Shifts - Admin Panel
                                                                                     stroke-linejoin="round" />
                                                                             </svg>
                                                                         </button>
+                                                                        @endif
                                                                         <button
                                                                             class="btn btn-light btn-sm border border-success text-success"
                                                                             title="Edit"
@@ -173,7 +181,7 @@ Shifts - Admin Panel
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Form Input</h5>
+                <h5 class="modal-title" id="tittleform">Form Input</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -230,8 +238,12 @@ Shifts - Admin Panel
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        @if ($usr->can('shifts.create'))
                         <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
+                        @endif
+                        @if ($usr->can('shifts.update') || $usr->can('shifts.create'))
                         <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
+                        @endif
                     </div>
                 </form>
             </div>
@@ -274,16 +286,17 @@ Shifts - Admin Panel
 
     function clearForm() {  // tambahan clear data
         document.getElementById('shift_id').value = '';
-            document.getElementById('shift_name').value = '';
-            document.getElementById('shift_notes').value = '';
-            document.getElementById('shift_start_time_before_break').value = '';
-            document.getElementById('shift_end_time_before_break').value = '';
-            document.getElementById('shift_start_time_break').value = '';
-            document.getElementById('shift_end_time_break').value = '';
-            document.getElementById('shift_start_time_after_break').value = '';
-            document.getElementById('shift_end_time_after_break').value = '';
-            $('#companies_code').append(new Option('', '', true, true)).trigger('change');
-            document.getElementById('saveButton').textContent = 'Save';
+        document.getElementById('shift_name').value = '';
+        document.getElementById('shift_notes').value = '';
+        document.getElementById('shift_start_time_before_break').value = '';
+        document.getElementById('shift_end_time_before_break').value = '';
+        document.getElementById('shift_start_time_break').value = '';
+        document.getElementById('shift_end_time_break').value = '';
+        document.getElementById('shift_start_time_after_break').value = '';
+        document.getElementById('shift_end_time_after_break').value = '';
+        $('#companies_code').append(new Option('', '', true, true)).trigger('change');
+        document.getElementById('tittleform').innerHTML = 'Form Input';
+        document.getElementById('saveButton').textContent = 'Save';
     }
 
     $(document).ready(function () {
@@ -300,16 +313,16 @@ Shifts - Admin Panel
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.shifts.current_page - 1) * response.shifts.per_page + index + 1}</td>
-                                    <td class="text-center">${shift.shift_code}</td>
-                                    <td class="text-center">${shift.shift_name}</td>
-                                    <td class="text-center">${shift.company ? shift.company.companies_name : '-'}</td>
-                                    <td class="text-center">${shift.shift_start_time_before_break}</td>
-                                    <td class="text-center">${shift.shift_end_time_before_break}</td>
-                                    <td class="text-center">${shift.shift_start_time_break}</td>
-                                    <td class="text-center">${shift.shift_end_time_break}</td>
-                                    <td class="text-center">${shift.shift_start_time_after_break}</td>
-                                    <td class="text-center">${shift.shift_end_time_after_break}</td>
-                                    <td class="text-center">${shift.shift_notes ?? '-'}</td>
+                                    <td class="text-center">${ truncateText(shift.shift_code, 10, '...')}</td>
+                                    <td class="text-center">${ truncateText(shift.shift_name, 10, '...')}</td>
+                                    <td class="text-center">${ shift.company ?  shift.company.companies_name : '-'}</td>
+                                    <td class="text-center">${ shift.shift_start_time_before_break}</td>
+                                    <td class="text-center">${ shift.shift_end_time_before_break}</td>
+                                    <td class="text-center">${ shift.shift_start_time_break}</td>
+                                    <td class="text-center">${ shift.shift_end_time_break}</td>
+                                    <td class="text-center">${ shift.shift_start_time_after_break}</td>
+                                    <td class="text-center">${ shift.shift_end_time_after_break}</td>
+                                    <td class="text-center">${ truncateText(shift.shift_notes, 10, '...') ?? '-'}</td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
                                             <button
@@ -500,6 +513,7 @@ Shifts - Admin Panel
             document.getElementById('shift_start_time_after_break').value = data.shift_start_time_after_break;
             document.getElementById('shift_end_time_after_break').value = data.shift_end_time_after_break;
             $('#companies_code').append(new Option(data.companies_name, data.companies_code, true, true)).trigger('change');
+            document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
             document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });

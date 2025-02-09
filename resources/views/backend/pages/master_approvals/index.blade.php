@@ -4,6 +4,10 @@
 Master Approvals - Admin Panel
 @endsection
 
+@php
+    $usr = Auth::guard('web')->user();
+@endphp
+
 @section('admin-content')
 <div class="content-wrapper">
     <div class="page-content">
@@ -40,8 +44,10 @@ Master Approvals - Admin Panel
                                         </div>
                                     </form>
                                 </div>
+                                @if ($usr->can('master_approvals.create'))
                                 <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#modalinput">Tambah Data</button>
+                                    data-bs-target="#modalinput" onclick="clearForm()">Tambah Data</button>
+                                @endif
                             </div>
                         </div>
 
@@ -70,14 +76,15 @@ Master Approvals - Admin Panel
                                                                 <td scope="row" class="text-center">
                                                                     {{ ($masterApprovals->currentPage() - 1) * $masterApprovals->perPage() + $loop->iteration }}
                                                                 </td>
-                                                                <td class="text-center">{{ $approval->master_approvals_code }}</td>
-                                                                 <td class="text-center">{{ $approval->master_approvals_approval_name }}</td>
-                                                                 <td class="text-center">{{ $approval->master_approvals_notes }}</td>
-                                                                 <td class="text-center">{{ $approval->division->division_name ?? '-' }}</td>
-                                                                 <td class="text-center">{{ $approval->department->department_name ?? '-' }}</td>
-                                                                 <td class="text-center">{{ $approval->level->level_name ?? '-' }}</td>
+                                                                <td class="text-center">{{ Str::words($approval->master_approvals_code, 10, '...') }}</td>
+                                                                 <td class="text-center">{{ Str::words($approval->master_approvals_approval_name, 10, '...') }}</td>
+                                                                 <td class="text-center">{{ Str::words($approval->master_approvals_notes, 10, '...') }}</td>
+                                                                 <td class="text-center">{{ Str::words($approval->division->division_name, 10, '...') ?? '-' }}</td>
+                                                                 <td class="text-center">{{ Str::words($approval->department->department_name, 10, '...') ?? '-' }}</td>
+                                                                 <td class="text-center">{{ Str::words($approval->level->level_name, 10, '...') ?? '-' }}</td>
                                                                 <td class="text-center">
                                                                     <div class="d-flex justify-content-center gap-2">
+                                                                        @if ($usr->can('master_approvals.delete'))
                                                                         <button
                                                                             class="btn btn-light btn-sm border border-danger text-danger"
                                                                             title="Delete"
@@ -94,6 +101,7 @@ Master Approvals - Admin Panel
                                                                                     stroke-linejoin="round" />
                                                                             </svg>
                                                                         </button>
+                                                                        @endif
                                                                         <button
                                                                             class="btn btn-light btn-sm border border-success text-success"
                                                                             title="Edit"
@@ -171,7 +179,7 @@ Master Approvals - Admin Panel
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Form Input</h5>
+                <h5 class="modal-title" id="tittleform">Form Input</h5>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -213,8 +221,12 @@ Master Approvals - Admin Panel
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        @if ($usr->can('master_approvals.create'))
+                        @endif
                         <button type="button" class="btn btn-warning" onclick="clearForm()">Clear Data</button>
+                        @if ($usr->can('master_approvals.update') || $usr->can('master_approvals.create'))
                         <button type="button" id="saveButton" class="btn btn-primary" onclick="save()">Save</button>
+                        @endif
                     </div>
                 </form>
             </div>
@@ -311,6 +323,7 @@ Master Approvals - Admin Panel
         $('#department_code').append(new Option('', '', true, true)).trigger('change');
         $('#level_code').append(new Option('', '', true, true)).trigger('change');
         document.getElementById('level_code').value = '';
+        document.getElementById('tittleform').innerHTML = 'Form Input';
         document.getElementById('saveButton').textContent = 'Save';
     }
 
@@ -329,28 +342,30 @@ Master Approvals - Admin Panel
                             $('#tableBody').append(`
                                 <tr>
                                     <td class="text-center">${(response.masterApprovals.current_page - 1) * response.masterApprovals.per_page + index + 1}</td>
-                                    <td class="text-center">${approval.master_approvals_code}</td>
-                                    <td class="text-center">${approval.master_approvals_approval_name}</td>
-                                    <td class="text-center">${approval.master_approvals_notes ?? '-'}</td>
-                                    <td class="text-center">${approval.division ? approval.division.division_name : '-'}</td>
-                                    <td class="text-center">${approval.department ? approval.department.department_name : '-'}</td>
-                                    <td class="text-center">${approval.level ? approval.level.level_name : '-'}</td>
+                                    <td class="text-center">${ truncateText(approval.master_approvals_code, 10, '...')}</td>
+                                    <td class="text-center">${ truncateText(approval.master_approvals_approval_name, 10, '...')}</td>
+                                    <td class="text-center">${ truncateText(approval.master_approvals_notes, 10, '...') ?? '-'}</td>
+                                    <td class="text-center">${ truncateText(approval.division, 10, '...') ? approval.division.division_name : '-'}</td>
+                                    <td class="text-center">${ truncateText(approval.department, 10, '...') ? approval.department.department_name : '-'}</td>
+                                    <td class="text-center">${ truncateText(approval.level, 10, '...') ? approval.level.level_name : '-'}</td>
                                     <td class="text-center">
-                                    <div class="d-flex justify-content-center gap-2">
-                                                                        <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${approval.master_approvals_id }')">
-                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            </svg>
-                                                                        </button>
-                                                                        <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${approval.master_approvals_id }')">
-                                                                            <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                                                <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                                <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                                            </svg>
-                                                                        </button>
-                                                                    </div>
-                                                                </td>
+                                        <div class="d-flex justify-content-center gap-2">
+                                            @if ($usr->can('master_approvals.delete'))
+                                            <button class="btn btn-light btn-sm border border-danger text-danger" title="Delete" onclick="delete_data('${approval.master_approvals_id }')">
+                                                <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.5 3.5L3.5 12.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M12.5 12.5L3.5 3.5" stroke="red" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                            @endif
+                                            <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${approval.master_approvals_id }')">
+                                                <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                    <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
                                 </tr>
                             `);
                         });
@@ -534,6 +549,7 @@ Master Approvals - Admin Panel
             $('#division_code').append(new Option(data.division_name, data.division_code, true, true)).trigger('change');
             $('#department_code').append(new Option(data.department_name, data.department_code, true, true)).trigger('change');
             $('#level_code').append(new Option(data.level_name, data.level_code, true, true)).trigger('change');
+            document.getElementById('tittleform').innerHTML = 'Form Detail & Edit';
             document.getElementById('saveButton').textContent = 'Save Changes';
             $('#modalinput').modal('show');
         });
