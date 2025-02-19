@@ -1,7 +1,7 @@
 <div class="card">
     <div class="card-body">
         <div class="kanban-board-header">
-            <h5>To-do</h5>
+            <h5>Inquiry Masuk</h5>
             <div class="card-priority__actions">
                 <button class="dots-three text-gray-400 f-size-24 lh-1" type="button" id="dropdownMenuButton5" data-bs-toggle="dropdown" aria-expanded="true">
                     <img src="{{ asset('backend/assets/images/svg/dot.svg') }}" alt="clock" />
@@ -286,7 +286,7 @@
                     <span class="button-icon align-icon-left">
                         <i class="ph-plus"></i>
                     </span>
-                    <span class="button-text"> Add new card </span>
+                    <span class="button-text"> Tambah Inquiry </span>
                 </span>
             </button>
         </div>

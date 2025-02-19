@@ -1,7 +1,7 @@
 <div class="card">
 <div class="card-body">
     <div class="kanban-board-header">
-    <h5>Doing</h5>
+    <h5>Waiting List Admin</h5>
     <div class="card-priority__actions">
         <button class="dots-three text-gray-400 f-size-24 lh-1" type="button" id="dropdownMenuButton6" data-bs-toggle="dropdown" aria-expanded="true">
         <img src="{{asset('backend/assets/images/svg/dot.svg')}}" alt="clock" />
@@ -302,7 +302,7 @@
         </div>
     </div>
     </div>
-    <div class="add-new-card-btn">
+    <!-- <div class="add-new-card-btn">
     <button type="button" class="btn btn-primary2 waves-effect primary-dark pill btn-icon d-block" id="doingboard_task" name="button-group">
         <span class="button-content-wrapper">
         <span class="button-icon align-icon-left">
@@ -311,6 +311,6 @@
         <span class="button-text"> Add new card </span>
         </span>
     </button>
-    </div>
+    </div> -->
 </div>
 </div>
