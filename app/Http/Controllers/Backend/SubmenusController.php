@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
-use App\Models\Permission;
+// use App\Models\Permission;
+use Spatie\Permission\Models\Permission;
 use App\Models\Menus;
 
 class SubmenusController extends Controller
@@ -19,7 +20,7 @@ class SubmenusController extends Controller
     public function __construct()
     {
         $this->model = new Submenus();
-        $this->permission = new Permission();
+        // $this->permission = new Permission();
         $this->menu = new Menus();
         $this->mandatory = array(
             'menus_code' => 'required', 
@@ -78,6 +79,8 @@ class SubmenusController extends Controller
 			return response()->json($messages);
 		}
 
+        $menu = $this->menu->where('menus_code', $request->menus_code)->first();
+
         $result = $this->model->create([
             'submenus_code' => $this->setcode($this->model->count() + 1, 'SMN', 4), // (@nomor_urut, @kode, @panjang_kode)
             'menus_code' => $request->menus_code, 
@@ -87,10 +90,12 @@ class SubmenusController extends Controller
             'submenus_created_by' => Session::get('user_code'),
         ]);
 
-        $permission = $this->permission->create([
+        // $permission = $this->permission->create([
+        $permission = Permission::create([
             'name' => $request->submenus_name,
             'guard_name' => 'web',
             'group_name' => $this->namemenus($request->menus_code),
+            'menu_code' => $menu->menus_id,
         ]);
 
         session()->flash('success', __('Menus has been created.'));
@@ -106,34 +111,38 @@ class SubmenusController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['submenus.edit']);
 
-        $validator = Validator::make($request->all(), $this->mandatory); // $this->mainroute
+        $validator = Validator::make($request->all(), $this->mandatory);
 
-		if ($validator->fails()) {
-			$messages = [
-				'data' => $validator->errors()->first(),
-				'status' => 401,
+        if ($validator->fails()) {
+            $messages = [
+                'data' => $validator->errors()->first(),
+                'status' => 401,
                 'column' => $validator->errors()->keys()[0],
-			];
-			return response()->json($messages);
-		}
-        $result1 = $this->model->find($id);
+            ];
+            return response()->json($messages);
+        }
 
-        // update permission
-        $this->permission
-            ->where('name','=', $result1->submenus_name)
-            ->update([
+        $submenu = $this->model->findOrFail($id);
+        $menu = $this->menu->where('menus_code', $request->menus_code)->first();
+
+        // Update permission Spatie
+        $permission = Permission::where('name', $submenu->submenus_name)->first();
+        if ($permission) {
+            $permission->update([
                 'name' => $request->submenus_name,
                 'group_name' => $this->namemenus($request->menus_code),
+                'menu_code' => $menu->menus_id,
             ]);
+        }
 
-        $result = $this->model->find($id)->update([
+        // Update submenu
+        $submenu->update([
             'menus_code' => $request->menus_code, 
             'submenus_name' => $request->submenus_name, 
             'submenus_notes' => $request->submenus_notes, 
-            'submenus_updated_at' => date("Y-m-d h:i:s"),
+            'submenus_updated_at' => now(),
             'submenus_updated_by' => Session::get('user_code'),
         ]);
-
 
         session()->flash('success', 'Menus has been updated.');
         return $request;
@@ -143,16 +152,23 @@ class SubmenusController extends Controller
     {
         $this->checkAuthorization(auth()->user(), ['submenus.delete']);
 
-        $result = $this->model->find($id)->update([
-            'submenus_deleted_at' => date("Y-m-d h:i:s"),
+        $submenu = $this->model->findOrFail($id);
+
+        // Soft delete submenu
+        $submenu->update([
+            'submenus_deleted_at' => now(),
             'submenus_deleted_by' => Session::get('user_code'),
             'submenus_soft_delete' => 1,
         ]);
 
-        // delete permission
-        $permission = $this->permission->where('name', $this->model->find($id)->submenus_name)->delete();
+        // Delete permission Spatie
+        $permission = Permission::where('name', $submenu->submenus_name)->first();
+        if ($permission) {
+            $permission->delete();
+        }
 
         session()->flash('success', 'Menus has been deleted.');
-        return $result;
+        return response()->json(['status' => 'success']);
     }
+
 }

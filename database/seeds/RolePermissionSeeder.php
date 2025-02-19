@@ -419,6 +419,18 @@ class RolePermissionSeeder extends Seeder
                     'description_quotations.update',
                 ]
             ],
+            
+            [
+                'group_name' => 'Inquiry',
+                'menu_code' => 36,
+                'permissions' => [
+                    'inquiry.create',
+                    'inquiry.view',
+                    'inquiry.edit',
+                    'inquiry.delete',
+                    'inquiry.update',
+                ]
+            ],
         ];
 
         // Do same for the admin guard for tutorial purposes.
