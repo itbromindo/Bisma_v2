@@ -1,5 +1,5 @@
 <div class="card">
-    <button class="plain-btn add-new-column text-primary-500 font-semibold" data-bs-toggle="modal" data-bs-target="#createboard-modal">
+    <!-- <button class="plain-btn add-new-column text-primary-500 font-semibold" data-bs-toggle="modal" data-bs-target="#createboard-modal">
         <span>
         <svg
             width="21"
@@ -15,5 +15,5 @@
             stroke-width="0.125"
             />
         </svg> </span>Add new Column
-    </button>
+    </button> -->
 </div>

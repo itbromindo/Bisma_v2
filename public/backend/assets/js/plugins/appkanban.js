@@ -343,82 +343,61 @@
       modalbox.setAttribute("class", "modal fade show");
       modalbox.style.display = "block";
       modalbox.innerHTML = `
+        <style>
+          .inquiry-option {
+              border: 2px solid #ddd;
+              border-radius: 8px;
+              padding: 10px;
+              margin-bottom: 10px;
+              cursor: pointer;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+          }
+          .inquiry-option input {
+              display: none;
+          }
+          .inquiry-option.active {
+              border-color: #007bff;
+              background-color: #f0f8ff;
+          }
+        </style>
         <div class="modal-dialog createcard-modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="body-font-3">Create New Card</h5>
+          <h5 class="body-font-3">Buat Inquiry</h5>
           <button type="button" class="plain-btn" id="modal-vag" aria-label="Close">
             <img src="assets/images/svg/close-btn.png" alt="" draggable="false">
           </button>
         </div>
         <div class="modal-body">
-          <form id="boardform">
-            <div class="rt-mb-24">
-              <div class="row">
-                <div class="col-12 rt-mb-15">
-                <div className="fromGroup">
-                <label class=" body-font-4 pointer block mb-2" for="card_title_1">Tittle</label>
-                <input type="text" placeholder="Add tittle" class="form-control" id="card_title_1">
-                
-                </div>
-                  
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6 rt-mb-15">
-                  <label for="">Priority</label>
-                  <select name="" id="priority__tag" >
-                    <option value="High Priority">High Priority</option>
-                    <option value="Low Priority">Low Priority</option>
-                  </select>
-                </div>
-                <div class="col-md-6 rt-mb-15">
-                  <label for="">Label</label>
-                  <select name="" id="urgent_tag">
-                    <option value="hight">Urgents</option>
-                    <option value="low">Medium</option>
-                  </select>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-12 rt-mb-15">
-                  <textarea  rows="4" placeholder="Write something about your events..." ></textarea>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6 rt-mb-15">
-                  <div class="fromGroup has-icon">
-                    <label>Created Date</label>
-                    <div class="form-control-icon">
-                      <input class="form-control date-picker-calender" type="text" placeholder="DD / MM / YY">
-                      <div class="icon-badge-2">
-                        <img src="assets/images/svg/calendar.svg" alt="">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 rt-mb-15">
-                  <div class="fromGroup has-icon">
-                    <label>Created Date</label>
-                    <div class="form-control-icon">
-                      <input class="form-control date-picker-calender" type="text" placeholder="DD / MM / YY">
-                      <div class="icon-badge-2">
-                        <img src="assets/images/svg/calendar.svg" alt="">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-12">
-                <div className="fromGroup">
-                 <label for="member-email" class="block rt-mb-4">Add Member</label>
-                  <input type="text" placeholder="Member email address" id="member-email">
-                </div>
-                 
-                </div>
-              </div>
-            </div>
+          <form id="inquiryForm">
+            <label class="inquiry-option active">
+                Supply Only
+                <input type="radio" name="inquiry" value="Supply Only" checked>
+                <span class="badge bg-primary rounded-circle p-2"></span>
+            </label>
+            <label class="inquiry-option">
+                Project
+                <input type="radio" name="inquiry" value="Project">
+                <span class="badge bg-secondary rounded-circle p-2"></span>
+            </label>
+            <label class="inquiry-option">
+                Refill
+                <input type="radio" name="inquiry" value="Refill">
+                <span class="badge bg-secondary rounded-circle p-2"></span>
+            </label>
+            <label class="inquiry-option">
+                Servis
+                <input type="radio" name="inquiry" value="Servis">
+                <span class="badge bg-secondary rounded-circle p-2"></span>
+            </label>
+            <label class="inquiry-option">
+                Info Harga
+                <input type="radio" name="inquiry" value="Info Harga">
+                <span class="badge bg-secondary rounded-circle p-2"></span>
+            </label>
+          </form>
             <div class="createcard-modal-footer d-flex justify-content-between">
               <button type="button" class="btn btn-dark2 pill" id="modal-vag2" >Cancel</button>
        
@@ -428,16 +407,31 @@
                   <i class="ph-arrow-right"></i>
                 </span>
                 <span class="button-text" >
-                  Create Column
+                  Simpan
                 </span>
                 </span>
               </button>
               
             </div>
-          </form>
         </div>
       </div>
     </div>
+
+    <script>
+        document.querySelectorAll('.inquiry-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.inquiry-option').forEach(opt => {
+                    opt.classList.remove('active');
+                    opt.querySelector('span').classList.remove('bg-primary');
+                    opt.querySelector('span').classList.add('bg-secondary');
+                });
+                this.classList.add('active');
+                this.querySelector('input').checked = true;
+                this.querySelector('span').classList.remove('bg-secondary');
+                this.querySelector('span').classList.add('bg-primary');
+            });
+        });
+    </script>
         
         `;
       document.body.appendChild(modalbox);
