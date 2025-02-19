@@ -49,6 +49,7 @@ class MenuSeeder extends Seeder
             ['menus_code' => '1033', 'moduls_code' => '5000', 'menus_name' => 'Template Win Lose', 'menus_route' => 'template_win_loses', 'menus_notes' => '-'],
             ['menus_code' => '1034', 'moduls_code' => '5000', 'menus_name' => 'Inquiry Status', 'menus_route' => 'inquiry_statuses', 'menus_notes' => '-'],
             ['menus_code' => '1035', 'moduls_code' => '5000', 'menus_name' => 'Quotation Status', 'menus_route' => 'quotation_statuses', 'menus_notes' => '-'],
+            ['menus_code' => '1036', 'moduls_code' => '6000', 'menus_name' => 'Inquiry', 'menus_route' => 'inquiry', 'menus_notes' => '-'],
 
         ];
 
