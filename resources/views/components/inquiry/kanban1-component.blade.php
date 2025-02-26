@@ -292,3 +292,34 @@
         </div>
     </div>
 </div>
+
+<input type="hidden" id="kanban1_inquiry_active" value="kanban1_inquiry_active">
+
+<script>
+    function inquiryactive(kodeval){
+        $('#supply-only').removeClass('active');
+        $('#project').removeClass('active');
+        $('#refill').removeClass('active');
+        $('#servis').removeClass('active');
+        $('#info-harga').removeClass('active');
+
+        $('#'+kodeval).addClass('active');
+        $('#kanban1_inquiry_active').val(kodeval);
+    }
+
+    function saveinquiry_active(){
+        var inquiry_active = $('#kanban1_inquiry_active').val();
+        // open route to save inquiry active with a herf
+        if(inquiry_active == 'supply-only'){
+            window.location.href = '/admin/inquiry_supply_only';
+        }else if(inquiry_active == 'project'){
+            window.location.href = '/admin/inquiry_project';
+        }else if(inquiry_active == 'refill'){
+            window.location.href = '/admin/inquiry_refill';
+        }else if(inquiry_active == 'servis'){
+            window.location.href = '/admin/inquiry_servis';
+        }else if(inquiry_active == 'info-harga'){
+            window.location.href = '/admin/inquiry_info_harga';
+        }
+    }
+</script>

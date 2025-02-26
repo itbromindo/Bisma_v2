@@ -32,18 +32,26 @@ Inquiry - Admin Panel
                 <div class="col-12">
                     <div id="board" class="board">
                         <div class="d-flex kanbanboard_parent" id="kanban_board_parent">
-                            <div class="kanbanboard_child">
-                                <x-inquiry.kanban1-component />
-                            </div>
-                            <div class="kanbanboard_child">
-                                <x-inquiry.kanban2-component />
-                            </div>
-                            <div class="kanbanboard_child">
-                                <x-inquiry.kanban3-component />
-                            </div>
-                            <div class="kanbanboard_child">
-                                <x-inquiry.kanban4-component />
-                            </div>
+                            @if ($usr->can('inquiry.kanban1'))
+                                <div class="kanbanboard_child">
+                                    <x-inquiry.kanban1-component />
+                                </div>
+                            @endif
+                            @if ($usr->can('inquiry.kanban2'))
+                                <div class="kanbanboard_child">
+                                    <x-inquiry.kanban2-component />
+                                </div>
+                            @endif
+                            @if ($usr->can('inquiry.kanban3'))
+                                <div class="kanbanboard_child">
+                                    <x-inquiry.kanban3-component />
+                                </div>
+                            @endif
+                            @if ($usr->can('inquiry.kanban4'))
+                                <div class="kanbanboard_child">
+                                    <x-inquiry.kanban4-component />
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
