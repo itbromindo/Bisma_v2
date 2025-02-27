@@ -367,41 +367,41 @@
         <div class="modal-header">
           <h5 class="body-font-3">Buat Inquiry</h5>
           <button type="button" class="plain-btn" id="modal-vag" aria-label="Close">
-            <img src="assets/images/svg/close-btn.png" alt="" draggable="false">
+            <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
           <form id="inquiryForm">
-            <label class="inquiry-option active">
+            <label class="inquiry-option" id="supply-only" onclick="inquiryactive('supply-only')">
                 Supply Only
-                <input type="radio" name="inquiry" value="Supply Only" checked>
+                <input type="radio" name="inquiry" value="Supply Only">
                 <span class="badge bg-primary rounded-circle p-2"></span>
             </label>
-            <label class="inquiry-option">
+            <label class="inquiry-option" id="project" onclick="inquiryactive('project')">
                 Project
                 <input type="radio" name="inquiry" value="Project">
                 <span class="badge bg-secondary rounded-circle p-2"></span>
             </label>
-            <label class="inquiry-option">
+            <label class="inquiry-option" id="refill" onclick="inquiryactive('refill')">
                 Refill
                 <input type="radio" name="inquiry" value="Refill">
                 <span class="badge bg-secondary rounded-circle p-2"></span>
             </label>
-            <label class="inquiry-option">
+            <label class="inquiry-option" id="servis" onclick="inquiryactive('servis')">
                 Servis
                 <input type="radio" name="inquiry" value="Servis">
                 <span class="badge bg-secondary rounded-circle p-2"></span>
             </label>
-            <label class="inquiry-option">
+            <label class="inquiry-option" id="info-harga" onclick="inquiryactive('info-harga')">
                 Info Harga
                 <input type="radio" name="inquiry" value="Info Harga">
                 <span class="badge bg-secondary rounded-circle p-2"></span>
             </label>
           </form>
             <div class="createcard-modal-footer d-flex justify-content-between">
-              <button type="button" class="btn btn-dark2 pill" id="modal-vag2" >Cancel</button>
+              <button type="button" class="btn btn-dark2 pill" id="modal-vag2" >&nbsp;</button>
        
-              <button type="submit" class="btn btn-primary pill btn-icon" id="createcard">
+              <button type="submit" class="btn btn-primary pill btn-icon" id="createcard" onclick="saveinquiry_active()">
                 <span class="button-content-wrapper">
                 <span class="button-icon align-icon-right">
                   <i class="ph-arrow-right"></i>

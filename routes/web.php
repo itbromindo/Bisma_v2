@@ -209,4 +209,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::any('inquiry_statuses/{id}', [App\Http\Controllers\Backend\InquiryStatusController::class, 'update']);
 
     Route::resource('inquiry', App\Http\Controllers\Backend\Inquiry\InquiryController::class);
+
+    Route::resource('inquiry_supply_only', App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class);
 })->middleware('auth:admin');
