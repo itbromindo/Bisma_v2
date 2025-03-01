@@ -3,9 +3,6 @@
         <div class="kanban-board-header">
             <h5>Inquiry Masuk</h5>
             <div class="card-priority__actions">
-                <button class="dots-three text-gray-400 f-size-24 lh-1" type="button" id="dropdownMenuButton5" data-bs-toggle="dropdown" aria-expanded="true">
-                    <img src="{{ asset('backend/assets/images/svg/dot.svg') }}" alt="clock" />
-                </button>
                 <ul class="dropdown-menu dropdown-actions" aria-labelledby="dropdownMenuButton5" data-popper-placement="bottom-start">
                     <li>
                         <a href="#" class="dropdown-item">
