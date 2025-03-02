@@ -1,19 +1,236 @@
 <div class="card">
-    <!-- <button class="plain-btn add-new-column text-primary-500 font-semibold" data-bs-toggle="modal" data-bs-target="#createboard-modal">
-        <span>
-        <svg
-            width="21"
-            height="20"
-            viewBox="0 0 21 20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-        >
-            <path
-            d="M11.0625 9.375V9.4375H11.125H17.375C17.5242 9.4375 17.6673 9.49676 17.7727 9.60225C17.8782 9.70774 17.9375 9.85082 17.9375 10C17.9375 10.1492 17.8782 10.2923 17.7727 10.3977C17.6673 10.5032 17.5242 10.5625 17.375 10.5625H11.125H11.0625V10.625V16.875C11.0625 17.0242 11.0032 17.1673 10.8977 17.2727C10.7923 17.3782 10.6492 17.4375 10.5 17.4375C10.3508 17.4375 10.2077 17.3782 10.1023 17.2727C9.99676 17.1673 9.9375 17.0242 9.9375 16.875V10.625V10.5625H9.875H3.625C3.47582 10.5625 3.33274 10.5032 3.22725 10.3977C3.12176 10.2923 3.0625 10.1492 3.0625 10C3.0625 9.85082 3.12176 9.70774 3.22725 9.60225C3.33274 9.49676 3.47582 9.4375 3.625 9.4375H9.875H9.9375V9.375V3.125C9.9375 2.97582 9.99676 2.83274 10.1023 2.72725C10.2077 2.62176 10.3508 2.5625 10.5 2.5625C10.6492 2.5625 10.7923 2.62176 10.8977 2.72725C11.0032 2.83274 11.0625 2.97582 11.0625 3.125V9.375Z"
-            fill="#005CE8"
-            stroke="#005CE8"
-            stroke-width="0.125"
+<div class="card-body">
+    <div class="kanban-board-header">
+    <h5>Waiting Approval Harga</h5>
+    <div class="card-priority__actions">
+        <ul class="dropdown-menu dropdown-actions" aria-labelledby="dropdownMenuButton7" data-popper-placement="bottom-start">
+        <li>
+            <a href="#" class="dropdown-item">
+            <span>
+            <img
+                src="{{asset('backend/assets/images/svg/pen.svg')}}"
+                alt="pen"
             />
-        </svg> </span>Add new Column
-    </button> -->
+            </span>
+            Edit
+            </a>
+        </li>
+        <li>
+            <a href="#" class="dropdown-item">
+            <span>
+            <img
+                src="{{asset('backend/assets/images/svg/copy-link.svg')}}"
+                alt="copylink"
+            />
+            </span>
+            Copy Link
+            </a>
+        </li>
+        <li>
+            <a href="#" class="dropdown-item remove-killer plain-btn">
+            <span>
+            <img
+                src="{{asset('backend/assets/images/svg/trash.svg')}}"
+                alt="copylink"
+            />
+            </span>
+            Delete
+            </a>
+        </li>
+        </ul>
+    </div>
+    </div>
+    <div id="task-3">
+    <div id="done">
+        <div class="card-priority rt-mb-12">
+        <!-- top bar  -->
+        <div class="card-priority__header">
+            <div class="date">
+            <span class="icon">
+            <img
+                src="{{asset('backend/assets/images/svg/clock.svg')}}"
+                alt="clock"
+            />
+            </span>
+            <p>14 Nov, 2021</p>
+            </div>
+            <!-- actions  -->
+            <div class="card-priority__actions">
+            <button class="dots-three text-gray-400 f-size-24 lh-1" type="button" id="dropdownMenuButton4" data-bs-toggle="dropdown" aria-expanded="true">
+                <img src="{{asset('backend/assets/images/svg/dot.svg')}}" alt="clock" />
+            </button>
+            <ul class="dropdown-menu dropdown-actions" aria-labelledby="dropdownMenuButton4" data-popper-placement="bottom-start">
+                <li>
+                <a href="#" class="dropdown-item">
+                    <span>
+                    <img
+                    src="{{asset('backend/assets/images/svg/pen.svg')}}"
+                    alt="pen"
+                    />
+                </span>
+                    Edit
+                </a>
+                </li>
+                <li>
+                <a href="#" class="dropdown-item">
+                    <span>
+                    <img
+                    src="{{asset('backend/assets/images/svg/copy-link.svg')}}"
+                    alt="copylink"
+                    />
+                </span>
+                    Copy Link
+                </a>
+                </li>
+                <li>
+                <a href="#" type="button" class="dropdown-item remove-killer plain-btn">
+                    <span>
+                    <img
+                    src="{{asset('backend/assets/images/svg/trash.svg')}}"
+                    alt="copylink"
+                    />
+                </span>
+                    Delete
+                </a>
+                </li>
+            </ul>
+            </div>
+        </div>
+
+        <!-- labels  -->
+        <div class="card-priority__labels">
+            <ul>
+            <li>
+                <span class="labels medium"
+                >Medium Priority</span>
+            </li>
+            <li>
+                <span class="labels urgent green"
+                ><img
+                class="rt-mr-6"
+                src="{{asset('backend/assets/images/svg/circle-green.svg')}}"
+                alt=""
+                />
+                Productivity</span>
+            </li>
+            </ul>
+        </div>
+        <h2 class="card-priority__title pointer">
+            Learn how to work with kanban board.
+        </h2>
+        <!-- priority footer  -->
+        <div class="card-priority__footer">
+            <div>
+            <ul class="labels-info">
+                <li>
+                <a href="#">
+                    <span>
+                    <img
+                    src="{{asset('backend/assets/images/svg/attach.svg')}}"
+                    alt="icon"
+                    />
+                </span>
+                    5
+                </a>
+                </li>
+                <li>
+                <a href="#">
+                    <span>
+                    <img
+                    src="{{asset('backend/assets/images/svg/comments.svg')}}"
+                    alt="icon"
+                    />
+                </span>
+                    19
+                </a>
+                </li>
+            </ul>
+            </div>
+        </div>
+        </div>
+        <div class="card-priority rt-mb-12">
+        <!-- top bar  -->
+        <div class="card-priority__header">
+            <div class="date">
+            <span class="icon">
+            <img
+                src="{{asset('backend/assets/images/svg/clock.svg')}}"
+                alt="clock"
+            />
+            </span>
+            <p>14 Nov, 2021</p>
+            </div>
+            <!-- actions  -->
+            <div class="card-priority__actions">
+            <button class="dots-three text-gray-400 f-size-24 lh-1" type="button" id="dropdownMenuButton8" data-bs-toggle="dropdown" aria-expanded="true">
+                <img src="{{asset('backend/assets/images/svg/dot.svg')}}" alt="clock" />
+            </button>
+            <ul class="dropdown-menu dropdown-actions" aria-labelledby="dropdownMenuButton8" data-popper-placement="bottom-start">
+                <li>
+                <a href="#" class="dropdown-item">
+                    <span>
+                    <img
+                    src="{{asset('backend/assets/images/svg/pen.svg')}}"
+                    alt="pen"
+                    />
+                </span>
+                    Edit
+                </a>
+                </li>
+                <li>
+                <a href="#" class="dropdown-item">
+                    <span>
+                    <img
+                    src="{{asset('backend/assets/images/svg/copy-link.svg')}}"
+                    alt="copylink"
+                    />
+                </span>
+                    Copy Link
+                </a>
+                </li>
+                <li>
+                <a href="#" type="button" class="dropdown-item remove-killer plain-btn">
+                    <span>
+                    <img
+                    src="{{asset('backend/assets/images/svg/trash.svg')}}"
+                    alt="copylink"
+                    />
+                </span>
+                    Delete
+                </a>
+                </li>
+            </ul>
+            </div>
+        </div>
+
+        <div class="card-priority-thumb">
+            <img src="{{asset('backend/assets/images/all-img/kanban-thumb2.jpg')}}" alt="">
+        </div>
+
+        <!-- labels  -->
+        <div class="card-priority__labels">
+            <ul>
+            <li>
+                <span class="labels red"
+                >High Priority</span>
+            </li>
+            <li>
+                <span class="labels urgent"
+                ><img
+                class="rt-mr-6"
+                src="{{asset('backend/assets/images/svg/red-circle.svg')}}"
+                alt=""
+                />
+                Urgents</span>
+            </li>
+            </ul>
+        </div>
+        <h2 class="card-priority__title pointer">
+            Buy Green Plants for my Desk.
+        </h2>
+
+        </div>
+    </div>
+    </div>
+</div>
 </div>
