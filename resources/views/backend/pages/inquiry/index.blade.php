@@ -52,6 +52,31 @@ Inquiry - Admin Panel
                                     <x-inquiry.kanban4-component />
                                 </div>
                             @endif
+                            @if ($usr->can('inquiry.kanban5'))
+                                <div class="kanbanboard_child">
+                                    <x-inquiry.kanban5-component />
+                                </div>
+                            @endif
+                            @if ($usr->can('inquiry.kanban6'))
+                                <div class="kanbanboard_child">
+                                    <x-inquiry.kanban6-component />
+                                </div>
+                            @endif
+                            @if ($usr->can('inquiry.kanban7'))
+                                <div class="kanbanboard_child">
+                                    <x-inquiry.kanban7-component />
+                                </div>
+                            @endif
+                            @if ($usr->can('inquiry.kanban8'))
+                                <div class="kanbanboard_child">
+                                    <x-inquiry.kanban8-component />
+                                </div>
+                            @endif
+                            @if ($usr->can('inquiry.kanban9'))
+                                <div class="kanbanboard_child">
+                                    <x-inquiry.kanban9-component />
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>

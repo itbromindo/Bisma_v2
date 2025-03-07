@@ -1,7 +1,7 @@
 <div class="card">
 <div class="card-body">
     <div class="kanban-board-header">
-    <h5>Waiting List Estimator</h5>
+    <h5>Reject</h5>
     <div class="card-priority__actions">
         <ul class="dropdown-menu dropdown-actions" aria-labelledby="dropdownMenuButton7" data-popper-placement="bottom-start">
         <li>
