@@ -159,4 +159,27 @@ class CustomerController extends Controller
         session()->flash('success', 'customer has been deleted.');
         return $result;
     }
+
+    public function combo(Request $request)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->model
+            ->select('customer_code as id', 'customer_name as text',
+                'customers_existing',
+                'customers_full_address',
+                'customers_phone',
+                'customers_email',
+                'customers_PIC',
+                'customers_npwp',
+                'customers_village',
+                'districts_code',
+                'cities_code',
+                'provinces_code'
+            )
+            ->where('customer_name', 'like', '%' . $search . '%')
+            ->where('customers_soft_delete', 0)
+            ->get();
+
+        return response()->json($listdata);
+    }
 }

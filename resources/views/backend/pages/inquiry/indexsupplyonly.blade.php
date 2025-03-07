@@ -70,31 +70,34 @@ Inquiry - Admin Panel
                         <div class="card-body">
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Nama</b></label>
-                                <input class="form-control" type="text" placeholder="Pilih Nama"> <!-- Pilih Nama diambil dari data customer (search) -->
+                                <!-- <input class="form-control" type="text" placeholder="Pilih Nama"> -->
+                                <select class="form-control" id="nama_customer" style="width: 100%;">
+                                    <option value="" disabled selected>Pilih Nama</option>
+                                </select>
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>User</b></label>
-                                <input class="form-control" type="text" placeholder="Pilih Customer Dulu">
+                                <input class="form-control" id="user_code" type="text" placeholder="Pilih Customer Dulu">
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Perusahaan</b></label>
-                                <input class="form-control" type="text">
+                                <input class="form-control" type="text" id="company">
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Alamat</b></label>
-                                <input class="form-control" type="text">
+                                <input class="form-control" type="text" id="address">
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Prov & Kota</b></label>
-                                <input class="form-control" type="text">
+                                <input class="form-control" type="text" id="city">
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>No. Tlpn</b></label>
-                                <input class="form-control" type="text">
+                                <input class="form-control" type="text" id="phone">
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Email</b></label>
-                                <input class="form-control" type="text">
+                                <input class="form-control" type="text" id="email">
                             </div>
                         </div>
                     </div>
@@ -196,6 +199,60 @@ Inquiry - Admin Panel
     </div>
 </div>
 
+<div class="modal fade" id="modalinput" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 50%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tittleform">Tambah Permintaan</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- <form id="requestProdukForm"> -->
+                    <div class="fromGroup horizontal-form mb-3">
+                        <label class="form-label">Request produk?</label>
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="requestProdukSwitch">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="namaBarang" class="form-label">Nama barang</label>
+                        <input type="text" class="form-control" id="namaBarang" value="">
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="quantity" class="form-label">Quantity</label>
+                            <input type="number" class="form-control" id="quantity" value="1">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="satuan" class="form-label">Satuan</label>
+                            <input type="text" class="form-control" id="satuan" value="" readonly>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <label for="hargaPricelist" class="form-label">Harga pricelist</label>
+                            <input type="text" class="form-control" id="hargaPricelist" value="" readonly>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="hargaNet" class="form-label">Harga NET (End user)</label>
+                            <input type="text" class="form-control" id="hargaNet" value="" readonly>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label for="hargaTotal" class="form-label">Harga Total (End user)</label>
+                        <input type="text" class="form-control" id="hargaTotal" value="" readonly>
+                    </div>
+                <!-- </form> -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="saveclick" onclick="save()"><i class="ph ph-floppy-disk"></i> Simpan</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <script>
     ClassicEditor
@@ -218,6 +275,46 @@ Inquiry - Admin Panel
         .catch(error => {
             console.error(error);
         });
+
+    $(document).ready(function() {        
+        // $('#modalinput').on('shown.bs.modal', function () {
+            $('#nama_customer').on('select2:select', function(e) {
+                var data = e.params.data;
+                // console.log(data);
+                // $('#user_code').val(data.id);
+                // $('#company').val(data.company);
+                $('#address').val(data.customers_full_address);
+                $('#city').val(data.provinces_code+" & "+data.cities_code);
+                $('#phone').val(data.customers_phone);
+                $('#email').val(data.customers_email);
+            }).on("select2:unselect", function (e) {
+                // clear data
+            }).select2({
+                // dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Nama",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combocustomer',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term,
+                            // data: $('#cities_code').val()
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
+            
+        // });
+
+    });
 </script>
 
 @endsection
