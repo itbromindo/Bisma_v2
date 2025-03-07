@@ -77,7 +77,14 @@ Inquiry - Admin Panel
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>User</b></label>
-                                <input class="form-control" id="user_code" type="text" placeholder="Pilih Customer Dulu">
+                                <!-- <input class="form-control" id="user_code" type="text" placeholder="Pilih Customer Dulu"> -->
+                                <div class="select-box">
+                                    <select class="custom-select sources" id="user_code" title="User">
+                                        <option value="1">Reseller</option>
+                                        <option value="2">End User</option>
+                                        <option value="3">Kontraktor</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Perusahaan</b></label>
@@ -150,19 +157,40 @@ Inquiry - Admin Panel
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5>List Permintaan</h5>
                             <div class="d-flex align-items-center">
-                                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modalinput" onclick="clearform()"><i class="ph ph-plus"></i> Tambah Data</button>
+                                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modalinput" style="color: #2563eb;"><i class="ph ph-plus"></i> Tambah Data</button>
                             </div>
                         </div>
 
                         <div class="card-body">
                                     
-                            <div style="border: 1px solid #d1d5db; border-radius: 8px; padding: 12px; display: flex; align-items: center; background-color: #f9fafb;">
+                            <div id="new_misi" style="border: 1px solid #d1d5db; border-radius: 8px; padding: 12px; display: flex; align-items: center; background-color: #f9fafb;">
                                 <div style="color: #2563eb; font-size: 45px; margin-right: 10px;">ℹ️</div>
                                 <div>
                                     <strong>Mulai Misi Baru! 🎉</strong><br>
                                     <span>Misi: Tambahkan barang sesuai kebutuhan customer. Reward: Kepuasan pelanggan meningkat!</span>
                                 </div>
                             </div>
+
+                            <table class="table hidden" id="table_misi">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">Produk</th>
+                                        <th class="text-center">Qty</th>
+                                        <th class="text-center">Stock</th>
+                                        <th class="text-center">Status</th>
+                                        <th class="text-center">Satuan</th>
+                                        <th class="text-center">Harga / Unit</th>
+                                        <th class="text-center">Harga NET</th>
+                                        <th class="text-center">Taxes</th>
+                                        <th class="text-center">Harga Total</th>
+                                        <th class="text-center">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tbody">
+                                    
+                                </tbody>
+                            </table>
 
                         </div>
                     </div>
@@ -213,17 +241,23 @@ Inquiry - Admin Panel
                     <div class="fromGroup horizontal-form mb-3">
                         <label class="form-label">Request produk?</label>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="requestProdukSwitch">
+                            <input class="form-check-input" type="checkbox" id="requestProdukSwitch" onclick="request()">
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="namaBarang" class="form-label">Nama barang</label>
-                        <input type="text" class="form-control" id="namaBarang" value="">
+                        <input type="text" class="form-control hidden" id="namaBarangText" value="">
+                        <div id=namaBarangCombo>
+                            <select class="form-control" id="namaBarang" style="width: 100%;">
+                                <option value="" disabled selected>Pilih Barang</option>
+                            </select>
+
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <label for="quantity" class="form-label">Quantity</label>
-                            <input type="number" class="form-control" id="quantity" value="1">
+                            <input type="number" class="form-control" id="quantity" value="" onchange="hitung()">
                         </div>
                         <div class="col-md-6">
                             <label for="satuan" class="form-label">Satuan</label>
@@ -233,7 +267,7 @@ Inquiry - Admin Panel
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <label for="hargaPricelist" class="form-label">Harga pricelist</label>
-                            <input type="text" class="form-control" id="hargaPricelist" value="" readonly>
+                            <input type="text" class="form-control" id="hargaPricelist" value="" onchange="hitung()" readonly>
                         </div>
                         <div class="col-md-6">
                             <label for="hargaNet" class="form-label">Harga NET (End user)</label>
@@ -247,7 +281,7 @@ Inquiry - Admin Panel
                 <!-- </form> -->
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="saveclick" onclick="save()"><i class="ph ph-floppy-disk"></i> Simpan</button>
+                <button type="button" class="btn btn-primary" id="saveclick" onclick="tambahlist()"><i class="ph ph-floppy-disk"></i> Simpan</button>
             </div>
         </div>
     </div>
@@ -282,7 +316,7 @@ Inquiry - Admin Panel
                 var data = e.params.data;
                 // console.log(data);
                 // $('#user_code').val(data.id);
-                // $('#company').val(data.company);
+                $('#company').val(data.text);
                 $('#address').val(data.customers_full_address);
                 $('#city').val(data.provinces_code+" & "+data.cities_code);
                 $('#phone').val(data.customers_phone);
@@ -314,7 +348,171 @@ Inquiry - Admin Panel
             
         // });
 
+        $('#modalinput').on('shown.bs.modal', function () {
+            $('#namaBarang').on('select2:select', function(e) {
+                var data = e.params.data;
+                // console.log(data);
+                // $('#user_code').val(data.id);
+                $('#satuan').val(data.uom_name);
+                $('#hargaPricelist').val(data.goods_price);
+                var user_code = $('#user_code').val();
+                if (user_code == 1) {
+                    $('#hargaNet').val(data.goods_reseller_price);
+                } else if (user_code == 2) {
+                    $('#hargaNet').val(data.goods_end_user_price);
+                }else if (user_code == 3) {
+                    $('#hargaNet').val(data.goods_contractor_price);
+                } else {
+                    $('#hargaNet').val(data.goods_price);
+                }
+                // $('#hargaTotal').val(data.id);
+            }).on("select2:unselect", function (e) {
+                // clear data
+            }).select2({
+                dropdownParent: $('#modalinput'),
+                placeholder: "Pilih Barang",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combogoods',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term,
+                            // data: $('#cities_code').val()
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                }
+            });
+            
+        });
+
     });
+
+    function request() {
+        // console.log(value);
+        const checkreq = $('#requestProdukSwitch').prop('checked');
+        if (checkreq == false) {
+            $('#namaBarangText').addClass('hidden');
+            $('#namaBarangCombo').removeClass('hidden');
+
+            $('#satuan').prop('readonly', true);
+            $('#hargaPricelist').prop('readonly', true);
+            $('#hargaNet').prop('readonly', true);
+            // $('#hargaTotal').prop('readonly', true);
+        } else {
+            $('#namaBarangCombo').addClass('hidden');
+            $('#namaBarangText').removeClass('hidden');
+
+            $('#satuan').removeAttr('readonly');
+            $('#hargaPricelist').removeAttr('readonly');
+            $('#hargaNet').removeAttr('readonly');
+            // $('#hargaTotal').removeAttr('readonly');
+        }
+    }
+
+    function tambahlist() {
+
+        $('#modalinput').modal('hide')
+
+        $('#table_misi').removeClass('hidden');
+        $('#new_misi').addClass('hidden');
+
+        const checkreq = $('#requestProdukSwitch').prop('checked');
+        if (checkreq == false) {
+            var namaBarang = $('#namaBarang').val();
+            var status = '<p style="color: green;">Ready</p>'; // indent
+            var stok = 1;
+        } else {
+            var namaBarang = $('#namaBarangText').val();
+            var status = '<p style="color: red;">Tidak ditemukan disistem</p>';
+            var stok = 0;
+        }
+        var quantity = $('#quantity').val();
+        var satuan = $('#satuan').val();
+        var hargaPricelist = $('#hargaPricelist').val();
+        var hargaTotal = $('#hargaTotal').val();
+        var no = $('#tbody tr').length + 1;
+        var hargaNet = $('#hargaNet').val();
+
+        $('#tbody').append(`
+            <tr>
+                <td class="text-center">${no}</td>
+                <td>${namaBarang}</td>
+                <td><input type="number" value="${quantity}"></td>
+                <td>${stok}</td>
+                <td>${status}</td>
+                <td>${satuan}</td>
+                <td>${hargaPricelist}</td>
+                <td>${hargaNet}</td>
+                <td><input type="text" value="12%"></td>
+                <td>${hargaTotal}</td>
+                <td>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-danger" onclick="hapuslist(this)">
+                            <i class="ph ph-trash"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="moveUp(this)">
+                            <i class="ph ph-arrow-up"></i>
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="moveDown(this)">
+                            <i class="ph ph-arrow-down"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `);
+    }
+
+    function hitung() {
+        var quantity = $('#quantity').val();
+        var hargaNet = $('#hargaPricelist').val();
+        var hargaTotal = quantity * hargaNet;
+        $('#hargaTotal').val(hargaTotal);
+    }
+
+    // Fungsi untuk menghapus baris
+    function hapuslist(button) {
+        let row = button.closest("tr");
+        row.remove();
+        updateRowNumbers();
+    }
+
+    // Fungsi untuk memindahkan baris ke atas
+    function moveUp(button) {
+        let row = button.closest("tr");
+        let prevRow = row.previousElementSibling;
+
+        if (prevRow) {
+            row.parentNode.insertBefore(row, prevRow);
+            updateRowNumbers();
+        }
+    }
+
+    // Fungsi untuk memindahkan baris ke bawah
+    function moveDown(button) {
+        let row = button.closest("tr");
+        let nextRow = row.nextElementSibling;
+
+        if (nextRow) {
+            row.parentNode.insertBefore(nextRow, row);
+            updateRowNumbers();
+        }
+    }
+
+    // Fungsi untuk memperbarui nomor urutan setelah perubahan posisi
+    function updateRowNumbers() {
+        let rows = document.querySelectorAll("#tbody tr");
+        rows.forEach((row, index) => {
+            row.cells[0].textContent = index + 1;
+        });
+    }
 </script>
 
 @endsection

@@ -128,6 +128,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     // Goods Routes
     Route::resource('goods', App\Http\Controllers\Backend\GoodsController::class);
     Route::any('goods/{id}', [App\Http\Controllers\Backend\GoodsController::class, 'update']);
+    Route::get('combogoods', [App\Http\Controllers\Backend\GoodsController::class, 'combo']);
 
     // product_divisions
     Route::resource('product_divisions', App\Http\Controllers\Backend\ProductdivisionController::class);
