@@ -50,6 +50,46 @@ Inquiry - Admin Panel
     #nama_customer, #user_code {
         width: 100% !important; /* Force lebar 100% */
     }
+
+    .kategori-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .kategori-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        cursor: pointer;
+    }
+
+    .kategori-btn {
+        width: 30px;
+        height: 30px;
+        border: 1px solid #ccc;
+        background-color: white;
+        cursor: pointer;
+        border-radius: 5px;
+        display: inline-block;
+    }
+
+    .kategori-btn.active {
+        background-color: blue;
+        border-color: blue;
+        position: relative;
+    }
+
+    .kategori-btn.active::after {
+        content: "✔";
+        color: white;
+        font-size: 18px;
+        font-weight: bold;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
 </style>
 
 <div class="content-wrapper">
@@ -141,31 +181,66 @@ Inquiry - Admin Panel
                         <div class="card-body">
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Dari</b></label>
-                                <input class="form-control" type="text"> 
+                                <!-- <input class="form-control" type="text">  -->
+                                <select class="form-control" id="permintaan_dari">
+                                    <option value="1">Whatsapp</option>
+                                </select>
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Lokasi</b></label>
-                                <input class="form-control" type="text">
+                                <input class="form-control" type="text" id="permintaan_lokasi">
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Pengiriman</b></label>
-                                <input class="form-control" type="text">
+                                <!-- <input class="form-control" type="text"> -->
+                                 <select class="form-control" id="permintaan_pengiriman">
+                                    <option value="1">Kurir Bromindo</option>
+                                 </select>
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Ongkir</b></label>
-                                <input class="form-control" type="text">
+                                <input class="form-control" type="text" id="permintaan_ongkir" value="0">
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Kategori</b></label>
-                                <input class="form-control" type="text">
+                                <!-- <input class="form-control" type="text"> -->
+                                <div class="kategori-group">
+                                    <div class="kategori-item" data-value="FE">
+                                        <div class="kategori-btn"></div>
+                                        <span>FE</span>
+                                    </div>
+                                    <div class="kategori-item" data-value="FA">
+                                        <div class="kategori-btn"></div>
+                                        <span>FA</span>
+                                    </div>
+                                    <div class="kategori-item" data-value="FH">
+                                        <div class="kategori-btn"></div>
+                                        <span>FH</span>
+                                    </div>
+                                    <div class="kategori-item" data-value="SE">
+                                        <div class="kategori-btn"></div>
+                                        <span>SE</span>
+                                    </div>
+                                    <div class="kategori-item" data-value="FS">
+                                        <div class="kategori-btn"></div>
+                                        <span>FS</span>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="kategoriInput" name="kategori">
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Stock</b></label>
-                                <input class="form-control" type="text">
+                                <!-- <input class="form-control" type="text"> -->
+                                 <select class="form-control" id="permintaan_stock">
+                                    <option value="1">Gudang Semarang</option>
+                                 </select>
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Spesifikasi</b></label>
-                                <input class="form-control" type="text">
+                                <!-- <input class="form-control" type="text"> -->
+                                 <select class="form-control" id="permintaan_spesifikasi">
+                                    <option value="1">Low End</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -239,7 +314,7 @@ Inquiry - Admin Panel
 
 <div class="floating-footer">
     <div class="harga-total">
-        Harga Total : 0 <span class="harga-invalid">(Harga belum valid)</span><br>
+        Harga Total : <span class="harga-invalid" id="harga_keseluruhan"> 0 (Harga belum valid)</span><br>
         <small>* Termasuk PPN 11% dan ongkir</small>
     </div>
     <div class="button-container">
@@ -331,7 +406,12 @@ Inquiry - Admin Panel
             console.error(error);
         });
 
-    $(document).ready(function() {        
+    $(document).ready(function() {   
+        $(".kategori-item").click(function(){
+            $(".kategori-btn").removeClass("active"); // Hapus aktif dari semua
+            $(this).find(".kategori-btn").addClass("active"); // Tambahkan aktif ke yang diklik
+            $("#kategoriInput").val($(this).data("value")); // Simpan value ke input hidden
+        });   
         $('#nama_customer').on('select2:select', function(e) {
             var data = e.params.data;
             $('#company').val(data.text);
@@ -468,42 +548,47 @@ Inquiry - Admin Panel
     }
 
     function tambahlist() {
-
-        $('#modalinput').modal('hide')
+        $('#modalinput').modal('hide');
 
         $('#table_misi').removeClass('hidden');
         $('#new_misi').addClass('hidden');
         $('#header_form_nama').removeClass('hidden');
 
         const checkreq = $('#requestProdukSwitch').prop('checked');
+        let namaBarang, status, stok;
+
         if (checkreq == false) {
-            var namaBarang = $('#namaBarang').val();
-            var status = '<p style="color: green;">Ready</p>'; // indent
-            var stok = 1;
+            namaBarang = $('#namaBarang').val();
+            status = '<p style="color: green;">Ready</p>';
+            stok = 1;
         } else {
-            var namaBarang = $('#namaBarangText').val();
-            var status = '<p style="color: red;">Tidak ditemukan disistem</p>';
-            var stok = 0;
+            namaBarang = $('#namaBarangText').val();
+            status = '<p style="color: red;">Tidak ditemukan disistem</p>';
+            stok = 0;
         }
-        var quantity = $('#quantity').val();
-        var satuan = $('#satuan').val();
-        var hargaPricelist = $('#hargaPricelist').val();
-        var hargaTotal = $('#hargaTotal').val();
-        var no = $('#tbody tr').length + 1;
-        var hargaNet = $('#hargaNet').val();
+
+        let quantity = $('#quantity').val();
+        let satuan = $('#satuan').val();
+        let hargaPricelist = $('#hargaPricelist').val();
+        let hargaNet = $('#hargaNet').val();
+        let no = $('#tbody tr').length + 1;
+        let ppn = 12; // Default PPN 12%
+
+        // Hitung harga total awal
+        let hargaTotal = (quantity * hargaNet) * (1 + ppn / 100);
 
         $('#tbody').append(`
             <tr>
                 <td class="text-center">${no}</td>
                 <td>${namaBarang}</td>
-                <td><input type="number" value="${quantity}"></td>
+                <td><input type="number" value="${quantity}" class="quantity-input" oninput="updateHargaTotal(this)"></td>
                 <td>${stok}</td>
                 <td>${status}</td>
                 <td>${satuan}</td>
                 <td>${hargaPricelist}</td>
-                <td>${hargaNet}</td>
-                <td><input type="text" value="12%"></td>
-                <td>${hargaTotal}</td>
+                <td class="harga-net">${hargaNet}</td>
+                <td><input type="text" value="${ppn}%" class="ppn-input" oninput="updateHargaTotal(this)"></td>
+                <td class="harga-total">${hargaTotal.toFixed(0)}</td>
                 <td>
                     <div class="d-flex gap-2">
                         <button type="button" class="btn btn-danger" onclick="hapuslist(this)">
@@ -519,7 +604,60 @@ Inquiry - Admin Panel
                 </td>
             </tr>
         `);
+
+        // Update grand total setelah menambah item
+        updateGrandTotal();
     }
+
+    function updateHargaTotal(input) {
+        let row = $(input).closest("tr"); // Dapatkan baris tabel yang sedang diedit
+        let quantity = parseFloat(row.find(".quantity-input").val()) || 0;
+        let hargaNet = parseFloat(row.find(".harga-net").text()) || 0;
+        let ppnText = row.find(".ppn-input").val().replace('%', ''); // Ambil nilai PPN tanpa simbol "%"
+        let ppn = parseFloat(ppnText) || 0; // Konversi ke angka
+
+        // Hitung harga total baru
+        let hargaTotal = (quantity * hargaNet) * (1 + ppn / 100);
+
+        // Perbarui nilai harga total di tabel
+        row.find(".harga-total").text(hargaTotal.toFixed(2));
+
+        // Update grand total setelah menambah item
+        updateGrandTotal();
+    }
+
+    function updateGrandTotal() {
+        let grandTotal = 0;
+
+        // Loop melalui setiap baris untuk menjumlahkan harga total
+        $(".harga-total").each(function () {
+            let harga = parseFloat($(this).text()) || 0;
+            grandTotal += harga;
+        });
+
+        // Periksa apakah elemen grand total sudah ada, jika tidak, tambahkan
+        if ($("#grand-total-row").length === 0) {
+            // $("#tbody").after(`
+            //     <tr id="grand-total-row">
+            //         <td colspan="9" class="text-end"><b>Grand Total:</b></td>
+            //         <td id="grand-total-value"><b>${grandTotal.toFixed(2)}</b></td>
+            //         <td></td>
+            //     </tr>
+            // `);
+            // tambahkan warna font menjadi putih di dalam inner
+            document.getElementById('harga_keseluruhan').innerHTML = grandTotal.toFixed(2);
+            $("#harga_keseluruhan").css("color", "white");
+            // console.log('total 1 ',grandTotal.toFixed(2));
+        } else {
+            // Perbarui nilai Grand Total jika elemen sudah ada
+            document.getElementById('harga_keseluruhan').innerHTML = grandTotal.toFixed(2);
+            $("#harga_keseluruhan").css("color", "red");
+            // $("#grand-total-value").html(`<b>${grandTotal.toFixed(2)}</b>`);
+            // console.log('total 2 ',grandTotal.toFixed(2));
+        }
+    }
+
+
 
     function hitung() {
         var quantity = $('#quantity').val();
@@ -533,6 +671,9 @@ Inquiry - Admin Panel
         let row = button.closest("tr");
         row.remove();
         updateRowNumbers();
+
+        // Update grand total setelah menghapus item
+        updateGrandTotal();
     }
 
     // Fungsi untuk memindahkan baris ke atas
