@@ -5,6 +5,69 @@
     document.getElementById("done"),
   ]);
 
+  // KANBAN BOARD
+
+  const columnCustomeIds = [
+    "inquiry-masuk", "waiting-list-estimator", "waiting-approval-harga", 
+    "reject", "waiting-approval-no-quote", "inquiry-no-quote", 
+    "waiting-approval-batal", "inquiry-batal"
+  ];
+
+  // Dapatkan semua kolom kanban
+  let columnsCustome = Array.from(document.querySelectorAll(".kanban-column"));
+
+  // Inisialisasi Dragula
+  let drake = dragula(columnsCustome, {
+      removeOnSpill: false,
+      copy: false,
+      moves: function (el, container, handle) {
+          return el.classList.contains("card-priority");
+      },
+      accepts: function (el, target, source, sibling) {
+          return target.classList.contains("kanban-column");
+      }
+  });
+
+  // Event listener untuk saat elemen dijatuhkan ke kolom baru
+  drake.on('drop', function (el, target, source, sibling) {
+    if (el && target) {
+      let inquiryStage = target.querySelector('.inquiry-stage');
+      inquiryStage = inquiryStage.value;
+      let inquiryId = target.querySelector('.inquiry-id');
+      inquiryId = inquiryId.value;
+      updateInquiryStage(inquiryId, inquiryStage);
+    }
+  });
+
+  // Jika elemen kembali ke tempat lama
+  drake.on('cancel', function (el, container, source) {
+    if (el && target) {
+      let inquiryStage = target.querySelector('.inquiry-stage');
+      inquiryStage = inquiryStage.value;
+      let inquiryId = target.querySelector('.inquiry-id');
+      inquiryId = inquiryId.value;
+      updateInquiryStage(inquiryId, inquiryStage);
+    }
+  });
+
+  function updateInquiryStage(id, stage)
+  {
+    $.ajax({
+      url: '/admin/inquiry/update_stage?id='+id+'&stage='+stage,
+      type: 'GET',
+      dataType: 'JSON',
+      success: function(response) {
+        console.log(response);
+      },
+      error: function(error){
+        console.log(error);
+      }
+    })
+  }
+
+
+  // END::KANBAN BOARD
+
   const boardTitle = document.getElementById("board_title");
   const CreateBoard = document.getElementById("createboard");
 

@@ -5,6 +5,7 @@ namespace App\View\Components\inquiry;
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use App\Models\Inquiry;
 
 class kanban4Component extends Component
 {
@@ -13,7 +14,7 @@ class kanban4Component extends Component
      */
     public function __construct()
     {
-        //
+        $this->inquiry = new Inquiry();
     }
 
     /**
@@ -21,6 +22,7 @@ class kanban4Component extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.inquiry.kanban4-component');
+        $data = $this->inquiry->getListCardInquiry('STATUS0004');
+        return view('components.inquiry.kanban4-component', compact('data'));
     }
 }
