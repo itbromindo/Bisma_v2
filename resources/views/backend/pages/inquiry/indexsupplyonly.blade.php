@@ -39,6 +39,17 @@ Inquiry - Admin Panel
         display: flex;
         gap: 10px;
     }
+
+    /* Pastikan semua input dan select memiliki lebar yang sama */
+    .form-control {
+        width: 100%; /* Lebar 100% dari parent-nya */
+        box-sizing: border-box; /* Pastikan padding dan border termasuk dalam lebar */
+    }
+
+    /* Jika ada elemen select yang masih bermasalah */
+    #nama_customer, #user_code {
+        width: 100% !important; /* Force lebar 100% */
+    }
 </style>
 
 <div class="content-wrapper">
@@ -68,45 +79,55 @@ Inquiry - Admin Panel
                         </div>
 
                         <div class="card-body">
-                            <div class="fromGroup horizontal-form mb-3">
+                            <!-- Form Nama -->
+                            <div class="fromGroup horizontal-form mb-3" id="header_form_nama">
                                 <label><b>Nama</b></label>
-                                <!-- <input class="form-control" type="text" placeholder="Pilih Nama"> -->
                                 <select class="form-control" id="nama_customer" style="width: 100%;">
                                     <option value="" disabled selected>Pilih Nama</option>
                                 </select>
                             </div>
+
+                            <!-- Form User -->
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>User</b></label>
-                                <!-- <input class="form-control" id="user_code" type="text" placeholder="Pilih Customer Dulu"> -->
-                                <div class="select-box">
-                                    <select class="custom-select sources" id="user_code" title="User">
-                                        <option value="1">Reseller</option>
-                                        <option value="2">End User</option>
-                                        <option value="3">Kontraktor</option>
-                                    </select>
-                                </div>
+                                <select class="form-control" id="user_code">
+                                    <option value="1">Reseller</option>
+                                    <option value="2">End User</option>
+                                    <option value="3">Kontraktor</option>
+                                </select>
                             </div>
+
+                            <!-- Form Perusahaan -->
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Perusahaan</b></label>
                                 <input class="form-control" type="text" id="company">
                             </div>
+
+                            <!-- Form Alamat -->
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Alamat</b></label>
                                 <input class="form-control" type="text" id="address">
                             </div>
+
+                            <!-- Form Prov & Kota -->
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Prov & Kota</b></label>
                                 <input class="form-control" type="text" id="city">
                             </div>
+
+                            <!-- Form No. Tlpn -->
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>No. Tlpn</b></label>
                                 <input class="form-control" type="text" id="phone">
                             </div>
+
+                            <!-- Form Email -->
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Email</b></label>
                                 <input class="form-control" type="text" id="email">
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -157,7 +178,7 @@ Inquiry - Admin Panel
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5>List Permintaan</h5>
                             <div class="d-flex align-items-center">
-                                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modalinput" style="color: #2563eb;"><i class="ph ph-plus"></i> Tambah Data</button>
+                                <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#" onclick="showadddata()" style="color: #2563eb;"><i class="ph ph-plus"></i> Tambah Data</button>
                             </div>
                         </div>
 
@@ -311,48 +332,41 @@ Inquiry - Admin Panel
         });
 
     $(document).ready(function() {        
-        // $('#modalinput').on('shown.bs.modal', function () {
-            $('#nama_customer').on('select2:select', function(e) {
-                var data = e.params.data;
-                // console.log(data);
-                // $('#user_code').val(data.id);
-                $('#company').val(data.text);
-                $('#address').val(data.customers_full_address);
-                $('#city').val(data.provinces_code+" & "+data.cities_code);
-                $('#phone').val(data.customers_phone);
-                $('#email').val(data.customers_email);
-            }).on("select2:unselect", function (e) {
-                // clear data
-            }).select2({
-                // dropdownParent: $('#modalinput'),
-                placeholder: "Pilih Nama",
-                allowClear: true,
-                ajax: {
-                    url: '/admin/combocustomer',
-                    dataType: 'json',
-                    delay: 250,
-                    data: function (params) {
-                        return {
-                            search: params.term,
-                            // data: $('#cities_code').val()
-                        };
-                    },
-                    processResults: function (data) {
-                        return {
-                            results: data
-                        };
-                    },
-                    cache: true
-                }
-            });
+        $('#nama_customer').on('select2:select', function(e) {
+            var data = e.params.data;
+            $('#company').val(data.text);
+            $('#address').val(data.customers_full_address);
+            $('#city').val(data.provinces_code+" & "+data.cities_code);
+            $('#phone').val(data.customers_phone);
+            $('#email').val(data.customers_email);
+        }).on("select2:unselect", function (e) {
+            // clear data
+        }).select2({
+            placeholder: "Pilih Nama",
+            allowClear: true,
+            ajax: {
+                url: '/admin/combocustomer',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term,
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
             
-        // });
 
         $('#modalinput').on('shown.bs.modal', function () {
+            $('#header_form_nama').addClass('hidden');
             $('#namaBarang').on('select2:select', function(e) {
                 var data = e.params.data;
-                // console.log(data);
-                // $('#user_code').val(data.id);
                 $('#satuan').val(data.uom_name);
                 $('#hargaPricelist').val(data.goods_price);
                 var user_code = $('#user_code').val();
@@ -365,7 +379,6 @@ Inquiry - Admin Panel
                 } else {
                     $('#hargaNet').val(data.goods_price);
                 }
-                // $('#hargaTotal').val(data.id);
             }).on("select2:unselect", function (e) {
                 // clear data
             }).select2({
@@ -379,7 +392,6 @@ Inquiry - Admin Panel
                     data: function (params) {
                         return {
                             search: params.term,
-                            // data: $('#cities_code').val()
                         };
                     },
                     processResults: function (data) {
@@ -393,7 +405,17 @@ Inquiry - Admin Panel
             
         });
 
+        $('#modalinput').on('hidden.bs.modal', function () {
+            // Tampilkan kembali Select2 di luar modal saat modal ditutup
+            $('#header_form_nama').removeClass('hidden');
+        });
+    
+        $('#closeModal').on('click', function () {
+            // Jika tombol close diklik, pastikan Select2 kembali tampil
+            $('#header_form_nama').removeClass('hidden');
+        });
     });
+    
 
     function request() {
         // console.log(value);
@@ -417,12 +439,41 @@ Inquiry - Admin Panel
         }
     }
 
+    function showadddata() {
+        let name = $('#nama_customer').val();
+        let user = $('#user_code').val();
+
+        if (name == null) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Pilih nama customer terlebih dahulu!'
+            });
+
+            alertform('select2','nama_customer',"Form ini Tidak Boleh Kosong");
+            return;
+        }
+
+        if (user == null) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Pilih user terlebih dahulu!'
+            });
+            alertform('select2','user_code',"Form ini Tidak Boleh Kosong");
+            return;
+        }
+
+        $('#modalinput').modal('show');
+    }
+
     function tambahlist() {
 
         $('#modalinput').modal('hide')
 
         $('#table_misi').removeClass('hidden');
         $('#new_misi').addClass('hidden');
+        $('#header_form_nama').removeClass('hidden');
 
         const checkreq = $('#requestProdukSwitch').prop('checked');
         if (checkreq == false) {
