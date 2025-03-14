@@ -2,47 +2,23 @@
     <div class="card-body">
         <div class="kanban-board-header">
             <h5>Inquiry Masuk</h5>
-            <div class="card-priority__actions">
-                <ul class="dropdown-menu dropdown-actions" aria-labelledby="dropdownMenuButton5" data-popper-placement="bottom-start">
-                    <li>
-                        <a href="#" class="dropdown-item">
-                            <span>
-                                <img
-                                    src="{{asset('backend/assets/images/svg/pen.svg')}}"
-                                    alt="pen"
-                                />
-                            </span>
-                            Edit
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="dropdown-item">
-                            <span>
-                                <img
-                                    src="{{asset('backend/assets/images/svg/copy-link.svg')}}"
-                                    alt="copylink"
-                                />
-                            </span>
-                            Copy Link
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#" class="dropdown-item remove-killer plain-btn">
-                            <span>
-                                <img
-                                    src="{{asset('backend/assets/images/svg/trash.svg')}}"
-                                    alt="copylink"
-                                />
-                            </span>
-                            Delete
-                        </a>
-                    </li>
-                </ul>
-            </div>
         </div>
-        <div id="task-1">
-            <div id="todo">
-                <div class="card-priority rt-mb-12">
+        <div id="task-inquiry-masuk">
+            <div id="inquiry-masuk" class="kanban-column">
+                <input type="hidden" value="STATUS0001" class="inquiry-stage">
+                @foreach($data as $row)
+                @php
+                    $duedate = $row->inquiry_end_date;
+                    $today = date('Y-m-d H:i:s');
+                    $status_card = '';
+                    
+                    if($today > $duedate)
+                    {
+                        $status_card = 'bg-danger-50';
+                    }
+                @endphp
+                <div class="card-priority rt-mb-12 {{ $status_card }}">
+                    <input type="hidden" value="{{ $row->inquiry_id }}" class="inquiry-id">
                     <!-- top bar  -->
                     <div class="card-priority__header">
                         <div class="date">
@@ -52,7 +28,8 @@
                                     alt="clock"
                                 />
                             </span>
-                            <p>14 Nov, 2021</p>
+
+                            <p>Due Date Inquiry : <br>{{ date("d M, Y", strtotime($duedate)) }}</p>
                         </div>
                         <!-- actions  -->
                         <div class="card-priority__actions">
@@ -72,22 +49,11 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="dropdown-item">
-                                        <span>
-                                            <img
-                                            src="{{asset('backend/assets/images/svg/copy-link.svg')}}"
-                                            alt="copylink"
-                                            />
-                                        </span>
-                                        Copy Link
-                                    </a>
-                                </li>
-                                <li>
                                     <a href="#" class="dropdown-item remove-killer plain-btn">
                                         <span>
                                             <img
                                             src="{{asset('backend/assets/images/svg/trash.svg')}}"
-                                            alt="copylink"
+                                            alt="trash"
                                             />
                                         </span>
                                         Delete
@@ -96,29 +62,19 @@
                             </ul>
                         </div>
                     </div>
-
                     <!-- labels  -->
                     <div class="card-priority__labels">
                         <ul>
                             <li>
-                                <span class="labels medium"
-                                >Medium Priority</span>
-                            </li>
-                            <li>
-                                <span class="labels urgent"
-                                ><img
-                                class="rt-mr-6"
-                                src="{{asset('backend/assets/images/svg/red-circle.svg')}}"
-                                alt=""
-                                />
-                                Urgents</span>
+                                <span class="labels medium yellow">{{ $row->inquiry_type_name }}</span>
                             </li>
                         </ul>
                     </div>
                     <h2 class="card-priority__title pointer">
-                        Meeting with UI/UX Team to manage our upcoming
-                        projects &amp; task.
+                        {{ $row->inquiry_code }}
                     </h2>
+                    <p>{{ $row->customer_name }}</p>
+                    @if(!empty($row->users_photo))
                     <!-- priority footer  -->
                     <div class="card-priority__footer">
                         <div>
@@ -126,7 +82,10 @@
                                 <li>
                                     <a href="#">
                                         <span>
-                                            <img src="{{asset('backend/assets/images/svg/attach.svg')}}" alt="icon">
+                                        <img
+                                            src="{{asset('backend/assets/images/svg/attach.svg')}}"
+                                            alt="icon"
+                                        />
                                         </span>
                                         5
                                     </a>
@@ -134,7 +93,10 @@
                                 <li>
                                     <a href="#">
                                         <span>
-                                            <img src="{{asset('backend/assets/images/svg/comments.svg')}}" alt="icon">
+                                        <img
+                                            src="{{asset('backend/assets/images/svg/comments.svg')}}"
+                                            alt="icon"
+                                        />
                                         </span>
                                         19
                                     </a>
@@ -142,139 +104,30 @@
                             </ul>
                         </div>
                         <div>
-                            <ul class="users">
-                                <li class="users-item">
-                                    <img src="{{asset('backend/assets/images/all-img/users/user1.png')}}" alt="user-photo">
-                                </li>
-                                <li class="users-item">
-                                    <img src="{{asset('backend/assets/images/all-img/users/three.png')}}" alt="user-photo">
-                                </li>
-                                <li class="users-item">
-                                    <img src="{{asset('backend/assets/images/all-img/users/two.png')}}" alt="user-photo">
-                                </li>
-                                <li class="users-item">
-                                    <img src="{{asset('backend/assets/images/all-img/users/one.png')}}" alt="user-photo">
+                            <ul>
+                                <li>
+                                    <span class="labels urgent {{ $row->inquiry_stage_progress_color }}"
+                                    >{{ $row->inquiry_stage_progress }}</span>
                                 </li>
                             </ul>
                         </div>
-                    </div>
-                    </div>
-                    <div class="card-priority rt-mb-12">
-                    <!-- top bar  -->
-                    <div class="card-priority__header">
-                        <div class="date">
-                        <span class="icon">
-                        <img
-                            src="{{asset('backend/assets/images/svg/clock.svg')}}"
-                            alt="clock"
-                        />
-                        </span>
-                        <p>14 Nov, 2021</p>
-                        </div>
-                        <!-- actions  -->
-                        <div class="card-priority__actions">
-                        <button class="dots-three text-gray-400 f-size-24 lh-1" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="true">
-                            <img src="{{asset('backend/assets/images/svg/dot.svg')}}" alt="clock" />
-                        </button>
-                        <ul class="dropdown-menu dropdown-actions" aria-labelledby="dropdownMenuButton2" data-popper-placement="bottom-start">
-                            <li>
-                            <a href="#" class="dropdown-item">
-                                <span>
-                                <img
-                                src="{{asset('backend/assets/images/svg/pen.svg')}}"
-                                alt="pen"
-                                />
-                            </span>
-                                Edit
-                            </a>
-                            </li>
-                            <li>
-                            <a href="#" class="dropdown-item">
-                                <span>
-                                <img
-                                src="{{asset('backend/assets/images/svg/copy-link.svg')}}"
-                                alt="copylink"
-                                />
-                            </span>
-                                Copy Link
-                            </a>
-                            </li>
-                            <li>
-                            <a href="#" type="button" class="dropdown-item remove-killer plain-btn">
-                                <span>
-                                <img
-                                src="{{asset('backend/assets/images/svg/trash.svg')}}"
-                                alt="copylink"
-                                />
-                            </span>
-                                Delete
-                            </a>
-                            </li>
-                        </ul>
+                        <div class="rt-mb-12">
+                            @php
+                                $image = $row->users_photo;
+                                $images = explode(',', $image);
+                            @endphp
+                            <ul class="users">
+                                @foreach($images as $img)
+                                <li class="users-item">
+                                    <img src="{{ $img }}" alt="user-photo">
+                                </li>
+                                @endforeach
+                            </ul>
                         </div>
                     </div>
-
-                    <!-- labels  -->
-                    <div class="card-priority__labels">
-                        <ul>
-                        <li>
-                            <span class="labels red"
-                            >High Priority</span>
-                        </li>
-                        <li>
-                            <span class="labels urgent green"
-                            ><img
-                            class="rt-mr-6"
-                            src="{{asset('backend/assets/images/svg/circle-green.svg')}}"
-                            alt=""
-                            />
-                            Work</span>
-                        </li>
-                        </ul>
-                    </div>
-                    <h2 class="card-priority__title pointer">
-                        New Project Idea & UX Research
-                    </h2>
-                    <!-- priority footer  -->
-                    <div class="card-priority__footer">
-                        <div>
-                        <ul class="labels-info">
-                            <li>
-                            <a href="#">
-                                <span>
-                            <img src="{{asset('backend/assets/images/svg/attach.svg')}}" alt="icon">
-                            </span>
-                                5
-                            </a>
-                            </li>
-                            <li>
-                            <a href="#">
-                                <span>
-                            <img src="{{asset('backend/assets/images/svg/comments.svg')}}" alt="icon">
-                            </span>
-                                19
-                            </a>
-                            </li>
-                        </ul>
-                        </div>
-                        <div>
-                        <ul class="users">
-                            <li class="users-item">
-                            <img src="{{asset('backend/assets/images/all-img/users/user1.png')}}" alt="user-photo">
-                            </li>
-                            <li class="users-item">
-                            <img src="{{asset('backend/assets/images/all-img/users/three.png')}}" alt="user-photo">
-                            </li>
-                            <li class="users-item">
-                            <img src="{{asset('backend/assets/images/all-img/users/two.png')}}" alt="user-photo">
-                            </li>
-                            <li class="users-item">
-                            <img src="{{asset('backend/assets/images/all-img/users/one.png')}}" alt="user-photo">
-                            </li>
-                        </ul>
-                        </div>
-                    </div>
+                    @endif
                 </div>
+                @endforeach
             </div>
         </div>
         <div class="add-new-card-btn">
