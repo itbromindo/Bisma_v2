@@ -31,6 +31,26 @@ Inquiry - Admin Panel
             <div class="row">
                 <div class="col-12">
                     <div id="board" class="board">
+                        <div class="d-flex justify-content-end my-2">
+                            <button type="button" class="btn btn-sm btn-outline-primary pill btn-icon">
+                                <span class="button-content-wrapper">
+                                    <span class="button-text">
+                                        Button
+                                    </span>
+                                    <span class="button-icon">
+                                        <img src="{{ asset('backend/assets/images/svg/search.svg')}}" alt="Search" draggable="false">
+                                    </span>
+                                </span>
+                            </button>
+                            <button type="button" class="btn btn-icon">
+                                <span class="button-content-wrapper">
+                                    <span class="button-icon">
+                                        <img src="{{ asset('backend/assets/images/svg/search.svg')}}" alt="Search" draggable="false">
+                                    </span>
+                                </span>
+                            </button>
+                        </div>
+
                         <div class="d-flex kanbanboard_parent" id="kanban_board_parent">
                             @if ($usr->can('inquiry.kanban1'))
                                 <div class="kanbanboard_child">
@@ -86,5 +106,22 @@ Inquiry - Admin Panel
         </div>
     </div>
 </div>
+
+<style>
+    .kanban-container {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+    }
+
+    .kanban-column {
+        min-height: 200px;
+    }
+
+    .card-priority {
+        cursor: grab;
+    }
+
+</style>
 
 @endsection

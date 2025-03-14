@@ -1,19 +1,20 @@
 <?php
 
-namespace App\View\Components\Inquiry;
+namespace App\View\Components\inquiry;
 
 use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use App\Models\Inquiry;
 
-class Kanban8Component extends Component
+class kanban8Component extends Component
 {
     /**
      * Create a new component instance.
      */
     public function __construct()
     {
-        //
+        $this->inquiry = new Inquiry();
     }
 
     /**
@@ -21,6 +22,7 @@ class Kanban8Component extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.inquiry.kanban8-component');
+        $data = $this->inquiry->getListCardInquiry('STATUS0008');
+        return view('components.inquiry.kanban8-component', compact('data'));
     }
 }
