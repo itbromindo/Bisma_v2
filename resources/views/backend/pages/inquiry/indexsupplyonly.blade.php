@@ -315,11 +315,11 @@ Inquiry - Admin Panel
 <div class="floating-footer">
     <div class="harga-total">
         Harga Total : <span class="harga-invalid" id="harga_keseluruhan"> 0 (Harga belum valid)</span><br>
-        <small>* Termasuk PPN 11% dan ongkir</small>
+        <small>* Termasuk PPN dan ongkir</small>
     </div>
     <div class="button-container">
         <button type="button" class="btn btn-warning"><i class="ph ph-eye" style="font-size: 20px;"></i> Pratinjau</button>
-        <button type="button" class="btn btn-primary"><i class="ph ph-floppy-disk" style="font-size: 20px;"></i> Simpan</button>
+        <button type="button" class="btn btn-primary" onclick="saveAll()"><i class="ph ph-floppy-disk" style="font-size: 20px;"></i> Simpan</button>
     </div>
 </div>
 
@@ -343,6 +343,7 @@ Inquiry - Admin Panel
                     <div class="mb-3">
                         <label for="namaBarang" class="form-label">Nama barang</label>
                         <input type="text" class="form-control hidden" id="namaBarangText" value="">
+                        <input type="hidden" class="form-control" id="namaBarangSelect2" value="">
                         <div id=namaBarangCombo>
                             <select class="form-control" id="namaBarang" style="width: 100%;">
                                 <option value="" disabled selected>Pilih Barang</option>
@@ -363,11 +364,11 @@ Inquiry - Admin Panel
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <label for="hargaPricelist" class="form-label">Harga pricelist</label>
-                            <input type="text" class="form-control" id="hargaPricelist" value="" onchange="hitung()" readonly>
+                            <input type="text" class="form-control" id="hargaPricelist" value="" readonly>
                         </div>
                         <div class="col-md-6">
                             <label for="hargaNet" class="form-label">Harga NET (End user)</label>
-                            <input type="text" class="form-control" id="hargaNet" value="" readonly>
+                            <input type="text" class="form-control" id="hargaNet" value="" onchange="hitung()" readonly>
                         </div>
                     </div>
                     <div class="mt-3">
@@ -401,6 +402,8 @@ Inquiry - Admin Panel
                 8. Barang yang sudah dibeli tidak dapat ditukar / dikembalikan. <br>
                 9. Email resmi perusahaan adalah email yang menggunakan domain @patigeni.com diluar akun tersebut dianggap tidak SAH. <br>
             `);
+
+            window.myEditor = editor;
         })
         .catch(error => {
             console.error(error);
@@ -408,9 +411,9 @@ Inquiry - Admin Panel
 
     $(document).ready(function() {   
         $(".kategori-item").click(function(){
-            $(".kategori-btn").removeClass("active"); // Hapus aktif dari semua
+            // $(".kategori-btn").removeClass("active"); // Hapus aktif dari semua
             $(this).find(".kategori-btn").addClass("active"); // Tambahkan aktif ke yang diklik
-            $("#kategoriInput").val($(this).data("value")); // Simpan value ke input hidden
+            // $("#kategoriInput").val($(this).data("value")); // Simpan value ke input hidden
         });   
         $('#nama_customer').on('select2:select', function(e) {
             var data = e.params.data;
@@ -449,6 +452,7 @@ Inquiry - Admin Panel
                 var data = e.params.data;
                 $('#satuan').val(data.uom_name);
                 $('#hargaPricelist').val(data.goods_price);
+                $('#namaBarangSelect2').val(data.text);
                 var user_code = $('#user_code').val();
                 if (user_code == 1) {
                     $('#hargaNet').val(data.goods_reseller_price);
@@ -495,6 +499,12 @@ Inquiry - Admin Panel
             $('#header_form_nama').removeClass('hidden');
         });
     });
+
+    function getEditorValue() {
+        var content = window.myEditor.getData();
+        // console.log(content);
+        return content;
+    }
     
 
     function request() {
@@ -558,13 +568,17 @@ Inquiry - Admin Panel
         let namaBarang, status, stok;
 
         if (checkreq == false) {
-            namaBarang = $('#namaBarang').val();
+            namaBarang = $('#namaBarangSelect2').val();
             status = '<p style="color: green;">Ready</p>';
             stok = 1;
+            code_status = 2; // ready
+            // code_status = 1; // indent
+            // code_status = 4; // product expaierd
         } else {
             namaBarang = $('#namaBarangText').val();
             status = '<p style="color: red;">Tidak ditemukan disistem</p>';
             stok = 0;
+            code_status = 3; // not value in system
         }
 
         let quantity = $('#quantity').val();
@@ -573,6 +587,7 @@ Inquiry - Admin Panel
         let hargaNet = $('#hargaNet').val();
         let no = $('#tbody tr').length + 1;
         let ppn = 12; // Default PPN 12%
+        let kodebarang = $('#namaBarang').val();
 
         // Hitung harga total awal
         let hargaTotal = (quantity * hargaNet) * (1 + ppn / 100);
@@ -580,9 +595,11 @@ Inquiry - Admin Panel
         $('#tbody').append(`
             <tr>
                 <td class="text-center">${no}</td>
+                <td class="hidden">${kodebarang}</td>
                 <td>${namaBarang}</td>
                 <td><input type="number" value="${quantity}" class="quantity-input" oninput="updateHargaTotal(this)"></td>
                 <td>${stok}</td>
+                <td class="hidden">${code_status}</td>
                 <td>${status}</td>
                 <td>${satuan}</td>
                 <td>${hargaPricelist}</td>
@@ -661,7 +678,7 @@ Inquiry - Admin Panel
 
     function hitung() {
         var quantity = $('#quantity').val();
-        var hargaNet = $('#hargaPricelist').val();
+        var hargaNet = $('#hargaNet').val();
         var hargaTotal = quantity * hargaNet;
         $('#hargaTotal').val(hargaTotal);
     }
@@ -704,6 +721,111 @@ Inquiry - Admin Panel
         rows.forEach((row, index) => {
             row.cells[0].textContent = index + 1;
         });
+    }
+
+    function saveAll() {
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+
+        postdata.append('nama_customer', document.getElementById('nama_customer').value); 
+        postdata.append('user_code', document.getElementById('user_code').value); 
+        postdata.append('company', document.getElementById('company').value); 
+        postdata.append('address', document.getElementById('address').value); 
+        postdata.append('city', document.getElementById('city').value); 
+        postdata.append('phone', document.getElementById('phone').value); 
+        postdata.append('email', document.getElementById('email').value); 
+
+        postdata.append('permintaan_dari', document.getElementById('permintaan_dari').value); 
+        postdata.append('permintaan_lokasi', document.getElementById('permintaan_lokasi').value); 
+        postdata.append('permintaan_pengiriman', document.getElementById('permintaan_pengiriman').value); 
+        postdata.append('permintaan_ongkir', document.getElementById('permintaan_ongkir').value); 
+        // postdata.append('kategoriInput', document.getElementById('kategoriInput').value); 
+        postdata.append('permintaan_stock', document.getElementById('permintaan_stock').value); 
+        postdata.append('permintaan_spesifikasi', document.getElementById('permintaan_spesifikasi').value); 
+        postdata.append('keterangan', getEditorValue()); 
+        postdata.append('harga_total', document.getElementById('harga_keseluruhan').innerText);
+
+
+        // ambil detail
+        var tbody = document.getElementById('tbody');
+        var rows = tbody.getElementsByTagName('tr');
+
+        var details = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName('td');
+
+            var detail = {
+                no: cells[0].innerText.trim(),
+                produk_code: cells[1].innerText.trim(),
+                produk_name: cells[2].innerText.trim(),
+                qty: cells[3].innerText.trim(),
+                stock: cells[4].innerText.trim(),
+                status: cells[5].innerText.trim(),
+                status_name: cells[6].innerText.trim(),
+                satuan: cells[7].innerText.trim(),
+                harga_unit: cells[8].innerText.trim(),
+                harga_net: cells[9].innerText.trim(),
+                taxes: cells[10].innerText.trim(),
+                harga_total: cells[11].innerText.trim()
+            };
+
+            details.push(detail);
+        }
+
+        // Tambahkan detail ke FormData sebagai JSON string
+        postdata.append('details', JSON.stringify(details));
+
+        console.log('Data FormData: ', Array.from(postdata.entries()));
+
+        // return;
+
+        $.ajax({
+            type: "POST",
+            url: "/admin/inquiry_supply_only",
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'department_code') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    if (data.column == 'department_code') {
+                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                    } else {
+                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                    }
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        // location.reload();
+                    });
+                }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
+            }
+        });
+
     }
 </script>
 
