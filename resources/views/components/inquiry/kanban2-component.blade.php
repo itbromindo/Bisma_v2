@@ -1,11 +1,11 @@
 <div class="card">
     <div class="card-body">
         <div class="kanban-board-header">
-            <h5>Waiting List Admin</h5>
+            <h5>{{ $inquiry->inquiry_status_name }}</h5>
         </div>
-        <div id="task-waiting-list-admin">
-            <div id="waiting-list-admin" class="kanban-column">
-                <input type="hidden" value="STATUS0002" class="inquiry-stage">
+        <div id="task-inquiry-2">
+            <div id="inquiry-2" class="kanban-column">
+                <input type="hidden" value="{{ $inquiry->inquiry_status_code }}" class="inquiry-stage">
                 @foreach($data as $row)
                 @php
                     $duedate = $row->inquiry_end_date;
@@ -48,17 +48,7 @@
                                         Edit
                                     </a>
                                 </li>
-                                <li>
-                                    <a href="#" class="dropdown-item remove-killer plain-btn">
-                                        <span>
-                                            <img
-                                            src="{{asset('backend/assets/images/svg/trash.svg')}}"
-                                            alt="trash"
-                                            />
-                                        </span>
-                                        Delete
-                                    </a>
-                                </li>
+                                <li></li>
                             </ul>
                         </div>
                     </div>

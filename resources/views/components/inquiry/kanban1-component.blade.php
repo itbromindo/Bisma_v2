@@ -1,11 +1,11 @@
 <div class="card">
     <div class="card-body">
         <div class="kanban-board-header">
-            <h5>Inquiry Masuk</h5>
+            <h5>{{ $inquiry->inquiry_status_name }}</h5>
         </div>
-        <div id="task-inquiry-masuk">
-            <div id="inquiry-masuk" class="kanban-column">
-                <input type="hidden" value="STATUS0001" class="inquiry-stage">
+        <div id="task-inquiry-1">
+            <div id="inquiry-1" class="kanban-column">
+                <input type="hidden" value="{{ $inquiry->inquiry_status_code }}" class="inquiry-stage">
                 @foreach($data as $row)
                 @php
                     $duedate = $row->inquiry_end_date;
@@ -49,14 +49,14 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="dropdown-item remove-killer plain-btn">
+                                    <a href="#" onclick="cancel_inquiry({{ $row->inquiry_id }})" class="dropdown-item">
                                         <span>
                                             <img
                                             src="{{asset('backend/assets/images/svg/trash.svg')}}"
                                             alt="trash"
                                             />
                                         </span>
-                                        Delete
+                                        Cancel
                                     </a>
                                 </li>
                             </ul>
@@ -66,7 +66,17 @@
                     <div class="card-priority__labels">
                         <ul>
                             <li>
-                                <span class="labels medium yellow">{{ $row->inquiry_type_name }}</span>
+                                <span class="badge rounded-pill bg-success-50 text-success-500"
+                                >{{ $row->origin_inquiry_name }}</span>
+                            </li>
+                            @foreach (json_decode($row->inquiry_product_division, true) as $divisi)
+                            <li>
+                                <span class="badge rounded-pill bg-primary-50 text-primary-500"
+                                >{{ $divisi }}</span>
+                            </li>
+                            @endforeach
+                            <li>
+                                <span class="badge rounded-pill bg-warning-50 text-warning-500">{{ $row->inquiry_type_name }}</span>
                             </li>
                         </ul>
                     </div>

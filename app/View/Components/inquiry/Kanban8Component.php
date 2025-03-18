@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 use App\Models\Inquiry;
+use App\Models\InquiryStatus;
 
 class kanban8Component extends Component
 {
@@ -22,7 +23,9 @@ class kanban8Component extends Component
      */
     public function render(): View|Closure|string
     {
-        $data = $this->inquiry->getListCardInquiry('STATUS0008');
-        return view('components.inquiry.kanban8-component', compact('data'));
+        $inquiry_status_code = 'STATUS008';
+        $inquiry = InquiryStatus::where('inquiry_status_code', $inquiry_status_code)->first();
+        $data = $this->inquiry->getListCardInquiry($inquiry_status_code);
+        return view('components.inquiry.kanban8-component', compact('data', 'inquiry'));
     }
 }

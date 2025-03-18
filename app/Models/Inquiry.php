@@ -20,14 +20,17 @@ class Inquiry extends Model
                         'it.inquiry_type_name',
                         'i.inquiry_code',
                         'i.inquiry_stage_progress',
+                        'i.inquiry_product_division',
                         'c.customer_name',
                         'u.users_name',
-                        DB::raw("IF(i.inquiry_stage_progress = 'in progress', 'yellow', 'danger') as inquiry_stage_progress_color"),
+                        'oi.origin_inquiry_name',
+                        DB::raw("IF(i.inquiry_stage_progress = 'in progress', 'yellow', 'red') as inquiry_stage_progress_color"),
                         DB::raw('GROUP_CONCAT(ut.users_photo) as users_photo')
                     )
                     ->join('inquiry_type as it', 'i.inquiry_type', '=', 'it.inquiry_type_code')
                     ->join('customer as c', 'i.inquiry_customer', '=', 'c.customer_code')
                     ->join('users as u', 'i.inquiry_sales', '=', 'u.user_code')
+                    ->join('origin_inquiries as oi', 'i.inquiry_origin', '=', 'oi.origin_inquiry_code')
                     ->leftJoin('users as ut', function ($join) {
                         $join->on(DB::raw("JSON_CONTAINS(i.inquiry_teams, JSON_QUOTE(ut.user_code), '$')"), '=', DB::raw('1'));
                     })

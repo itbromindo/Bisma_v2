@@ -7,14 +7,16 @@
 
   // KANBAN BOARD
 
-  const columnCustomeIds = [
-    "inquiry-masuk", "waiting-list-estimator", "waiting-approval-harga", 
-    "reject", "waiting-approval-no-quote", "inquiry-no-quote", 
-    "waiting-approval-batal", "inquiry-batal"
-  ];
-
   // Dapatkan semua kolom kanban
   let columnsCustome = Array.from(document.querySelectorAll(".kanban-column"));
+
+  let kanbanViewModel = document.querySelectorAll(".kanban-column");
+
+  kanbanViewModel.forEach(function (singlemodal) {
+    $(singlemodal).on("click", function () {
+      $("#viewmodal").modal("toggle");
+    });
+  });
 
   // Inisialisasi Dragula
   let drake = dragula(columnsCustome, {
@@ -64,7 +66,6 @@
       }
     })
   }
-
 
   // END::KANBAN BOARD
 

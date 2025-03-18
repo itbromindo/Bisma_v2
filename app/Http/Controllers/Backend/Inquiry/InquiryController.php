@@ -25,11 +25,6 @@ class InquiryController extends Controller
         return view('backend.pages.inquiry.index');
     }
 
-    public function show($id)
-    {
-        return response()->json(['message' => 'This is the show method for ID: ' . $id]);
-    }
-
     public function update_stage(Request $request)
     {
         $id = $request->id;
@@ -46,6 +41,32 @@ class InquiryController extends Controller
             'status' => 200,
             'data' => 'berhasil!'
         ];
+        return response()->json($messages);
+    }
+
+    public function cancel_stage(Request $request)
+    {
+        $id = $request->id;
+        $inquiry = Inquiry::where('inquiry_id', $id)->first();
+        if($inquiry->inquiry_stage == 'STATUS001') {
+            $data = [
+                'inquiry_stage' => 'STATUS008',
+                'inquiry_updated_at' => now(),
+                'inquiry_updated_by' => Session::get('user_code')
+            ];
+    
+            DB::table('inquiry')->where('inquiry_id', $id)->update($data);
+            $messages = [
+                'status' => 200,
+                'data' => 'Berhasil!'
+            ];
+        }else{
+            $messages = [
+                'status' => 400,
+                'data' => 'Gagal, terjadi kesalahan data!'
+            ];
+        }
+
         return response()->json($messages);
     }
 }
