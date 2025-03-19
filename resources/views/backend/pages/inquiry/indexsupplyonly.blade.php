@@ -179,11 +179,12 @@ Inquiry - Admin Panel
                         
                         <!-- ambil dari api raja ongkir -->
                         <div class="card-body">
-                            <div class="fromGroup horizontal-form mb-3">
+                            <div class="fromGroup horizontal-form mb-3" id="header_form_permintaan">
                                 <label><b>Dari</b></label>
                                 <!-- <input class="form-control" type="text">  -->
-                                <select class="form-control" id="permintaan_dari">
-                                    <option value="1">Whatsapp</option>
+                                
+                                <select class="form-control" id="permintaan_dari" style="width: 100%;">
+                                    <option value="" disabled selected>Pilih Permintaan</option>
                                 </select>
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
@@ -199,7 +200,7 @@ Inquiry - Admin Panel
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Ongkir</b></label>
-                                <input class="form-control" type="text" id="permintaan_ongkir" value="0">
+                                <input class="form-control" type="text" id="permintaan_ongkir" value="" placeholder="0">
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Kategori</b></label>
@@ -301,7 +302,7 @@ Inquiry - Admin Panel
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
-                                <textarea id="editor" name="content" class="form-control"></textarea>
+                                <textarea id="editor" name="content" class="form-control" data-desc="{{ $description }}"></textarea>
                             </div>
                         </div>
                     </div>
@@ -384,37 +385,59 @@ Inquiry - Admin Panel
     </div>
 </div>
 
-<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<!-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script> -->
 <script>
-    ClassicEditor
-        .create(document.querySelector('#editor'))
-        .then(editor => {
-            // editor.setData(`{!! old('content', $post->content ?? '') !!}`); // contoh value ambil dari dabaase
-            editor.setData(`
-                1. Harga sudah termasuk PPN 11%. <br>
-                2. Pembayaran Melalui Cheque / Giro Atas Nama : PT. Patigeni Mitra Sejati dianggap lunas setelah Cheque / Giro dicairkan. Pembayaran melalui Transfer hanya melalui rekening 
-                BCA AN PT. Patigeni Mitra Sejati BCA Ungaran a/c IDR : 222068B111 Bank Mandiri Pemuda a/c : 1350078787577 Kami tidak bertanggung jawab atas transaksi diluar akun tersebut. <br>
-                3. Stock : Mohon konfirmasi sales. <br>
-                4. Franco : Jakarta, Semarang, Surabaya. <br>
-                5. Pembayaran : Cash Before Delivery. <br>
-                6. Validasi penawaran : 7 hari kerja. <br>
-                7. Harga tidak termasuk jasa instalasi (Supply Only). <br>
-                8. Barang yang sudah dibeli tidak dapat ditukar / dikembalikan. <br>
-                9. Email resmi perusahaan adalah email yang menggunakan domain @patigeni.com diluar akun tersebut dianggap tidak SAH. <br>
-            `);
 
-            window.myEditor = editor;
-        })
-        .catch(error => {
-            console.error(error);
-        });
+    document.addEventListener("DOMContentLoaded", function () {
+        let editorElement = document.querySelector('#editor');
+        let description = editorElement.getAttribute('data-desc'); // Ambil data dari attribute
+
+        ClassicEditor
+            .create(editorElement)
+            .then(editor => {
+                editor.setData(description); // Set data ke CKEditor
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+
+
+    // ClassicEditor
+    //     .create(document.querySelector('#editor'))
+    //     .then(editor => {
+            // editor.setData(`{!! old('content', $post->content ?? '') !!}`); // contoh value ambil dari dabaase
+            // editor.setData(`
+            //     1. Harga sudah termasuk PPN 11%. <br>
+            //     2. Pembayaran Melalui Cheque / Giro Atas Nama : PT. Patigeni Mitra Sejati dianggap lunas setelah Cheque / Giro dicairkan. Pembayaran melalui Transfer hanya melalui rekening 
+            //     BCA AN PT. Patigeni Mitra Sejati BCA Ungaran a/c IDR : 222068B111 Bank Mandiri Pemuda a/c : 1350078787577 Kami tidak bertanggung jawab atas transaksi diluar akun tersebut. <br>
+            //     3. Stock : Mohon konfirmasi sales. <br>
+            //     4. Franco : Jakarta, Semarang, Surabaya. <br>
+            //     5. Pembayaran : Cash Before Delivery. <br>
+            //     6. Validasi penawaran : 7 hari kerja. <br>
+            //     7. Harga tidak termasuk jasa instalasi (Supply Only). <br>
+            //     8. Barang yang sudah dibeli tidak dapat ditukar / dikembalikan. <br>
+            //     9. Email resmi perusahaan adalah email yang menggunakan domain @patigeni.com diluar akun tersebut dianggap tidak SAH. <br>
+            // `);
+
+        //     window.myEditor = editor;
+        // })
+        // .catch(error => {
+        //     console.error(error);
+        // });
 
     $(document).ready(function() {   
-        $(".kategori-item").click(function(){
-            // $(".kategori-btn").removeClass("active"); // Hapus aktif dari semua
-            $(this).find(".kategori-btn").addClass("active"); // Tambahkan aktif ke yang diklik
-            // $("#kategoriInput").val($(this).data("value")); // Simpan value ke input hidden
-        });   
+        $(".kategori-item").click(function () {
+            let btn = $(this).find(".kategori-btn");
+            btn.toggleClass("active"); // Toggle class active
+
+            // Update input hidden dengan daftar kategori yang dipilih
+            let selectedValues = $(".kategori-item .kategori-btn.active").map(function () {
+                return $(this).parent().data("value");
+            }).get().join(",");
+
+            $("#kategoriInput").val(selectedValues);
+        }); 
         $('#nama_customer').on('select2:select', function(e) {
             var data = e.params.data;
             $('#company').val(data.text);
@@ -444,10 +467,41 @@ Inquiry - Admin Panel
                 cache: true
             }
         });
+
+        $('#permintaan_dari').on('select2:select', function(e) {
+            var data = e.params.data;
+            // $('#company').val(data.text);
+            // $('#address').val(data.customers_full_address);
+            // $('#city').val(data.provinces_code+" & "+data.cities_code);
+            // $('#phone').val(data.customers_phone);
+            // $('#email').val(data.customers_email);
+        }).on("select2:unselect", function (e) {
+            // clear data
+        }).select2({
+            placeholder: "Pilih Permintaan",
+            allowClear: true,
+            ajax: {
+                url: '/admin/comboorigininquiries',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term,
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
             
 
         $('#modalinput').on('shown.bs.modal', function () {
             $('#header_form_nama').addClass('hidden');
+            $('#header_form_permintaan').addClass('hidden');
             $('#namaBarang').on('select2:select', function(e) {
                 var data = e.params.data;
                 $('#satuan').val(data.uom_name);
@@ -492,11 +546,13 @@ Inquiry - Admin Panel
         $('#modalinput').on('hidden.bs.modal', function () {
             // Tampilkan kembali Select2 di luar modal saat modal ditutup
             $('#header_form_nama').removeClass('hidden');
+            $('#header_form_permintaan').removeClass('hidden');
         });
     
         $('#closeModal').on('click', function () {
             // Jika tombol close diklik, pastikan Select2 kembali tampil
             $('#header_form_nama').removeClass('hidden');
+            $('#header_form_permintaan').removeClass('hidden');
         });
     });
 
@@ -563,6 +619,7 @@ Inquiry - Admin Panel
         $('#table_misi').removeClass('hidden');
         $('#new_misi').addClass('hidden');
         $('#header_form_nama').removeClass('hidden');
+        $('#header_form_permintaan').removeClass('hidden');
 
         const checkreq = $('#requestProdukSwitch').prop('checked');
         let namaBarang, status, stok;
@@ -730,7 +787,7 @@ Inquiry - Admin Panel
 
         postdata.append('nama_customer', document.getElementById('nama_customer').value); 
         postdata.append('user_code', document.getElementById('user_code').value); 
-        postdata.append('company', document.getElementById('company').value); 
+        postdata.append('company', document.getElementById('company').value); // nama customer
         postdata.append('address', document.getElementById('address').value); 
         postdata.append('city', document.getElementById('city').value); 
         postdata.append('phone', document.getElementById('phone').value); 

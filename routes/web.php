@@ -176,6 +176,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     //Origin Inquiry Routes
     Route::resource('origin_inquiries', App\Http\Controllers\Backend\OriginInquiryController::class);
     Route::any('origin_inquiries/{id}', [App\Http\Controllers\Backend\OriginInquiryController::class, 'update']);
+    Route::get('comboorigininquiries', [App\Http\Controllers\Backend\OriginInquiryController::class, 'combo']);
     
     //Description Quotation Routes
     Route::resource('description_quotations', App\Http\Controllers\Backend\DescriptionQuotationController::class);

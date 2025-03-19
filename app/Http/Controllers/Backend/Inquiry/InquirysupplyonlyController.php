@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend\Inquiry;
 use App\Http\Controllers\Controller;
 use App\Models\Inquiry;
 use App\Models\InquiryProduct;
+use App\Models\DescriptionQuotation;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Session;
@@ -16,6 +17,7 @@ class InquirysupplyonlyController extends Controller
     {
         $this->modelheader = new Inquiry();
         $this->modeldetail = new InquiryProduct();
+        $this->modeldesc = new DescriptionQuotation();
         $this->mandatory = [
         //     'cities_name' => 'required',
         //     'cities_code' => 'nullable|string|max:225',
@@ -29,9 +31,15 @@ class InquirysupplyonlyController extends Controller
         $this->checkAuthorization(auth()->user(), ['supplyonly.view']);
 
         $search = $_GET['search'] ??'';
+        $desc = $this->modeldesc
+            ->select('template_inquiry_desc_text as description')
+            ->where('template_inquiry_desc_soft_delete', 0)
+            ->limit(1)
+            ->get();
         
         return view('backend.pages.inquiry.indexsupplyonly', [
             // 'listdata' => $listdata,
+            'description' => $desc[0]->description,
         ]);
     }
 
