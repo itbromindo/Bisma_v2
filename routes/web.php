@@ -215,4 +215,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('inquiry/update_stage', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'update_stage']);
 
     Route::resource('inquiry_supply_only', App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class);
+
+    Route::get('combotaxes', [App\Http\Controllers\Backend\TaxesController::class, 'combo']);
+
 })->middleware('auth:admin');

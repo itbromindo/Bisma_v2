@@ -181,8 +181,7 @@ Inquiry - Admin Panel
                         <div class="card-body">
                             <div class="fromGroup horizontal-form mb-3" id="header_form_permintaan">
                                 <label><b>Dari</b></label>
-                                <!-- <input class="form-control" type="text">  -->
-                                
+                                <input class="form-control" type="hidden" id="permintaan_dari_name"> 
                                 <select class="form-control" id="permintaan_dari" style="width: 100%;">
                                     <option value="" disabled selected>Pilih Permintaan</option>
                                 </select>
@@ -316,6 +315,9 @@ Inquiry - Admin Panel
 <div class="floating-footer">
     <div class="harga-total">
         Harga Total : <span class="harga-invalid" id="harga_keseluruhan"> 0 (Harga belum valid)</span><br>
+        <input type="hidden" class="form-control" id="harga_keseluruhan_hide" value="0" readonly>
+        <input type="hidden" class="form-control" id="harga_ppn" value="0" readonly>
+        <input type="hidden" class="form-control" id="harga_tanpa_ppn" value="0" readonly>
         <small>* Termasuk PPN dan ongkir</small>
     </div>
     <div class="button-container">
@@ -396,6 +398,7 @@ Inquiry - Admin Panel
             .create(editorElement)
             .then(editor => {
                 editor.setData(description); // Set data ke CKEditor
+                window.myEditor = editor;
             })
             .catch(error => {
                 console.error(error);
@@ -426,17 +429,22 @@ Inquiry - Admin Panel
         //     console.error(error);
         // });
 
+    let datakategori = [];
+
     $(document).ready(function() {   
         $(".kategori-item").click(function () {
             let btn = $(this).find(".kategori-btn");
             btn.toggleClass("active"); // Toggle class active
 
-            // Update input hidden dengan daftar kategori yang dipilih
-            let selectedValues = $(".kategori-item .kategori-btn.active").map(function () {
+            // Update daftar kategori yang dipilih
+            datakategori = $(".kategori-item .kategori-btn.active").map(function () {
                 return $(this).parent().data("value");
-            }).get().join(",");
+            }).get(); // Pastikan hasilnya array
 
-            $("#kategoriInput").val(selectedValues);
+            // Konversi ke format JSON
+            $("#kategoriInput").val(JSON.stringify(datakategori));
+
+            console.log(datakategori);
         }); 
         $('#nama_customer').on('select2:select', function(e) {
             var data = e.params.data;
@@ -470,7 +478,7 @@ Inquiry - Admin Panel
 
         $('#permintaan_dari').on('select2:select', function(e) {
             var data = e.params.data;
-            // $('#company').val(data.text);
+            $('#permintaan_dari').val(data.text);
             // $('#address').val(data.customers_full_address);
             // $('#city').val(data.provinces_code+" & "+data.cities_code);
             // $('#phone').val(data.customers_phone);
@@ -502,6 +510,8 @@ Inquiry - Admin Panel
         $('#modalinput').on('shown.bs.modal', function () {
             $('#header_form_nama').addClass('hidden');
             $('#header_form_permintaan').addClass('hidden');
+            $('.pph-input-data').css('display','none');
+            
             $('#namaBarang').on('select2:select', function(e) {
                 var data = e.params.data;
                 $('#satuan').val(data.uom_name);
@@ -547,12 +557,14 @@ Inquiry - Admin Panel
             // Tampilkan kembali Select2 di luar modal saat modal ditutup
             $('#header_form_nama').removeClass('hidden');
             $('#header_form_permintaan').removeClass('hidden');
+            $('.pph-input-data').css('display','block');
         });
     
         $('#closeModal').on('click', function () {
             // Jika tombol close diklik, pastikan Select2 kembali tampil
             $('#header_form_nama').removeClass('hidden');
             $('#header_form_permintaan').removeClass('hidden');
+            $('.pph-input-data').css('display','block');
         });
     });
 
@@ -620,6 +632,7 @@ Inquiry - Admin Panel
         $('#new_misi').addClass('hidden');
         $('#header_form_nama').removeClass('hidden');
         $('#header_form_permintaan').removeClass('hidden');
+        $('.pph-input-data').css('display','block');
 
         const checkreq = $('#requestProdukSwitch').prop('checked');
         let namaBarang, status, stok;
@@ -629,8 +642,6 @@ Inquiry - Admin Panel
             status = '<p style="color: green;">Ready</p>';
             stok = 1;
             code_status = 2; // ready
-            // code_status = 1; // indent
-            // code_status = 4; // product expaierd
         } else {
             namaBarang = $('#namaBarangText').val();
             status = '<p style="color: red;">Tidak ditemukan disistem</p>';
@@ -661,7 +672,11 @@ Inquiry - Admin Panel
                 <td>${satuan}</td>
                 <td>${hargaPricelist}</td>
                 <td class="harga-net">${hargaNet}</td>
-                <td><input type="text" value="${ppn}%" class="ppn-input" oninput="updateHargaTotal(this)"></td>
+                <td class="pph-input-data" style="display: block;">
+                    <select class="ppn-input select2-ppn form-control" onchange="updateHargaTotal(this)">
+                        <option value="" selected>Pilih PPN</option>
+                    </select>
+                </td>
                 <td class="harga-total">${hargaTotal.toFixed(0)}</td>
                 <td>
                     <div class="d-flex gap-2">
@@ -679,6 +694,28 @@ Inquiry - Admin Panel
             </tr>
         `);
 
+        // Inisialisasi Select2 pada elemen yang baru ditambahkan
+        $('.select2-ppn').select2({
+            placeholder: "PPN",
+            allowClear: true,
+            ajax: {
+                url: '/admin/combotaxes', 
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term,
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data 
+                    };
+                },
+                cache: true
+            },
+        });
+
         // Update grand total setelah menambah item
         updateGrandTotal();
     }
@@ -690,45 +727,47 @@ Inquiry - Admin Panel
         let ppnText = row.find(".ppn-input").val().replace('%', ''); // Ambil nilai PPN tanpa simbol "%"
         let ppn = parseFloat(ppnText) || 0; // Konversi ke angka
 
-        // Hitung harga total baru
         let hargaTotal = (quantity * hargaNet) * (1 + ppn / 100);
 
-        // Perbarui nilai harga total di tabel
         row.find(".harga-total").text(hargaTotal.toFixed(2));
-
-        // Update grand total setelah menambah item
         updateGrandTotal();
     }
 
     function updateGrandTotal() {
         let grandTotal = 0;
+        let totalHargaTanpaTaxes = 0;
+        let totalTaxes = 0;
 
-        // Loop melalui setiap baris untuk menjumlahkan harga total
         $(".harga-total").each(function () {
-            let harga = parseFloat($(this).text()) || 0;
-            grandTotal += harga;
+            let row = $(this).closest("tr");
+            let quantity = parseFloat(row.find(".quantity-input").val()) || 0;
+            let hargaNet = parseFloat(row.find(".harga-net").text()) || 0;
+
+            // Ambil elemen select PPN dengan pengecekan apakah ditemukan
+            let ppnElement = row.find(".ppn-input");
+            let ppnText = ppnElement.length > 0 ? ppnElement.val() : "0"; // Pastikan selalu ada nilai
+            let ppn = parseFloat(ppnText.replace('%', '')) || 0; // Hapus simbol "%" jika ada, pastikan konversi angka
+
+            let hargaTanpaTaxes = quantity * hargaNet; // Harga sebelum pajak
+            let taxAmount = hargaTanpaTaxes * (ppn / 100); // Pajak yang dikenakan
+            let hargaTotal = hargaTanpaTaxes + taxAmount; // Harga setelah pajak
+
+            // Akumulasi total
+            totalHargaTanpaTaxes += hargaTanpaTaxes;
+            totalTaxes += taxAmount;
+            grandTotal += hargaTotal;
         });
 
-        // Periksa apakah elemen grand total sudah ada, jika tidak, tambahkan
-        if ($("#grand-total-row").length === 0) {
-            // $("#tbody").after(`
-            //     <tr id="grand-total-row">
-            //         <td colspan="9" class="text-end"><b>Grand Total:</b></td>
-            //         <td id="grand-total-value"><b>${grandTotal.toFixed(2)}</b></td>
-            //         <td></td>
-            //     </tr>
-            // `);
-            // tambahkan warna font menjadi putih di dalam inner
-            document.getElementById('harga_keseluruhan').innerHTML = grandTotal.toFixed(2);
-            $("#harga_keseluruhan").css("color", "white");
-            // console.log('total 1 ',grandTotal.toFixed(2));
-        } else {
-            // Perbarui nilai Grand Total jika elemen sudah ada
-            document.getElementById('harga_keseluruhan').innerHTML = grandTotal.toFixed(2);
-            $("#harga_keseluruhan").css("color", "red");
-            // $("#grand-total-value").html(`<b>${grandTotal.toFixed(2)}</b>`);
-            // console.log('total 2 ',grandTotal.toFixed(2));
-        }
+        // Debugging di Console
+        // console.log("Total Harga Tanpa Taxes:", totalHargaTanpaTaxes.toFixed(2));
+        // console.log("Total Taxes:", totalTaxes.toFixed(2));
+        // console.log("Grand Total (Harga + Taxes):", grandTotal.toFixed(2));
+        $("#harga_ppn").text(totalTaxes.toFixed(2));
+        $("#harga_tanpa_ppn").text(totalHargaTanpaTaxes.toFixed(2));
+
+        // Update tampilan
+        $("#harga_keseluruhan").text(grandTotal.toFixed(2));
+        $("#harga_keseluruhan_hide").val(grandTotal.toFixed(2));
     }
 
 
@@ -781,6 +820,32 @@ Inquiry - Admin Panel
     }
 
     function saveAll() {
+
+        let name = $('#nama_customer').val();
+        let user = $('#user_code').val();
+
+        if (name == null) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Pilih nama customer terlebih dahulu!'
+            });
+
+            alertform('select2','nama_customer',"Form ini Tidak Boleh Kosong");
+            return;
+        }
+
+        if (user == null) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Pilih user terlebih dahulu!'
+            });
+            alertform('select2','user_code',"Form ini Tidak Boleh Kosong");
+            return;
+        }
+
+
         var postdata = new FormData();
         // Tambahkan token CSRF
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
@@ -794,14 +859,21 @@ Inquiry - Admin Panel
         postdata.append('email', document.getElementById('email').value); 
 
         postdata.append('permintaan_dari', document.getElementById('permintaan_dari').value); 
+        postdata.append('permintaan_dari_name', document.getElementById('permintaan_dari_name').value); 
         postdata.append('permintaan_lokasi', document.getElementById('permintaan_lokasi').value); 
         postdata.append('permintaan_pengiriman', document.getElementById('permintaan_pengiriman').value); 
+        postdata.append('permintaan_pengiriman_name', "Kurir Bromindo"); 
         postdata.append('permintaan_ongkir', document.getElementById('permintaan_ongkir').value); 
         // postdata.append('kategoriInput', document.getElementById('kategoriInput').value); 
         postdata.append('permintaan_stock', document.getElementById('permintaan_stock').value); 
+        postdata.append('permintaan_stock_name', "Gudang Semarang"); 
         postdata.append('permintaan_spesifikasi', document.getElementById('permintaan_spesifikasi').value); 
         postdata.append('keterangan', getEditorValue()); 
-        postdata.append('harga_total', document.getElementById('harga_keseluruhan').innerText);
+        postdata.append('harga_total', document.getElementById('harga_keseluruhan_hide').value);
+        postdata.append('harga_ppn', document.getElementById('harga_ppn').value);
+        postdata.append('harga_tanpa_ppn', document.getElementById('harga_tanpa_ppn').value);
+        postdata.append('kategori', datakategori);
+
 
 
         // ambil detail
@@ -824,7 +896,7 @@ Inquiry - Admin Panel
                 satuan: cells[7].innerText.trim(),
                 harga_unit: cells[8].innerText.trim(),
                 harga_net: cells[9].innerText.trim(),
-                taxes: cells[10].innerText.trim(),
+                taxes: cells[10].querySelector("select").value.trim(),
                 harga_total: cells[11].innerText.trim()
             };
 
@@ -836,7 +908,7 @@ Inquiry - Admin Panel
 
         console.log('Data FormData: ', Array.from(postdata.entries()));
 
-        // return;
+        return;
 
         $.ajax({
             type: "POST",
