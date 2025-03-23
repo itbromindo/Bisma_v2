@@ -148,7 +148,19 @@ Users - Admin Panel
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <div class="profile-wrap">
+                <div class="profile-left">
+                    <div class="profile-thumb">
+                        <img src="{{ asset('backend/assets/images/all-img/users/user1.png')}}" alt="" id="photouser_profile" />
+                    </div>
+                    <div class="profile-data">
+                        <h4 id="namauser_profile">-</h4>
+                        <p id="emailuser_profile">-</p>
+                    </div>
+                </div>
+            </div>
             <div class="modal-body">
+
                 <form>
                     <input type="hidden" id="user_id">
                     <div id="alert-container"></div> <!-- Tempat Alert -->
@@ -210,14 +222,6 @@ Users - Admin Panel
                         </div>
                         <div class="col-mb-3 col-lg-3">
                             <div class="fromGroup mb-3">
-                                <label>Level</label>
-                                <select class="form-control" id="users_level" style="width: 100%;">
-                                    <option value="" disabled selected>Pilih Level</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-mb-3 col-lg-3">
-                            <div class="fromGroup mb-3">
                                 <label>Company</label>
                                 <select class="form-control" id="users_company" style="width: 100%;">
                                     <option value="" disabled selected>Pilih Company</option>
@@ -226,17 +230,9 @@ Users - Admin Panel
                         </div>
                         <div class="col-mb-3 col-lg-3">
                             <div class="fromGroup mb-3">
-                                <label>Homebase</label>
-                                <select class="form-control" id="users_homebase" style="width: 100%;">
-                                    <option value="" disabled selected>Pilih Homebase</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-mb-3 col-lg-3">
-                            <div class="fromGroup mb-3">
-                                <label>Devisi</label>
+                                <label>Divisi</label>
                                 <select class="form-control" id="users_division" style="width: 100%;">
-                                    <option value="" disabled selected>Pilih Devisi</option>
+                                    <option value="" disabled selected>Pilih Divisi</option>
                                 </select>
                             </div>
                         </div>
@@ -245,6 +241,22 @@ Users - Admin Panel
                                 <label>Department</label>
                                 <select class="form-control" id="users_department" style="width: 100%;">
                                     <option value="" disabled selected>Pilih Department</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>Level</label>
+                                <select class="form-control" id="users_level" style="width: 100%;">
+                                    <option value="" disabled selected>Pilih Level</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-mb-3 col-lg-3">
+                            <div class="fromGroup mb-3">
+                                <label>Homebase</label>
+                                <select class="form-control" id="users_homebase" style="width: 100%;">
+                                    <option value="" disabled selected>Pilih Homebase</option>
                                 </select>
                             </div>
                         </div>
@@ -686,8 +698,17 @@ Users - Admin Panel
             success: function (data) {
                 document.getElementById('user_id').value = data.user_id;
                 document.getElementById('users_name').value = data.users_name; 
+                document.getElementById('namauser_profile').innerHTML = data.users_name;
+                document.getElementById('emailuser_profile').innerHTML = data.users_email; 
+                document.getElementById('users_email').value = data.users_email;
                 // document.getElementById('users_photo').value = data.users_photo; 
-                document.getElementById('users_email').value = data.users_email; 
+
+                var imgElement = document.getElementById("photouser_profile");
+
+                if (imgElement) {
+                    imgElement.src = "../"+data.users_photo;
+                }
+
                 document.getElementById('users_office_phone').value = data.users_office_phone; 
                 document.getElementById('users_personal_phone').value = data.users_personal_phone; 
                 document.getElementById('users_join_date').value = data.users_join_date; 

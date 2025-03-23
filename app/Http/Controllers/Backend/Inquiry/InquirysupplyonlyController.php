@@ -67,25 +67,12 @@ class InquirysupplyonlyController extends Controller
             // 'inquiry_start_date' => '',
             // 'inquiry_end_date' => '',
             'inquiry_customer' => $request->input('nama_customer') ?? '',
-            'inquiry_origin' => $request->input('permintaan_dari') ?? '', // perlu di convert 1 = WA, 2 = Email, 3 = Telepon, dll
-            // 'inquiry_stage' => '',
-            // 'inquiry_stage_progress' => '',
+            'inquiry_origin' => $request->input('permintaan_dari') ?? '', 
             'inquiry_product_division' => '', // belum 
-            'inquiry_warehouse' => $request->input('permintaan_stock') ?? '', // data di form belum ambil dari master gudang
-            // 'inquiry_customer_type' => '',
-            // 'inquiry_oc' => '',
-            // 'inquiry_shipping_cost' => '',
-            // 'inquiry_wording_card_header' => '',
+            'inquiry_warehouse' => $request->input('permintaan_stock') ?? '', 
             'inquiry_tax' => $request->input('harga_ppn') ?? 0,
             'inquiry_total_no_tax' => $request->input('harga_tanpa_ppn') ?? 0,
             'inquiry_grand_total' => $request->input('harga_total') ?? 0,
-            // 'inquiry_product_grand_total_status' => '',
-            // 'inquiry_sales' => '',
-            // 'inquiry_footer_note_inquiry' => '',
-            // 'inquiry_flag_quote' => '',
-            // 'inquiry_teams' => '',
-            // 'inquiry_total_files' => '',
-            // 'inquiry_total_chats' => '',
         ]);
 
         // Ambil data detail dari request (dalam format JSON)
