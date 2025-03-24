@@ -213,6 +213,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('inquiry', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'index']);
     Route::get('inquiry/update_stage', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'update_stage']);
     Route::get('inquiry/cancel_stage/{id}', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'cancel_stage']);
+    Route::get('inquiry/detail/{id}', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'detail_inquiry']);
 
     Route::resource('inquiry_supply_only', App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class);
 })->middleware('auth:admin');

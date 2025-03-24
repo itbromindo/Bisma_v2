@@ -49,13 +49,12 @@ class InquiryController extends Controller
         $id = $request->id;
         $inquiry = Inquiry::where('inquiry_id', $id)->first();
         if($inquiry->inquiry_stage == 'STATUS001') {
-            $data = [
-                'inquiry_stage' => 'STATUS008',
+            $inquiry->update([
+                'inquiry_stage' => 'STATUS008', // inquiry batal
                 'inquiry_updated_at' => now(),
                 'inquiry_updated_by' => Session::get('user_code')
-            ];
-    
-            DB::table('inquiry')->where('inquiry_id', $id)->update($data);
+            ]);
+
             $messages = [
                 'status' => 200,
                 'data' => 'Berhasil!'
@@ -68,5 +67,19 @@ class InquiryController extends Controller
         }
 
         return response()->json($messages);
+    }
+
+    public function detail_inquiry($id)
+    {
+        $data = [
+            'inquiry' => $this->inquiry->detailInquiry($id),
+        ];
+
+        $result = [
+            'status' => 200,
+            'data' => $data
+        ];
+
+        return response()->json($result);
     }
 }

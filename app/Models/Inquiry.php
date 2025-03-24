@@ -41,4 +41,39 @@ class Inquiry extends Model
 
         return $data;
     }
+
+    public function detailInquiry($id)
+    {
+        $query = DB::table('inquiry as i')
+                ->select(
+                    'i.inquiry_code', 
+                    'i.inquiry_product_division',
+                    DB::raw("CONCAT(DATE_FORMAT(i.inquiry_start_date, '%d %b %Y'), ' (', DATE_FORMAT(i.inquiry_start_date, '%H:%i'), ')') AS create_date"),
+                    DB::raw("CONCAT(DATE_FORMAT(i.inquiry_end_date, '%d %b %Y'), ' (', DATE_FORMAT(i.inquiry_end_date, '%H:%i'), ')') AS due_date"),
+                    'c.customer_name',
+                    'c.customers_full_address',
+                    'c.customers_phone',
+                    'c.customers_email',
+                    'c.customers_PIC',
+                    'u.users_name',
+                    'u.users_email',
+                    'u.users_personal_phone',
+                    'is2.inquiry_status_name',
+                    'it.inquiry_type_name',
+                    'oi.origin_inquiry_name',
+                    'p.provinces_name',
+	                'c2.cities_name' 
+                )
+                ->join('customer as c', 'i.inquiry_customer', '=', 'c.customer_code')
+                ->join('users as u', 'i.inquiry_created_by', '=', 'u.user_code')
+                ->join('inquiry_statuses as is2', 'i.inquiry_stage', '=', 'is2.inquiry_status_code')
+                ->join('inquiry_type as it', 'i.inquiry_type', '=', 'it.inquiry_type_code')
+                ->join('origin_inquiries as oi', 'i.inquiry_origin', '=', 'oi.origin_inquiry_code')
+                ->join('provinces as p', 'c.provinces_code', '=', 'p.provinces_code') 
+                ->join('cities as c2', 'c.cities_code', '=', 'c2.cities_code') 
+                ->where('i.inquiry_id', $id)
+                ->first();
+
+        return $query;
+    }
 }

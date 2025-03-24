@@ -14,6 +14,7 @@ Inquiry - Admin Panel
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 rt-mb-25">
+                  <div class="d-flex justify-content-between">
                     <div class="breadcrumbs">
                         <div class="breadcrumb-title">Inquiry</div>
                         <nav aria-label="breadcrumb">
@@ -24,6 +25,19 @@ Inquiry - Admin Panel
                             </ol>
                         </nav>
                     </div>
+                    <div class="button-filter">
+                      <button type="button" class="btn btn-primary2 btn-icon">
+                        <span class="button-content-wrapper">
+                        <span class="button-icon align-icon-left">
+                          <img src="{{ asset('backend/assets/images/svg/filter.svg') }}">
+                        </span>
+                        <span class="button-text">
+                          Filter
+                        </span>
+                        </span>
+                      </button>
+                    </div>
+                  </div>
                 </div>
             </div>
 
@@ -31,25 +45,6 @@ Inquiry - Admin Panel
             <div class="row">
                 <div class="col-12">
                     <div id="board" class="board">
-                        <!-- <div class="d-flex justify-content-end my-2">
-                            <button type="button" class="btn btn-sm btn-outline-primary pill btn-icon">
-                                <span class="button-content-wrapper">
-                                    <span class="button-text">
-                                        Button
-                                    </span>
-                                    <span class="button-icon">
-                                        <img src="{{ asset('backend/assets/images/svg/search.svg')}}" alt="Search" draggable="false">
-                                    </span>
-                                </span>
-                            </button>
-                            <button type="button" class="btn btn-icon">
-                                <span class="button-content-wrapper">
-                                    <span class="button-icon">
-                                        <img src="{{ asset('backend/assets/images/svg/search.svg')}}" alt="Search" draggable="false">
-                                    </span>
-                                </span>
-                            </button>
-                        </div> -->
 
                         <div class="d-flex kanbanboard_parent" id="kanban_board_parent">
                             @if ($usr->can('inquiry.kanban1'))
@@ -107,321 +102,328 @@ Inquiry - Admin Panel
     </div>
 </div>
 
-<div
-  class="modal fade"
-  id="viewmodal"
-  tabindex="-1"
-  aria-labelledby="viewmodalLabel"
-  aria-hidden="true"
->
-  <div class="modal-dialog viewmodal-dialog modal-lg modal-dialog-scrollable">
+<div class="modal fade" id="viewmodal" tabindex="-1" aria-labelledby="viewmodalLabel" aria-hidden="true">
+  <div class="modal-dialog viewmodal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
+
       <div class="modal-header">
         <div>
           <button class="plain-btn rt-mr-8">
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 40 40"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 20C0 8.95431 8.95431 0 20 0V0C31.0457 0 40 8.95431 40 20V20C40 31.0457 31.0457 40 20 40V40C8.95431 40 0 31.0457 0 20V20Z"
-                fill="#F5F6F7"
-              />
-              <path
-                d="M20 22.5H17.5V20L25 12.5L27.5 15L20 22.5Z"
-                stroke="#191B1C"
-                stroke-width="1.25"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M23.125 14.375L25.625 16.875"
-                stroke="#191B1C"
-                stroke-width="1.25"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M26.875 19.375V26.25C26.875 26.4158 26.8092 26.5747 26.6919 26.6919C26.5747 26.8092 26.4158 26.875 26.25 26.875H13.75C13.5842 26.875 13.4253 26.8092 13.3081 26.6919C13.1908 26.5747 13.125 26.4158 13.125 26.25V13.75C13.125 13.5842 13.1908 13.4253 13.3081 13.3081C13.4253 13.1908 13.5842 13.125 13.75 13.125H20.625"
-                stroke="#191B1C"
-                stroke-width="1.25"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
+            <div class="btn-content">
+              <svg width="90" height="40" viewBox="0 0 90 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Original edit icon paths -->
+                <path d="M20 22.5H17.5V20L25 12.5L27.5 15L20 22.5Z" stroke="#191B1C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M23.125 14.375L25.625 16.875" stroke="#191B1C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M26.875 19.375V26.25C26.875 26.4158 26.8092 26.5747 26.6919 26.6919C26.5747 26.8092 26.4158 26.875 26.25 26.875H13.75C13.5842 26.875 13.4253 26.8092 13.3081 26.6919C13.1908 26.5747 13.125 26.4158 13.125 26.25V13.75C13.125 13.5842 13.1908 13.4253 13.3081 13.3081C13.4253 13.1908 13.5842 13.125 13.75 13.125H20.625" stroke="#191B1C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"></path>
+                <!-- Added text -->
+                <text x="45" y="25" font-family="Arial" font-size="14" fill="#191B1C">Edit</text>
+              </svg>
+            </div>
           </button>
-          <button class="plain-btn">
-            <svg
-              width="40"
-              height="40"
-              viewBox="0 0 40 40"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M20 40C8.95431 40 0 31.0457 0 20V20C0 8.95431 8.95431 0 20 0V0C31.0457 0 40 8.95431 40 20V20C40 31.0457 31.0457 40 20 40V40Z"
-                fill="#F5F6F7"
-              />
-              <path
-                d="M20 25.5C19.7239 25.5 19.5 25.2761 19.5 25C19.5 24.7239 19.7239 24.5 20 24.5C20.2761 24.5 20.5 24.7239 20.5 25C20.5 25.2761 20.2761 25.5 20 25.5ZM20 20.5C19.7239 20.5 19.5 20.2761 19.5 20C19.5 19.7239 19.7239 19.5 20 19.5C20.2761 19.5 20.5 19.7239 20.5 20C20.5 20.2761 20.2761 20.5 20 20.5ZM20 15.5C19.7239 15.5 19.5 15.2761 19.5 15C19.5 14.7239 19.7239 14.5 20 14.5C20.2761 14.5 20.5 14.7239 20.5 15C20.5 15.2761 20.2761 15.5 20 15.5Z"
-                fill="#191B1C"
-                stroke="#191B1C"
-                stroke-width="1.5"
-              />
-            </svg>
+          <button class="plain-btn rt-mr-8">
+            <div class="btn-content">
+              <svg width="135" height="40" viewBox="0 0 135 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Download icon paths -->
+                <path d="M20 25V15" stroke="#191B1C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M15 20L20 25L25 20" stroke="#191B1C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M26.25 26.875H13.75C13.5842 26.875 13.4253 26.8092 13.3081 26.6919C13.1908 26.5747 13.125 26.4158 13.125 26.25V13.75C13.125 13.5842 13.1908 13.4253 13.3081 13.3081C13.4253 13.1908 13.5842 13.125 13.75 13.125H26.25C26.4158 13.125 26.5747 13.1908 26.6919 13.3081C26.8092 13.4253 26.875 13.5842 26.875 13.75V26.25C26.875 26.4158 26.8092 26.5747 26.6919 26.6919C26.5747 26.8092 26.4158 26.875 26.25 26.875Z" stroke="#191B1C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"></path>
+                <!-- Added text -->
+                <text x="45" y="25" font-family="Arial" font-size="14" fill="#191B1C">Download</text>
+              </svg>
+            </div>
           </button>
+          
         </div>
-        <button
-          type="button"
-          class="plain-btn"
-          data-bs-dismiss="modal"
-          aria-label="Close"
-        >
-          <img
-            src="{{ asset('assets/images/svg/close-btn.png') }}"
-            alt=""
-            draggable="false"
-          />
+        <button type="button" class="" data-bs-dismiss="modal" aria-label="Close">
+          <img src="{{ asset('backend/assets/images/svg/cross.svg') }}" alt="" draggable="false">
         </button>
       </div>
-      <div class="modal-body">
+
+      <div class="modal-body p-3">
         <div class="card-details-wrap">
           <div class="card-details-body">
+
             <div class="project-idea-wrap">
               <div class="project-idea-header">
                 <h3>
-                  New Project Idea & Research
-                  <span
-                    class="badge rounded-pill bg-danger-50 text-danger-500 rt-ml-8"
-                    >High Priority</span
-                  >
+                  Mission Possible: 4 Jam Menuju Keputusan!
                 </h3>
+                <p>Mau lanjut ke Quote atau No Quote? Waktu terus berjalan…</p>
               </div>
               <div class="project-idea-body">
-                <div class="project-idea-data">
-                  <h5>Label</h5>
-                  <span
-                    ><img
-                      class="rt-mr-6"
-                      src="{{ asset('assets/images/svg/red-circle.svg') }}"
-                      alt=""
-                    />Urgents</span
-                  >
-                </div>
-                <div class="project-idea-data">
-                  <h5>Created date</h5>
-                  <p>12 Nov, 2021 at 9:40 PM</p>
-                </div>
-                <div class="project-idea-data">
-                  <h5>Due Date</h5>
-                  <p>15 Nov, 2021 at 10:00 AM</p>
-                </div>
-              </div>
-            </div>
-            <div class="project-description">
-              <h4>Description</h4>
-              <p>
-                In lobortis fermentum venenatis. Phasellus orci libero, feugiat
-                et velit non, sagittis feugiat eros. In placerat risus vitae est
-                faucibus, in laoreet enim rutrum. Mauris posuere vitae felis at
-                convallis. Integer consequat et tellus vel tincidunt. Aenean
-                rhoncus ligula eu risus molestie semper.
-              </p>
-            </div>
-            <div class="project-member-column">
-              <h4>Members <span>(05)</span></h4>
-              <div class="project-member-wrap">
-                <div class="project-member-item">
-                  <div class="project-member-thumb">
-                    <img src="{{ asset('assets/images/all-img/users/user1.png') }}" alt="" />
+                <div class="project-idea-data d-flex">
+                  <div class="col-lg-3">
+                    <div class="project-idea-data-left">
+                      <h5 class="text-dark mb-1 d-inquiry-nomor" style="font-size: 18px;"></h5>
+                      <p>Inquiry Dibuat : <span class="d-inquiry-create-date"></span></p>
+                    </div>
                   </div>
-                  <div class="project-member-data">
-                    <h5>Brooklyn Simmons</h5>
-                    <a href="#">ateniese@mac.com</a>
-                  </div>
-                </div>
-                <div class="project-member-item">
-                  <div class="project-member-thumb">
-                    <img src="{{ asset('assets/images/all-img/users/two.png') }}" alt="" />
-                  </div>
-                  <div class="project-member-data">
-                    <h5>Ralph Edwards</h5>
-                    <a href="#">raines@optonline.com</a>
-                  </div>
-                </div>
-                <div class="project-member-item">
-                  <div class="project-member-thumb">
-                    <img src="{{ asset('assets/images/all-img/users/one.png') }}" alt="" />
-                  </div>
-                  <div class="project-member-data">
-                    <h5>Devon Lane</h5>
-                    <a href="#">gravyface@mac.com</a>
-                  </div>
-                </div>
-                <div class="project-member-item">
-                  <div class="project-member-thumb">
-                    <img src="{{ asset('assets/images/all-img/users/three.png') }}" alt="" />
-                  </div>
-                  <div class="project-member-data">
-                    <h5>Arlene McCoy</h5>
-                    <a href="#">kspiteri@live.com</a>
-                  </div>
-                </div>
-                <div class="project-member-item">
-                  <div class="project-member-thumb">
-                    <img src="{{ asset('assets/images/all-img/users/one.png') }}" alt="" />
-                  </div>
-                  <div class="project-member-data">
-                    <h5>Jane Cooper</h5>
-                    <a href="#">mthurn@optonline.com</a>
+                  <div class="col-lg-9">
+                    <ul class="d-flex">
+                      <li class="me-2">
+                        <span class="badge rounded-pill bg-warning-50 text-warning-500 d-inquiry-type"></span>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
             </div>
+
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="project-idea-data">
+                  <h5 class="text-dark mb-2">Due Date</h5>
+                  <button type="button" class="btn btn-icon" style="background-color: #8D98AF;" id="" name="">
+                    <span class="button-content-wrapper">
+                        <span class="button-icon align-icon-left">
+                          <input type="checkbox" id="taskCheckbox" class="custom-checkbox">
+                        </span>
+                        <span class="button-text text-white d-inquiry-due-date"></span>
+                    </span>
+                </button>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="project-idea-data">
+                  <h5 class="text-dark mb-2">Keputusan</h5>
+                  <button type="button" class="btn btn-icon btn-primary" id="" name="">
+                    <span class="button-content-wrapper">
+                        <span class="button-icon align-icon-left">
+                          <i class="ph-check-square text-white"></i> <!-- Changed Icon -->
+                        </span>
+                        <span class="button-text text-white"> 31 Jan 2023 (20:15) </span>
+                    </span>
+                </button>
+                </div>
+              </div>
+            </div>
+
+            {{-- Deskripsi --}}
+            <div class="row mt-3">
+              <div class="col-lg-6">
+                <div class="company-customer">
+                  <h6 class="table-inquiry-title">Perusahaan Customer</h6>
+                  <table class="table-inquiry-header">
+                    <tr>
+                      <td style="width: 6rem;">Perusahaan</td>
+                      <td>: <span class="d-inquiry-customer-nama"></span></td>
+                    </tr>
+                    <tr>
+                      <td>Provinsi</td>
+                      <td>: <span class="d-inquiry-customer-provinsi"></span></td>
+                    </tr>
+                    <tr>
+                      <td>Kota</td>
+                      <td>: <span class="d-inquiry-customer-kota"></span></td>
+                    </tr>
+                    <tr>
+                      <td>Alamat</td>
+                      <td>: <span class="d-inquiry-customer-alamat"></span></td>
+                    </tr>
+                    <tr>
+                      <td>Email</td>
+                      <td>: <span class="d-inquiry-customer-email"></span></td>
+                    </tr>
+                    <tr>
+                      <td>No Telp</td>
+                      <td>: <span class="d-inquiry-customer-telp"></span></td>
+                    </tr>
+                    <tr>
+                      <td>PIC</td>
+                      <td>: <span class="d-inquiry-customer-pic"></span></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="final-user">
+                  <h5 class="table-inquiry-title">User Final</h5>
+                  <table class="table-inquiry-header">
+                    <tr>
+                      <td style="width: 7rem;">Nama</td>
+                      <td>: <span class="d-inquiry-user-name"></span></td>
+                    </tr>
+                    <tr>
+                      <td>Email</td>
+                      <td>: <span class="d-inquiry-user-email"></span></td>
+                    </tr>
+                    <tr>
+                      <td>Telp</td>
+                      <td>: <span class="d-inquiry-user-telp"></span></td>
+                    </tr>
+                  </table>
+                </div>
+                <div class="information-inquiry">
+                  <h5 class="table-inquiry-title">Informasi Inquiry</h5>
+                  <table class="table-inquiry-header">
+                    <tr>
+                      <td style="width: 7rem;">Asal Inquiry</td>
+                      <td>: <span class="badge rounded-3 bg-warning-50 text-warning-500 d-inquiry-origin"></span></td>
+                    </tr>
+                    <tr>
+                      <td>Status Saat Ini</td>
+                      <td>: <span class="text-warning d-inquiry-status"></span></td>
+                    </tr>
+                    <tr>
+                      <td>Jenis</td>
+                      <td><div class="d-inquiry-product"><ul class="d-flex">
+                      <li class="me-2">
+                        <span class="badge rounded-pill bg-warning-50 text-warning-500">SS</span>
+                      </li>
+                    </ul></div></td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <div class="row my-4">
+              <div class="col-lg-6">
+                <div class="project-idea-data">
+                  <h5 class="text-dark mb-2 fw-bold">Score</h5>
+                  <div class="d-flex justify-content-start" style="border: 2px solid #E5E7E8; border-radius: 8px; padding: 20px;">
+                    <img src="{{ asset('backend/assets/images/start-green.png')}}" alt="">
+                    <div class="row ms-1">
+                      <p class="m-0" style="font-size: 16px; font-weight: 500;">Score Final</p>
+                      <p class="text-success m-0 d-flex" style="font-size: 36px; font-weight: 700;">0/100 <a class="text-primary ms-2" href="" style="font-size: 14px; font-weight: 700;">Lihat Detail <img src="{{ asset('backend/assets/images/svg/arrow-icon.svg')}}" alt="" style="margin-top: -2px; scale: 1.5; transform: rotate(-90deg);"></a></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="project-idea-data">
+                  <h5 class="text-white mb-2">Score</h5>
+                  <div class="d-flex justify-content-start" style="border: 2px solid #E5E7E8; border-radius: 8px; padding: 20px;">
+                    <img src="{{ asset('backend/assets/images/start-blue.png')}}" alt="">
+                    <div class="row ms-1">
+                      <p class="m-0" style="font-size: 16px; font-weight: 500;">Score Penggalian Sales</p>
+                      <p class="text-success m-0 d-flex" style="font-size: 36px; font-weight: 700;">0% <a class="ms-2" href="" style="font-size: 14px; font-weight: 700; color: #626C70;">Buat Schedule Dulu <img src="{{ asset('backend/assets/images/svg/arrow-icon.svg')}}" alt="" style="margin-top: -2px; scale: 1.5; transform: rotate(-90deg);"></a></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
-          <div class="project-tab">
+          <div class="project-tab px-2">
             <ul class="nav nav-tabs" id="myTab" role="tablist">
               <li class="nav-item" role="presentation">
-                <button
-                  class="nav-link active"
-                  id="home-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#home"
-                  type="button"
-                  role="tab"
-                  aria-controls="home"
-                  aria-selected="true"
-                >
-                  Comments
-                </button>
+                <button class="nav-link active" id="list-permintaan-tab" data-bs-toggle="tab" data-bs-target="#list-permintaan" type="button" role="tab" aria-controls="list-permintaan" aria-selected="true"> List Permintaan </button>
               </li>
               <li class="nav-item" role="presentation">
-                <button
-                  class="nav-link"
-                  id="profile-tab"
-                  data-bs-toggle="tab"
-                  data-bs-target="#profile"
-                  type="button"
-                  role="tab"
-                  aria-controls="profile"
-                  aria-selected="false"
-                >
-                  Attach File
-                </button>
+                <button class="nav-link" id="progress-tab" data-bs-toggle="tab" data-bs-target="#progress" type="button" role="tab" aria-controls="progress" aria-selected="false"> Progress </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="jadwal-tab" data-bs-toggle="tab" data-bs-target="#jadwal" type="button" role="tab" aria-controls="jadwal" aria-selected="false"> Jadwal </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="diskusi-tab" data-bs-toggle="tab" data-bs-target="#diskusi" type="button" role="tab" aria-controls="diskusi" aria-selected="false"> Diskusi </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="file-tab" data-bs-toggle="tab" data-bs-target="#file" type="button" role="tab" aria-controls="file" aria-selected="false"> File </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="member-tab" data-bs-toggle="tab" data-bs-target="#member" type="button" role="tab" aria-controls="member" aria-selected="false"> Member </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" id="log-aktivitas-tab" data-bs-toggle="tab" data-bs-target="#log-aktivitas" type="button" role="tab" aria-controls="log-aktivitas" aria-selected="false"> Log Aktivitas </button>
               </li>
             </ul>
             <div class="project-tab-body_s">
               <div class="tab-content" id="myTabContent">
-                <div
-                  class="tab-pane fade show active"
-                  id="home"
-                  role="tabpanel"
-                  aria-labelledby="home-tab"
-                >
-                  <div class="post-comment-wrap">
-                    <h4 class="rt-mb-30 rt-pt-20">Post Comments</h4>
-                    <form action="#">
-                      <div class="fromGroup post-comment has-icon mb-4">
-                        <div class="form-control-icon">
-                          <input
-                            class="form-control"
-                            type="text"
-                            placeholder="Write down your questions and comments..."
-                          />
-                          <div class="icon-badge-2">
-                            <img
-                              src="{{ asset('assets/images/svg/chat-circle-dots.svg') }}"
-                              alt=""
-                            />
+                <div class="tab-pane fade show active" id="list-permintaan" role="tabpanel" aria-labelledby="list-permintaan-tab">
+                  <section class="tables">
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <div class="table-wrapper">
+                          <div class="table-content table-responsive">
+
+                            <div class="row mt-2">
+                              <div class="col-lg-6">
+                                <p class="m-0" style="font-weight: 500; font-size: 14px;">List Permintaan</p>
+                                <p class="m-0" style="font-size: 14px;"><span>2</span> Produk</p>
+                              </div>
+                              <div class="col-lg-6 text-end d-flex align-items-center justify-content-end">
+                                <button class="btn btn-primary">
+                                  Lihat Detail
+                                </button>
+                              </div>
+                            </div>
+
+                            <hr class="custom-hr">
+
+                            <div class="row my-2">
+                              <div class="col-lg-6">
+                                <table class="table-inquiry-detail">
+                                  <tr>
+                                    <td style="width: 6rem;">Stock</td>
+                                    <td>: <span>Gudang Jakarta</span></td>
+                                  </tr>
+                                  <tr>
+                                    <td>User</td>
+                                    <td>: <span>End User</span></td>
+                                  </tr>
+                                </table>
+                              </div>
+                              <div class="col-lg-6">
+                                <table class="table-inquiry-detail">
+                                  <tr>
+                                    <td style="width: 6rem;">OC</td>
+                                    <td>: <span>0</span></td>
+                                  </tr>
+                                  <tr>
+                                    <td>Ongkir</td>
+                                    <td>: <span>50.000.000</span></td>
+                                  </tr>
+                                </table>
+                              </div>
+                            </div>
+
+                            <div class="row">
+                              <div class="col-lg-6">
+                                
+                              </div>
+                            </div>
+
+                            <table class="table align-middle table-basic">
+                              <thead style="text-align: center">
+                                <tr>
+                                  <th scope="col" width="5%">NO</th>
+                                  <th scope="col">Produk</th>
+                                  <th scope="col">Qty</th>
+                                  <th scope="col">Stock</th>
+                                  <th scope="col">Status</th>
+                                  <th scope="col">Satuan</th>
+                                  <th scope="col">Harga / Unit</th>
+                                  <th scope="col">Harga NET</th>
+                                  <th scope="col">Taxes</th>
+                                  <th scope="col">Harga Total</th>
+                                </tr>
+                              </thead>
+                              <tbody id="tableBody"></tbody>
+                            </table>
+
+                            <hr class="custom-hr">
+
+                            <div class="row mt-3 mb-2">
+                              <div class="col-lg-6">
+                                <p style="font-weight: 700; font-size: 16px; margin: 0;">Harga Total : <span style="font-size: 16px; font-weight: 400;">Rp 148.037.000.00</span><span class="text-success"> (Harga Valid)</span></p>
+                                <p style="font-size: 12px; font-weight: 500; margin: 0;">*Termasuk PPN 11% dan Ongkir</p>
+                              </div>
+                            </div>
+
                           </div>
                         </div>
-                        <button
-                          type="button"
-                          class="btn btn-primary pill btn-icon"
-                        >
-                          <span class="button-content-wrapper">
-                            <span class="button-icon align-icon-right">
-                              <i class="ph-arrow-right"></i>
-                            </span>
-                            <span class="button-text"> Post </span>
-                          </span>
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                  <div class="latest-comment-wrap">
-                    <h4>Latest Comments</h4>
-                    <div class="latest-comment-item">
-                      <div class="latest-comment-thumb">
-                        <img
-                          src="{{ asset('assets/images/all-img/users/three.png') }}"
-                          alt=""
-                        />
-                      </div>
-                      <div class="latest-comment-data">
-                        <h5>Jane Cooper<span>10 mins ago</span></h5>
-                        <p>
-                          <a href="#"
-                            ><span class="font-medium">@Everyone</span></a
-                          >Great Job.
-                        </p>
                       </div>
                     </div>
-                    <div class="latest-comment-item">
-                      <div class="latest-comment-thumb">
-                        <img
-                          src="{{ asset('assets/images/all-img/users/user1.png') }}"
-                          alt=""
-                        />
-                      </div>
-                      <div class="latest-comment-data">
-                        <h5>Jane Cooper<span>10 mins ago</span></h5>
-                        <p>
-                          <a href="#"
-                            ><span class="font-medium">@Everyone</span></a
-                          >Great Job.
-                        </p>
-                      </div>
-                    </div>
-                    <div class="latest-comment-item">
-                      <div class="latest-comment-thumb">
-                        <img src="{{ asset('assets/images/all-img/users/one.png') }}" alt="" />
-                      </div>
-                      <div class="latest-comment-data">
-                        <h5>Jane Cooper<span>10 mins ago</span></h5>
-                        <p>
-                          <a href="#"
-                            ><span class="font-medium">@Everyone</span></a
-                          >Great Job.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  </section>
                 </div>
-                <div
-                  class="tab-pane fade"
-                  id="profile"
-                  role="tabpanel"
-                  aria-labelledby="profile-tab"
-                >
-                  <div class="latest-comment-wrap">
-                    <div
-                      class="upload-file-wrap_2 position-relative text-center"
-                    >
-                      <img
-                        src="{{ asset('assets/images/svg/cloud-arrow-up.svg') }}"
-                        alt=""
-                        class="rt-mb-30"
-                      />
-                      <h4>Upload new file or folder</h4>
-                      <p>Drag an drop a file or <a href="#">browse file</a></p>
-                      <input type="file" />
-                    </div>
-                  </div>
-                </div>
+                <div class="tab-pane fade" id="progress" role="tabpanel" aria-labelledby="progress-tab"></div>
+                <div class="tab-pane fade" id="jadwal" role="tabpanel" aria-labelledby="jadwal-tab"></div>
+                <div class="tab-pane fade" id="diskusi" role="tabpanel" aria-labelledby="diskusi-tab"></div>
+                <div class="tab-pane fade" id="file" role="tabpanel" aria-labelledby="file-tab"></div>
+                <div class="tab-pane fade" id="member" role="tabpanel" aria-labelledby="member-tab"></div>
+                <div class="tab-pane fade" id="log-aktivitas" role="tabpanel" aria-labelledby="log-aktivitas-tab"></div>
               </div>
             </div>
           </div>
@@ -444,6 +446,139 @@ Inquiry - Admin Panel
 
     .card-priority {
         cursor: grab;
+    }
+
+    .card-priority__labels ul {
+      flex-wrap: wrap;
+    }
+
+    .card-priority__labels ul li span {
+      margin-right: .5rem;
+      margin-bottom: .5rem;
+    }
+
+    .card-priority__footer {
+        flex-direction: column;
+        align-items: normal;
+        margin-top: 8px;
+    }
+
+    .card-priority__footer div:nth-child(2) {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      margin-top: 16px;
+    }
+
+    span.labels.red {
+      background-color: transparent;
+      font-weight: 700;
+    }
+
+    .plain-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px; /* Spacing between icon and text */
+      background-color: #F5F6F7;
+      border: none;
+      padding: 0px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn-content {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .plain-btn:hover {
+      background-color: #E0E2E5;
+    }
+
+    .btn-text {
+      font-size: 16px;
+      font-weight: 500;
+      color: #191B1C;
+    }
+
+    .card-details-wrap {
+      max-width: 100%;
+    }
+
+    .project-idea-header {
+      background-color: #323C55;
+      border-radius: 8px;
+      padding: 20px;
+    }
+
+    .project-idea-header h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .project-idea-header p {
+      font-size: 14px;
+      font-weight: 400;
+      color: #fff;
+      margin: 0;
+      margin-top: 4px;
+    }
+
+    .project-idea-data {
+      flex: 1;
+    }
+    .table-inquiry-title {
+      font-size: 16px; 
+      font-weight: 500;
+      margin-bottom: 0;
+    }
+
+    .table-inquiry-header td {
+      padding: 4px 0;
+      font-size: 14px;
+      font-weight: 400;
+      color: #111;
+    }
+
+    .table-inquiry-header td span {
+      margin-left: 8px;
+    }
+
+    .custom-checkbox {
+      width: 20px; /* Adjust size */
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .custom-hr {
+      border: none;
+      height: 2px !important; /* Adjust thickness */
+      background-color: #E5E7E8; /* Change color if needed */
+    }
+
+    .table-inquiry-detail td {
+      margin: 0;
+      font-size: 14px;
+    }
+
+    #inquiry-1 .cancel-inquiry {
+      display: block;
+    }
+
+    #inquiry-2 .cancel-inquiry,
+    #inquiry-3 .cancel-inquiry,
+    #inquiry-4 .cancel-inquiry,
+    #inquiry-5 .cancel-inquiry,
+    #inquiry-6 .cancel-inquiry,
+    #inquiry-7 .cancel-inquiry,
+    #inquiry-8 .cancel-inquiry,
+    #inquiry-9 .cancel-inquiry
+    {
+      display: none;
     }
 
 </style>
