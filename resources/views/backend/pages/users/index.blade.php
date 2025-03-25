@@ -148,20 +148,24 @@ Users - Admin Panel
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="profile-wrap">
-                <div class="profile-left">
-                    <div class="profile-thumb">
-                        <img src="{{ asset('backend/assets/images/all-img/users/user1.png')}}" alt="" id="photouser_profile" />
-                    </div>
-                    <div class="profile-data">
-                        <h4 id="namauser_profile">-</h4>
-                        <p id="emailuser_profile">-</p>
+            <div class="modal-body">
+                <div class="row">
+
+                    <div class="profile-wrap">
+                        <div class="profile-left">
+                            <div class="profile-thumb">
+                                <img src="{{ asset('backend/assets/images/all-img/users/user1.png')}}" alt="" id="photouser_profile" />
+                            </div>
+                            <div class="profile-data">
+                                <h4 id="namauser_profile">-</h4>
+                                <p id="emailuser_profile">-</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-body">
 
                 <form>
+                    
                     <input type="hidden" id="user_id">
                     <div id="alert-container"></div> <!-- Tempat Alert -->
                     <div class="row">
@@ -432,34 +436,41 @@ Users - Admin Panel
 
     $(document).ready(function() {     
         $('#modalinput').on('shown.bs.modal', function () {
-            // Inisialisasi Select2
-            $('#users_level, #users_company, #users_homebase, #users_division, #users_department, #users_shift, #users_permission').select2({
-                dropdownParent: $('#modalinput'),
-                placeholder: "Pilih Data",
-                allowClear: true,
-                ajax: {
-                    url: function () {
-                        // Tentukan URL berdasarkan ID elemen
-                        if ($(this).attr('id') === 'users_level') return '/admin/combolevels';
-                        if ($(this).attr('id') === 'users_company') return '/admin/combocompanies';
-                        if ($(this).attr('id') === 'users_homebase') return '/admin/combohomebases';
-                        if ($(this).attr('id') === 'users_division') return '/admin/combodivisions';
-                        if ($(this).attr('id') === 'users_department') return '/admin/combodepartments';
-                        if ($(this).attr('id') === 'users_shift') return '/admin/comboshifts';
-                        if ($(this).attr('id') === 'users_permission') return '/admin/comboroles';
-                    },
-                    dataType: 'json',
-                    delay: 250,
-                    data: function (params) {
-                        return { search: params.term };
-                    },
-                    processResults: function (data) {
-                        return { results: data };
-                    },
-                    cache: true
-                }
-            });
-            
+            function initSelect2(selector, url, dependsOn = null) {
+                $(selector).select2({
+                    dropdownParent: $('body'),
+                    placeholder: "Pilih Data",
+                    allowClear: true,
+                    ajax: {
+                        url: url,
+                        dataType: 'json',
+                        delay: 250,
+                        data: function (params) {
+                            let query = { search: params.term };
+                            if (dependsOn) {
+                                let parentValue = $(dependsOn).val();
+                                if (parentValue) {
+                                    query.filter = parentValue;
+                                }
+                            }
+                            return query;
+                        },
+                        processResults: function (data) {
+                            return { results: data };
+                        },
+                        cache: true
+                    }
+                });
+            }
+
+            // Inisialisasi Select2 dengan filter berdasarkan elemen sebelumnya
+            initSelect2('#users_company', '/admin/combocompanies');
+            initSelect2('#users_division', '/admin/combodivisions', '#users_company');
+            initSelect2('#users_department', '/admin/combodepartments', '#users_division');
+            initSelect2('#users_level', '/admin/combolevels', '#users_department');
+            initSelect2('#users_homebase', '/admin/combohomebases', '#users_company');
+            initSelect2('#users_shift', '/admin/comboshifts', '#users_company');
+            initSelect2('#users_permission', '/admin/comboroles');
         });
 
         $('#modalinput').on('select2:open', function (e) {

@@ -135,11 +135,15 @@ class LevelsController extends Controller
     public function combo(Request $request)
     {
         $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $filter = !empty($_GET['filter']) ? $_GET['filter'] : '';
         $listdata = $this->model
             ->select('level_code as id', 'level_name as text')
             ->where('level_name', 'like', '%' . $search . '%')
-            ->where('level_soft_delete', 0)
-            ->get();
+            ->where('level_soft_delete', 0);
+        if ($filter) {
+            $listdata = $listdata->where('department_code', $filter);
+        }
+        $listdata = $listdata->get();
 
         return response()->json($listdata);
     }

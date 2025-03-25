@@ -131,11 +131,16 @@ class DepartmentController extends Controller
     public function combo(Request $request)
     {
         $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $filter = !empty($_GET['filter']) ? $_GET['filter'] : '';
         $listdata = $this->model
             ->select('department_code as id', 'department_name as text')
             ->where('department_name', 'like', '%' . $search . '%')
-            ->where('department_soft_delete', 0)
-            ->get();
+            ->where('department_soft_delete', 0);
+
+        if ($filter) {
+            $listdata = $listdata->where('division_code', $filter);
+        }
+            $listdata = $listdata->get();
 
         return response()->json($listdata);
     }
