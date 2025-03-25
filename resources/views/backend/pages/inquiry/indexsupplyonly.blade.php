@@ -906,9 +906,9 @@ Inquiry - Admin Panel
         // Tambahkan detail ke FormData sebagai JSON string
         postdata.append('details', JSON.stringify(details));
 
-        console.log('Data FormData: ', Array.from(postdata.entries()));
+        // console.log('Data FormData: ', Array.from(postdata.entries()));
 
-        return;
+        // return;
 
         $.ajax({
             type: "POST",
