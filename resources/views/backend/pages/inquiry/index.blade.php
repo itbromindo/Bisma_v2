@@ -25,17 +25,29 @@ Inquiry - Admin Panel
                             </ol>
                         </nav>
                     </div>
-                    <div class="button-filter">
-                      <button type="button" class="btn btn-primary2 btn-icon">
-                        <span class="button-content-wrapper">
-                        <span class="button-icon align-icon-left">
-                          <img src="{{ asset('backend/assets/images/svg/filter.svg') }}">
-                        </span>
-                        <span class="button-text">
-                          Filter
-                        </span>
-                        </span>
-                      </button>
+                    <div class="section-filter d-flex">
+                      <div class="app-main-search me-2">
+                          <form action="/admin/users" method="GET" class="d-flex">
+                              <div class="input-box d-flex">
+                                  <input type="text" name="search" id="search" value="" class="form-control" placeholder="Search Here">
+                                  <button type="submit" class="btn btn-light ms-2">
+                                      <img src="{{ asset('backend/assets/images/svg/search2.svg') }}" alt="Search" draggable="false">
+                                  </button>
+                              </div>
+                          </form>
+                      </div>
+                      <div class="button-filter">
+                        <button type="button" class="btn btn-primary2 btn-icon" id="btn-filter-inquiry">
+                          <span class="button-content-wrapper">
+                          <span class="button-icon align-icon-left">
+                            <img src="{{ asset('backend/assets/images/svg/filter.svg') }}">
+                          </span>
+                          <span class="button-text">
+                            Filter
+                          </span>
+                          </span>
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -433,6 +445,374 @@ Inquiry - Admin Panel
   </div>
 </div>
 
+<div class="modal fade" id="filtermodal" tabindex="-1" aria-labelledby="filtermodalLabel" aria-hidden="true">
+  <div class="modal-dialog filtermodal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div>
+          <p class="fw-bold">Filter</p>
+        </div>
+        <button type="button" class="" data-bs-dismiss="modal" aria-label="Close">
+          <img src="{{ asset('backend/assets/images/svg/cross.svg') }}" alt="" draggable="false">
+        </button>
+      </div>
+      <form action="#">
+      <div class="modal-body p-3">
+        <div class="fromGroup mb-3">
+            <label class="fw-bold">Tanggal Mulai</label>
+            <input class="form-control date-picker-calender hasDatepicker" type="date" id="filltertanggalmulai" placeholder="" />
+        </div>
+
+        <label class="fw-bold">Jenis</label>
+        <div class="row row-cols-auto px-2 mb-3">
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-all" checked>
+              <label class="form-check-label" for="radio-jenis-all">
+                Semua
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-project">
+              <label class="form-check-label" for="radio-jenis-project">
+                Project
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-refill">
+              <label class="form-check-label" for="radio-jenis-refill">
+                Refill
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-servis">
+              <label class="form-check-label" for="radio-jenis-servis">
+                Servis
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-harga">
+              <label class="form-check-label" for="radio-jenis-harga">
+                Info Harga
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-dukungan">
+              <label class="form-check-label" for="radio-jenis-dukungan">
+                Surat Dukungan
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <label class="fw-bold">User</label>
+        <div class="row row-cols-auto px-2 mb-3">
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-all" checked>
+              <label class="form-check-label" for="radio-jenis-all">
+                Semua
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filteruser" id="radio-user-end">
+              <label class="form-check-label" for="radio-user-end">
+                End User
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filteruser" id="radio-user-reseller">
+              <label class="form-check-label" for="radio-user-reseller">
+                Reseller
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filteruser" id="radio-user-kontraktor">
+              <label class="form-check-label" for="radio-user-kontraktor">
+                Kontraktor
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <label class="fw-bold">Stage Inqury</label>
+        <div class="row row-cols-auto px-2 mb-3">
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-all" checked>
+              <label class="form-check-label" for="radio-stage-all">
+                Semua
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-im">
+              <label class="form-check-label" for="radio-stage-im">
+                Inquiry Masuk
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-ocp">
+              <label class="form-check-label" for="radio-stage-ocp">
+                On Call Price
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-waocp">
+              <label class="form-check-label" for="radio-stage-waocp">
+                Waiting Approval On Call Price
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-ep">
+              <label class="form-check-label" for="radio-stage-ep">
+                Estimasi Project
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-waep">
+              <label class="form-check-label" for="radio-stage-waep">
+                Waiting Approval Estimasi Project
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-wainq">
+              <label class="form-check-label" for="radio-stage-wainq">
+                Waiting Approval Inquiry No Quote
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-inq">
+              <label class="form-check-label" for="radio-stage-inq">
+                Inquiry No Quote
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-waib">
+              <label class="form-check-label" for="radio-stage-waib">
+                Waiting Approval Inquiry Batal
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-ib">
+              <label class="form-check-label" for="radio-stage-ib">
+                Inquiry Batal
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        <label class="fw-bold">Status</label>
+        <div class="row row-cols-auto px-2 mb-3">
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterstatus" id="radio-status-all" checked>
+              <label class="form-check-label" for="radio-status-all">
+                Semua
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterstatus" id="radio-status-progress">
+              <label class="form-check-label" for="radio-status-progress">
+                In Progress
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterstatus" id="radio-status-overdue">
+              <label class="form-check-label" for="radio-status-overdue">
+                Overdue
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <label class="fw-bold">Asal</label>
+        <div class="row row-cols-auto px-2 mb-3">
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterstatus" id="radio-status-all" checked>
+              <label class="form-check-label" for="radio-status-all">
+                Semua
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-final">
+              <label class="form-check-label" for="radio-asal-final">
+                Final
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-wa">
+              <label class="form-check-label" for="radio-asal-wa">
+                Whatsapp
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-telp">
+              <label class="form-check-label" for="radio-asal-telp">
+                Telepon
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-email">
+              <label class="form-check-label" for="radio-asal-email">
+                Email
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-web">
+              <label class="form-check-label" for="radio-asal-web">
+                Website
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-walkin">
+              <label class="form-check-label" for="radio-asal-walkin">
+                Walk In
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-gbisnis">
+              <label class="form-check-label" for="radio-asal-gbisnis">
+                G-Bisnis
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <label class="fw-bold">Kategori</label>        
+        <div class="row row-cols-auto px-2 mb-3">
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-all" checked>
+              <label class="form-check-label" for="radio-kategori-all">
+                Semua
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-fe">
+              <label class="form-check-label" for="radio-kategori-fe">
+                Fire Extinguisher
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-fa">
+              <label class="form-check-label" for="radio-kategori-fa">
+                Fire Alarm
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-fh">
+              <label class="form-check-label" for="radio-kategori-fh">
+                Fire Hydrant
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-fse">
+              <label class="form-check-label" for="radio-kategori-fse">
+                Fire Safety Equipment
+              </label>
+            </div>
+          </div>
+          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
+            <div class="form-check from-radio-custom">
+              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-fss">
+              <label class="form-check-label" for="radio-kategori-fss">
+                Fire Supression System
+              </label>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="modal-footer">
+        <div class="d-flex justify-content-end">
+          <div class="me-2">
+            <button type="button" class="btn btn-danger2 btn-icon">
+              <span class="button-content-wrapper">
+              <span class="button-icon align-icon-left">
+                <img src="{{ asset('backend/assets/images/svg/trash.svg') }}">
+              </span>
+              <span class="button-text">Hapus Filter</span>
+              </span>
+            </button>
+          </div>
+          <div class="me-2">
+            <button type="button" class="btn btn-primary btn-icon">
+              <span class="button-content-wrapper">
+              <span class="button-icon align-icon-left">
+                <img src="{{ asset('backend/assets/images/svg/floppydisk2.svg') }}">
+              </span>
+              <span class="button-text">Simpan</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 <style>
     .kanban-container {
         display: flex;
@@ -583,45 +963,49 @@ Inquiry - Admin Panel
 
 </style>
 <script>
-    function cancel_inquiry(id) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: 'You will not be able to revert this!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, cancel it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: `/admin/inquiry/cancel_stage/${id}`,
-                    type: 'GET',
-                    dataType: 'JSON',
-                    success: function (response) {
-                        if(response.status == 200) {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Success!',
-                                text: response.data,
-                            }).then(function () {
-                                location.reload();
-                            });
+  function cancel_inquiry(id) {
+      Swal.fire({
+          title: 'Are you sure?',
+          text: 'You will not be able to revert this!',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, cancel it!'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              $.ajax({
+                  url: `/admin/inquiry/cancel_stage/${id}`,
+                  type: 'GET',
+                  dataType: 'JSON',
+                  success: function (response) {
+                      if(response.status == 200) {
+                          Swal.fire({
+                              icon: 'success',
+                              title: 'Success!',
+                              text: response.data,
+                          }).then(function () {
+                              location.reload();
+                          });
 
-                        }else{
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Failed!',
-                                text: response.data,
-                            }).then(function () {
-                                location.reload();
-                            })
-                        }
-                    }
-                });
-            }
-        });
-    }
+                      }else{
+                          Swal.fire({
+                              icon: 'error',
+                              title: 'Failed!',
+                              text: response.data,
+                          }).then(function () {
+                              location.reload();
+                          })
+                      }
+                  }
+              });
+          }
+      });
+  }
+
+  $('#btn-filter-inquiry').click(function() {
+    $('#filtermodal').modal('show');
+  })
 </script>
 
 @endsection

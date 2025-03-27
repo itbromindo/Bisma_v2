@@ -5,6 +5,10 @@
     document.getElementById("done"),
   ]);
 
+  const thousandView = (number = 0) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+
   // KANBAN BOARD
 
   // Dapatkan semua kolom kanban
@@ -695,6 +699,29 @@
               htmlInquiryProducts += `</ul>`;
             }
             $('.d-inquiry-product').html(htmlInquiryProducts);
+
+            let list_permintaan = response.data.list_permintaan;
+            $('#tableBody').empty();
+            if(list_permintaan.length > 0) {
+              list_permintaan.forEach(function (data, index) {
+                $('#tableBody').append(`
+                  <tr>
+                    <td class="text-center">${ index + 1}</td>
+                    <td class="text-center">${ data.inquiry_product_name }</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_qty) }</td>
+                    <td class="text-center">${ thousandView(data.goods_stock) }</td>
+                    <td class="text-center">${ data.inquiry_product_status_on_inquiry }</td>
+                    <td class="text-center">${ data.uom_name }</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_pricelist) }</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_net_price) }</td>
+                    <td class="text-center">${ data.inquiry_taxes_percent } %</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_total_price) }</td>
+                  </tr>
+                `);
+              });
+            }else{
+              $('#tableBody').append('<tr><td colspan="10" class="text-center">No results found</td></tr>');
+            }
 
           }else{
             Swal.fire({

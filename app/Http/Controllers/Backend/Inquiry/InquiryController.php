@@ -73,6 +73,7 @@ class InquiryController extends Controller
     {
         $data = [
             'inquiry' => $this->inquiry->detailInquiry($id),
+            'list_permintaan' => $this->inquiry->listPermintaanInquiry($id)
         ];
 
         $result = [

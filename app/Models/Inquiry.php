@@ -76,4 +76,29 @@ class Inquiry extends Model
 
         return $query;
     }
+
+    public function listPermintaanInquiry($id)
+    {
+        $query = DB::table('inquiry_product as ip')
+                ->join('inquiry as i', 'ip.inquiry_code', '=', 'i.inquiry_code')
+                ->join('goods as g', 'ip.goods_code', '=', 'g.goods_code')
+                ->join('uom as u', 'ip.inquiry_product_uom', '=', 'u.uom_code')
+                ->select(
+                    'ip.inquiry_product_code',
+                    'ip.inquiry_product_name',
+                    'ip.inquiry_product_status_on_inquiry',
+                    'ip.inquiry_product_qty',
+                    'ip.inquiry_product_pricelist',
+                    'ip.inquiry_product_net_price',
+                    'ip.inquiry_taxes_percent',
+                    'ip.inquiry_product_total_price',
+                    'g.goods_name',
+                    'g.goods_stock',
+                    'u.uom_name'
+                )
+                ->where('i.inquiry_id', $id)
+                ->get();
+
+        return $query;
+    }
 }
