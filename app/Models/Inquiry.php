@@ -89,6 +89,7 @@ class Inquiry extends Model
                     'i.inquiry_customer_type',
                     'i.inquiry_oc',
                     'i.inquiry_shipping_cost',
+                    'i.inquiry_notes',
                     DB::raw("CONCAT(DATE_FORMAT(i.inquiry_start_date, '%d %b %Y'), ' (', DATE_FORMAT(i.inquiry_start_date, '%H:%i'), ')') AS create_date"),
                     DB::raw("CONCAT(DATE_FORMAT(i.inquiry_end_date, '%d %b %Y'), ' (', DATE_FORMAT(i.inquiry_end_date, '%H:%i'), ')') AS due_date"),
                     'c.customer_name',

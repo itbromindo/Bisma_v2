@@ -353,7 +353,7 @@ Inquiry - Admin Panel
                             <div class="row mt-2">
                               <div class="col-lg-6">
                                 <p class="m-0" style="font-weight: 500; font-size: 14px;">List Permintaan</p>
-                                <p class="m-0" style="font-size: 14px;"><span>2</span> Produk</p>
+                                <p class="m-0" style="font-size: 14px;"><span class="d-total-produk-permintaan"></span> Produk</p>
                               </div>
                               <div class="col-lg-6 text-end d-flex align-items-center justify-content-end">
                                 <button class="btn btn-primary">
@@ -369,11 +369,11 @@ Inquiry - Admin Panel
                                 <table class="table-inquiry-detail">
                                   <tr>
                                     <td style="width: 6rem;">Stock</td>
-                                    <td>: <span>Gudang Jakarta</span></td>
+                                    <td>: <span class="d-inquiry-warehaouse"></span></td>
                                   </tr>
                                   <tr>
                                     <td>User</td>
-                                    <td>: <span>End User</span></td>
+                                    <td>: <span class="d-inquiry-customer-type">End User</span></td>
                                   </tr>
                                 </table>
                               </div>
@@ -381,11 +381,11 @@ Inquiry - Admin Panel
                                 <table class="table-inquiry-detail">
                                   <tr>
                                     <td style="width: 6rem;">OC</td>
-                                    <td>: <span>0</span></td>
+                                    <td>: <span class="d-inquiry-oc"></span></td>
                                   </tr>
                                   <tr>
                                     <td>Ongkir</td>
-                                    <td>: <span>50.000.000</span></td>
+                                    <td>: <span class="d-inquiry-shopping-cost"></span></td>
                                   </tr>
                                 </table>
                               </div>
@@ -419,8 +419,7 @@ Inquiry - Admin Panel
 
                             <div class="row mt-3 mb-2">
                               <div class="col-lg-6">
-                                <p style="font-weight: 700; font-size: 16px; margin: 0;">Harga Total : <span style="font-size: 16px; font-weight: 400;">Rp 148.037.000.00</span><span class="text-success"> (Harga Valid)</span></p>
-                                <p style="font-size: 12px; font-weight: 500; margin: 0;">*Termasuk PPN 11% dan Ongkir</p>
+                                <p style="font-weight: 700; font-size: 16px; margin: 0;">Harga Total : <span style="font-size: 16px; font-weight: 400;" class="d-total-harga-permintaan"></span><span class="text-success"> (Harga Valid)</span></p>
                               </div>
                             </div>
 
