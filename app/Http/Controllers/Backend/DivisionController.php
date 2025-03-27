@@ -145,11 +145,15 @@ class DivisionController extends Controller
     public function combo(Request $request)
     {
         $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $filter = !empty($_GET['filter']) ? $_GET['filter'] : '';
         $listdata = $this->model
             ->select('division_code as id', 'division_name as text')
             ->where('division_name', 'like', '%' . $search . '%')
-            ->where('division_soft_delete', 0)
-            ->get();
+            ->where('division_soft_delete', 0);
+        if ($filter) {
+            $listdata = $listdata->where('companies_code', $filter);
+        }
+            $listdata = $listdata->get();
 
         return response()->json($listdata);
     }

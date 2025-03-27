@@ -124,11 +124,15 @@ class HomebaseController extends Controller
     public function combo(Request $request)
     {
         $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $filter = !empty($_GET['filter']) ? $_GET['filter'] : '';
         $listdata = $this->model
             ->select('homebase_code as id', 'homebase_name as text')
             ->where('homebase_name', 'like', '%' . $search . '%')
-            ->where('homebase_soft_delete', 0)
-            ->get();
+            ->where('homebase_soft_delete', 0);
+        if ($filter) {
+            $listdata = $listdata->where('companies_code', $filter);
+        }
+        $listdata = $listdata->get();
 
         return response()->json($listdata);
     }
