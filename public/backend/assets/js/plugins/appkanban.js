@@ -700,10 +700,20 @@
             }
             $('.d-inquiry-product').html(htmlInquiryProducts);
 
+            // list permintaan
+            $('.d-inquiry-warehaouse').text(inquiry.warehouse_name);
+            $('.d-inquiry-customer-type').text(inquiry.inquiry_customer_type);
+            $('.d-inquiry-oc').text(inquiry.inquiry_oc);
+            $('.d-inquiry-shopping-cost').text(thousandView(inquiry.inquiry_shopping_cost));
+
             let list_permintaan = response.data.list_permintaan;
             $('#tableBody').empty();
+            let totalProdukPermintaan = 0;
+            let totalHargaPermintaan = 0;
             if(list_permintaan.length > 0) {
               list_permintaan.forEach(function (data, index) {
+                totalProdukPermintaan += 1;
+                totalHargaPermintaan += data.inquiry_product_total_price;
                 $('#tableBody').append(`
                   <tr>
                     <td class="text-center">${ index + 1}</td>
@@ -722,6 +732,9 @@
             }else{
               $('#tableBody').append('<tr><td colspan="10" class="text-center">No results found</td></tr>');
             }
+
+            $('.d-total-produk-permintaan').text(thousandView(totalProdukPermintaan));
+            $('.d-total-harga-permintaan').text('Rp.' + thousandView(totalHargaPermintaan));
 
           }else{
             Swal.fire({
