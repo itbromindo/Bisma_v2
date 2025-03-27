@@ -22,8 +22,8 @@
 <link rel="stylesheet" href="{{ asset('backend/assets/css/animate.min.css') }}" />
 <link rel="stylesheet" href="{{ asset('backend/assets/css/aos.css') }}" />
 <link rel="stylesheet" href="{{ asset('backend/assets/css/apexcharts.css') }}" />
-<link rel="stylesheet" href="{{ asset('backend/assets/css/app.min.css') }}" />
 <link rel="stylesheet" href="{{ asset('backend/assets/css/bootstrap.min.css') }}" />
+<link rel="stylesheet" href="{{ asset('backend/assets/css/app.min.css') }}" />
 <link rel="stylesheet" href="{{ asset('backend/assets/css/chartist-plugin-tooltip.css') }}" />
 <link rel="stylesheet" href="{{ asset('backend/assets/css/chartist.min.css') }}" />
 <link rel="stylesheet" href="{{ asset('backend/assets/css/customfont.css') }}" />

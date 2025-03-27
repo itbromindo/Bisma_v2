@@ -1,11 +1,11 @@
 <div class="card">
     <div class="card-body">
         <div class="kanban-board-header">
-            <h5>Waiting Approval No Quote</h5>
+            <h5>{{ $inquiry->inquiry_status_name }}</h5>
         </div>
-        <div id="task-waiting-approval-no-quote">
-            <div id="waiting-approval-no-quote" class="kanban-column">
-                <input type="hidden" value="STATUS0006" class="inquiry-stage">
+        <div id="task-inquiry-6">
+            <div id="inquiry-6" class="kanban-column">
+                <input type="hidden" value="{{ $inquiry->inquiry_status_code }}" class="inquiry-stage">
                 @foreach($data as $row)
                 @php
                     $duedate = $row->inquiry_end_date;
@@ -14,67 +14,72 @@
                     
                     if($today > $duedate)
                     {
-                        $status_card = 'bg-danger-50';
+                        $status_card = ' bg-danger-50 border-danger';
                     }
                 @endphp
+
                 <div class="card-priority rt-mb-12 {{ $status_card }}">
                     <input type="hidden" value="{{ $row->inquiry_id }}" class="inquiry-id">
                     <!-- top bar  -->
                     <div class="card-priority__header">
                         <div class="date">
                             <span class="icon">
-                                <img
-                                    src="{{asset('backend/assets/images/svg/clock.svg')}}"
-                                    alt="clock"
-                                />
+                                <img src="{{asset('backend/assets/images/svg/clock.svg')}}" alt="clock">
                             </span>
-
                             <p>Due Date Inquiry : <br>{{ date("d M, Y", strtotime($duedate)) }}</p>
                         </div>
                         <!-- actions  -->
                         <div class="card-priority__actions">
                             <button class="dots-three text-gray-400 f-size-24 lh-1" type="button" id="dropdownMenuButton_1" data-bs-toggle="dropdown" aria-expanded="true">
-                                <img src="{{asset('backend/assets/images/svg/dot.svg')}}" alt="clock" />
+                                <img src="{{asset('backend/assets/images/svg/dot.svg')}}" alt="clock">
                             </button>
                             <ul class="dropdown-menu dropdown-actions" aria-labelledby="dropdownMenuButton_1" data-popper-placement="bottom-start">
                                 <li>
                                     <a href="#" class="dropdown-item">
                                         <span>
-                                            <img
-                                            src="{{asset('backend/assets/images/svg/pen.svg')}}"
-                                            alt="pen"
-                                            />
-                                        </span>
-                                        Edit
+                                            <img src="{{asset('backend/assets/images/svg/pen.svg')}}" alt="pen">
+                                        </span> Edit
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="#" class="dropdown-item remove-killer plain-btn">
+                                    <a href="#" onclick="cancel_inquiry({{ $row->inquiry_id }})" class="dropdown-item cancel-inquiry">
                                         <span>
                                             <img
                                             src="{{asset('backend/assets/images/svg/trash.svg')}}"
                                             alt="trash"
                                             />
                                         </span>
-                                        Delete
+                                        Cancel
                                     </a>
                                 </li>
                             </ul>
                         </div>
                     </div>
+
                     <!-- labels  -->
                     <div class="card-priority__labels">
                         <ul>
                             <li>
-                                <span class="labels medium yellow">{{ $row->inquiry_type_name }}</span>
+                                <span class="badge rounded-pill bg-success-50 text-success-500"
+                                >{{ $row->origin_inquiry_name }}</span>
+                            </li>
+                            @foreach (json_decode($row->inquiry_product_division, true) as $divisi)
+                            <li>
+                                <span class="badge rounded-pill bg-primary-50 text-primary-500"
+                                >{{ $divisi }}</span>
+                            </li>
+                            @endforeach
+                            <li>
+                                <span class="badge rounded-pill bg-warning-50 text-warning-500">{{ $row->inquiry_type_name }}</span>
                             </li>
                         </ul>
                     </div>
+
                     <h2 class="card-priority__title pointer">
                         {{ $row->inquiry_code }}
                     </h2>
-                    <p>{{ $row->customer_name }}</p>
-                    @if(!empty($row->users_photo))
+                    <h3 class="card-priority__title pointer" style="font-size: 14px; color: #626C70; margin: 0;">{{ $row->customer_name }}</h3>
+
                     <!-- priority footer  -->
                     <div class="card-priority__footer">
                         <div>
@@ -82,36 +87,31 @@
                                 <li>
                                     <a href="#">
                                         <span>
-                                        <img
-                                            src="{{asset('backend/assets/images/svg/attach.svg')}}"
-                                            alt="icon"
-                                        />
-                                        </span>
-                                        5
+                                            <img src="{{asset('backend/assets/images/svg/attach.svg')}}" alt="icon">
+                                        </span> 5
                                     </a>
                                 </li>
                                 <li>
                                     <a href="#">
                                         <span>
-                                        <img
-                                            src="{{asset('backend/assets/images/svg/comments.svg')}}"
-                                            alt="icon"
-                                        />
-                                        </span>
-                                        19
+                                            <img src="{{asset('backend/assets/images/svg/comments.svg')}}" alt="icon">
+                                        </span> 19
                                     </a>
+                                </li>
+                                <li>
+                                    <a href="#">
+                                        <span>
+                                            <img src="{{asset('backend/assets/images/svg/checks.svg')}}" alt="icon">
+                                        </span> 19
+                                    </a>
+                                </li>
+                                <li>
+                                    <span class="labels urgent {{ $row->inquiry_stage_progress_color }}"
+                                    >{{ ucwords($row->inquiry_stage_progress) }}</span>
                                 </li>
                             </ul>
                         </div>
                         <div>
-                            <ul>
-                                <li>
-                                    <span class="labels urgent {{ $row->inquiry_stage_progress_color }}"
-                                    >{{ $row->inquiry_stage_progress }}</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="rt-mb-12">
                             @php
                                 $image = $row->users_photo;
                                 $images = explode(',', $image);
@@ -125,7 +125,6 @@
                             </ul>
                         </div>
                     </div>
-                    @endif
                 </div>
                 @endforeach
             </div>

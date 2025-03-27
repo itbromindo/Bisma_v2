@@ -5,13 +5,11 @@
     document.getElementById("done"),
   ]);
 
-  // KANBAN BOARD
+  const thousandView = (number = 0) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
 
-  const columnCustomeIds = [
-    "inquiry-masuk", "waiting-list-estimator", "waiting-approval-harga", 
-    "reject", "waiting-approval-no-quote", "inquiry-no-quote", 
-    "waiting-approval-batal", "inquiry-batal"
-  ];
+  // KANBAN BOARD
 
   // Dapatkan semua kolom kanban
   let columnsCustome = Array.from(document.querySelectorAll(".kanban-column"));
@@ -64,7 +62,6 @@
       }
     })
   }
-
 
   // END::KANBAN BOARD
 
@@ -664,7 +661,86 @@
 
   cardviewModal.forEach(function (singlemodal) {
     $(singlemodal).on("click", function () {
-      $("#viewmodal").modal("toggle");
+      let cardPriority = $(this).closest(".card-priority");
+      let inquiryId = cardPriority.find(".inquiry-id").val();
+      $.ajax({
+        url: '/admin/inquiry/detail/'+inquiryId,
+        dataType: 'json',
+        success: function(response) {
+          if(response.status == 200) {
+            let inquiry = response.data.inquiry;
+            $("#viewmodal").modal("toggle");
+            $('.d-inquiry-nomor').text(inquiry.inquiry_code);
+            $('.d-inquiry-create-date').text(inquiry.create_date);
+            $('.d-inquiry-type').text(inquiry.inquiry_type_name);
+            $('.d-inquiry-due-date').text(inquiry.due_date);
+            $('.d-inquiry-customer-nama').text(inquiry.customer_name);
+            $('.d-inquiry-customer-provinsi').text(inquiry.provinces_name);
+            $('.d-inquiry-customer-kota').text(inquiry.cities_name);
+            $('.d-inquiry-customer-alamat').text(inquiry.customers_full_address);
+            $('.d-inquiry-customer-email').text(inquiry.customers_email);
+            $('.d-inquiry-customer-telp').text(inquiry.customers_phone);
+            $('.d-inquiry-customer-pic').text(inquiry.customers_PIC);
+            $('.d-inquiry-user-name').text(inquiry.users_name);
+            $('.d-inquiry-user-email').text(inquiry.users_email);
+            $('.d-inquiry-user-telp').text(inquiry.users_personal_phone);
+            $('.d-inquiry-origin').text(inquiry.origin_inquiry_name);
+            $('.d-inquiry-status').text(inquiry.inquiry_status_name);
+            let htmlInquiryProducts = '';
+            if(inquiry.inquiry_product_division) {
+              htmlInquiryProducts += `<ul class="d-flex"><li class="me-2">:</li>`;
+              let array = JSON.parse(inquiry.inquiry_product_division); 
+              array.forEach(value => {
+                htmlInquiryProducts += `<li class="me-2">
+                  <span class="badge rounded-pill bg-primary-50 text-primary-500">${value}</span>
+                </li>`;
+              });
+
+              htmlInquiryProducts += `</ul>`;
+            }
+            $('.d-inquiry-product').html(htmlInquiryProducts);
+
+            let list_permintaan = response.data.list_permintaan;
+            $('#tableBody').empty();
+            if(list_permintaan.length > 0) {
+              list_permintaan.forEach(function (data, index) {
+                $('#tableBody').append(`
+                  <tr>
+                    <td class="text-center">${ index + 1}</td>
+                    <td class="text-center">${ data.inquiry_product_name }</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_qty) }</td>
+                    <td class="text-center">${ thousandView(data.goods_stock) }</td>
+                    <td class="text-center">${ data.inquiry_product_status_on_inquiry }</td>
+                    <td class="text-center">${ data.uom_name }</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_pricelist) }</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_net_price) }</td>
+                    <td class="text-center">${ data.inquiry_taxes_percent } %</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_total_price) }</td>
+                  </tr>
+                `);
+              });
+            }else{
+              $('#tableBody').append('<tr><td colspan="10" class="text-center">No results found</td></tr>');
+            }
+
+          }else{
+            Swal.fire({
+              icon: 'warning',
+              title: 'Warning!',
+              text: 'Data tidak ditemukan!',
+            })
+          }
+        },
+        error: function(error) {
+          console.log(error)
+          Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Terjadi kesalahan data!',
+          })
+        }
+      })
+      
     });
   });
 })(jQuery);
