@@ -45,6 +45,44 @@ class Inquiry extends Model
         'inquiry_total_chats',
     ];
 
+    protected $fillable = [
+        'inquiry_code', 
+        'inquiry_type', 
+        'inquiry_created_at', 
+        'inquiry_created_by', 
+        'inquiry_updated_at', 
+        'inquiry_updated_by', 
+        'inquiry_deleted_at',
+        'inquiry_deleted_by', 
+        'inquiry_notes', 
+        'inquiry_soft_delete',
+        'inquiry_start_date', 
+        'inquiry_end_date', 
+        'inquiry_customer', 
+        'inquiry_origin', 
+        'inquiry_date_and_location',
+        'inquiry_stage', 
+        'inquiry_stage_progress', 
+        'inquiry_product_division',
+        'inquiry_warehouse', 
+        'inquiry_customer_type', 
+        'inquiry_oc', 
+        'inquiry_expedition',
+        'inquiry_expedition_service',
+        'inquiry_expedition_route',
+        'inquiry_expedition_estimation_date',
+        'inquiry_shipping_cost',
+        'inquiry_wording_card_header',
+        'inquiry_tax',
+        'inquiry_total_no_tax',
+        'inquiry_grand_total',
+        'inquiry_product_grand_total_status',
+        'inquiry_sales',
+        'inquiry_footer_note_inquiry',
+        'inquiry_flag_quote',
+        'inquiry_teams'
+    ];
+
     public function getListCardInquiry($stage)
     {
         $data = DB::table('inquiry as i')
@@ -82,6 +120,9 @@ class Inquiry extends Model
                 ->select(
                     'i.inquiry_code', 
                     'i.inquiry_product_division',
+                    'i.inquiry_customer_type',
+                    'i.inquiry_oc',
+                    'i.inquiry_shipping_cost',
                     DB::raw("CONCAT(DATE_FORMAT(i.inquiry_start_date, '%d %b %Y'), ' (', DATE_FORMAT(i.inquiry_start_date, '%H:%i'), ')') AS create_date"),
                     DB::raw("CONCAT(DATE_FORMAT(i.inquiry_end_date, '%d %b %Y'), ' (', DATE_FORMAT(i.inquiry_end_date, '%H:%i'), ')') AS due_date"),
                     'c.customer_name',
@@ -96,7 +137,8 @@ class Inquiry extends Model
                     'it.inquiry_type_name',
                     'oi.origin_inquiry_name',
                     'p.provinces_name',
-	                'c2.cities_name' 
+	                'c2.cities_name',
+                    'w.warehouse_name' 
                 )
                 ->join('customer as c', 'i.inquiry_customer', '=', 'c.customer_code')
                 ->join('users as u', 'i.inquiry_created_by', '=', 'u.user_code')
@@ -105,6 +147,7 @@ class Inquiry extends Model
                 ->join('origin_inquiries as oi', 'i.inquiry_origin', '=', 'oi.origin_inquiry_code')
                 ->join('provinces as p', 'c.provinces_code', '=', 'p.provinces_code') 
                 ->join('cities as c2', 'c.cities_code', '=', 'c2.cities_code') 
+                ->join('warehouse as w', 'w.warehouse_code', '=', 'i.inquiry_warehouse')
                 ->where('i.inquiry_id', $id)
                 ->first();
 
