@@ -50,7 +50,7 @@ class InquiryController extends Controller
         $inquiry = Inquiry::where('inquiry_id', $id)->first();
         if($inquiry->inquiry_stage == 'STATUS001') {
             $inquiry->update([
-                'inquiry_stage' => 'STATUS008', // inquiry batal
+                'inquiry_stage' => 'STATUS008', // waiting approval no batal
                 'inquiry_updated_at' => now(),
                 'inquiry_updated_by' => Session::get('user_code')
             ]);
