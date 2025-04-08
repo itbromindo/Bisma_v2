@@ -321,7 +321,7 @@ Inquiry - Admin Panel
         <small>* Termasuk PPN dan ongkir</small>
     </div>
     <div class="button-container">
-        <button type="button" class="btn btn-warning"><i class="ph ph-eye" style="font-size: 20px;"></i> Pratinjau</button>
+        <button type="button" class="btn btn-warning" onclick="previewpdf()"><i class="ph ph-eye" style="font-size: 20px;"></i> Pratinjau</button>
         <button type="button" class="btn btn-primary" onclick="saveAll()"><i class="ph ph-floppy-disk" style="font-size: 20px;"></i> Simpan</button>
     </div>
 </div>
@@ -386,6 +386,20 @@ Inquiry - Admin Panel
         </div>
     </div>
 </div>
+
+<!-- modal preview menggunakan iframe -->
+ <div class="modal fade" id="modalpreview" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <iframe id="preview" src="inquiry_supply_only/previewpdf" style="width: 100%; height: 80vh; border: none;"></iframe>
+            </div>
+        </div>
+    </div>
 
 <!-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script> -->
 <script>
@@ -955,6 +969,14 @@ Inquiry - Admin Panel
             }
         });
 
+    }
+
+    function previewpdf() {
+        let iframe = document.getElementById('iframePreview');
+        if (iframe) {
+            iframe.src = iframe.src; // Reload iframe
+        }
+        $('#modalpreview').modal('show');
     }
 </script>
 
