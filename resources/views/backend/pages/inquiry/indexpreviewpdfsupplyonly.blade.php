@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Penawaran Harga Dummy</title>
+    <title>Penawaran Harga</title>
     <style>
         body { font-family: Arial, sans-serif; font-size: 12px; }
         .header { text-align: center; font-weight: bold; }
@@ -16,14 +16,14 @@
 <body>
     <div class="header">
         <h2>PT BROMINDO MEKAR MITRA</h2>
-        <p>Jakarta, 14 Maret 2025</p>
+        <p>Semarang, </p>
     </div>
     
     <p>Kepada Yth.<br>
-    <strong>PT ADM SILVIWANGI PROPERTI (MD7 HOTEL CIREBON)</strong><br>
-    Jl. xxx, Telp: 082984478688<br>
-    Email: md7@md7hdl.com<br>
-    Attn: Ibu Fitria
+    <strong>{{ $data['company'] ?? '-' }}</strong><br>
+    {{ $data['address'] ?? '-'}}, Telp: {{ $data['phone'] ?? '-'}}<br>
+    Email: {{ $data['email'] ?? '-'}}<br>
+    Attn: {{ $data['phone'] ?? '-'}}
     </p>
 
     <p>Bersama dengan ini kami sampaikan penawaran harga barang sebagai berikut:</p>

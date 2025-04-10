@@ -106,9 +106,11 @@ class InquirysupplyonlyController extends Controller
         return $request;
     }
 
-    public function previewpdf() {
-        // $pdf = Pdf::loadView('backend.pages.inquiry.indexpreviewpdfsupplyonly', compact('data'));
-        $pdf = Pdf::loadView('backend.pages.inquiry.indexpreviewpdfsupplyonly');
-        return $pdf->stream();
+    public function previewpdf(Request $request) {
+
+        $data = $request->all();
+
+        $pdf = Pdf::loadView('backend.pages.inquiry.indexpreviewpdfsupplyonly', compact('data'));
+        return $pdf->stream('preview.pdf');
     }
 }

@@ -214,7 +214,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('inquiry', App\Http\Controllers\Backend\Inquiry\InquiryController::class)->except(['show']);
     Route::get('inquiry/update_stage', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'update_stage']);
 
-    Route::get('inquiry_supply_only/previewpdf', [App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class, 'previewpdf']);
+    Route::post('inquiry_supply_only/previewpdf', [App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class, 'previewpdf']);
     Route::resource('inquiry_supply_only', App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class);
 
     Route::get('combotaxes', [App\Http\Controllers\Backend\TaxesController::class, 'combo']);
