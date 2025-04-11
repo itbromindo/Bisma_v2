@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Pdf;
 
 class InquirysupplyonlyController extends Controller
 {
@@ -103,5 +104,13 @@ class InquirysupplyonlyController extends Controller
 
         session()->flash('success', __('Level has been created.'));
         return $request;
+    }
+
+    public function previewpdf(Request $request) {
+
+        $data = $request->all();
+
+        $pdf = Pdf::loadView('backend.pages.inquiry.indexpreviewpdfsupplyonly', compact('data'));
+        return $pdf->stream('preview.pdf');
     }
 }

@@ -398,13 +398,13 @@ Users - Admin Panel
                         </div>
                         <div class="col-mb-3 col-lg-3">
                             <div class="fromGroup mb-3">
-                                <label>Scan KTP</label>
+                                <label>Scan KTP <i class="ph ph-eye" id="iconpreviewktp" onclick="showpreviewktp()"></i></label>
                                 <input class="form-control" type="file" id="users_ktp_picture" placeholder="file" />
                             </div>
                         </div>
                         <div class="col-mb-3 col-lg-3">
                             <div class="fromGroup mb-3">
-                                <label>Scan TTD</label>
+                                <label>Scan TTD <i class="ph ph-eye" onclick="showpreviewttd()" id="iconpreviewttd"></i></label>
                                 <input class="form-control" type="file" id="users_signature" placeholder="file" />
                             </div>
                         </div>
@@ -427,6 +427,52 @@ Users - Admin Panel
                 @if ($usr->can('users.update') || $usr->can('users.create'))
                 <button type="button" class="btn btn-primary" id="saveclick" onclick="save()">Save</button>
                 @endif
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalpreviewktp" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 50%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tittleform">Preview Image KTP</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <section class="cards">
+                    <div class="row">
+                        <div class="card-blog">
+                            <div class="card-blog__img">
+                                <img src="{{ asset('backend/assets/images/all-img/img-one.png')}}" alt="card-img" id="photoktp_profile" />
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalpreviewttd" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 50%;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="tittleform">Preview Image TTD</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="card-blog">
+                        <div class="card-blog__img">
+                            <img src="{{ asset('backend/assets/images/all-img/img-one.png')}}" alt="card-img" id="photottd_profile" />
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -497,6 +543,14 @@ Users - Admin Panel
         });
         
     });
+
+    function showpreviewktp(){
+        $('#modalpreviewktp').modal('show');
+    }
+
+    function showpreviewttd(){
+        $('#modalpreviewttd').modal('show');
+    }
 
     function fetchSubmenus(searchQuery, page) {
         $.ajax({
@@ -608,6 +662,9 @@ Users - Admin Panel
 
         document.getElementById('tittleform').innerHTML = 'Form Input';
         document.getElementById('saveclick').innerHTML = 'Save';
+
+        $('#iconpreviewktp').addClass('hidden');
+        $('#iconpreviewttd').addClass('hidden');
     }
 
     function saveInput() {
@@ -715,9 +772,21 @@ Users - Admin Panel
                 // document.getElementById('users_photo').value = data.users_photo; 
 
                 var imgElement = document.getElementById("photouser_profile");
+                var imgElement2 = document.getElementById("photoktp_profile");
+                var imgElement3 = document.getElementById("photottd_profile");
 
                 if (imgElement) {
                     imgElement.src = "../"+data.users_photo;
+                }
+
+                if (imgElement2) {
+                    $('#iconpreviewktp').removeClass('hidden');
+                    imgElement2.src = "../"+data.users_ktp_picture;
+                }
+
+                if (imgElement3) {
+                    $('#iconpreviewttd').removeClass('hidden');
+                    imgElement3.src = "../"+data.users_signature;
                 }
 
                 document.getElementById('users_office_phone').value = data.users_office_phone; 

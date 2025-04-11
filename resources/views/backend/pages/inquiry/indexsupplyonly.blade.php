@@ -321,7 +321,7 @@ Inquiry - Admin Panel
         <small>* Termasuk PPN dan ongkir</small>
     </div>
     <div class="button-container">
-        <button type="button" class="btn btn-warning"><i class="ph ph-eye" style="font-size: 20px;"></i> Pratinjau</button>
+        <button type="button" class="btn btn-warning" onclick="previewpdf()"><i class="ph ph-eye" style="font-size: 20px;"></i> Pratinjau</button>
         <button type="button" class="btn btn-primary" onclick="saveAll()"><i class="ph ph-floppy-disk" style="font-size: 20px;"></i> Simpan</button>
     </div>
 </div>
@@ -386,6 +386,20 @@ Inquiry - Admin Panel
         </div>
     </div>
 </div>
+
+<!-- modal preview menggunakan iframe -->
+ <div class="modal fade" id="modalpreview" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <iframe id="iframePreview" src="inquiry_supply_only/previewpdf" style="width: 100%; height: 80vh; border: none;"></iframe>
+            </div>
+        </div>
+    </div>
 
 <!-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script> -->
 <script>
@@ -954,6 +968,120 @@ Inquiry - Admin Panel
                 });
             }
         });
+
+    }
+
+    async function previewpdf() {
+
+        // console.log("data");
+        
+
+        let name = $('#nama_customer').val();
+        let user = $('#user_code').val();
+
+        if (name == null) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Pilih nama customer terlebih dahulu!'
+            });
+
+            alertform('select2','nama_customer',"Form ini Tidak Boleh Kosong");
+            return;
+        }
+
+        if (user == null) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Pilih user terlebih dahulu!'
+            });
+            alertform('select2','user_code',"Form ini Tidak Boleh Kosong");
+            return;
+        }
+
+
+        var postdata = new FormData();
+        // Tambahkan token CSRF
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+
+        postdata.append('nama_customer', document.getElementById('nama_customer').value); 
+        postdata.append('user_code', document.getElementById('user_code').value); 
+        postdata.append('company', document.getElementById('company').value); // nama customer
+        postdata.append('address', document.getElementById('address').value); 
+        postdata.append('city', document.getElementById('city').value); 
+        postdata.append('phone', document.getElementById('phone').value); 
+        postdata.append('email', document.getElementById('email').value); 
+
+        postdata.append('permintaan_dari', document.getElementById('permintaan_dari').value); 
+        postdata.append('permintaan_dari_name', document.getElementById('permintaan_dari_name').value); 
+        postdata.append('permintaan_lokasi', document.getElementById('permintaan_lokasi').value); 
+        postdata.append('permintaan_pengiriman', document.getElementById('permintaan_pengiriman').value); 
+        postdata.append('permintaan_pengiriman_name', "Kurir Bromindo"); 
+        postdata.append('permintaan_ongkir', document.getElementById('permintaan_ongkir').value); 
+        // postdata.append('kategoriInput', document.getElementById('kategoriInput').value); 
+        postdata.append('permintaan_stock', document.getElementById('permintaan_stock').value); 
+        postdata.append('permintaan_stock_name', "Gudang Semarang"); 
+        postdata.append('permintaan_spesifikasi', document.getElementById('permintaan_spesifikasi').value); 
+        postdata.append('keterangan', getEditorValue()); 
+        postdata.append('harga_total', document.getElementById('harga_keseluruhan_hide').value);
+        postdata.append('harga_ppn', document.getElementById('harga_ppn').value);
+        postdata.append('harga_tanpa_ppn', document.getElementById('harga_tanpa_ppn').value);
+        postdata.append('kategori', datakategori);
+
+
+        var tbody = document.getElementById('tbody');
+        var rows = tbody.getElementsByTagName('tr');
+
+        var details = [];
+
+        for (var i = 0; i < rows.length; i++) {
+            var cells = rows[i].getElementsByTagName('td');
+
+            var detail = {
+                no: cells[0].innerText.trim(),
+                produk_code: cells[1].innerText.trim(),
+                produk_name: cells[2].innerText.trim(),
+                qty: cells[3].innerText.trim(),
+                stock: cells[4].innerText.trim(),
+                status: cells[5].innerText.trim(),
+                status_name: cells[6].innerText.trim(),
+                satuan: cells[7].innerText.trim(),
+                harga_unit: cells[8].innerText.trim(),
+                harga_net: cells[9].innerText.trim(),
+                taxes: cells[10].querySelector("select").value.trim(),
+                harga_total: cells[11].innerText.trim()
+            };
+
+            details.push(detail);
+        }
+
+        postdata.append('details', JSON.stringify(details));
+
+        console.log('Data FormData: ', Array.from(postdata.entries()));
+
+        // let iframe = document.getElementById('iframePreview');
+        // iframe.setAttribute("src", "inquiry_supply_only/previewpdf");
+        // $('#modalpreview').modal('show');
+
+        try {
+            const response = await fetch("inquiry_supply_only/previewpdf", {
+                method: 'POST',
+                body: postdata
+            });
+
+            if (!response.ok) throw new Error('Network response was not ok');
+
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+
+            let iframe = document.getElementById('iframePreview');
+            iframe.src = url;
+            $('#modalpreview').modal('show');
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire('Error', 'Gagal memuat preview PDF', 'error');
+        }
 
     }
 </script>

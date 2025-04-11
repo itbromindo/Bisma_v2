@@ -216,6 +216,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::get('inquiry/cancel_stage/{id}', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'cancel_stage']);
     Route::get('inquiry/detail/{id}', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'detail_inquiry']);
 
+    Route::post('inquiry_supply_only/previewpdf', [App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class, 'previewpdf']);
     Route::resource('inquiry_supply_only', App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class);
 
     Route::get('combotaxes', [App\Http\Controllers\Backend\TaxesController::class, 'combo']);
