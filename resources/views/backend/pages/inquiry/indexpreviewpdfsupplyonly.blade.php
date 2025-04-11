@@ -52,11 +52,31 @@
     </div>
 
     <div class="content">
+        <table width="100%" style="margin-bottom: 20px;">
+            <tr>
+                <td width="70%">
+                    <table>
+                        <tr>
+                            <td><strong>No</strong></td>
+                            <td>: FE/29663/BMM/III/2025</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hal</strong></td>
+                            <td>: Penawaran Harga</td>
+                        </tr>
+                    </table>
+                </td>
+                <td width="30%" style="text-align: right;">
+                    Jakarta, 14 Maret 2025
+                </td>
+            </tr>
+        </table>
+
         <p>Kepada Yth.<br>
-        <strong>{{ $data['company'] ?? '-' }}</strong><br>
-        {{ $data['address'] ?? '-'}}, Telp: {{ $data['phone'] ?? '-'}}<br>
-        Email: {{ $data['email'] ?? '-'}}<br>
-        Attn: {{ $data['phone'] ?? '-'}}
+            <strong>{{ $data['company'] ?? '-' }}</strong><br>
+            {{ $data['address'] ?? '-'}}, Telp: {{ $data['phone'] ?? '-'}}<br>
+            Email: {{ $data['email'] ?? '-'}}<br>
+            Attn: {{ $data['phone'] ?? '-'}}
         </p>
     
         <p>Dengan Hormat,</p>
@@ -123,6 +143,27 @@
     
         <p>Syarat & Ketentuan:
             <br>
+        </p>
+
+        <p>
+            EMAIL PERUSAHAAN YANG BERLAKU ADALAH ALAMAT EMAIL YANG MENGGUNAKAN AKUN RESMI PERUSAHAAN<br>
+            CONTOH : XXX@BROMINDO.COM<br>
+            DILUAR AKUN RESMI PERUSAHAAN EMAIL DIANGGAP TIDAK SAH<br>
+        </p>
+
+        <p>
+            Layanan Purna Jual Alat Pemadam Api :<br>
+            1. Pelayanan pengisian ulang APAR dilakukan ditempat ( kecuali Media CO2 )<br>
+            2. Garansi kebocoran tabung selama 5 (lima) tahun untuk media HFC-227, CO2, media powder, dan 2 (dua) tahun untuk foam, selama segel masih dalam keadaan utuh.<br>
+            <br>
+            Demikian surat penawaran ini dari kami, atas perhatian dan kerjasamanya kami mengucapkan terima kasih.<br>
+            <br>
+            Hormat kami,<br>
+            <br>
+            <br>
+            <br>
+            <b>Dhevia</b><br>
+            08882420888<br>
         </p>
     </div>
     
