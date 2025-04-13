@@ -6,6 +6,8 @@ Inquiry - Admin Panel
 
 @php
     $usr = Auth::guard('web')->user();
+    $homebase = session()->get('homebase_name');
+    $date = session()->get('date_indo_format');
 @endphp
 
 @section('admin-content')
@@ -188,7 +190,7 @@ Inquiry - Admin Panel
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Lokasi</b></label>
-                                <input class="form-control" type="text" id="permintaan_lokasi">
+                                <input class="form-control" type="text" id="permintaan_lokasi" value="{{ $homebase }}, {{ $date }}">
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Pengiriman</b></label>
@@ -903,7 +905,7 @@ Inquiry - Admin Panel
                 no: cells[0].innerText.trim(),
                 produk_code: cells[1].innerText.trim(),
                 produk_name: cells[2].innerText.trim(),
-                qty: cells[3].innerText.trim(),
+                qty: cells[3].querySelector('input').value.trim(),
                 stock: cells[4].innerText.trim(),
                 status: cells[5].innerText.trim(),
                 status_name: cells[6].innerText.trim(),
@@ -1042,7 +1044,7 @@ Inquiry - Admin Panel
                 no: cells[0].innerText.trim(),
                 produk_code: cells[1].innerText.trim(),
                 produk_name: cells[2].innerText.trim(),
-                qty: cells[3].innerText.trim(),
+                qty: cells[3].querySelector('input').value.trim(),
                 stock: cells[4].innerText.trim(),
                 status: cells[5].innerText.trim(),
                 status_name: cells[6].innerText.trim(),
