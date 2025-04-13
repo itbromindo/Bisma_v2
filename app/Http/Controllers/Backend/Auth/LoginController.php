@@ -13,6 +13,8 @@ use App\Models\Moduls;
 use App\Models\Menus;
 use App\Models\Submenus;
 use DB;
+use Hamcrest\Core\Set;
+
 class LoginController extends Controller
 {
     /*
@@ -72,9 +74,20 @@ class LoginController extends Controller
         if (Auth::attempt(['users_email' => $request->email, 'password' => $request->password], $request->remember)) {
             $user = Auth::user();
 
+            $code_homebase = DB::table('homebases')
+                ->select('homebase_name')
+                ->where('homebase_code', $user->users_homebase)
+                ->first();
+            $homebase_name = $code_homebase->homebase_name ?? null;
+
             Session::put('user_code', $user->user_code);
             Session::put('user_name', $user->users_name);
             Session::put('permission', $user->users_permission);
+            Session::put('homebase_code', $user->users_homebase);
+            Session::put('homebase_name', $homebase_name);
+            Session::put('date_now', date('Y-m-d'));
+            Session::put('time_now', date('H:i:s'));
+            Session::put('date_indo_format',$this->date_indo(date('Y-m-d')));
 
             session()->flash('success', 'Successully Logged in !');
             return redirect()->route('admin.dashboard');
@@ -99,9 +112,22 @@ class LoginController extends Controller
     public function logout()
     {
         // return "okok";
-        session()->forget(['user_code', 'user_name', 'user_id', 'permission']);
+        session()->forget(['user_code', 'user_name', 'user_id', 'permission','homebase_code','homebase_name','date_now','time_now','date_indo_format']);
         // session()->flush();
         Auth::guard('web')->logout();
         return redirect()->route('admin.login');
+    }
+
+    public function date_indo($date){
+        $bulan = [
+            1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
+            'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
+    
+        $tanggal = date('d', strtotime($date));
+        $bulanIndex = (int)date('m', strtotime($date));
+        $tahun = date('Y', strtotime($date));
+    
+        return $tanggal . ' ' . $bulan[$bulanIndex] . ' ' . $tahun;
     }
 }

@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+@php
+    $details = json_decode($data['details'], true);
+@endphp
 <html>
 <head>
     <meta charset="utf-8">
@@ -67,7 +70,7 @@
                     </table>
                 </td>
                 <td width="30%" style="text-align: right;">
-                    Jakarta, 14 Maret 2025
+                    {{ $data['permintaan_lokasi'] ?? '-'}}
                 </td>
             </tr>
         </table>
@@ -100,32 +103,35 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>1</td>
-                    <td>Refilling SP Powder Kap. 3 Kg</td>
-                    <td class="right">37</td>
-                    <td>pcs</td>
-                    <td class="right">89.950,00</td>
-                    <td class="right">10%</td>
-                    <td class="right">8.995,00</td>
-                    <td class="right">80.955,00</td>
-                    <td class="right">2.996.350,00</td>
-                </tr>
+                @foreach($details as $d)
+                    <tr>
+                        <td>{{ $d['no'] ?? '0' }}</td>
+                        <td>{{ $d['produk_name'] ?? '' }}</td>
+                        <td class="center">{{ $d['qty'] ?? '' }}</td>
+                        <td>{{ $d['satuan'] ?? '' }}</td>
+                        <td class="right">{{ $d['harga_unit'] ?? '' }}</td>
+                        <td class="right">{{ $d['taxes'] ?? '' }}</td>
+                        <td class="right">0</td>
+                        <td class="right">0</td>
+                        <td class="right">{{ $d['harga_total'] ?? '' }}</td>
+                    </tr>
+                @endforeach
+
                 <tr>
                     <td colspan="8" class="right">Harga Sebelum PPN:</td>
-                    <td class="right">1</td>
+                    <td class="right">{{ $data['harga_tanpa_ppn'] ?? '0' }}</td>
                 </tr>
                 <tr>
                     <td colspan="8" class="right">Ongkir:</td>
-                    <td class="right">2</td>
+                    <td class="right">{{ $data['permintaan_ongkir'] ?? '0' }}</td>
                 </tr>
                 <tr>
                     <td colspan="8" class="right">PPN:</td>
-                    <td class="right">3</td>
+                    <td class="right">{{ $data['harga_ppn'] ?? '0' }}</td>
                 </tr>
                 <tr>
-                    <td colspan="8" class="right">Total:</td>
-                    <td class="right">4</td>
+                    <td colspan="8" class="right"><b>Total:</b></td>
+                    <td class="right"><b>{{ $data['harga_total'] ?? '0' }}</b></td>
                 </tr>
             </tbody>
         </table>
@@ -142,6 +148,8 @@
         </p>
     
         <p>Syarat & Ketentuan:
+            <br>
+            {!! $data['keterangan'] ?? '-' !!}
             <br>
         </p>
 
