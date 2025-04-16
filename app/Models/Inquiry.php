@@ -48,7 +48,7 @@ class Inquiry extends Model
         'inquiry_teams'
     ];
 
-    public function getListCardInquiry($stage)
+    public function getListCardInquiry($stage, $search = '')
     {
         $data = DB::table('inquiry as i')
                     ->select(
@@ -73,10 +73,17 @@ class Inquiry extends Model
                     })
                     ->where('i.inquiry_soft_delete', 0)
                     ->where('i.inquiry_stage', $stage)
-                    ->groupBy('i.inquiry_code')
-                    ->get();
+                    ->groupBy('i.inquiry_code');
 
-        return $data;
+        if($search)
+        {
+            $data->whereAny([
+                'c.customer_name',
+                'i.inquiry_code'
+            ], 'like', '%'.$search.'%');
+        }
+
+        return $data->get();
     }
 
     public function detailInquiry($id)
@@ -89,8 +96,8 @@ class Inquiry extends Model
                     'i.inquiry_oc',
                     'i.inquiry_shipping_cost',
                     'i.inquiry_notes',
-                    DB::raw("CONCAT(DATE_FORMAT(i.inquiry_start_date, '%d %b %Y'), ' (', DATE_FORMAT(i.inquiry_start_date, '%H:%i'), ')') AS create_date"),
-                    DB::raw("CONCAT(DATE_FORMAT(i.inquiry_end_date, '%d %b %Y'), ' (', DATE_FORMAT(i.inquiry_end_date, '%H:%i'), ')') AS due_date"),
+                    DB::raw("DATE_FORMAT(i.inquiry_start_date, '%d %b %Y %H:%i') AS create_date"),
+                    DB::raw("DATE_FORMAT(i.inquiry_end_date, '%d %b %Y %H:%i') AS due_date"),
                     'c.customer_name',
                     'c.customers_full_address',
                     'c.customers_phone',

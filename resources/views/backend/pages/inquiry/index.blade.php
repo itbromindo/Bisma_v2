@@ -27,12 +27,9 @@ Inquiry - Admin Panel
                     </div>
                     <div class="section-filter d-flex">
                       <div class="app-main-search me-2">
-                          <form action="/admin/users" method="GET" class="d-flex">
+                          <form action="/admin/inquiry" method="GET" class="d-flex" autocomplete="off">
                               <div class="input-box d-flex">
-                                  <input type="text" name="search" id="search" value="" class="form-control" placeholder="Search Here">
-                                  <button type="submit" class="btn btn-light ms-2">
-                                      <img src="{{ asset('backend/assets/images/svg/search2.svg') }}" alt="Search" draggable="false">
-                                  </button>
+                                  <input type="text" name="search" id="search" value="{{ $search }}" class="form-control" placeholder="Search Here">
                               </div>
                           </form>
                       </div>
@@ -61,47 +58,47 @@ Inquiry - Admin Panel
                         <div class="d-flex kanbanboard_parent" id="kanban_board_parent">
                             @if ($usr->can('inquiry.kanban1'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban1-component />
+                                    <x-inquiry.kanban1-component :search="$search" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban2'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban2-component />
+                                    <x-inquiry.kanban2-component :search="$search" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban3'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban3-component />
+                                    <x-inquiry.kanban3-component :search="$search" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban4'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban4-component />
+                                    <x-inquiry.kanban4-component :search="$search" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban5'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban5-component />
+                                    <x-inquiry.kanban5-component :search="$search" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban6'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban6-component />
+                                    <x-inquiry.kanban6-component :search="$search" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban7'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban7-component />
+                                    <x-inquiry.kanban7-component :search="$search" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban8'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban8-component />
+                                    <x-inquiry.kanban8-component :search="$search" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban9'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban9-component />
+                                    <x-inquiry.kanban9-component :search="$search" />
                                 </div>
                             @endif
                         </div>
@@ -150,6 +147,8 @@ Inquiry - Admin Panel
           <img src="{{ asset('backend/assets/images/svg/cross.svg') }}" alt="" draggable="false">
         </button>
       </div>
+
+      <input type="hidden" id="d-inquiry-id">
 
       <div class="modal-body p-3">
         <div class="card-details-wrap">
@@ -356,7 +355,7 @@ Inquiry - Admin Panel
                                 <p class="m-0" style="font-size: 14px;"><span class="d-total-produk-permintaan"></span> Produk</p>
                               </div>
                               <div class="col-lg-6 text-end d-flex align-items-center justify-content-end">
-                                <button class="btn btn-primary">
+                                <button class="btn btn-primary" id="btn-detail-permintaan">
                                   Lihat Detail
                                 </button>
                               </div>
@@ -518,8 +517,8 @@ Inquiry - Admin Panel
         <div class="row row-cols-auto px-2 mb-3">
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-all" checked>
-              <label class="form-check-label" for="radio-jenis-all">
+              <input class="form-check-input" type="radio" name="filteruser" id="radio-user-all" checked>
+              <label class="form-check-label" for="radio-user-all">
                 Semua
               </label>
             </div>
@@ -666,8 +665,8 @@ Inquiry - Admin Panel
         <div class="row row-cols-auto px-2 mb-3">
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstatus" id="radio-status-all" checked>
-              <label class="form-check-label" for="radio-status-all">
+              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-all" checked>
+              <label class="form-check-label" for="radio-asal-all">
                 Semua
               </label>
             </div>
@@ -808,6 +807,58 @@ Inquiry - Admin Panel
         </div>
       </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="listpermintaanmodal" tabindex="-1" aria-labelledby="listpermintaanmodalLabel" aria-hidden="true">
+  <div class="modal-dialog listpermintaanmodal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <div>  
+          <p class="fs-4">List Permintaan</p>        
+        </div>
+        <button type="button" class="" data-bs-dismiss="modal" aria-label="Close">
+          <img src="{{ asset('backend/assets/images/svg/cross.svg') }}" alt="" draggable="false">
+        </button>
+      </div>
+
+      <div class="modal-body p-3">
+        <div class="card-details-wrap">
+          <div class="card-details-body">
+
+            <div class="table-wrapper">
+              <div class="table-content table-responsive">
+                <table class="table align-middle table-basic">
+                  <thead style="text-align: center">
+                    <tr>
+                      <th scope="col" width="5%">NO</th>
+                      <th scope="col">Produk</th>
+                      <th scope="col">Qty</th>
+                      <th scope="col">Stock</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Satuan</th>
+                      <th scope="col">Harga / Unit</th>
+                      <th scope="col">Harga NET</th>
+                      <th scope="col">Taxes</th>
+                      <th scope="col">Harga Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tableListPermintaan"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <hr class="custom-hr">
+            
+            <p class="fs-4">Keterangan</p>
+            <div class="keterangan-detail-permintaan"></div>
+
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -962,7 +1013,19 @@ Inquiry - Admin Panel
 
 </style>
 <script>
-  function cancel_inquiry(id) {
+  $(document).ready(function () {
+    $('#listpermintaanmodal').on('shown.bs.modal', function () {
+      setTimeout(function () {
+          $('#viewmodal').css('z-index', '-1');
+      }, 100);
+    });
+    $('#listpermintaanmodal').on('hidden.bs.modal', function () {
+      setTimeout(function () {
+          $('#viewmodal').css('z-index', '');
+      }, 100);
+    });
+
+    function cancel_inquiry(id) {
       Swal.fire({
           title: 'Are you sure?',
           text: 'You will not be able to revert this!',
@@ -1000,11 +1063,71 @@ Inquiry - Admin Panel
               });
           }
       });
-  }
+    }
 
-  $('#btn-filter-inquiry').click(function() {
-    $('#filtermodal').modal('show');
-  })
+    $('#btn-filter-inquiry').click(function() {
+      $('#filtermodal').modal('show');
+    })
+
+    const thousandView = (number = 0) => {
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    $('#btn-detail-permintaan').click(function() {
+      let inquiryId = $('#d-inquiry-id').val();
+      $.ajax({
+        url: '/admin/inquiry/detail/'+inquiryId,
+        dataType: 'json',
+        success: function(response) {
+          if(response.status == 200) {
+            $("#listpermintaanmodal").modal("toggle");
+            let inquiry = response.data.inquiry;
+            $('.keterangan-detail-permintaan').text(inquiry.inquiry_notes);
+            let list_permintaan = response.data.list_permintaan;
+            $('#tableListPermintaan').empty();
+            let totalProdukPermintaan = 0;
+            let totalHargaPermintaan = 0;
+            if(list_permintaan.length > 0) {
+              list_permintaan.forEach(function (data, index) {
+                totalProdukPermintaan += 1;
+                totalHargaPermintaan += data.inquiry_product_total_price;
+                $('#tableListPermintaan').append(`
+                  <tr>
+                    <td class="text-center">${ index + 1}</td>
+                    <td class="text-center">${ data.inquiry_product_name }</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_qty) }</td>
+                    <td class="text-center">${ thousandView(data.goods_stock) }</td>
+                    <td class="text-center">${ data.inquiry_product_status_on_inquiry }</td>
+                    <td class="text-center">${ data.uom_name }</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_pricelist) }</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_net_price) }</td>
+                    <td class="text-center">${ data.inquiry_taxes_percent } %</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_total_price) }</td>
+                  </tr>
+                `);
+              });
+            }else{
+              $('#tableListPermintaan').append('<tr><td colspan="10" class="text-center">No results found</td></tr>');
+            }
+          }else{
+            Swal.fire({
+              icon: 'warning',
+              title: 'Warning!',
+              text: 'Data tidak ditemukan!',
+            })
+          }
+        },
+        error: function(error) {
+          console.log(error)
+          Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Terjadi kesalahan data!',
+          })
+        }
+      })
+    })
+  });
 </script>
 
 @endsection

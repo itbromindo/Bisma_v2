@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Backend\Inquiry;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Support\Renderable;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
@@ -21,8 +19,9 @@ class InquiryController extends Controller
     public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['inquiry.view']);
-        
-        return view('backend.pages.inquiry.index');
+
+        $search = $request->search;
+        return view('backend.pages.inquiry.index', compact('search'));
     }
 
     public function update_stage(Request $request)
