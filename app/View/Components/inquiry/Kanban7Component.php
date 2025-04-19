@@ -11,11 +11,13 @@ use App\Models\InquiryStatus;
 class Kanban7Component extends Component
 {
     public $search;
+    public $filters;
 
-    public function __construct($search = null)
+    public function __construct($search, $filters = [])
     {
         $this->inquiry = new Inquiry();
         $this->search = $search;
+        $this->filters = $filters;
     }
 
     /**
@@ -25,7 +27,7 @@ class Kanban7Component extends Component
     {
         $inquiry_status_code = 'STATUS007';
         $inquiry = InquiryStatus::where('inquiry_status_code', $inquiry_status_code)->first();
-        $data = $this->inquiry->getListCardInquiry($inquiry_status_code, $this->search);
+        $data = $this->inquiry->getListCardInquiry($inquiry_status_code, $this->search, $this->filters);
         return view('components.inquiry.kanban7-component', compact('data', 'inquiry'));
     }
 }

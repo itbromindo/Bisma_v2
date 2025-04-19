@@ -48,7 +48,7 @@ class Inquiry extends Model
         'inquiry_teams'
     ];
 
-    public function getListCardInquiry($stage, $search = '')
+    public function getListCardInquiry($stage, $search = '', $filters = [])
     {
         $data = DB::table('inquiry as i')
                     ->select(
@@ -75,12 +75,39 @@ class Inquiry extends Model
                     ->where('i.inquiry_stage', $stage)
                     ->groupBy('i.inquiry_code');
 
-        if($search)
-        {
+        if($search) {
             $data->whereAny([
                 'c.customer_name',
                 'i.inquiry_code'
             ], 'like', '%'.$search.'%');
+        }
+
+        if(!empty($filters['filtertanggal'])) {
+            $data->whereRaw("DATE(i.inquiry_end_date) = ?", [$filters['filtertanggal']]);
+        }
+
+        if(!empty($filters['filterjenis'])) {
+            $data->where('i.inquiry_type', [$filters['filterjenis']]);
+        }
+
+        if(!empty($filters['filteruser'])) {
+            $data->where('i.inquiry_customer_type', [$filters['filteruser']]);
+        }
+
+        if(!empty($filters['filterstage'])) {
+            $data->where('i.inquiry_stage', [$filters['filterstage']]);
+        }
+
+        if(!empty($filters['filterstatus'])) {
+            $data->where('i.inquiry_stage_progress', [$filters['filterstatus']]);
+        }
+
+        if(!empty($filters['filterasal'])) {
+            $data->where('i.inquiry_origin', [$filters['filterasal']]);
+        }
+
+        if (!empty($filters['filterkategori'])) {
+            $data->whereRaw("JSON_CONTAINS(i.inquiry_product_division, '\"{$filters['filterkategori']}\"')");
         }
 
         return $data->get();
