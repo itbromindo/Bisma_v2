@@ -670,6 +670,7 @@
           if(response.status == 200) {
             let inquiry = response.data.inquiry;
             $("#viewmodal").modal("toggle");
+            $('#d-inquiry-id').val(inquiryId);
             $('.d-inquiry-nomor').text(inquiry.inquiry_code);
             $('.d-inquiry-create-date').text(inquiry.create_date);
             $('.d-inquiry-type').text(inquiry.inquiry_type_name);

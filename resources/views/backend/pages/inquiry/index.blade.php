@@ -27,12 +27,9 @@ Inquiry - Admin Panel
                     </div>
                     <div class="section-filter d-flex">
                       <div class="app-main-search me-2">
-                          <form action="/admin/users" method="GET" class="d-flex">
+                          <form action="/admin/inquiry" method="GET" class="d-flex" autocomplete="off">
                               <div class="input-box d-flex">
-                                  <input type="text" name="search" id="search" value="" class="form-control" placeholder="Search Here">
-                                  <button type="submit" class="btn btn-light ms-2">
-                                      <img src="{{ asset('backend/assets/images/svg/search2.svg') }}" alt="Search" draggable="false">
-                                  </button>
+                                  <input type="text" name="search" id="search" value="{{ $search }}" class="form-control" placeholder="Search Here">
                               </div>
                           </form>
                       </div>
@@ -61,47 +58,47 @@ Inquiry - Admin Panel
                         <div class="d-flex kanbanboard_parent" id="kanban_board_parent">
                             @if ($usr->can('inquiry.kanban1'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban1-component />
+                                    <x-inquiry.kanban1-component :search="$search" :filters="$filters" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban2'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban2-component />
+                                    <x-inquiry.kanban2-component :search="$search" :filters="$filters" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban3'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban3-component />
+                                    <x-inquiry.kanban3-component :search="$search" :filters="$filters" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban4'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban4-component />
+                                    <x-inquiry.kanban4-component :search="$search" :filters="$filters" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban5'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban5-component />
+                                    <x-inquiry.kanban5-component :search="$search" :filters="$filters" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban6'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban6-component />
+                                    <x-inquiry.kanban6-component :search="$search" :filters="$filters" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban7'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban7-component />
+                                    <x-inquiry.kanban7-component :search="$search" :filters="$filters" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban8'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban8-component />
+                                    <x-inquiry.kanban8-component :search="$search" :filters="$filters" />
                                 </div>
                             @endif
                             @if ($usr->can('inquiry.kanban9'))
                                 <div class="kanbanboard_child">
-                                    <x-inquiry.kanban9-component />
+                                    <x-inquiry.kanban9-component :search="$search" :filters="$filters" />
                                 </div>
                             @endif
                         </div>
@@ -150,6 +147,8 @@ Inquiry - Admin Panel
           <img src="{{ asset('backend/assets/images/svg/cross.svg') }}" alt="" draggable="false">
         </button>
       </div>
+
+      <input type="hidden" id="d-inquiry-id">
 
       <div class="modal-body p-3">
         <div class="card-details-wrap">
@@ -356,7 +355,7 @@ Inquiry - Admin Panel
                                 <p class="m-0" style="font-size: 14px;"><span class="d-total-produk-permintaan"></span> Produk</p>
                               </div>
                               <div class="col-lg-6 text-end d-flex align-items-center justify-content-end">
-                                <button class="btn btn-primary">
+                                <button class="btn btn-primary" id="btn-detail-permintaan">
                                   Lihat Detail
                                 </button>
                               </div>
@@ -455,78 +454,48 @@ Inquiry - Admin Panel
           <img src="{{ asset('backend/assets/images/svg/cross.svg') }}" alt="" draggable="false">
         </button>
       </div>
-      <form action="#">
+      <form action="/admin/inquiry" method="GET" autocomplete="off">
       <div class="modal-body p-3">
         <div class="fromGroup mb-3">
             <label class="fw-bold">Tanggal Mulai</label>
-            <input class="form-control date-picker-calender hasDatepicker" type="date" id="filltertanggalmulai" placeholder="" />
+            <input class="form-control date-picker-calender hasDatepicker" type="date" id="filltertanggalmulai" name="filtertanggal" value="{{ $filtertanggal }}" />
         </div>
 
         <label class="fw-bold">Jenis</label>
         <div class="row row-cols-auto px-2 mb-3">
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-all" checked>
+              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-all" value="" {{ empty($filterjenis) ? "checked" : "" }}>
               <label class="form-check-label" for="radio-jenis-all">
                 Semua
               </label>
             </div>
           </div>
+          @foreach($inquiry_type as $row)
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-project">
-              <label class="form-check-label" for="radio-jenis-project">
-                Project
+              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-{{ $row->inquiry_type_id }}" value="{{ $row->inquiry_type_code }}" {{ ($filterjenis == $row->inquiry_type_code) ? "checked" : "" }}>
+              <label class="form-check-label" for="radio-jenis-{{ $row->inquiry_type_id }}">
+                {{ $row->inquiry_type_name }}
               </label>
             </div>
           </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-refill">
-              <label class="form-check-label" for="radio-jenis-refill">
-                Refill
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-servis">
-              <label class="form-check-label" for="radio-jenis-servis">
-                Servis
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-harga">
-              <label class="form-check-label" for="radio-jenis-harga">
-                Info Harga
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-dukungan">
-              <label class="form-check-label" for="radio-jenis-dukungan">
-                Surat Dukungan
-              </label>
-            </div>
-          </div>
+          @endforeach
         </div>
 
         <label class="fw-bold">User</label>
         <div class="row row-cols-auto px-2 mb-3">
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterjenis" id="radio-jenis-all" checked>
-              <label class="form-check-label" for="radio-jenis-all">
+              <input class="form-check-input" type="radio" name="filteruser" id="radio-user-all" value="" {{ empty($filteruser) ? "checked" : "" }}>
+              <label class="form-check-label" for="radio-user-all">
                 Semua
               </label>
             </div>
           </div>
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filteruser" id="radio-user-end">
+              <input class="form-check-input" type="radio" name="filteruser" id="radio-user-end" value="End User" {{ ($filteruser == "End User") ? "checked" : "" }}>
               <label class="form-check-label" for="radio-user-end">
                 End User
               </label>
@@ -534,7 +503,7 @@ Inquiry - Admin Panel
           </div>
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filteruser" id="radio-user-reseller">
+              <input class="form-check-input" type="radio" name="filteruser" id="radio-user-reseller" value="Reseller" {{ ($filteruser == "Reseller") ? "checked" : "" }}>
               <label class="form-check-label" for="radio-user-reseller">
                 Reseller
               </label>
@@ -542,7 +511,7 @@ Inquiry - Admin Panel
           </div>
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filteruser" id="radio-user-kontraktor">
+              <input class="form-check-input" type="radio" name="filteruser" id="radio-user-kontraktor" value="Kontraktor" {{ ($filteruser == "Kontraktor") ? "checked" : "" }}>
               <label class="form-check-label" for="radio-user-kontraktor">
                 Kontraktor
               </label>
@@ -554,91 +523,29 @@ Inquiry - Admin Panel
         <div class="row row-cols-auto px-2 mb-3">
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-all" checked>
+              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-all" value="" {{ empty($filterstage) ? "checked" : "" }}>
               <label class="form-check-label" for="radio-stage-all">
                 Semua
               </label>
             </div>
           </div>
+          @foreach($inquiry_status as $row)
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-im">
-              <label class="form-check-label" for="radio-stage-im">
-                Inquiry Masuk
+              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-{{ $row->inquiry_status_id }}" value="{{ $row->inquiry_status_code }}" {{ ($filterstage == $row->inquiry_status_code) ? "checked" : "" }}>
+              <label class="form-check-label" for="radio-stage-{{ $row->inquiry_status_id }}">
+                {{ $row->inquiry_status_name }}
               </label>
             </div>
           </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-ocp">
-              <label class="form-check-label" for="radio-stage-ocp">
-                On Call Price
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-waocp">
-              <label class="form-check-label" for="radio-stage-waocp">
-                Waiting Approval On Call Price
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-ep">
-              <label class="form-check-label" for="radio-stage-ep">
-                Estimasi Project
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-waep">
-              <label class="form-check-label" for="radio-stage-waep">
-                Waiting Approval Estimasi Project
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-wainq">
-              <label class="form-check-label" for="radio-stage-wainq">
-                Waiting Approval Inquiry No Quote
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-inq">
-              <label class="form-check-label" for="radio-stage-inq">
-                Inquiry No Quote
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-waib">
-              <label class="form-check-label" for="radio-stage-waib">
-                Waiting Approval Inquiry Batal
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstage" id="radio-stage-ib">
-              <label class="form-check-label" for="radio-stage-ib">
-                Inquiry Batal
-              </label>
-            </div>
-          </div>
+          @endforeach
         </div>
         
         <label class="fw-bold">Status</label>
         <div class="row row-cols-auto px-2 mb-3">
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstatus" id="radio-status-all" checked>
+              <input class="form-check-input" type="radio" name="filterstatus" id="radio-status-all" value="" {{ empty($filterstatus) ? "checked" : "" }}>
               <label class="form-check-label" for="radio-status-all">
                 Semua
               </label>
@@ -646,7 +553,7 @@ Inquiry - Admin Panel
           </div>
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstatus" id="radio-status-progress">
+              <input class="form-check-input" type="radio" name="filterstatus" id="radio-status-progress" value="in progress" {{ ($filterstatus == "in progress") ? "checked" : "" }}>
               <label class="form-check-label" for="radio-status-progress">
                 In Progress
               </label>
@@ -654,7 +561,7 @@ Inquiry - Admin Panel
           </div>
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstatus" id="radio-status-overdue">
+              <input class="form-check-input" type="radio" name="filterstatus" id="radio-status-overdue" value="overdue" {{ ($filterstatus == "overdue") ? "checked" : "" }}>
               <label class="form-check-label" for="radio-status-overdue">
                 Overdue
               </label>
@@ -666,127 +573,51 @@ Inquiry - Admin Panel
         <div class="row row-cols-auto px-2 mb-3">
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterstatus" id="radio-status-all" checked>
-              <label class="form-check-label" for="radio-status-all">
+              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-all" value="" {{ empty($filterasal) ? "checked" : "" }}>
+              <label class="form-check-label" for="radio-asal-all">
                 Semua
               </label>
             </div>
           </div>
+          @foreach($origin_inquiry as $row)
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-final">
-              <label class="form-check-label" for="radio-asal-final">
-                Final
+              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-{{ $row->origin_inquiry_id }}" value="{{ $row->origin_inquiry_code }}" {{ ($filterasal == $row->origin_inquiry_code) ? "checked" : "" }}>
+              <label class="form-check-label" for="radio-asal-{{ $row->origin_inquiry_id }}">
+                {{ $row->origin_inquiry_name }}
               </label>
             </div>
           </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-wa">
-              <label class="form-check-label" for="radio-asal-wa">
-                Whatsapp
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-telp">
-              <label class="form-check-label" for="radio-asal-telp">
-                Telepon
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-email">
-              <label class="form-check-label" for="radio-asal-email">
-                Email
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-web">
-              <label class="form-check-label" for="radio-asal-web">
-                Website
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-walkin">
-              <label class="form-check-label" for="radio-asal-walkin">
-                Walk In
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterasal" id="radio-asal-gbisnis">
-              <label class="form-check-label" for="radio-asal-gbisnis">
-                G-Bisnis
-              </label>
-            </div>
-          </div>
+          @endforeach
         </div>
 
         <label class="fw-bold">Kategori</label>        
         <div class="row row-cols-auto px-2 mb-3">
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-all" checked>
+              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-all" value="" {{ empty($filterkategori) ? "checked" : "" }}>
               <label class="form-check-label" for="radio-kategori-all">
                 Semua
               </label>
             </div>
           </div>
+          @foreach($goods as $row)
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-fe">
-              <label class="form-check-label" for="radio-kategori-fe">
-                Fire Extinguisher
+              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-{{ $row->goods_id }}" value="{{ $row->goods_code }}" {{ ($filterkategori == $row->goods_code) ? "checked" : "" }}>
+              <label class="form-check-label" for="radio-kategori-{{ $row->goods_id }}">
+              {{ $row->goods_name }}
               </label>
             </div>
           </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-fa">
-              <label class="form-check-label" for="radio-kategori-fa">
-                Fire Alarm
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-fh">
-              <label class="form-check-label" for="radio-kategori-fh">
-                Fire Hydrant
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-fse">
-              <label class="form-check-label" for="radio-kategori-fse">
-                Fire Safety Equipment
-              </label>
-            </div>
-          </div>
-          <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
-            <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-fss">
-              <label class="form-check-label" for="radio-kategori-fss">
-                Fire Supression System
-              </label>
-            </div>
-          </div>
+          @endforeach
         </div>
 
       </div>
       <div class="modal-footer">
         <div class="d-flex justify-content-end">
           <div class="me-2">
-            <button type="button" class="btn btn-danger2 btn-icon">
+            <button type="button" class="btn btn-danger2 btn-icon" id="reset-filters">
               <span class="button-content-wrapper">
               <span class="button-icon align-icon-left">
                 <img src="{{ asset('backend/assets/images/svg/trash.svg') }}">
@@ -796,7 +627,7 @@ Inquiry - Admin Panel
             </button>
           </div>
           <div class="me-2">
-            <button type="button" class="btn btn-primary btn-icon">
+            <button type="submit" class="btn btn-primary btn-icon">
               <span class="button-content-wrapper">
               <span class="button-icon align-icon-left">
                 <img src="{{ asset('backend/assets/images/svg/floppydisk2.svg') }}">
@@ -808,6 +639,58 @@ Inquiry - Admin Panel
         </div>
       </div>
       </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="listpermintaanmodal" tabindex="-1" aria-labelledby="listpermintaanmodalLabel" aria-hidden="true">
+  <div class="modal-dialog listpermintaanmodal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <div>  
+          <p class="fs-4">List Permintaan</p>        
+        </div>
+        <button type="button" class="" data-bs-dismiss="modal" aria-label="Close">
+          <img src="{{ asset('backend/assets/images/svg/cross.svg') }}" alt="" draggable="false">
+        </button>
+      </div>
+
+      <div class="modal-body p-3">
+        <div class="card-details-wrap">
+          <div class="card-details-body">
+
+            <div class="table-wrapper">
+              <div class="table-content table-responsive">
+                <table class="table align-middle table-basic">
+                  <thead style="text-align: center">
+                    <tr>
+                      <th scope="col" width="5%">NO</th>
+                      <th scope="col">Produk</th>
+                      <th scope="col">Qty</th>
+                      <th scope="col">Stock</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Satuan</th>
+                      <th scope="col">Harga / Unit</th>
+                      <th scope="col">Harga NET</th>
+                      <th scope="col">Taxes</th>
+                      <th scope="col">Harga Total</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tableListPermintaan"></tbody>
+                </table>
+              </div>
+            </div>
+
+            <hr class="custom-hr">
+            
+            <p class="fs-4">Keterangan</p>
+            <div class="keterangan-detail-permintaan"></div>
+
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -962,7 +845,19 @@ Inquiry - Admin Panel
 
 </style>
 <script>
-  function cancel_inquiry(id) {
+  $(document).ready(function () {
+    $('#listpermintaanmodal').on('shown.bs.modal', function () {
+      setTimeout(function () {
+          $('#viewmodal').css('z-index', '-1');
+      }, 100);
+    });
+    $('#listpermintaanmodal').on('hidden.bs.modal', function () {
+      setTimeout(function () {
+          $('#viewmodal').css('z-index', '');
+      }, 100);
+    });
+
+    function cancel_inquiry(id) {
       Swal.fire({
           title: 'Are you sure?',
           text: 'You will not be able to revert this!',
@@ -1000,11 +895,84 @@ Inquiry - Admin Panel
               });
           }
       });
-  }
+    }
 
-  $('#btn-filter-inquiry').click(function() {
-    $('#filtermodal').modal('show');
-  })
+    $('#btn-filter-inquiry').click(function() {
+      $('#filtermodal').modal('show');
+    })
+
+    const thousandView = (number = 0) => {
+      return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
+    $('#btn-detail-permintaan').click(function() {
+      let inquiryId = $('#d-inquiry-id').val();
+      $.ajax({
+        url: '/admin/inquiry/detail/'+inquiryId,
+        dataType: 'json',
+        success: function(response) {
+          if(response.status == 200) {
+            $("#listpermintaanmodal").modal("toggle");
+            let inquiry = response.data.inquiry;
+            $('.keterangan-detail-permintaan').text(inquiry.inquiry_notes);
+            let list_permintaan = response.data.list_permintaan;
+            $('#tableListPermintaan').empty();
+            let totalProdukPermintaan = 0;
+            let totalHargaPermintaan = 0;
+            if(list_permintaan.length > 0) {
+              list_permintaan.forEach(function (data, index) {
+                totalProdukPermintaan += 1;
+                totalHargaPermintaan += data.inquiry_product_total_price;
+                $('#tableListPermintaan').append(`
+                  <tr>
+                    <td class="text-center">${ index + 1}</td>
+                    <td class="text-center">${ data.inquiry_product_name }</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_qty) }</td>
+                    <td class="text-center">${ thousandView(data.goods_stock) }</td>
+                    <td class="text-center">${ data.inquiry_product_status_on_inquiry }</td>
+                    <td class="text-center">${ data.uom_name }</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_pricelist) }</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_net_price) }</td>
+                    <td class="text-center">${ data.inquiry_taxes_percent } %</td>
+                    <td class="text-center">${ thousandView(data.inquiry_product_total_price) }</td>
+                  </tr>
+                `);
+              });
+            }else{
+              $('#tableListPermintaan').append('<tr><td colspan="10" class="text-center">No results found</td></tr>');
+            }
+          }else{
+            Swal.fire({
+              icon: 'warning',
+              title: 'Warning!',
+              text: 'Data tidak ditemukan!',
+            })
+          }
+        },
+        error: function(error) {
+          console.log(error)
+          Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Terjadi kesalahan data!',
+          })
+        }
+      })
+    })
+
+    $('#reset-filters').on('click', function() {
+        var $form = $(this).closest('form');
+        $form.find('input[type=radio]').prop('checked', false);
+        $form.find('input[type=date]').val('');
+        $('#radio-jenis-all').prop('checked', true);
+        $('#radio-user-all').prop('checked', true);
+        $('#radio-stage-all').prop('checked', true);
+        $('#radio-status-all').prop('checked', true);
+        $('#radio-asal-all').prop('checked', true);
+        $('#radio-kategori-all').prop('checked', true);
+        $form.submit();
+    });
+  });
 </script>
 
 @endsection
