@@ -45,7 +45,7 @@
             <div class="left-content">
                 <div class="logo-segment">
                     <div class="all-logo">
-                        <!-- <a class='brand-logo' href='/'>
+                        <a class='brand-logo' href='/'>
                             <img src="{{ asset('images/large_bromindo.png') }}" alt="" draggable="false" class="logo-black" />
                             <img src="{{ asset('backend/assets/images/logo/logo-white.svg') }}" alt="" draggable="false" class="logo-white" />
                             <img src="{{ asset('images/bromindo.jpg') }}" alt="" draggable="false" class="logo-icon rt-mr-10" style="max-width: 30px"/>
@@ -57,7 +57,7 @@
                         <a class='collapse-in-logo' href='/'>
                             <img src="{{ asset('images/bromindo.jpg') }}" alt="" draggable="false" class="logo-icon-blue" style="max-width: 30px"/>
                             <img src="{{ asset('backend/assets/images/logo/logo-icon-white.svg') }}" alt="" draggable="false" class="logo-icon-white" />
-                        </a> -->
+                        </a>
                     </div>
                     <div class="opener_sidebar">
                         <span class="icon-bar-open" id="opener_icon"></span>

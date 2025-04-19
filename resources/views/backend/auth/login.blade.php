@@ -61,7 +61,7 @@
         <div class="login-card">
             <form method="POST" action="{{ route('admin.login.submit') }}">
                 @csrf
-                <!-- <img src="{{ asset('images/bromindo.jpg') }}" alt="Logo" class="logo"> -->
+                <img src="{{ asset('images/bromindo.jpg') }}" alt="Logo" class="logo">
                 <h4 class="text-center mb-4">Login to your account</h4>
                 @include('backend.layouts.partials.messages')
 
