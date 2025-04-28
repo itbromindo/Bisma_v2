@@ -40,7 +40,7 @@ class InquirysupplyonlyController extends Controller
         
         return view('backend.pages.inquiry.indexsupplyonly', [
             // 'listdata' => $listdata,
-            'description' => $desc[0]->description,
+            'description' => $desc[0]->description ?? 'Description not found',
         ]);
     }
 
@@ -69,11 +69,15 @@ class InquirysupplyonlyController extends Controller
             // 'inquiry_end_date' => '',
             'inquiry_customer' => $request->input('nama_customer') ?? '',
             'inquiry_origin' => $request->input('permintaan_dari') ?? '', 
-            'inquiry_product_division' => '', // belum 
-            'inquiry_warehouse' => $request->input('permintaan_stock') ?? '', 
+            'inquiry_product_division' => json_encode(
+                $request->input('kategori') ?? '{}'
+            ), // belum 
+            'inquiry_notes' => $request->input('keterangan') ?? '',
+            'inquiry_warehouse' => $request->input('permintaan_stock') ?? '', // ini salah
             'inquiry_tax' => $request->input('harga_ppn') ?? 0,
             'inquiry_total_no_tax' => $request->input('harga_tanpa_ppn') ?? 0,
             'inquiry_grand_total' => $request->input('harga_total') ?? 0,
+            // 'inquiry_date_and_location' => '', // ini belum ada di db untuk kolomnya
         ]);
 
         // Ambil data detail dari request (dalam format JSON)
@@ -87,7 +91,7 @@ class InquirysupplyonlyController extends Controller
                     'inquiry_code' => $code_header,
                     'goods_code' => $detail['produk_code'] ?? '',
                     'inquiry_product_name' => $detail['produk_name'] ?? '',
-                    'inquiry_product_status_quote_no_quote' => null,
+                    'inquiry_product_status_quote_no_quote' => '',
                     'inquiry_product_qty' => $detail['qty'] ?? 0,
                     'inquiry_product_status_on_inquiry' => $detail['status'] ?? '',
                     'inquiry_product_uom' => $detail['satuan'] ?? '',
