@@ -73,10 +73,11 @@ class InquirysupplyonlyController extends Controller
                 $request->input('kategori') ?? '{}'
             ), // belum 
             'inquiry_notes' => $request->input('keterangan') ?? '',
-            'inquiry_warehouse' => $request->input('permintaan_stock') ?? '', 
+            'inquiry_warehouse' => $request->input('permintaan_stock') ?? '', // ini salah
             'inquiry_tax' => $request->input('harga_ppn') ?? 0,
             'inquiry_total_no_tax' => $request->input('harga_tanpa_ppn') ?? 0,
             'inquiry_grand_total' => $request->input('harga_total') ?? 0,
+            // 'inquiry_date_and_location' => '', // ini belum ada di db untuk kolomnya
         ]);
 
         // Ambil data detail dari request (dalam format JSON)
