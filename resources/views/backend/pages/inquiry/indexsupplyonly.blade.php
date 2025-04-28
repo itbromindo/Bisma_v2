@@ -390,18 +390,19 @@ Inquiry - Admin Panel
 </div>
 
 <!-- modal preview menggunakan iframe -->
- <div class="modal fade" id="modalpreview" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalpreview" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Preview</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="showppn()"></button>
             </div>
             <div class="modal-body">
                 <iframe id="iframePreview" src="inquiry_supply_only/previewpdf" style="width: 100%; height: 80vh; border: none;"></iframe>
             </div>
         </div>
     </div>
+</div>
 
 <!-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script> -->
 <script>
@@ -1060,7 +1061,7 @@ Inquiry - Admin Panel
 
         postdata.append('details', JSON.stringify(details));
 
-        console.log('Data FormData: ', Array.from(postdata.entries()));
+        // console.log('Data FormData: ', Array.from(postdata.entries()));
 
         // let iframe = document.getElementById('iframePreview');
         // iframe.setAttribute("src", "inquiry_supply_only/previewpdf");
@@ -1079,12 +1080,17 @@ Inquiry - Admin Panel
 
             let iframe = document.getElementById('iframePreview');
             iframe.src = url;
+            $('.pph-input-data').css('display','none');
             $('#modalpreview').modal('show');
         } catch (error) {
             console.error('Error:', error);
             Swal.fire('Error', 'Gagal memuat preview PDF', 'error');
         }
 
+    }
+
+    function showppn() {
+        $('.pph-input-data').css('display','block');
     }
 </script>
 
