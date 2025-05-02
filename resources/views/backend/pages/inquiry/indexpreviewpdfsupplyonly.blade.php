@@ -109,7 +109,7 @@
                         <td>{{ $d['produk_name'] ?? '' }}</td>
                         <td class="center">{{ $d['qty'] ?? '' }}</td>
                         <td>{{ $d['satuan'] ?? '' }}</td>
-                        <td class="right">{{ $d['harga_unit'] ?? '' }}</td>
+                        <td class="right">{{ number_format($d['harga_unit'],0) ?? '' }}</td>
                         <td class="right">{{ $d['taxes'] ?? '' }}</td>
                         <td class="right">0</td>
                         <td class="right">0</td>
@@ -119,19 +119,19 @@
 
                 <tr>
                     <td colspan="8" class="right">Harga Sebelum PPN:</td>
-                    <td class="right">{{ $data['data']['harga_tanpa_ppn'] ?? '0' }}</td>
+                    <td class="right">{{ number_format($data['data']['harga_tanpa_ppn'],0) ?? '0' }}</td>
                 </tr>
                 <tr>
                     <td colspan="8" class="right">Ongkir:</td>
-                    <td class="right">{{ $data['data']['permintaan_ongkir'] ?? '0' }}</td>
+                    <td class="right">{{ number_format($data['data']['permintaan_ongkir'],0) ?? '0' }}</td>
                 </tr>
                 <tr>
                     <td colspan="8" class="right">PPN:</td>
-                    <td class="right">{{ $data['data']['harga_ppn'] ?? '0' }}</td>
+                    <td class="right">{{ number_format($data['data']['harga_ppn'],0) ?? '0' }}</td>
                 </tr>
                 <tr>
                     <td colspan="8" class="right"><b>Total:</b></td>
-                    <td class="right"><b>{{ $data['data']['harga_total'] ?? '0' }}</b></td>
+                    <td class="right"><b>{{ number_format($data['data']['harga_total']+$data['data']['permintaan_ongkir'],2) ?? '0' }}</b></td>
                 </tr>
             </tbody>
         </table>
