@@ -601,12 +601,12 @@ Inquiry - Admin Panel
               </label>
             </div>
           </div>
-          @foreach($goods as $row)
+          @foreach($product_divisions as $row)
           <div class="col border border-2 border-primary rounded-pill d-flex align-items-center justify-content-center me-2 mb-2">
             <div class="form-check from-radio-custom">
-              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-{{ $row->goods_id }}" value="{{ $row->goods_code }}" {{ ($filterkategori == $row->goods_code) ? "checked" : "" }}>
-              <label class="form-check-label" for="radio-kategori-{{ $row->goods_id }}">
-              {{ $row->goods_name }}
+              <input class="form-check-input" type="radio" name="filterkategori" id="radio-kategori-{{ $row->product_divisions_id }}" value="{{ $row->product_divisions_code }}" {{ ($filterkategori == $row->product_divisions_code) ? "checked" : "" }}>
+              <label class="form-check-label" for="radio-kategori-{{ $row->product_divisions_id }}">
+              {{ $row->product_divisions_name }}
               </label>
             </div>
           </div>

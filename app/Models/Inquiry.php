@@ -57,12 +57,12 @@ class Inquiry extends Model
                         'it.inquiry_type_name',
                         'i.inquiry_code',
                         'i.inquiry_stage_progress',
-                        'i.inquiry_product_division',
                         'c.customer_name',
                         'u.users_name',
                         'oi.origin_inquiry_name',
                         DB::raw("IF(i.inquiry_stage_progress = 'in progress', 'yellow', 'red') as inquiry_stage_progress_color"),
-                        DB::raw('GROUP_CONCAT(ut.users_photo) as users_photo')
+                        DB::raw('GROUP_CONCAT(DISTINCT ut.users_photo) as users_photo'),
+                        DB::raw('GROUP_CONCAT(DISTINCT pd.product_divisions_name) as product_divisions_name')
                     )
                     ->join('inquiry_type as it', 'i.inquiry_type', '=', 'it.inquiry_type_code')
                     ->join('customer as c', 'i.inquiry_customer', '=', 'c.customer_code')
@@ -70,6 +70,9 @@ class Inquiry extends Model
                     ->join('origin_inquiries as oi', 'i.inquiry_origin', '=', 'oi.origin_inquiry_code')
                     ->leftJoin('users as ut', function ($join) {
                         $join->on(DB::raw("JSON_CONTAINS(i.inquiry_teams, JSON_QUOTE(ut.user_code), '$')"), '=', DB::raw('1'));
+                    })
+                    ->leftJoin('product_divisions as pd', function ($join) {
+                        $join->on(DB::raw("JSON_CONTAINS(i.inquiry_product_division, JSON_QUOTE(pd.product_divisions_code), '$')"), '=', DB::raw('1'));
                     })
                     ->where('i.inquiry_soft_delete', 0)
                     ->where('i.inquiry_stage', $stage)

@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
-use App\Models\Goods;
 use App\Models\Inquiry;
 use App\Models\InquiryType;
 use App\Models\InquiryStatus;
 use App\Models\OriginInquiry;
+use App\Models\Product_divisions;
 
 class InquiryController extends Controller
 {
@@ -23,7 +23,7 @@ class InquiryController extends Controller
     public function index(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['inquiry.view']);
-        $goods = Goods::where('goods_soft_delete', 0)->select('goods_id', 'goods_code', 'goods_name')->get();
+        $product_divisions = Product_divisions::where('product_divisions_soft_delete', 0)->select('product_divisions_id', 'product_divisions_code', 'product_divisions_name')->get();
         $origin_inquiry = OriginInquiry::where('origin_inquiry_soft_delete', 0)->select('origin_inquiry_id', 'origin_inquiry_code', 'origin_inquiry_name')->get();
         $inquiry_type = InquiryType::where('inquiry_type_status_soft_delete', 0)->select('inquiry_type_id', 'inquiry_type_code', 'inquiry_type_name')->get();
         $inquiry_status = InquiryStatus::where('inquiry_status_soft_delete', 0)->select('inquiry_status_id', 'inquiry_status_code', 'inquiry_status_name')->get();
@@ -44,7 +44,7 @@ class InquiryController extends Controller
             'filterasal' => $filterasal,
             'filterkategori' => $filterkategori
         ];
-        return view('backend.pages.inquiry.index', compact('inquiry_type','inquiry_status','origin_inquiry','goods','search','filtertanggal','filterjenis','filteruser','filterstage','filterstatus','filterasal','filterkategori','filters'));
+        return view('backend.pages.inquiry.index', compact('inquiry_type','inquiry_status','origin_inquiry','product_divisions','search','filtertanggal','filterjenis','filteruser','filterstage','filterstatus','filterasal','filterkategori','filters'));
     }
 
     public function update_stage(Request $request)
