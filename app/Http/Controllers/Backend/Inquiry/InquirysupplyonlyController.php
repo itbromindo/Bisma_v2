@@ -70,7 +70,7 @@ class InquirysupplyonlyController extends Controller
         $getmonthtodayRoman = $romanMonths[$getmonthtoday] ?? $getmonthtoday;
         
         $code_header = $this->setcode($getcountheader, 'HEAISO', 6);
-        $code_inquiry = $request->input('nomor_left').'/'.$getcountheader.'/'.$getmonthtodayRoman.'/'.$getyeartoday;
+        $code_inquiry = $request->input('nomor_left').'/'.$getcountheader.'/BMM/'.$getmonthtodayRoman.'/'.$getyeartoday;
         // return json_encode($request->input('kategori'));
 
         $inquiry = $this->modelheader->create([
@@ -156,7 +156,7 @@ class InquirysupplyonlyController extends Controller
         ];
         $getmonthtodayRoman = $romanMonths[$getmonthtoday] ?? $getmonthtoday;
         
-        $code_inquiry = $request->input('nomor_left').'/'.$getcountheader.'/'.$getmonthtodayRoman.'/'.$getyeartoday;
+        $code_inquiry = $request->input('nomor_left').'/'.$getcountheader.'/BMM/'.$getmonthtodayRoman.'/'.$getyeartoday;
 
         $data = array(
             'data' => $request->all(),
