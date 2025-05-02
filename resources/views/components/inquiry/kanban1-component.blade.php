@@ -119,7 +119,7 @@
                             <ul class="users">
                                 @foreach($images as $img)
                                 <li class="users-item">
-                                    <img src="{{ $img }}" alt="user-photo">
+                                    <img src="{{ asset($img) }}" alt="user-photo">
                                 </li>
                                 @endforeach
                             </ul>
