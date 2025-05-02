@@ -63,7 +63,11 @@
                                 <span class="badge rounded-pill bg-success-50 text-success-500"
                                 >{{ $row->origin_inquiry_name }}</span>
                             </li>
-                            @foreach (json_decode($row->inquiry_product_division, true) as $divisi)
+                            @php
+                                $product_divisions = $row->product_divisions_name;
+                                $product_divisions = explode(',', $product_divisions);
+                            @endphp
+                            @foreach ($product_divisions as $divisi)
                             <li>
                                 <span class="badge rounded-pill bg-primary-50 text-primary-500"
                                 >{{ $divisi }}</span>
