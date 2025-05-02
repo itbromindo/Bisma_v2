@@ -164,21 +164,28 @@ class CustomerController extends Controller
     {
         $search = !empty($_GET['search']) ? $_GET['search'] : '%';
         $listdata = $this->model
-            ->select('customer_code as id', 'customer_name as text',
-                'customers_existing',
-                'customers_full_address',
-                'customers_phone',
-                'customers_email',
-                'customers_PIC',
-                'customers_npwp',
-                'customers_village',
-                'districts_code',
-                'cities_code',
-                'provinces_code'
+            ->select(
+                'customer.customer_code as id',
+                'customer.customer_name as text',
+                'customer.customers_existing',
+                'customer.customers_full_address',
+                'customer.customers_phone',
+                'customer.customers_email',
+                'customer.customers_PIC',
+                'customer.customers_npwp',
+                'customer.customers_village',
+                'customer.districts_code',
+                'cities.cities_code',
+                'cities.cities_name',
+                'provinces.provinces_code',
+                'provinces.provinces_name'
             )
-            ->where('customer_name', 'like', '%' . $search . '%')
-            ->where('customers_soft_delete', 0)
+            ->join('provinces', 'provinces.provinces_code', '=', 'customer.provinces_code')
+            ->join('cities', 'cities.cities_code', '=', 'customer.cities_code')
+            ->where('customer.customer_name', 'like', '%' . $search . '%')
+            ->where('customer.customers_soft_delete', 0)
             ->get();
+
 
         return response()->json($listdata);
     }

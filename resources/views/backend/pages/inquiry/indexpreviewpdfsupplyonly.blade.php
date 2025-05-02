@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 @php
-    $details = json_decode($data['details'], true);
+    $details = json_decode($data['data']['details'], true);
 @endphp
 <html>
 <head>
@@ -61,7 +61,7 @@
                     <table>
                         <tr>
                             <td><strong>No</strong></td>
-                            <td>: FE/29663/BMM/III/2025</td>
+                            <td>: {{ $data['code_header'] ?? '-'}}</td>
                         </tr>
                         <tr>
                             <td><strong>Hal</strong></td>
@@ -70,16 +70,16 @@
                     </table>
                 </td>
                 <td width="30%" style="text-align: right;">
-                    {{ $data['permintaan_lokasi'] ?? '-'}}
+                    {{ $data['data']['permintaan_lokasi'] ?? '-'}}
                 </td>
             </tr>
         </table>
 
         <p>Kepada Yth.<br>
-            <strong>{{ $data['company'] ?? '-' }}</strong><br>
-            {{ $data['address'] ?? '-'}}, Telp: {{ $data['phone'] ?? '-'}}<br>
-            Email: {{ $data['email'] ?? '-'}}<br>
-            Attn: {{ $data['phone'] ?? '-'}}
+            <strong>{{ $data['data']['company'] ?? '-' }}</strong><br>
+            {{ $data['data']['address'] ?? '-'}}, Telp: {{ $data['data']['phone'] ?? '-'}}<br>
+            Email: {{ $data['data']['email'] ?? '-'}}<br>
+            Attn: {{ $data['data']['phone'] ?? '-'}}
         </p>
     
         <p>Dengan Hormat,</p>
@@ -119,24 +119,24 @@
 
                 <tr>
                     <td colspan="8" class="right">Harga Sebelum PPN:</td>
-                    <td class="right">{{ $data['harga_tanpa_ppn'] ?? '0' }}</td>
+                    <td class="right">{{ $data['data']['harga_tanpa_ppn'] ?? '0' }}</td>
                 </tr>
                 <tr>
                     <td colspan="8" class="right">Ongkir:</td>
-                    <td class="right">{{ $data['permintaan_ongkir'] ?? '0' }}</td>
+                    <td class="right">{{ $data['data']['permintaan_ongkir'] ?? '0' }}</td>
                 </tr>
                 <tr>
                     <td colspan="8" class="right">PPN:</td>
-                    <td class="right">{{ $data['harga_ppn'] ?? '0' }}</td>
+                    <td class="right">{{ $data['data']['harga_ppn'] ?? '0' }}</td>
                 </tr>
                 <tr>
                     <td colspan="8" class="right"><b>Total:</b></td>
-                    <td class="right"><b>{{ $data['harga_total'] ?? '0' }}</b></td>
+                    <td class="right"><b>{{ $data['data']['harga_total'] ?? '0' }}</b></td>
                 </tr>
             </tbody>
         </table>
     
-        <p>
+        <!-- <p>
             GRATIS* <br>
             <br>
             Manage Alat Pemadam Api dengan Aplikasi FireCek - Info Detail<br>
@@ -145,15 +145,15 @@
             3. Fire Analysis<br>
             4. Inventory Control<br>
             5. Cost Estimation<br>
-        </p>
+        </p> -->
     
         <p>Syarat & Ketentuan:
             <br>
-            {!! $data['keterangan'] ?? '-' !!}
+            {!! $data['data']['keterangan'] ?? '-' !!}
             <br>
         </p>
 
-        <p>
+        <!-- <p>
             EMAIL PERUSAHAAN YANG BERLAKU ADALAH ALAMAT EMAIL YANG MENGGUNAKAN AKUN RESMI PERUSAHAAN<br>
             CONTOH : XXX@BROMINDO.COM<br>
             DILUAR AKUN RESMI PERUSAHAAN EMAIL DIANGGAP TIDAK SAH<br>
@@ -172,7 +172,7 @@
             <br>
             <b>Dhevia</b><br>
             08882420888<br>
-        </p>
+        </p> -->
     </div>
     
 </body>

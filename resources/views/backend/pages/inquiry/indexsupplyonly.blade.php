@@ -234,7 +234,7 @@ Inquiry - Admin Panel
                                 <label><b>Stock</b></label>
                                 <!-- <input class="form-control" type="text"> -->
                                  <select class="form-control" id="permintaan_stock">
-                                    <option value="1">Gudang Semarang</option>
+                                    <option value="WRH0001">Gudang Semarang</option>
                                  </select>
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
@@ -359,7 +359,7 @@ Inquiry - Admin Panel
                     <div class="row">
                         <div class="col-md-6">
                             <label for="quantity" class="form-label">Quantity</label>
-                            <input type="number" class="form-control" id="quantity" value="" onchange="hitung()">
+                            <input type="number" class="form-control" id="quantity" value="" onInput="hitung()">
                         </div>
                         <div class="col-md-6">
                             <label for="satuan" class="form-label">Satuan</label>
@@ -369,11 +369,11 @@ Inquiry - Admin Panel
                     <div class="row mt-3">
                         <div class="col-md-6">
                             <label for="hargaPricelist" class="form-label">Harga pricelist</label>
-                            <input type="text" class="form-control" id="hargaPricelist" value="" readonly>
+                            <input type="number" class="form-control" id="hargaPricelist" value="" readonly>
                         </div>
                         <div class="col-md-6">
                             <label for="hargaNet" class="form-label">Harga NET (End user)</label>
-                            <input type="text" class="form-control" id="hargaNet" value="" onchange="hitung()" readonly>
+                            <input type="number" class="form-control" id="hargaNet" value="" onInput="hitung()" readonly>
                         </div>
                     </div>
                     <div class="mt-3">
@@ -467,7 +467,7 @@ Inquiry - Admin Panel
             var data = e.params.data;
             $('#company').val(data.text);
             $('#address').val(data.customers_full_address);
-            $('#city').val(data.provinces_code+" & "+data.cities_code);
+            $('#city').val(data.provinces_name+" & "+data.cities_name);
             $('#phone').val(data.customers_phone);
             $('#email').val(data.customers_email);
         }).on("select2:unselect", function (e) {
@@ -606,10 +606,12 @@ Inquiry - Admin Panel
         } else {
             $('#namaBarangCombo').addClass('hidden');
             $('#namaBarangText').removeClass('hidden');
-
+            
             $('#satuan').removeAttr('readonly');
             $('#hargaPricelist').removeAttr('readonly');
             $('#hargaNet').removeAttr('readonly');
+            $('#hargaPricelist').val(0);
+            $('#hargaNet').val(0);
             // $('#hargaTotal').removeAttr('readonly');
         }
     }
@@ -675,7 +677,8 @@ Inquiry - Admin Panel
         let kodebarang = $('#namaBarang').val();
 
         // Hitung harga total awal
-        let hargaTotal = (quantity * hargaNet) * (1 + ppn / 100);
+        // let hargaTotal = (quantity * hargaNet) * (1 + ppn / 100);
+        let hargaTotal = (quantity * hargaNet);
 
         $('#tbody').append(`
             <tr>
@@ -867,8 +870,19 @@ Inquiry - Admin Panel
         // Tambahkan token CSRF
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
 
-        postdata.append('nama_customer', document.getElementById('nama_customer').value); 
-        postdata.append('user_code', document.getElementById('user_code').value); 
+        postdata.append('nama_customer', document.getElementById('nama_customer').value);
+
+        var user_code = document.getElementById('user_code').value;
+        if(user_code == 1) {
+            postdata.append('user_code', "Reseller");
+        } else if (user_code == 2) {
+            postdata.append('user_code', "End User");
+        } else if (user_code == 3) {
+            postdata.append('user_code', "Kontraktor");
+        } else {
+            postdata.append('user_code', "Reseller");
+        }
+        // postdata.append('user_code', document.getElementById('user_code').value); 
         postdata.append('company', document.getElementById('company').value); // nama customer
         postdata.append('address', document.getElementById('address').value); 
         postdata.append('city', document.getElementById('city').value); 
@@ -890,8 +904,10 @@ Inquiry - Admin Panel
         postdata.append('harga_ppn', document.getElementById('harga_ppn').value);
         postdata.append('harga_tanpa_ppn', document.getElementById('harga_tanpa_ppn').value);
         postdata.append('kategori', datakategori);
+        postdata.append('nomor_left', datakategori[0]);
 
-
+        // console.log("datakategori",datakategori[0]);
+        // return;
 
         // ambil detail
         var tbody = document.getElementById('tbody');
@@ -1031,6 +1047,7 @@ Inquiry - Admin Panel
         postdata.append('harga_ppn', document.getElementById('harga_ppn').value);
         postdata.append('harga_tanpa_ppn', document.getElementById('harga_tanpa_ppn').value);
         postdata.append('kategori', datakategori);
+        postdata.append('nomor_left', datakategori[0]);
 
 
         var tbody = document.getElementById('tbody');
@@ -1081,6 +1098,8 @@ Inquiry - Admin Panel
             let iframe = document.getElementById('iframePreview');
             iframe.src = url;
             $('.pph-input-data').css('display','none');
+            $('#header_form_nama').addClass('hidden');
+            $('#header_form_permintaan').addClass('hidden');
             $('#modalpreview').modal('show');
         } catch (error) {
             console.error('Error:', error);
@@ -1091,6 +1110,8 @@ Inquiry - Admin Panel
 
     function showppn() {
         $('.pph-input-data').css('display','block');
+        $('#header_form_nama').removeClass('hidden');
+        $('#header_form_permintaan').removeClass('hidden');
     }
 </script>
 
