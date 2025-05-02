@@ -75,11 +75,11 @@ class InquirysupplyonlyController extends Controller
 
         $inquiry = $this->modelheader->create([
             'inquiry_code' => $code_inquiry, // FS/5643/PMS/I/2024
-            'inquiry_type' => '', // IT0001
+            'inquiry_type' => 'IT0001', // IT0001
             'inquiry_start_date' => date("Y-m-d h:i:s"), // 2024-04-02 22:18:39
             'inquiry_end_date' => date("Y-m-d h:i:s"), // 2024-04-02 22:18:39
             'inquiry_customer' => $request->input('nama_customer') ?? '', // CSR000008
-            'inquiry_origin' => '', // ORIGIN003
+            'inquiry_origin' => 'ORIGIN001', // ORIGIN003
             'inquiry_stage' => 'STATUS001', // STATUS009
             'inquiry_stage_progress' => 'in progress', // in progress
             'inquiry_product_division' => json_encode(
