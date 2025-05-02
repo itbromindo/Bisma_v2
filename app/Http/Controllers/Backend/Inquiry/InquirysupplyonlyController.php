@@ -79,7 +79,7 @@ class InquirysupplyonlyController extends Controller
             'inquiry_start_date' => date("Y-m-d h:i:s"), // 2024-04-02 22:18:39
             'inquiry_end_date' => date("Y-m-d h:i:s"), // 2024-04-02 22:18:39
             'inquiry_customer' => $request->input('nama_customer') ?? '', // CSR000008
-            'inquiry_origin' => 'ORIGIN001', // ORIGIN003
+            'inquiry_origin' => 'OI013', // ORIGIN003
             'inquiry_stage' => 'STATUS001', // STATUS009
             'inquiry_stage_progress' => 'in progress', // in progress
             'inquiry_product_division' => json_encode(
