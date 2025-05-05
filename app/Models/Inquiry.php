@@ -113,6 +113,8 @@ class Inquiry extends Model
             $data->whereRaw("JSON_CONTAINS(i.inquiry_product_division, '\"{$filters['filterkategori']}\"')");
         }
 
+        $data->orderBy('i.inquiry_created_at', 'desc');
+
         return $data->get();
     }
 
