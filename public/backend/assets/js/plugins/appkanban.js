@@ -687,11 +687,13 @@
             $('.d-inquiry-user-telp').text(inquiry.users_personal_phone);
             $('.d-inquiry-origin').text(inquiry.origin_inquiry_name);
             $('.d-inquiry-status').text(inquiry.inquiry_status_name);
+            
             let htmlInquiryProducts = '';
-            if(inquiry.inquiry_product_division) {
+            if(inquiry.product_divisions_name) {
+              let product_divisions = inquiry.product_divisions_name;
+              let division_names = product_divisions.split(",");
               htmlInquiryProducts += `<ul class="d-flex"><li class="me-2">:</li>`;
-              let array = JSON.parse(inquiry.inquiry_product_division); 
-              array.forEach(value => {
+              division_names.forEach(value => {
                 htmlInquiryProducts += `<li class="me-2">
                   <span class="badge rounded-pill bg-primary-50 text-primary-500">${value}</span>
                 </li>`;
