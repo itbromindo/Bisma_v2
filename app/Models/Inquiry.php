@@ -143,7 +143,8 @@ class Inquiry extends Model
                     'oi.origin_inquiry_name',
                     'p.provinces_name',
 	                'c2.cities_name',
-                    'w.warehouse_name' 
+                    'w.warehouse_name',
+                    DB::raw('GROUP_CONCAT(DISTINCT pd.product_divisions_name) as product_divisions_name')
                 )
                 ->join('customer as c', 'i.inquiry_customer', '=', 'c.customer_code')
                 ->join('users as u', 'i.inquiry_created_by', '=', 'u.user_code')
@@ -153,6 +154,9 @@ class Inquiry extends Model
                 ->join('provinces as p', 'c.provinces_code', '=', 'p.provinces_code') 
                 ->join('cities as c2', 'c.cities_code', '=', 'c2.cities_code') 
                 ->join('warehouse as w', 'w.warehouse_code', '=', 'i.inquiry_warehouse')
+                ->leftJoin('product_divisions as pd', function ($join) {
+                    $join->on(DB::raw("JSON_CONTAINS(i.inquiry_product_division, JSON_QUOTE(pd.product_divisions_code), '$')"), '=', DB::raw('1'));
+                })
                 ->where('i.inquiry_id', $id)
                 ->first();
 
