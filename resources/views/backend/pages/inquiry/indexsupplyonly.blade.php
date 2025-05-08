@@ -645,14 +645,6 @@ Inquiry - Admin Panel
     }
 
     function tambahlist() {
-        $('#modalinput').modal('hide');
-
-        $('#table_misi').removeClass('hidden');
-        $('#new_misi').addClass('hidden');
-        $('#header_form_nama').removeClass('hidden');
-        $('#header_form_permintaan').removeClass('hidden');
-        $('.pph-input-data').css('display','block');
-
         const checkreq = $('#requestProdukSwitch').prop('checked');
         let namaBarang, status, stok;
 
@@ -666,6 +658,16 @@ Inquiry - Admin Panel
             status = '<p style="color: red;">Tidak ditemukan disistem</p>';
             stok = 0;
             code_status = 3; // not value in system
+
+            if(namaBarang == null || namaBarang == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Mohon isi nama barang terlebih dahulu!'
+                });
+
+                return;
+            }
         }
 
         let quantity = $('#quantity').val();
@@ -679,6 +681,35 @@ Inquiry - Admin Panel
         // Hitung harga total awal
         // let hargaTotal = (quantity * hargaNet) * (1 + ppn / 100);
         let hargaTotal = (quantity * hargaNet);
+
+        if(satuan == null || satuan == "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Mohon isi satuan terlebih dahulu!'
+            });
+
+            return;
+        }
+
+        if(hargaNet == null || hargaNet == "" || hargaNet == 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Harga Net tidak boleh kosong!'
+            });
+
+            return;
+        }
+
+        $('#modalinput').modal('hide');
+
+        $('#table_misi').removeClass('hidden');
+        $('#new_misi').addClass('hidden');
+        $('#header_form_nama').removeClass('hidden');
+        $('#header_form_permintaan').removeClass('hidden');
+        $('.pph-input-data').css('display','block');
+
 
         $('#tbody').append(`
             <tr>
