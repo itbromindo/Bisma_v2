@@ -230,12 +230,12 @@ Inquiry - Admin Panel
                                 </div>
                                 <input type="hidden" id="kategoriInput" name="kategori">
                             </div>
-                            <div class="fromGroup horizontal-form mb-3">
+                            <div class="fromGroup horizontal-form mb-3" id="header_form_gudang">
                                 <label><b>Stock</b></label>
-                                <!-- <input class="form-control" type="text"> -->
-                                 <select class="form-control" id="permintaan_stock">
-                                    <option value="WRH0001">Gudang Semarang</option>
-                                 </select>
+                                <input class="form-control" type="hidden" id="permintaan_stock_name"> 
+                                <select class="form-control" id="permintaan_stock" style="width: 100%;">
+                                    <option value="" disabled selected>Pilih Gudang</option>
+                                </select>
                             </div>
                             <div class="fromGroup horizontal-form mb-3">
                                 <label><b>Spesifikasi</b></label>
@@ -463,6 +463,7 @@ Inquiry - Admin Panel
 
             console.log(datakategori);
         }); 
+
         $('#nama_customer').on('select2:select', function(e) {
             var data = e.params.data;
             $('#company').val(data.text);
@@ -522,11 +523,42 @@ Inquiry - Admin Panel
                 cache: true
             }
         });
+
+        $('#permintaan_stock').on('select2:select', function(e) {
+            var data = e.params.data;
+            $('#permintaan_stock_name').val(data.text);
+            // $('#address').val(data.customers_full_address);
+            // $('#city').val(data.provinces_code+" & "+data.cities_code);
+            // $('#phone').val(data.customers_phone);
+            // $('#email').val(data.customers_email);
+        }).on("select2:unselect", function (e) {
+            // clear data
+        }).select2({
+            placeholder: "Pilih Gudang",
+            allowClear: true,
+            ajax: {
+                url: '/admin/combowarehouse',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term,
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            }
+        });
             
 
         $('#modalinput').on('shown.bs.modal', function () {
             $('#header_form_nama').addClass('hidden');
             $('#header_form_permintaan').addClass('hidden');
+            $('#header_form_gudang').addClass('hidden');
             $('.pph-input-data').css('display','none');
             
             $('#namaBarang').on('select2:select', function(e) {
@@ -574,6 +606,7 @@ Inquiry - Admin Panel
             // Tampilkan kembali Select2 di luar modal saat modal ditutup
             $('#header_form_nama').removeClass('hidden');
             $('#header_form_permintaan').removeClass('hidden');
+            $('#header_form_gudang').removeClass('hidden');
             $('.pph-input-data').css('display','block');
         });
     
@@ -581,6 +614,7 @@ Inquiry - Admin Panel
             // Jika tombol close diklik, pastikan Select2 kembali tampil
             $('#header_form_nama').removeClass('hidden');
             $('#header_form_permintaan').removeClass('hidden');
+            $('#header_form_gudang').removeClass('hidden');
             $('.pph-input-data').css('display','block');
         });
     });
@@ -708,6 +742,7 @@ Inquiry - Admin Panel
         $('#new_misi').addClass('hidden');
         $('#header_form_nama').removeClass('hidden');
         $('#header_form_permintaan').removeClass('hidden');
+        $('#header_form_gudang').removeClass('hidden');
         $('.pph-input-data').css('display','block');
 
 
@@ -928,7 +963,7 @@ Inquiry - Admin Panel
         postdata.append('permintaan_ongkir', document.getElementById('permintaan_ongkir').value); 
         // postdata.append('kategoriInput', document.getElementById('kategoriInput').value); 
         postdata.append('permintaan_stock', document.getElementById('permintaan_stock').value); 
-        postdata.append('permintaan_stock_name', "Gudang Semarang"); 
+        postdata.append('permintaan_stock_name', document.getElementById('permintaan_stock_name').value); 
         postdata.append('permintaan_spesifikasi', document.getElementById('permintaan_spesifikasi').value); 
         postdata.append('keterangan', getEditorValue()); 
         postdata.append('harga_total', document.getElementById('harga_keseluruhan_hide').value);
@@ -1071,7 +1106,7 @@ Inquiry - Admin Panel
         postdata.append('permintaan_ongkir', document.getElementById('permintaan_ongkir').value); 
         // postdata.append('kategoriInput', document.getElementById('kategoriInput').value); 
         postdata.append('permintaan_stock', document.getElementById('permintaan_stock').value); 
-        postdata.append('permintaan_stock_name', "Gudang Semarang"); 
+        postdata.append('permintaan_stock_name', document.getElementById('permintaan_stock_name').value); 
         postdata.append('permintaan_spesifikasi', document.getElementById('permintaan_spesifikasi').value); 
         postdata.append('keterangan', getEditorValue()); 
         postdata.append('harga_total', document.getElementById('harga_keseluruhan_hide').value);
@@ -1131,6 +1166,7 @@ Inquiry - Admin Panel
             $('.pph-input-data').css('display','none');
             $('#header_form_nama').addClass('hidden');
             $('#header_form_permintaan').addClass('hidden');
+            $('#header_form_gudang').addClass('hidden');
             $('#modalpreview').modal('show');
         } catch (error) {
             console.error('Error:', error);
@@ -1143,6 +1179,7 @@ Inquiry - Admin Panel
         $('.pph-input-data').css('display','block');
         $('#header_form_nama').removeClass('hidden');
         $('#header_form_permintaan').removeClass('hidden');
+        $('#header_form_gudang').removeClass('hidden');
     }
 </script>
 
