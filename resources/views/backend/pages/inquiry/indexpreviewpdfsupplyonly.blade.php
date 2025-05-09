@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 @php
     $details = json_decode($data['data']['details'], true);
+    $harga_sebelum_ppn = 0;
 @endphp
 <html>
 <head>
@@ -104,22 +105,37 @@
             </thead>
             <tbody>
                 @foreach($details as $d)
+                    @php
+                        if($d['status'] == '3'){
+                            $status = '(indent)';
+                        }else{
+                            $status = '';
+                        }
+                    @endphp
                     <tr>
                         <td>{{ $d['no'] ?? '0' }}</td>
-                        <td>{{ $d['produk_name'] ?? '' }}</td>
+                        <td>{{ $d['produk_name'] ?? '' }} {{$status}}</td>
                         <td class="center">{{ $d['qty'] ?? '' }}</td>
                         <td>{{ $d['satuan'] ?? '' }}</td>
-                        <td class="right">{{ number_format($d['harga_unit'],0) ?? '' }}</td>
-                        <td class="right">{{ $d['taxes'] ?? '' }}</td>
+                        <td class="right">{{ number_format($d['harga_net'],0) ?? '' }}</td>
                         <td class="right">0</td>
                         <td class="right">0</td>
-                        <td class="right">{{ $d['harga_total'] ?? '' }}</td>
+                        <td class="right">0</td>
+                        <td class="right">{{ number_format($d['qty']*$d['harga_net'],0) }}</td>
                     </tr>
+                    @php
+                        $harga_sebelum_ppn += $d['qty']*$d['harga_net'];
+                    @endphp
                 @endforeach
+
+                @php
+                    $harga_ppn = $data['data']['harga_total'] - $harga_sebelum_ppn;
+                    $harga_akhir = $data['data']['harga_total'] + $data['data']['permintaan_ongkir'];
+                @endphp
 
                 <tr>
                     <td colspan="8" class="right">Harga Sebelum PPN:</td>
-                    <td class="right">{{ number_format($data['data']['harga_tanpa_ppn'],0) ?? '0' }}</td>
+                    <td class="right">{{ number_format($harga_sebelum_ppn,0) ?? '0' }}</td>
                 </tr>
                 <tr>
                     <td colspan="8" class="right">Ongkir:</td>
@@ -127,11 +143,11 @@
                 </tr>
                 <tr>
                     <td colspan="8" class="right">PPN:</td>
-                    <td class="right">{{ number_format($data['data']['harga_ppn'],0) ?? '0' }}</td>
+                    <td class="right">{{ number_format($harga_ppn,0) ?? '0' }}</td>
                 </tr>
                 <tr>
                     <td colspan="8" class="right"><b>Total:</b></td>
-                    <td class="right"><b>{{ number_format($data['data']['harga_total']+$data['data']['permintaan_ongkir'],2) ?? '0' }}</b></td>
+                    <td class="right"><b>{{ number_format($harga_akhir,0) ?? '0' }}</b></td>
                 </tr>
             </tbody>
         </table>

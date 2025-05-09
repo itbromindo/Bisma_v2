@@ -153,6 +153,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     // warehouse
     Route::resource('warehouse', App\Http\Controllers\Backend\WarehouseController::class);
     Route::any('warehouse/{id}', [App\Http\Controllers\Backend\WarehouseController::class, 'update']);
+    Route::get('combowarehouse', [App\Http\Controllers\Backend\WarehouseController::class, 'combo']);
 
     // customer
     Route::resource('customer', App\Http\Controllers\Backend\CustomerController::class);

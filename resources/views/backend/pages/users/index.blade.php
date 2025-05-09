@@ -757,7 +757,21 @@ Users - Admin Panel
 
     }
 
+    function getBaseURL() {
+        var host = window.location.hostname;
+        var protocol = window.location.protocol;
+        var port = window.location.port ? ':' + window.location.port : '';
+        
+        // Deteksi jika host adalah localhost atau 127.0.0.1
+        if (host === "localhost" || host === "127.0.0.1") {
+            return protocol + "//" + host + port + "/";
+        } else {
+            return protocol + "//" + host + port + "/public/";
+        }
+    }
+
     function showedit(id){
+        var baseURL = getBaseURL();
         $.ajax({
             type: "GET",
             url: "/admin/users/"+id,
@@ -776,17 +790,17 @@ Users - Admin Panel
                 var imgElement3 = document.getElementById("photottd_profile");
 
                 if (imgElement) {
-                    imgElement.src = "../"+data.users_photo;
+                    imgElement.src = baseURL + data.users_photo;
                 }
 
                 if (imgElement2) {
                     $('#iconpreviewktp').removeClass('hidden');
-                    imgElement2.src = "../"+data.users_ktp_picture;
+                    imgElement2.src = baseURL + data.users_ktp_picture;
                 }
 
                 if (imgElement3) {
                     $('#iconpreviewttd').removeClass('hidden');
-                    imgElement3.src = "../"+data.users_signature;
+                    imgElement3.src = baseURL + data.users_signature;
                 }
 
                 document.getElementById('users_office_phone').value = data.users_office_phone; 
