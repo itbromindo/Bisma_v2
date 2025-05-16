@@ -59,25 +59,59 @@ class InquirysupplyonlyController extends Controller
             return response()->json($messages);
 		}
 
-        $code_header = $this->setcode($this->modelheader->count() + 1, 'HEAISO', 6);
+        $getcountheader = $this->modelheader->count() + 1;
+        $getyeartoday = date('Y');
+        $getmonthtoday = date('m');
+        $romanMonths = [
+            '01' => 'I', '02' => 'II', '03' => 'III', '04' => 'IV',
+            '05' => 'V', '06' => 'VI', '07' => 'VII', '08' => 'VIII',
+            '09' => 'IX', '10' => 'X', '11' => 'XI', '12' => 'XII'
+        ];
+        $getmonthtodayRoman = $romanMonths[$getmonthtoday] ?? $getmonthtoday;
+        
+        $code_header = $this->setcode($getcountheader, 'HEAISO', 6);
+        $code_inquiry = $request->input('nomor_left').'/'.$getcountheader.'/BMM/'.$getmonthtodayRoman.'/'.$getyeartoday;
+        // return json_encode($request->input('kategori'));
 
         $inquiry = $this->modelheader->create([
-            'inquiry_code' => $code_header,
-            'inquiry_type' => 'Supply Only',
-            'inquiry_soft_delete' => 0,
-            // 'inquiry_start_date' => '',
-            // 'inquiry_end_date' => '',
-            'inquiry_customer' => $request->input('nama_customer') ?? '',
-            'inquiry_origin' => $request->input('permintaan_dari') ?? '', 
+            'inquiry_code' => $code_inquiry, // FS/5643/PMS/I/2024
+            'inquiry_type' => 'IT0001', // IT0001
+            'inquiry_start_date' => date("Y-m-d h:i:s"), // 2024-04-02 22:18:39
+            'inquiry_end_date' => date("Y-m-d h:i:s"), // 2024-04-02 22:18:39
+            'inquiry_customer' => $request->input('nama_customer') ?? '', // CSR000008
+            'inquiry_origin' => 'OI013', // ORIGIN003
+            'inquiry_stage' => 'STATUS001', // STATUS009
+            'inquiry_stage_progress' => 'in progress', // in progress
             'inquiry_product_division' => json_encode(
-                $request->input('kategori') ?? '{}'
-            ), // belum 
-            'inquiry_notes' => $request->input('keterangan') ?? '',
-            'inquiry_warehouse' => $request->input('permintaan_stock') ?? '', // ini salah
-            'inquiry_tax' => $request->input('harga_ppn') ?? 0,
-            'inquiry_total_no_tax' => $request->input('harga_tanpa_ppn') ?? 0,
-            'inquiry_grand_total' => $request->input('harga_total') ?? 0,
-            // 'inquiry_date_and_location' => '', // ini belum ada di db untuk kolomnya
+                is_array($request->input('kategori'))
+                ? $request->input('kategori')
+                : explode(',', $request->input('kategori') ?? '')
+            ), // ["FS", "FE", "FH"]
+            'inquiry_warehouse' => $request->input('permintaan_stock') ?? '', // WRH0001
+            'inquiry_customer_type' => $request->input('user_code') ?? '', // End User
+            'inquiry_oc' => 0, // 0
+            'inquiry_expedition' => $request->input('permintaan_pengiriman_name') ?? '', // Kurir Bromindo
+            'inquiry_expedition_service' => '', // 
+            'inquiry_expedition_route' => '', // 
+            'inquiry_expedition_estimation_date' => '', // 
+            'inquiry_shipping_cost' => $request->input('permintaan_ongkir') ?? 0, // 15000.00
+            'inquiry_wording_card_header' => '', // 
+            'inquiry_tax' => $request->input('harga_ppn') ?? 0, // 0.00
+            'inquiry_total_no_tax' => $request->input('harga_tanpa_ppn') ?? 0, // 0.00
+            'inquiry_grand_total' => $request->input('harga_total') ?? 0, // 0.00
+            'inquiry_product_grand_total_status' => '', // 
+            'inquiry_sales' => 'admin1', // admin1 ??
+            'inquiry_footer_note_inquiry' => '', // 
+            'inquiry_flag_quote' => '', // 
+            'inquiry_teams' => '["admin1", "user1"]', // ["admin1", "user1"] ??
+            'inquiry_created_at' => date("Y-m-d h:i:s"),
+            'inquiry_created_by' => Session::get('user_code'),
+            'inquiry_updated_at' => '',
+            'inquiry_updated_by' => '',
+            'inquiry_deleted_at' => '',
+            'inquiry_deleted_by' => '',
+            'inquiry_notes' => $request->input('keterangan') ?? '', // lorem ipsum
+            'inquiry_soft_delete' => 0
         ]);
 
         // Ambil data detail dari request (dalam format JSON)
@@ -112,7 +146,22 @@ class InquirysupplyonlyController extends Controller
 
     public function previewpdf(Request $request) {
 
-        $data = $request->all();
+        $getcountheader = $this->modelheader->count() + 1;
+        $getyeartoday = date('Y');
+        $getmonthtoday = date('m');
+        $romanMonths = [
+            '01' => 'I', '02' => 'II', '03' => 'III', '04' => 'IV',
+            '05' => 'V', '06' => 'VI', '07' => 'VII', '08' => 'VIII',
+            '09' => 'IX', '10' => 'X', '11' => 'XI', '12' => 'XII'
+        ];
+        $getmonthtodayRoman = $romanMonths[$getmonthtoday] ?? $getmonthtoday;
+        
+        $code_inquiry = $request->input('nomor_left').'/'.$getcountheader.'/BMM/'.$getmonthtodayRoman.'/'.$getyeartoday;
+
+        $data = array(
+            'data' => $request->all(),
+            'code_header' => $code_inquiry,
+        );
 
         $pdf = Pdf::loadView('backend.pages.inquiry.indexpreviewpdfsupplyonly', compact('data'));
         return $pdf->stream('preview.pdf');
