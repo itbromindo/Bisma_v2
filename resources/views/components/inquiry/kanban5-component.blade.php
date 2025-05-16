@@ -122,7 +122,7 @@
                             @endphp
                             <ul class="users">
                                 @foreach($images as $img)
-                                <li class="users-item">
+                                <li class="users-item rounded-circle">
                                     <img src="{{ asset($img) }}" alt="user-photo">
                                 </li>
                                 @endforeach
