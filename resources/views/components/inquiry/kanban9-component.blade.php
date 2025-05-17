@@ -3,7 +3,7 @@
         <div class="kanban-board-header">
             <h5>{{ $inquiry->inquiry_status_name }}</h5>
         </div>
-        <div id="task-inquiry-9">
+        <div id="task-inquiry-9" class="kanban-section">
             <div id="inquiry-9" class="kanban-column">
                 <input type="hidden" value="{{ $inquiry->inquiry_status_code }}" class="inquiry-stage">
                 @foreach($data as $row)

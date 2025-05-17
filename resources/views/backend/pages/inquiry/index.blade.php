@@ -843,6 +843,11 @@ Inquiry - Admin Panel
       display: none;
     }
 
+    .kanban-section {
+      height: 80vh;
+      overflow: auto;
+    }
+
 </style>
 <script>
   $(document).ready(function () {
