@@ -12,26 +12,26 @@
   // KANBAN BOARD
 
   // Dapatkan semua kolom kanban
-  let columnsCustome = Array.from(document.querySelectorAll(".kanban-column"));
+  let columnsCustome = Array.from(document.querySelectorAll(".kanban-columnXX"));
 
   // Inisialisasi Dragula
   let drake = dragula(columnsCustome, {
       removeOnSpill: false,
       copy: false,
       moves: function (el, container, handle) {
-          return el.classList.contains("card-priority");
+          return el.classList.contains("card-priorityXX");
       },
       accepts: function (el, target, source, sibling) {
-          return target.classList.contains("kanban-column");
+          return target.classList.contains("kanban-columnXX");
       }
   });
 
   // Event listener untuk saat elemen dijatuhkan ke kolom baru
   drake.on('drop', function (el, target, source, sibling) {
     if (el && target) {
-      let inquiryStage = target.querySelector('.inquiry-stage');
+      let inquiryStage = target.querySelector('.inquiry-stageXX');
       inquiryStage = inquiryStage.value;
-      let inquiryId = target.querySelector('.inquiry-id');
+      let inquiryId = target.querySelector('.inquiry-idXX');
       inquiryId = inquiryId.value;
       updateInquiryStage(inquiryId, inquiryStage);
     }
@@ -40,9 +40,9 @@
   // Jika elemen kembali ke tempat lama
   drake.on('cancel', function (el, container, source) {
     if (el && target) {
-      let inquiryStage = target.querySelector('.inquiry-stage');
+      let inquiryStage = target.querySelector('.inquiry-stageXX');
       inquiryStage = inquiryStage.value;
-      let inquiryId = target.querySelector('.inquiry-id');
+      let inquiryId = target.querySelector('.inquiry-idXX');
       inquiryId = inquiryId.value;
       updateInquiryStage(inquiryId, inquiryStage);
     }
