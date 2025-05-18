@@ -92,6 +92,11 @@ Inquiry - Admin Panel
         left: 50%;
         transform: translate(-50%, -50%);
     }
+
+    /* .kategori-item.selected {
+        border: 2px solid #007bff;
+        background-color: #e6f0ff;
+    } */
 </style>
 
 <div class="content-wrapper">
@@ -119,135 +124,178 @@ Inquiry - Admin Panel
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5>Detail Customer</h5>
                         </div>
-
                         <div class="card-body">
-                            <!-- Form Nama -->
-                            <div class="fromGroup horizontal-form mb-3" id="header_form_nama">
-                                <label><b>Nama</b></label>
-                                <select class="form-control" id="nama_customer" style="width: 100%;">
-                                    <option value="" disabled selected>Pilih Nama</option>
-                                </select>
+                            <!-- Nama -->
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label"><b>Nama</b></label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="nama_customer" style="width: 100%;">
+                                        <option value="" disabled selected>Pilih Nama</option>
+                                    </select>
+                                </div>
                             </div>
 
-                            <!-- Form User -->
-                            <div class="fromGroup horizontal-form mb-3">
-                                <label><b>User</b></label>
-                                <select class="form-control" id="user_code">
-                                    <option value="1">Reseller</option>
-                                    <option value="2">End User</option>
-                                    <option value="3">Kontraktor</option>
-                                </select>
+                            <!-- User -->
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label"><b>User</b></label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="user_code">
+                                        <option value="1">Reseller</option>
+                                        <option value="2">End User</option>
+                                        <option value="3">Kontraktor</option>
+                                    </select>
+                                </div>
                             </div>
 
-                            <!-- Form Perusahaan -->
-                            <div class="fromGroup horizontal-form mb-3">
-                                <label><b>Perusahaan</b></label>
-                                <input class="form-control" type="text" id="company">
+                            <!-- Perusahaan -->
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label"><b>Perusahaan</b></label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" type="text" id="company">
+                                </div>
                             </div>
 
-                            <!-- Form Alamat -->
-                            <div class="fromGroup horizontal-form mb-3">
-                                <label><b>Alamat</b></label>
-                                <input class="form-control" type="text" id="address">
+                            <!-- Alamat -->
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label"><b>Alamat</b></label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" type="text" id="address">
+                                </div>
                             </div>
 
-                            <!-- Form Prov & Kota -->
-                            <div class="fromGroup horizontal-form mb-3">
-                                <label><b>Prov & Kota</b></label>
-                                <input class="form-control" type="text" id="city">
+                            <!-- Prov & Kota -->
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label"><b>Prov & Kota</b></label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" type="text" id="city">
+                                </div>
                             </div>
 
-                            <!-- Form No. Tlpn -->
-                            <div class="fromGroup horizontal-form mb-3">
-                                <label><b>No. Tlpn</b></label>
-                                <input class="form-control" type="text" id="phone">
+                            <!-- Telepon -->
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label"><b>No. Tlpn</b></label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" type="text" id="phone">
+                                </div>
                             </div>
 
-                            <!-- Form Email -->
-                            <div class="fromGroup horizontal-form mb-3">
-                                <label><b>Email</b></label>
-                                <input class="form-control" type="text" id="email">
+                            <!-- Email -->
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label"><b>Email</b></label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" type="text" id="email">
+                                </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
+                <!-- Informasi Permintaan -->
                 <div class="col-xxl-6 col-xl-6 col-md-6">
                     <div class="card">
                         <div class="card-header d-flex justify-content-between align-items-center">
                             <h5>Informasi Permintaan</h5>
                         </div>
-                        
-                        <!-- ambil dari api raja ongkir -->
                         <div class="card-body">
-                            <div class="fromGroup horizontal-form mb-3" id="header_form_permintaan">
-                                <label><b>Dari</b></label>
-                                <input class="form-control" type="hidden" id="permintaan_dari_name"> 
-                                <select class="form-control" id="permintaan_dari" style="width: 100%;">
-                                    <option value="" disabled selected>Pilih Permintaan</option>
-                                </select>
-                            </div>
-                            <div class="fromGroup horizontal-form mb-3">
-                                <label><b>Lokasi</b></label>
-                                <input class="form-control" type="text" id="permintaan_lokasi" value="{{ $homebase }}, {{ $date }}">
-                            </div>
-                            <div class="fromGroup horizontal-form mb-3">
-                                <label><b>Pengiriman</b></label>
-                                <!-- <input class="form-control" type="text"> -->
-                                 <select class="form-control" id="permintaan_pengiriman">
-                                    <option value="1">Kurir Bromindo</option>
-                                 </select>
-                            </div>
-                            <div class="fromGroup horizontal-form mb-3">
-                                <label><b>Ongkir</b></label>
-                                <input class="form-control" type="text" id="permintaan_ongkir" value="" placeholder="0">
-                            </div>
-                            <div class="fromGroup horizontal-form mb-3">
-                                <label><b>Kategori</b></label>
-                                <!-- <input class="form-control" type="text"> -->
-                                <div class="kategori-group">
-                                    <div class="kategori-item" data-value="FE">
-                                        <div class="kategori-btn"></div>
-                                        <span>FE</span>
-                                    </div>
-                                    <div class="kategori-item" data-value="FA">
-                                        <div class="kategori-btn"></div>
-                                        <span>FA</span>
-                                    </div>
-                                    <div class="kategori-item" data-value="FH">
-                                        <div class="kategori-btn"></div>
-                                        <span>FH</span>
-                                    </div>
-                                    <div class="kategori-item" data-value="SE">
-                                        <div class="kategori-btn"></div>
-                                        <span>SE</span>
-                                    </div>
-                                    <div class="kategori-item" data-value="FS">
-                                        <div class="kategori-btn"></div>
-                                        <span>FS</span>
-                                    </div>
+                            <!-- Dari -->
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label"><b>Dari</b></label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" type="hidden" id="permintaan_dari_name">
+                                    <select class="form-control" id="permintaan_dari" style="width: 100%;">
+                                        <option value="" disabled selected>Pilih Permintaan</option>
+                                    </select>
                                 </div>
-                                <input type="hidden" id="kategoriInput" name="kategori">
                             </div>
-                            <div class="fromGroup horizontal-form mb-3" id="header_form_gudang">
-                                <label><b>Stock</b></label>
-                                <input class="form-control" type="hidden" id="permintaan_stock_name"> 
-                                <select class="form-control" id="permintaan_stock" style="width: 100%;">
-                                    <option value="" disabled selected>Pilih Gudang</option>
-                                </select>
+
+                            <!-- Lokasi -->
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label"><b>Lokasi</b></label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" type="text" id="permintaan_lokasi" value="{{ $homebase }}, {{ $date }}">
+                                </div>
                             </div>
-                            <div class="fromGroup horizontal-form mb-3">
-                                <label><b>Spesifikasi</b></label>
-                                <!-- <input class="form-control" type="text"> -->
-                                 <select class="form-control" id="permintaan_spesifikasi">
-                                    <option value="1">Low End</option>
-                                </select>
+
+                            <!-- Pengiriman -->
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label"><b>Pengiriman</b></label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="permintaan_pengiriman">
+                                        <option value="1">Kurir Bromindo</option>
+                                    </select>
+                                </div>
                             </div>
+
+                            <!-- Ongkir -->
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label"><b>Ongkir</b></label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" type="number" id="permintaan_ongkir" placeholder="0" oninput="updateGrandTotal()">
+                                </div>
+                            </div>
+
+                            <!-- Kategori -->
+                            <!-- <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label"><b>Kategori</b></label>
+                                <div class="col-sm-8">
+                                    <div class="kategori-group d-flex gap-2 flex-wrap">
+                                        <div class="kategori-item" data-value="FE">
+                                            <div class="kategori-btn"></div><span>FE</span>
+                                        </div>
+                                        <div class="kategori-item" data-value="FA">
+                                            <div class="kategori-btn"></div><span>FA</span>
+                                        </div>
+                                        <div class="kategori-item" data-value="FH">
+                                            <div class="kategori-btn"></div><span>FH</span>
+                                        </div>
+                                        <div class="kategori-item" data-value="SE">
+                                            <div class="kategori-btn"></div><span>SE</span>
+                                        </div>
+                                        <div class="kategori-item" data-value="FS">
+                                            <div class="kategori-btn"></div><span>FS</span>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="kategoriInput" name="kategori">
+                                </div>
+                            </div> -->
+
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label"><b>Kategori</b></label>
+                                <div class="col-sm-8">
+                                    <div class="kategori-group d-flex gap-2 flex-wrap" id="kategoriGroup">
+                                        {{-- Akan diisi oleh JavaScript --}}
+                                    </div>
+                                    <input type="hidden" id="kategoriInput" name="kategori">
+                                </div>
+                            </div>
+
+
+                            <!-- Gudang -->
+                            <div class="row mb-3 align-items-center">
+                                <label class="col-sm-4 col-form-label"><b>Stock</b></label>
+                                <div class="col-sm-8">
+                                    <input class="form-control" type="hidden" id="permintaan_stock_name">
+                                    <select class="form-control" id="permintaan_stock" style="width: 100%;">
+                                        <option value="" disabled selected>Pilih Gudang</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Spesifikasi -->
+                            <div class="row mb-3 align-items-center hidden">
+                                <label class="col-sm-4 col-form-label"><b>Spesifikasi</b></label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" id="permintaan_spesifikasi">
+                                        <option value="1">Low End</option>
+                                    </select>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
+
 
             <div class="row">
                 <div class="col-xxl-12 col-xl-12 col-md-12">
@@ -422,46 +470,40 @@ Inquiry - Admin Panel
             });
     });
 
-
-    // ClassicEditor
-    //     .create(document.querySelector('#editor'))
-    //     .then(editor => {
-            // editor.setData(`{!! old('content', $post->content ?? '') !!}`); // contoh value ambil dari dabaase
-            // editor.setData(`
-            //     1. Harga sudah termasuk PPN 11%. <br>
-            //     2. Pembayaran Melalui Cheque / Giro Atas Nama : PT. Patigeni Mitra Sejati dianggap lunas setelah Cheque / Giro dicairkan. Pembayaran melalui Transfer hanya melalui rekening 
-            //     BCA AN PT. Patigeni Mitra Sejati BCA Ungaran a/c IDR : 222068B111 Bank Mandiri Pemuda a/c : 1350078787577 Kami tidak bertanggung jawab atas transaksi diluar akun tersebut. <br>
-            //     3. Stock : Mohon konfirmasi sales. <br>
-            //     4. Franco : Jakarta, Semarang, Surabaya. <br>
-            //     5. Pembayaran : Cash Before Delivery. <br>
-            //     6. Validasi penawaran : 7 hari kerja. <br>
-            //     7. Harga tidak termasuk jasa instalasi (Supply Only). <br>
-            //     8. Barang yang sudah dibeli tidak dapat ditukar / dikembalikan. <br>
-            //     9. Email resmi perusahaan adalah email yang menggunakan domain @patigeni.com diluar akun tersebut dianggap tidak SAH. <br>
-            // `);
-
-        //     window.myEditor = editor;
-        // })
-        // .catch(error => {
-        //     console.error(error);
-        // });
-
     let datakategori = [];
 
     $(document).ready(function() {   
+        // console.log('list kategori', @json($listproduct));
+
+        const listProduct = @json($listproduct); // convert PHP to JSON for JS
+        const kategoriGroup = $('#kategoriGroup');
+
+        listProduct.forEach(item => {
+            const kategoriItem = `
+                <div class="kategori-item" data-value="${item.code}">
+                    <div class="kategori-btn"></div><span>${item.name}</span>
+                </div>
+            `;
+            kategoriGroup.append(kategoriItem);
+        });
+
+        // Optional: add click event to select a category
+        $(document).on('click', '.kategori-item', function () {
+            $('.kategori-item').removeClass('selected');
+            $(this).addClass('selected');
+            $('#kategoriInput').val($(this).data('value'));
+        });
+        
         $(".kategori-item").click(function () {
             let btn = $(this).find(".kategori-btn");
             btn.toggleClass("active"); // Toggle class active
 
-            // Update daftar kategori yang dipilih
             datakategori = $(".kategori-item .kategori-btn.active").map(function () {
                 return $(this).parent().data("value");
             }).get(); // Pastikan hasilnya array
 
-            // Konversi ke format JSON
             $("#kategoriInput").val(JSON.stringify(datakategori));
 
-            console.log(datakategori);
         }); 
 
         $('#nama_customer').on('select2:select', function(e) {
@@ -497,10 +539,6 @@ Inquiry - Admin Panel
         $('#permintaan_dari').on('select2:select', function(e) {
             var data = e.params.data;
             $('#permintaan_dari').val(data.text);
-            // $('#address').val(data.customers_full_address);
-            // $('#city').val(data.provinces_code+" & "+data.cities_code);
-            // $('#phone').val(data.customers_phone);
-            // $('#email').val(data.customers_email);
         }).on("select2:unselect", function (e) {
             // clear data
         }).select2({
@@ -527,10 +565,6 @@ Inquiry - Admin Panel
         $('#permintaan_stock').on('select2:select', function(e) {
             var data = e.params.data;
             $('#permintaan_stock_name').val(data.text);
-            // $('#address').val(data.customers_full_address);
-            // $('#city').val(data.provinces_code+" & "+data.cities_code);
-            // $('#phone').val(data.customers_phone);
-            // $('#email').val(data.customers_email);
         }).on("select2:unselect", function (e) {
             // clear data
         }).select2({
@@ -603,7 +637,6 @@ Inquiry - Admin Panel
         });
 
         $('#modalinput').on('hidden.bs.modal', function () {
-            // Tampilkan kembali Select2 di luar modal saat modal ditutup
             $('#header_form_nama').removeClass('hidden');
             $('#header_form_permintaan').removeClass('hidden');
             $('#header_form_gudang').removeClass('hidden');
@@ -611,7 +644,6 @@ Inquiry - Admin Panel
         });
     
         $('#closeModal').on('click', function () {
-            // Jika tombol close diklik, pastikan Select2 kembali tampil
             $('#header_form_nama').removeClass('hidden');
             $('#header_form_permintaan').removeClass('hidden');
             $('#header_form_gudang').removeClass('hidden');
@@ -621,13 +653,11 @@ Inquiry - Admin Panel
 
     function getEditorValue() {
         var content = window.myEditor.getData();
-        // console.log(content);
         return content;
     }
     
 
     function request() {
-        // console.log(value);
         const checkreq = $('#requestProdukSwitch').prop('checked');
         if (checkreq == false) {
             $('#namaBarangText').addClass('hidden');
@@ -636,7 +666,6 @@ Inquiry - Admin Panel
             $('#satuan').prop('readonly', true);
             $('#hargaPricelist').prop('readonly', true);
             $('#hargaNet').prop('readonly', true);
-            // $('#hargaTotal').prop('readonly', true);
         } else {
             $('#namaBarangCombo').addClass('hidden');
             $('#namaBarangText').removeClass('hidden');
@@ -646,7 +675,6 @@ Inquiry - Admin Panel
             $('#hargaNet').removeAttr('readonly');
             $('#hargaPricelist').val(0);
             $('#hargaNet').val(0);
-            // $('#hargaTotal').removeAttr('readonly');
         }
     }
 
@@ -712,8 +740,6 @@ Inquiry - Admin Panel
         let ppn = 12; // Default PPN 12%
         let kodebarang = $('#namaBarang').val();
 
-        // Hitung harga total awal
-        // let hargaTotal = (quantity * hargaNet) * (1 + ppn / 100);
         let hargaTotal = (quantity * hargaNet);
 
         if(satuan == null || satuan == "") {
@@ -780,7 +806,6 @@ Inquiry - Admin Panel
             </tr>
         `);
 
-        // Inisialisasi Select2 pada elemen yang baru ditambahkan
         $('.select2-ppn').select2({
             placeholder: "PPN",
             allowClear: true,
@@ -802,7 +827,6 @@ Inquiry - Admin Panel
             },
         });
 
-        // Update grand total setelah menambah item
         updateGrandTotal();
     }
 
@@ -823,13 +847,13 @@ Inquiry - Admin Panel
         let grandTotal = 0;
         let totalHargaTanpaTaxes = 0;
         let totalTaxes = 0;
+        let ongkir = parseFloat($("#permintaan_ongkir").val()) || 0;
 
         $(".harga-total").each(function () {
             let row = $(this).closest("tr");
             let quantity = parseFloat(row.find(".quantity-input").val()) || 0;
             let hargaNet = parseFloat(row.find(".harga-net").text()) || 0;
 
-            // Ambil elemen select PPN dengan pengecekan apakah ditemukan
             let ppnElement = row.find(".ppn-input");
             let ppnText = ppnElement.length > 0 ? ppnElement.val() : "0"; // Pastikan selalu ada nilai
             let ppn = parseFloat(ppnText.replace('%', '')) || 0; // Hapus simbol "%" jika ada, pastikan konversi angka
@@ -838,22 +862,18 @@ Inquiry - Admin Panel
             let taxAmount = hargaTanpaTaxes * (ppn / 100); // Pajak yang dikenakan
             let hargaTotal = hargaTanpaTaxes + taxAmount; // Harga setelah pajak
 
-            // Akumulasi total
             totalHargaTanpaTaxes += hargaTanpaTaxes;
             totalTaxes += taxAmount;
             grandTotal += hargaTotal;
         });
 
-        // Debugging di Console
-        // console.log("Total Harga Tanpa Taxes:", totalHargaTanpaTaxes.toFixed(2));
-        // console.log("Total Taxes:", totalTaxes.toFixed(2));
-        // console.log("Grand Total (Harga + Taxes):", grandTotal.toFixed(2));
+        let total_plus_ongkir = grandTotal + ongkir;
+
         $("#harga_ppn").text(totalTaxes.toFixed(2));
         $("#harga_tanpa_ppn").text(totalHargaTanpaTaxes.toFixed(2));
 
-        // Update tampilan
-        $("#harga_keseluruhan").text(grandTotal.toFixed(2));
-        $("#harga_keseluruhan_hide").val(grandTotal.toFixed(2));
+        $("#harga_keseluruhan").text(total_plus_ongkir.toFixed(2));
+        $("#harga_keseluruhan_hide").val(total_plus_ongkir.toFixed(2));
     }
 
 
@@ -865,17 +885,14 @@ Inquiry - Admin Panel
         $('#hargaTotal').val(hargaTotal);
     }
 
-    // Fungsi untuk menghapus baris
     function hapuslist(button) {
         let row = button.closest("tr");
         row.remove();
         updateRowNumbers();
 
-        // Update grand total setelah menghapus item
         updateGrandTotal();
     }
 
-    // Fungsi untuk memindahkan baris ke atas
     function moveUp(button) {
         let row = button.closest("tr");
         let prevRow = row.previousElementSibling;
@@ -886,7 +903,6 @@ Inquiry - Admin Panel
         }
     }
 
-    // Fungsi untuk memindahkan baris ke bawah
     function moveDown(button) {
         let row = button.closest("tr");
         let nextRow = row.nextElementSibling;
@@ -897,7 +913,6 @@ Inquiry - Admin Panel
         }
     }
 
-    // Fungsi untuk memperbarui nomor urutan setelah perubahan posisi
     function updateRowNumbers() {
         let rows = document.querySelectorAll("#tbody tr");
         rows.forEach((row, index) => {
@@ -933,7 +948,6 @@ Inquiry - Admin Panel
 
 
         var postdata = new FormData();
-        // Tambahkan token CSRF
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
 
         postdata.append('nama_customer', document.getElementById('nama_customer').value);
@@ -948,7 +962,6 @@ Inquiry - Admin Panel
         } else {
             postdata.append('user_code', "Reseller");
         }
-        // postdata.append('user_code', document.getElementById('user_code').value); 
         postdata.append('company', document.getElementById('company').value); // nama customer
         postdata.append('address', document.getElementById('address').value); 
         postdata.append('city', document.getElementById('city').value); 
@@ -961,7 +974,6 @@ Inquiry - Admin Panel
         postdata.append('permintaan_pengiriman', document.getElementById('permintaan_pengiriman').value); 
         postdata.append('permintaan_pengiriman_name', "Kurir Bromindo"); 
         postdata.append('permintaan_ongkir', document.getElementById('permintaan_ongkir').value); 
-        // postdata.append('kategoriInput', document.getElementById('kategoriInput').value); 
         postdata.append('permintaan_stock', document.getElementById('permintaan_stock').value); 
         postdata.append('permintaan_stock_name', document.getElementById('permintaan_stock_name').value); 
         postdata.append('permintaan_spesifikasi', document.getElementById('permintaan_spesifikasi').value); 
@@ -972,10 +984,6 @@ Inquiry - Admin Panel
         postdata.append('kategori', datakategori);
         postdata.append('nomor_left', datakategori[0]);
 
-        // console.log("datakategori",datakategori[0]);
-        // return;
-
-        // ambil detail
         var tbody = document.getElementById('tbody');
         var rows = tbody.getElementsByTagName('tr');
 
@@ -1002,12 +1010,7 @@ Inquiry - Admin Panel
             details.push(detail);
         }
 
-        // Tambahkan detail ke FormData sebagai JSON string
         postdata.append('details', JSON.stringify(details));
-
-        // console.log('Data FormData: ', Array.from(postdata.entries()));
-
-        // return;
 
         $.ajax({
             type: "POST",
@@ -1041,11 +1044,11 @@ Inquiry - Admin Panel
                         text: 'Data Saved!',
                     }).then(function() {
                         // location.reload();
+                        window.location.href = "/admin/inquiry";
                     });
                 }
             },
             error: function (dataerror) {
-                console.log(dataerror);
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
@@ -1057,9 +1060,6 @@ Inquiry - Admin Panel
     }
 
     async function previewpdf() {
-
-        // console.log("data");
-        
 
         let name = $('#nama_customer').val();
         let user = $('#user_code').val();
@@ -1087,7 +1087,6 @@ Inquiry - Admin Panel
 
 
         var postdata = new FormData();
-        // Tambahkan token CSRF
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
 
         postdata.append('nama_customer', document.getElementById('nama_customer').value); 
@@ -1143,12 +1142,6 @@ Inquiry - Admin Panel
         }
 
         postdata.append('details', JSON.stringify(details));
-
-        // console.log('Data FormData: ', Array.from(postdata.entries()));
-
-        // let iframe = document.getElementById('iframePreview');
-        // iframe.setAttribute("src", "inquiry_supply_only/previewpdf");
-        // $('#modalpreview').modal('show');
 
         try {
             const response = await fetch("inquiry_supply_only/previewpdf", {

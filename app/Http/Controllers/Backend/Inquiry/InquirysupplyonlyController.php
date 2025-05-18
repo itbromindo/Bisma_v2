@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Inquiry;
 use App\Models\InquiryProduct;
 use App\Models\DescriptionQuotation;
+use App\Models\ParameterDuedate;
+use App\Models\Product_divisions;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Session;
@@ -19,6 +21,8 @@ class InquirysupplyonlyController extends Controller
         $this->modelheader = new Inquiry();
         $this->modeldetail = new InquiryProduct();
         $this->modeldesc = new DescriptionQuotation();
+        $this->modelduedate = new ParameterDuedate();
+        $this->modelproduct = new Product_divisions();
         $this->mandatory = [
         //     'cities_name' => 'required',
         //     'cities_code' => 'nullable|string|max:225',
@@ -37,10 +41,16 @@ class InquirysupplyonlyController extends Controller
             ->where('template_inquiry_desc_soft_delete', 0)
             ->limit(1)
             ->get();
+
+        $product = $this->modelproduct
+            ->select('product_divisions_code as code', 'product_divisions_name as name')
+            ->where('product_divisions_soft_delete', 0)
+            ->get();
         
         return view('backend.pages.inquiry.indexsupplyonly', [
             // 'listdata' => $listdata,
             'description' => $desc[0]->description ?? 'Description not found',
+            'listproduct' => $product,
         ]);
     }
 
@@ -71,13 +81,22 @@ class InquirysupplyonlyController extends Controller
         
         $code_header = $this->setcode($getcountheader, 'HEAISO', 6);
         $code_inquiry = $request->input('nomor_left').'/'.$getcountheader.'/BMM/'.$getmonthtodayRoman.'/'.$getyeartoday;
+        $duedate = $this->modelduedate
+            ->select('param_duedate_time as time')
+            ->where('user_code', Session::get('user_code'))
+            ->where('param_duedate_soft_delete', 0)
+            ->limit(1)
+            ->get();
+
+        // time inquiry_end_date timestamp + $duedate[0]->time (dalam jam)
+        $end_date = date("Y-m-d H:i:s", strtotime("+".$duedate[0]->time." hours"));
         // return json_encode($request->input('kategori'));
 
         $inquiry = $this->modelheader->create([
             'inquiry_code' => $code_inquiry, // FS/5643/PMS/I/2024
             'inquiry_type' => 'IT0001', // IT0001
             'inquiry_start_date' => date("Y-m-d h:i:s"), // 2024-04-02 22:18:39
-            'inquiry_end_date' => date("Y-m-d h:i:s"), // 2024-04-02 22:18:39
+            'inquiry_end_date' => $end_date, // 2024-04-02 22:18:39
             'inquiry_customer' => $request->input('nama_customer') ?? '', // CSR000008
             'inquiry_origin' => 'OI013', // ORIGIN003
             'inquiry_stage' => 'STATUS001', // STATUS009
@@ -103,7 +122,7 @@ class InquirysupplyonlyController extends Controller
             'inquiry_sales' => 'admin1', // admin1 ??
             'inquiry_footer_note_inquiry' => '', // 
             'inquiry_flag_quote' => '', // 
-            'inquiry_teams' => '["admin1", "user1"]', // ["admin1", "user1"] ??
+            'inquiry_teams' => '["'.Session::get('user_code').'"]', // ["admin1", "user1"] ??
             'inquiry_created_at' => date("Y-m-d h:i:s"),
             'inquiry_created_by' => Session::get('user_code'),
             'inquiry_updated_at' => '',
@@ -121,14 +140,14 @@ class InquirysupplyonlyController extends Controller
         if (!empty($details)) {
             foreach ($details as $detail) {
                 $this->modeldetail->create([
-                    'inquiry_product_code' => $this->setcode($this->modeldetail->count() + 1, 'DETISO', 6), // (@nomor_urut, @kode, @panjang_kode),
+                    'inquiry_product_code' => $code_inquiry,
                     'inquiry_code' => $code_header,
                     'goods_code' => $detail['produk_code'] ?? '',
                     'inquiry_product_name' => $detail['produk_name'] ?? '',
                     'inquiry_product_status_quote_no_quote' => '',
                     'inquiry_product_qty' => $detail['qty'] ?? 0,
                     'inquiry_product_status_on_inquiry' => $detail['status'] ?? '',
-                    'inquiry_product_uom' => $detail['satuan'] ?? '',
+                    'inquiry_product_uom' => $detail['satuan'] ?? '', // ini tolong ganti dengan kode satuan
                     'inquiry_product_cost_of_goods' => 0, 
                     'inquiry_product_pricelist' => $detail['harga_unit'] ?? 0,
                     'inquiry_product_net_price' => $detail['harga_net'] ?? 0,
