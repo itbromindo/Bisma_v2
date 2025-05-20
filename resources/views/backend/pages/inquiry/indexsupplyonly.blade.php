@@ -126,7 +126,7 @@ Inquiry - Admin Panel
                         </div>
                         <div class="card-body">
                             <!-- Nama -->
-                            <div class="row mb-3 align-items-center">
+                            <div class="row mb-3 align-items-center" id="header_form_nama">
                                 <label class="col-sm-4 col-form-label"><b>Nama</b></label>
                                 <div class="col-sm-8">
                                     <select class="form-control" id="nama_customer" style="width: 100%;">
@@ -198,7 +198,7 @@ Inquiry - Admin Panel
                         </div>
                         <div class="card-body">
                             <!-- Dari -->
-                            <div class="row mb-3 align-items-center">
+                            <div class="row mb-3 align-items-center" id="header_form_permintaan">
                                 <label class="col-sm-4 col-form-label"><b>Dari</b></label>
                                 <div class="col-sm-8">
                                     <input class="form-control" type="hidden" id="permintaan_dari_name">
@@ -271,7 +271,7 @@ Inquiry - Admin Panel
 
 
                             <!-- Gudang -->
-                            <div class="row mb-3 align-items-center">
+                            <div class="row mb-3 align-items-center" id="header_form_gudang">
                                 <label class="col-sm-4 col-form-label"><b>Stock</b></label>
                                 <div class="col-sm-8">
                                     <input class="form-control" type="hidden" id="permintaan_stock_name">
@@ -411,6 +411,7 @@ Inquiry - Admin Panel
                         </div>
                         <div class="col-md-6">
                             <label for="satuan" class="form-label">Satuan</label>
+                            <input type="hidden" class="form-control" id="satuan_code" value="" readonly>
                             <input type="text" class="form-control" id="satuan" value="" readonly>
                         </div>
                     </div>
@@ -538,7 +539,7 @@ Inquiry - Admin Panel
 
         $('#permintaan_dari').on('select2:select', function(e) {
             var data = e.params.data;
-            $('#permintaan_dari').val(data.text);
+            $('#permintaan_dari_name').val(data.text);
         }).on("select2:unselect", function (e) {
             // clear data
         }).select2({
@@ -597,6 +598,7 @@ Inquiry - Admin Panel
             
             $('#namaBarang').on('select2:select', function(e) {
                 var data = e.params.data;
+                $('#satuan_code').val(data.uom_code);
                 $('#satuan').val(data.uom_name);
                 $('#hargaPricelist').val(data.goods_price);
                 $('#namaBarangSelect2').val(data.text);
@@ -733,6 +735,7 @@ Inquiry - Admin Panel
         }
 
         let quantity = $('#quantity').val();
+        let satuan_code = $('#satuan_code').val();
         let satuan = $('#satuan').val();
         let hargaPricelist = $('#hargaPricelist').val();
         let hargaNet = $('#hargaNet').val();
@@ -771,6 +774,12 @@ Inquiry - Admin Panel
         $('#header_form_gudang').removeClass('hidden');
         $('.pph-input-data').css('display','block');
 
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Level Up! Permintaan Baru Ditambahkan!',
+        })
+
 
         $('#tbody').append(`
             <tr>
@@ -781,10 +790,11 @@ Inquiry - Admin Panel
                 <td>${stok}</td>
                 <td class="hidden">${code_status}</td>
                 <td>${status}</td>
+                <td class="hidden">${satuan_code}</td>
                 <td>${satuan}</td>
                 <td>${hargaPricelist}</td>
                 <td class="harga-net">${hargaNet}</td>
-                <td class="pph-input-data" style="display: block;">
+                <td class="pph-input-data text-center" style="display: block;">
                     <select class="ppn-input select2-ppn form-control" onchange="updateHargaTotal(this)">
                         <option value="" selected>Pilih PPN</option>
                     </select>
@@ -920,29 +930,56 @@ Inquiry - Admin Panel
         });
     }
 
+    function alertError(message) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: message
+        });
+    }
+
     function saveAll() {
 
         let name = $('#nama_customer').val();
         let user = $('#user_code').val();
 
         if (name == null) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Pilih nama customer terlebih dahulu!'
-            });
-
+            alertError('Pilih nama customer terlebih dahulu!');
             alertform('select2','nama_customer',"Form ini Tidak Boleh Kosong");
             return;
         }
 
         if (user == null) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Pilih user terlebih dahulu!'
-            });
+            alertError('Pilih user terlebih dahulu!');
             alertform('select2','user_code',"Form ini Tidak Boleh Kosong");
+            return;
+        }
+
+        // Validasi Header Fields
+        var headerFields = [
+            'nama_customer', 'company', 'address', 'city', 'phone', 'email',
+            'permintaan_dari', 'permintaan_dari_name', 'permintaan_lokasi', 'permintaan_pengiriman',
+            'permintaan_ongkir', 'permintaan_stock', 'permintaan_stock_name',
+        ];
+
+        for (var i = 0; i < headerFields.length; i++) {
+            var field = document.getElementById(headerFields[i]);
+            if (!field || field.value.trim() === '') {
+                alertError("Field '" + headerFields[i].replace(/_/g, ' ') + "' wajib diisi.");
+                return;
+            }
+        }
+
+        // Editor value
+        var keterangan = getEditorValue();
+        if (!keterangan || keterangan.trim() === '') {
+            alertError("Keterangan wajib diisi.");
+            return;
+        }
+
+        // Validasi datakategori
+        if (!Array.isArray(datakategori) || datakategori.length === 0 || !datakategori[0]) {
+            alertError("Kategori wajib diisi.");
             return;
         }
 
@@ -987,10 +1024,35 @@ Inquiry - Admin Panel
         var tbody = document.getElementById('tbody');
         var rows = tbody.getElementsByTagName('tr');
 
+        if (rows.length === 0) {
+            alertError("Detail produk minimal satu baris wajib diisi.");
+            return;
+        }
+
         var details = [];
 
         for (var i = 0; i < rows.length; i++) {
             var cells = rows[i].getElementsByTagName('td');
+            
+            const checkreq = $('#requestProdukSwitch').prop('checked');
+            if (checkreq == false) {
+                var satuan_barang = cells[7].innerText.trim();
+            } else {
+                var satuan_barang = cells[8].innerText.trim();
+            }
+
+            var qtyInput = cells[3].querySelector('input');
+            var taxesSelect = cells[11].querySelector("select");
+
+            if (!qtyInput || qtyInput.value.trim() === '') {
+                alertError("Qty pada baris ke-" + (i + 1) + " wajib diisi.");
+                return;
+            }
+
+            if (!taxesSelect || taxesSelect.value.trim() === '') {
+                alertError("Taxes pada baris ke-" + (i + 1) + " wajib diisi.");
+                return;
+            }
 
             var detail = {
                 no: cells[0].innerText.trim(),
@@ -1000,11 +1062,11 @@ Inquiry - Admin Panel
                 stock: cells[4].innerText.trim(),
                 status: cells[5].innerText.trim(),
                 status_name: cells[6].innerText.trim(),
-                satuan: cells[7].innerText.trim(),
-                harga_unit: cells[8].innerText.trim(),
-                harga_net: cells[9].innerText.trim(),
-                taxes: cells[10].querySelector("select").value.trim(),
-                harga_total: cells[11].innerText.trim()
+                satuan: satuan_barang,
+                harga_unit: cells[9].innerText.trim(),
+                harga_net: cells[10].innerText.trim(),
+                taxes: cells[11].querySelector("select").value.trim(),
+                harga_total: cells[12].innerText.trim()
             };
 
             details.push(detail);
@@ -1049,11 +1111,7 @@ Inquiry - Admin Panel
                 }
             },
             error: function (dataerror) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: dataerror.responseJSON.message
-                });
+                alertError(dataerror.responseJSON.message);
             }
         });
 
@@ -1123,6 +1181,13 @@ Inquiry - Admin Panel
         for (var i = 0; i < rows.length; i++) {
             var cells = rows[i].getElementsByTagName('td');
 
+            // const checkreq = $('#requestProdukSwitch').prop('checked');
+            // if (checkreq == false) {
+            //     var satuan_barang = cells[7].innerText.trim();
+            // } else {
+            //     var satuan_barang = cells[8].innerText.trim();
+            // }
+
             var detail = {
                 no: cells[0].innerText.trim(),
                 produk_code: cells[1].innerText.trim(),
@@ -1131,11 +1196,11 @@ Inquiry - Admin Panel
                 stock: cells[4].innerText.trim(),
                 status: cells[5].innerText.trim(),
                 status_name: cells[6].innerText.trim(),
-                satuan: cells[7].innerText.trim(),
-                harga_unit: cells[8].innerText.trim(),
-                harga_net: cells[9].innerText.trim(),
-                taxes: cells[10].querySelector("select").value.trim(),
-                harga_total: cells[11].innerText.trim()
+                satuan: cells[8].innerText.trim(),
+                harga_unit: cells[9].innerText.trim(),
+                harga_net: cells[10].innerText.trim(),
+                taxes: cells[11].querySelector("select").value.trim(),
+                harga_total: cells[12].innerText.trim()
             };
 
             details.push(detail);

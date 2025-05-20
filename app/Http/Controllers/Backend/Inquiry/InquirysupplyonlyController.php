@@ -80,7 +80,7 @@ class InquirysupplyonlyController extends Controller
         $getmonthtodayRoman = $romanMonths[$getmonthtoday] ?? $getmonthtoday;
         
         $code_header = $this->setcode($getcountheader, 'HEAISO', 6);
-        $code_inquiry = $request->input('nomor_left').'/'.$getcountheader.'/BMM/'.$getmonthtodayRoman.'/'.$getyeartoday;
+        $code_inquiry = $this->setcodeproduct($request->input('nomor_left')).'/'.$getcountheader.'/BMM/'.$getmonthtodayRoman.'/'.$getyeartoday;
         $duedate = $this->modelduedate
             ->select('param_duedate_time as time')
             ->where('user_code', Session::get('user_code'))
@@ -140,8 +140,8 @@ class InquirysupplyonlyController extends Controller
         if (!empty($details)) {
             foreach ($details as $detail) {
                 $this->modeldetail->create([
-                    'inquiry_product_code' => $code_inquiry,
-                    'inquiry_code' => $code_header,
+                    'inquiry_product_code' => $this->setcode($this->modeldetail->count() + 1, 'DETISO', 6),
+                    'inquiry_code' => $code_inquiry,
                     'goods_code' => $detail['produk_code'] ?? '',
                     'inquiry_product_name' => $detail['produk_name'] ?? '',
                     'inquiry_product_status_quote_no_quote' => '',
@@ -174,8 +174,10 @@ class InquirysupplyonlyController extends Controller
             '09' => 'IX', '10' => 'X', '11' => 'XI', '12' => 'XII'
         ];
         $getmonthtodayRoman = $romanMonths[$getmonthtoday] ?? $getmonthtoday;
+
         
-        $code_inquiry = $request->input('nomor_left').'/'.$getcountheader.'/BMM/'.$getmonthtodayRoman.'/'.$getyeartoday;
+        
+        $code_inquiry = $this->setcodeproduct($request->input('nomor_left')).'/'.$getcountheader.'/BMM/'.$getmonthtodayRoman.'/'.$getyeartoday;
 
         $data = array(
             'data' => $request->all(),
@@ -184,5 +186,17 @@ class InquirysupplyonlyController extends Controller
 
         $pdf = Pdf::loadView('backend.pages.inquiry.indexpreviewpdfsupplyonly', compact('data'));
         return $pdf->stream('preview.pdf');
+    }
+
+    public function setcodeproduct($code)
+    {
+        $get_code_left = $this->modelproduct
+            ->select('product_divisions_name as code')
+            ->where('product_divisions_soft_delete', 0)
+            ->where('product_divisions_code', $code)
+            ->limit(1)
+            ->get();
+
+        return $get_code_left[0]->code ?? '-';
     }
 }

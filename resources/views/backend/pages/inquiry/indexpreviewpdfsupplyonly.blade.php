@@ -2,6 +2,7 @@
 @php
     $details = json_decode($data['data']['details'], true);
     $harga_sebelum_ppn = 0;
+    $harga_ppn_per_barang = 0;
 @endphp
 <html>
 <head>
@@ -125,12 +126,13 @@
                     </tr>
                     @php
                         $harga_sebelum_ppn += $d['qty']*$d['harga_net'];
+                        $harga_ppn_per_barang += $d['qty']*$d['harga_net'] * ($d['taxes'] / 100);
                     @endphp
                 @endforeach
 
                 @php
-                    $harga_ppn = $data['data']['harga_total'] - $harga_sebelum_ppn;
-                    $harga_akhir = $data['data']['harga_total'] + $data['data']['permintaan_ongkir'];
+                    $harga_ppn = $harga_ppn_per_barang;
+                    $harga_akhir = $data['data']['harga_total'];
                 @endphp
 
                 <tr>
