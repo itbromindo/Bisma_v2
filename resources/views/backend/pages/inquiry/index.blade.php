@@ -919,7 +919,7 @@ Inquiry - Admin Panel
           if(response.status == 200) {
             $("#listpermintaanmodal").modal("toggle");
             let inquiry = response.data.inquiry;
-            $('.keterangan-detail-permintaan').text(inquiry.inquiry_notes);
+            $('.keterangan-detail-permintaan').html(inquiry.inquiry_notes);
             let list_permintaan = response.data.list_permintaan;
             $('#tableListPermintaan').empty();
             let totalProdukPermintaan = 0;
