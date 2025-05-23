@@ -811,19 +811,19 @@ Inquiry - Admin Panel
                 <td class="hidden">${kodebarang}</td>
                 <td>${namaBarang}</td>
                 <td><input type="number" value="${quantity}" class="quantity-input" oninput="updateHargaTotal(this)"></td>
-                <td>${stok}</td>
+                <td class="text-center">${stok}</td>
                 <td class="hidden">${code_status}</td>
                 <td>${status}</td>
                 <td class="hidden">${satuan_code}</td>
                 <td>${satuan}</td>
-                <td>${hargaPricelist}</td>
-                <td class="harga-net">${hargaNet}</td>
+                <td class="text-center">${hargaPricelist}</td>
+                <td class="harga-net text-center">${hargaNet}</td>
                 <td class="pph-input-data text-center" style="display: block;">
                     <select class="ppn-input select2-ppn form-control" onchange="updateHargaTotal(this)">
                         <option value="" selected>Pilih PPN</option>
                     </select>
                 </td>
-                <td class="harga-total">${hargaTotal.toFixed(0)}</td>
+                <td class="harga-total text-center">${hargaTotal.toFixed(0)}</td>
                 <td>
                     <div class="d-flex gap-2">
                         <button type="button" class="btn btn-danger" onclick="hapuslist(this)">
