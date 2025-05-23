@@ -29,31 +29,7 @@
                             <p>Due Date Inquiry : <br>{{ date("d M, Y", strtotime($duedate)) }}</p>
                         </div>
                         <!-- actions  -->
-                        <div class="card-priority__actions">
-                            <button class="dots-three text-gray-400 f-size-24 lh-1" type="button" id="dropdownMenuButton_1" data-bs-toggle="dropdown" aria-expanded="true">
-                                <img src="{{asset('backend/assets/images/svg/dot.svg')}}" alt="clock">
-                            </button>
-                            <ul class="dropdown-menu dropdown-actions" aria-labelledby="dropdownMenuButton_1" data-popper-placement="bottom-start">
-                                <li>
-                                    <a href="#" class="dropdown-item">
-                                        <span>
-                                            <img src="{{asset('backend/assets/images/svg/pen.svg')}}" alt="pen">
-                                        </span> Edit
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="#" onclick="cancel_inquiry({{ $row->inquiry_id }})" class="dropdown-item cancel-inquiry">
-                                        <span>
-                                            <img
-                                            src="{{asset('backend/assets/images/svg/trash.svg')}}"
-                                            alt="trash"
-                                            />
-                                        </span>
-                                        Cancel
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
+                        
                     </div>
 
                     <!-- labels  -->

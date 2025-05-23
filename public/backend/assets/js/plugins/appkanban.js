@@ -707,7 +707,7 @@
             $('.d-inquiry-warehaouse').text(inquiry.warehouse_name);
             $('.d-inquiry-customer-type').text(inquiry.inquiry_customer_type);
             $('.d-inquiry-oc').text(inquiry.inquiry_oc);
-            $('.d-inquiry-shopping-cost').text(thousandView(inquiry.inquiry_shopping_cost));
+            $('.d-inquiry-shopping-cost').text(thousandView(inquiry.inquiry_shipping_cost));
 
             let list_permintaan = response.data.list_permintaan;
             $('#tableBody').empty();
