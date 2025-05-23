@@ -397,6 +397,7 @@ Inquiry - Admin Panel
                         <label for="namaBarang" class="form-label">Nama barang</label>
                         <input type="text" class="form-control hidden" id="namaBarangText" value="">
                         <input type="hidden" class="form-control" id="namaBarangSelect2" value="">
+                        <input type="hidden" class="form-control" id="code_kategori" value="">
                         <div id=namaBarangCombo>
                             <select class="form-control" id="namaBarang" style="width: 100%;">
                                 <option value="" disabled selected>Pilih Barang</option>
@@ -493,6 +494,9 @@ Inquiry - Admin Panel
             $('.kategori-item').removeClass('selected');
             $(this).addClass('selected');
             $('#kategoriInput').val($(this).data('value'));
+            // $(this).find('.kategori-btn').toggleClass('active');
+
+            updateKategoriInput();
         });
         
         $(".kategori-item").click(function () {
@@ -602,6 +606,7 @@ Inquiry - Admin Panel
                 $('#satuan').val(data.uom_name);
                 $('#hargaPricelist').val(data.goods_price);
                 $('#namaBarangSelect2').val(data.text);
+                $('#code_kategori').val(data.product_division_code);
                 var user_code = $('#user_code').val();
                 if (user_code == 1) {
                     $('#hargaNet').val(data.goods_reseller_price);
@@ -652,6 +657,24 @@ Inquiry - Admin Panel
             $('.pph-input-data').css('display','block');
         });
     });
+
+    function pilihkategori(kode_kategori) {
+        const kategoriItem = $(`.kategori-item[data-value="${kode_kategori}"]`);
+        if (kategoriItem.length) {
+            const btn = kategoriItem.find('.kategori-btn');
+            btn.toggleClass('active');
+            updateKategoriInput(); // ← ini penting!
+        }
+    }
+
+    function updateKategoriInput() {
+        datakategori = $(".kategori-item .kategori-btn.active").map(function () {
+            return $(this).parent().data("value");
+        }).get();
+
+        $("#kategoriInput").val(JSON.stringify(datakategori));
+    }
+
 
     function getEditorValue() {
         var content = window.myEditor.getData();
@@ -780,6 +803,7 @@ Inquiry - Admin Panel
             text: 'Level Up! Permintaan Baru Ditambahkan!',
         })
 
+        pilihkategori($('#code_kategori').val()); 
 
         $('#tbody').append(`
             <tr>
