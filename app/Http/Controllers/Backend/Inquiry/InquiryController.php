@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Pdf;
 
 use App\Models\Inquiry;
 use App\Models\InquiryType;
@@ -104,5 +105,17 @@ class InquiryController extends Controller
         ];
 
         return response()->json($result);
+    }
+
+    public function download_inquiry(Request $request) 
+    {
+        $id = $request->id;
+        $data = [
+            'inquiry' => $this->inquiry->detailInquiry($id),
+            'details' => $this->inquiry->listPermintaanInquiry($id)
+        ];
+
+        $pdf = Pdf::loadView('backend.pages.inquiry.inquirypdf', compact('data'));
+        return $pdf->stream('preview.pdf');
     }
 }
