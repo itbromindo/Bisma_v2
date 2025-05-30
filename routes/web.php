@@ -13,6 +13,7 @@ use App\Http\Controllers\Backend\MenusController;
 use App\Http\Controllers\Backend\SubmenusController;
 use App\Http\Controllers\Backend\LevelsController;
 use App\Http\Controllers\Backend\PendudukController;
+use App\Http\Controllers\Backend\Inquiry\InquiryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -212,10 +213,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('inquiry_statuses', App\Http\Controllers\Backend\InquiryStatusController::class);
     Route::any('inquiry_statuses/{id}', [App\Http\Controllers\Backend\InquiryStatusController::class, 'update']);
 
-    Route::get('inquiry', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'index']);
-    Route::get('inquiry/update_stage', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'update_stage']);
-    Route::get('inquiry/cancel_stage/{id}', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'cancel_stage']);
-    Route::get('inquiry/detail/{id}', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'detail_inquiry']);
+    Route::prefix('inquiry')->controller(InquiryController::class)->group(function () {
+        Route::get('/', 'index')->name('inquiry');
+        Route::get('/update_stage', 'update_stage');
+        Route::get('/cancel_stage/{id}', 'cancel_stage');
+        Route::get('/detail/{id}', 'detail_inquiry');
+        Route::get('/download/{id}', 'download_inquiry');
+    });
+
 
     Route::post('inquiry_supply_only/previewpdf', [App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class, 'previewpdf']);
     Route::resource('inquiry_supply_only', App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class);
