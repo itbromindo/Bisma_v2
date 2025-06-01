@@ -97,6 +97,7 @@ Inquiry - Admin Panel
         border: 2px solid #007bff;
         background-color: #e6f0ff;
     } */
+
 </style>
 
 <div class="content-wrapper">
@@ -322,7 +323,7 @@ Inquiry - Admin Panel
                                     <tr>
                                         <th class="text-center">No</th>
                                         <th class="text-center">Produk</th>
-                                        <th class="text-center">Qty</th>
+                                        <th class="text-center" style="width: 10%;">Qty</th>
                                         <th class="text-center">Stock</th>
                                         <th class="text-center">Status</th>
                                         <th class="text-center">Satuan</th>
@@ -598,7 +599,8 @@ Inquiry - Admin Panel
             $('#header_form_nama').addClass('hidden');
             $('#header_form_permintaan').addClass('hidden');
             $('#header_form_gudang').addClass('hidden');
-            $('.pph-input-data').css('display','none');
+            $('.pph-input-data').addClass('hidden');
+            // $('.pph-input-data').css('display','none');
             
             $('#namaBarang').on('select2:select', function(e) {
                 var data = e.params.data;
@@ -647,14 +649,16 @@ Inquiry - Admin Panel
             $('#header_form_nama').removeClass('hidden');
             $('#header_form_permintaan').removeClass('hidden');
             $('#header_form_gudang').removeClass('hidden');
-            $('.pph-input-data').css('display','block');
+            // $('.pph-input-data').css('display','block');
+            $('.pph-input-data').removeClass('hidden');
         });
     
         $('#closeModal').on('click', function () {
             $('#header_form_nama').removeClass('hidden');
             $('#header_form_permintaan').removeClass('hidden');
             $('#header_form_gudang').removeClass('hidden');
-            $('.pph-input-data').css('display','block');
+            // $('.pph-input-data').css('display','block');
+            $('.pph-input-data').removeClass('hidden');
         });
     });
 
@@ -795,7 +799,8 @@ Inquiry - Admin Panel
         $('#header_form_nama').removeClass('hidden');
         $('#header_form_permintaan').removeClass('hidden');
         $('#header_form_gudang').removeClass('hidden');
-        $('.pph-input-data').css('display','block');
+        // $('.pph-input-data').css('display','block');
+        $('.pph-input-data').removeClass('hidden');
 
         Swal.fire({
             icon: 'success',
@@ -818,7 +823,7 @@ Inquiry - Admin Panel
                 <td>${satuan}</td>
                 <td class="text-center">${hargaPricelist}</td>
                 <td class="harga-net text-center">${hargaNet}</td>
-                <td class="pph-input-data text-center" style="display: block;">
+                <td class="pph-input-data text-center">
                     <select class="ppn-input select2-ppn form-control" onchange="updateHargaTotal(this)">
                         <option value="" selected>Pilih PPN</option>
                     </select>
@@ -1245,7 +1250,8 @@ Inquiry - Admin Panel
 
             let iframe = document.getElementById('iframePreview');
             iframe.src = url;
-            $('.pph-input-data').css('display','none');
+            // $('.pph-input-data').css('display','none');
+            $('.pph-input-data').addClass('hidden');
             $('#header_form_nama').addClass('hidden');
             $('#header_form_permintaan').addClass('hidden');
             $('#header_form_gudang').addClass('hidden');
@@ -1258,7 +1264,8 @@ Inquiry - Admin Panel
     }
 
     function showppn() {
-        $('.pph-input-data').css('display','block');
+        // $('.pph-input-data').css('display','block');
+        $('.pph-input-data').removeClass('hidden');
         $('#header_form_nama').removeClass('hidden');
         $('#header_form_permintaan').removeClass('hidden');
         $('#header_form_gudang').removeClass('hidden');

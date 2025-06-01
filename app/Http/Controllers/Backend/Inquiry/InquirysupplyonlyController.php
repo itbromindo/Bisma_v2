@@ -33,7 +33,7 @@ class InquirysupplyonlyController extends Controller
 
     public function index(Request $request)
     {
-        $this->checkAuthorization(auth()->user(), ['supplyonly.view']);
+        $this->checkAuthorization(auth()->user(), ['inquiry.viewsupplyonly']);
 
         $search = $_GET['search'] ??'';
         $desc = $this->modeldesc
