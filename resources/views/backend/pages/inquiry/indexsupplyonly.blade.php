@@ -1114,46 +1114,97 @@ Inquiry - Admin Panel
 
         postdata.append('details', JSON.stringify(details));
 
-        $.ajax({
-            type: "POST",
-            url: "/admin/inquiry_supply_only",
-            data: (postdata),
-            processData: false, // Jangan ubah data
-            contentType: false, // Atur tipe konten secara otomatis
-            dataType: "json",
-            async: false,
-            success: function (data) {
-                if (data.status == 401) {
-                    showAlert('danger', "Form Wajib Diisi");
-                    if (data.column == 'department_code') {
-                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+        if($('#inquiry_id').val() != '') {
+            console.log('edit');
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                type: "PUT",
+                url: "/admin/inquiry_supply_only/update/" + $('#inquiry_id').val(),
+                data: (postdata),
+                processData: false, // Jangan ubah data
+                contentType: false, // Atur tipe konten secara otomatis
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.status == 401) {
+                        showAlert('danger', "Form Wajib Diisi");
+                        if (data.column == 'department_code') {
+                            alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                        } else {
+                            alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                        }
+                        return;
+                    } else if (data.status == 501) {
+                        showAlert('danger', "Form Wajib Diisi");
+                        if (data.column == 'department_code') {
+                            alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                        } else {
+                            alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                        }
+                        return;
                     } else {
-                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Data Saved!',
+                        }).then(function() {
+                            // location.reload();
+                            window.location.href = "/admin/inquiry";
+                        });
                     }
-                    return;
-                } else if (data.status == 501) {
-                    showAlert('danger', "Form Wajib Diisi");
-                    if (data.column == 'department_code') {
-                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
-                    } else {
-                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
-                    }
-                    return;
-                } else {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Success',
-                        text: 'Data Saved!',
-                    }).then(function() {
-                        // location.reload();
-                        window.location.href = "/admin/inquiry";
-                    });
+                },
+                error: function (dataerror) {
+                    alertError(dataerror.responseJSON.message);
                 }
-            },
-            error: function (dataerror) {
-                alertError(dataerror.responseJSON.message);
-            }
-        });
+            });
+        }else {
+            console.log('store');
+
+            $.ajax({
+                type: "POST",
+                url: "/admin/inquiry_supply_only",
+                data: (postdata),
+                processData: false, // Jangan ubah data
+                contentType: false, // Atur tipe konten secara otomatis
+                dataType: "json",
+                async: false,
+                success: function (data) {
+                    if (data.status == 401) {
+                        showAlert('danger', "Form Wajib Diisi");
+                        if (data.column == 'department_code') {
+                            alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                        } else {
+                            alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                        }
+                        return;
+                    } else if (data.status == 501) {
+                        showAlert('danger', "Form Wajib Diisi");
+                        if (data.column == 'department_code') {
+                            alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
+                        } else {
+                            alertform('text',data.column,"Form ini Tidak Boleh Kosong");
+                        }
+                        return;
+                    } else {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Data Saved!',
+                        }).then(function() {
+                            // location.reload();
+                            window.location.href = "/admin/inquiry";
+                        });
+                    }
+                },
+                error: function (dataerror) {
+                    alertError(dataerror.responseJSON.message);
+                }
+            });
+        }
+
 
     }
 
@@ -1287,9 +1338,6 @@ Inquiry - Admin Panel
         const datadetail = @json($datadetail);
         const datauser = @json($datauser)['original'][0];
 
-        console.log('Menampilkan data edit...', dataheader, datadetail, datauser);
-        // console.log('data disini');
-
         // document.getElementById('nama_customer').value = datauser['text'];
         $('#nama_customer').append(new Option(datauser['text'], datauser['id'], true, true)).trigger('change');
         if(user_code == "Reseller") {
@@ -1332,13 +1380,96 @@ Inquiry - Admin Panel
             }
         }
 
-        // Sekarang aman dipakai forEach
         divisionData.forEach(function(code) {
             pilihkategori(code);
         });
 
         // tampilan untuk detail
-        
+        $('#modalinput').modal('hide');
+
+        $('#table_misi').removeClass('hidden');
+        $('#new_misi').addClass('hidden');
+        $('#header_form_nama').removeClass('hidden');
+        $('#header_form_permintaan').removeClass('hidden');
+        $('#header_form_gudang').removeClass('hidden');
+        $('.pph-input-data').removeClass('hidden');
+
+        datadetail.forEach((item, index) => {
+            
+            const no = index + 1;
+            const kodebarang = item.goods_code;
+            const namaBarang = item.inquiry_product_name;
+            const quantity = item.inquiry_product_qty;
+            const stok = 0; // sesuaikan kalau ada data stok
+            const code_status = item.inquiry_product_status_on_inquiry;
+            const status = code_status == "2" ? "<p style='color: green;'>Ready</p>" : "<p style='color: red;'>Tidak ditemukan disistem</p>"; // atau sesuaikan mapping
+            const satuan_code = item.inquiry_product_uom;
+            const satuan = satuan_code; // perlu ambil name dari master
+            const hargaPricelist = item.inquiry_product_pricelist;
+            const hargaNet = item.inquiry_product_net_price;
+            const hargaTotal = item.inquiry_product_total_price;
+            const pajak = item.inquiry_taxes_percent;
+
+            $('#tbody').append(`
+                <tr>
+                    <td class="text-center">${no}</td>
+                    <td class="hidden">${kodebarang}</td>
+                    <td>${namaBarang}</td>
+                    <td><input type="number" value="${quantity}" class="quantity-input" oninput="updateHargaTotal(this)"></td>
+                    <td class="text-center">${stok}</td>
+                    <td class="hidden">${code_status}</td>
+                    <td>${status}</td>
+                    <td class="hidden">${satuan_code}</td>
+                    <td>${satuan}</td>
+                    <td class="text-center">${hargaPricelist}</td>
+                    <td class="harga-net text-center">${hargaNet}</td>
+                    <td class="pph-input-data text-center">
+                        <select class="ppn-input select2-ppn form-control" onchange="updateHargaTotal(this)">
+                            <option value="${pajak}" selected>${pajak}%</option>
+                        </select>
+                    </td>
+                    <td class="harga-total text-center">${hargaTotal.toFixed(0)}</td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-danger" onclick="hapuslist(this)">
+                                <i class="ph ph-trash"></i>
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="moveUp(this)">
+                                <i class="ph ph-arrow-up"></i>
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="moveDown(this)">
+                                <i class="ph ph-arrow-down"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `);
+            // console.log('Menambahkan xxx', item.inquiry_product_code);
+        });
+
+
+        // Inisialisasi select2 untuk semua elemen baru
+        $('.select2-ppn').select2({
+            placeholder: "PPN",
+            allowClear: true,
+            ajax: {
+                url: '/admin/combotaxes',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term,
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            },
+        });
+
     }
 </script>
 
