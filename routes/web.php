@@ -224,6 +224,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     Route::post('inquiry_supply_only/previewpdf', [App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class, 'previewpdf']);
     Route::resource('inquiry_supply_only', App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class);
+    Route::get('inquiry_supply_only/edit/{id}', [App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class, 'edit_data']);
 
     Route::get('combotaxes', [App\Http\Controllers\Backend\TaxesController::class, 'combo']);
 

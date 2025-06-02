@@ -8,6 +8,7 @@ use App\Models\InquiryProduct;
 use App\Models\DescriptionQuotation;
 use App\Models\ParameterDuedate;
 use App\Models\Product_divisions;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Session;
@@ -23,6 +24,7 @@ class InquirysupplyonlyController extends Controller
         $this->modeldesc = new DescriptionQuotation();
         $this->modelduedate = new ParameterDuedate();
         $this->modelproduct = new Product_divisions();
+        $this->modelcustomer = new Customer();
         $this->mandatory = [
         //     'cities_name' => 'required',
         //     'cities_code' => 'nullable|string|max:225',
@@ -51,7 +53,79 @@ class InquirysupplyonlyController extends Controller
             // 'listdata' => $listdata,
             'description' => $desc[0]->description ?? 'Description not found',
             'listproduct' => $product,
+            'method' => 'store',
+            'dataheader' => [],
+            'datadetail' => [],
+            'id' => '',
+            'datauser' => [],
         ]);
+    }
+
+    public function edit_data($iddata)
+    {
+        $this->checkAuthorization(auth()->user(), ['inquiry.editsupplyonly']);
+
+        $modelheader = $this->modelheader
+            ->select('*','inquiry_code as code_inquiry')
+            ->where('inquiry_id', $iddata)
+            ->where('inquiry_soft_delete', 0)
+            ->get();
+
+        $modeldetail = [];
+        if ($modelheader) {
+            $modeldetail = $this->modeldetail
+            ->select('*')
+            ->where('inquiry_code', $modelheader[0]->code_inquiry)
+            ->get();
+        }
+
+        $product = $this->modelproduct
+            ->select('product_divisions_code as code', 'product_divisions_name as name')
+            ->where('product_divisions_soft_delete', 0)
+            ->get();
+
+        // return $modeldetail;
+
+        return view('backend.pages.inquiry.indexsupplyonly', [
+            'description' => $modelheader[0]->inquiry_notes ?? 'Description not found',
+            'listproduct' => $product,
+            'method' => 'edit',
+            'dataheader' => $modelheader,
+            'datadetail' => $modeldetail,
+            'id' => $iddata,
+            'datauser' => $this->search_customer($modelheader[0]->inquiry_customer) ?? '-',
+        ]);
+        
+    }
+
+    public function search_customer($code)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->modelcustomer
+            ->select(
+                'customer.customer_code as id',
+                'customer.customer_name as text',
+                'customer.customers_existing',
+                'customer.customers_full_address',
+                'customer.customers_phone',
+                'customer.customers_email',
+                'customer.customers_PIC',
+                'customer.customers_npwp',
+                'customer.customers_village',
+                'customer.districts_code',
+                'cities.cities_code',
+                'cities.cities_name',
+                'provinces.provinces_code',
+                'provinces.provinces_name'
+            )
+            ->join('provinces', 'provinces.provinces_code', '=', 'customer.provinces_code')
+            ->join('cities', 'cities.cities_code', '=', 'customer.cities_code')
+            ->where('customer.customer_code', '=', $code)
+            ->where('customer.customers_soft_delete', 0)
+            ->get();
+
+
+        return response()->json($listdata);
     }
 
     public function store(Request $request)
@@ -98,7 +172,7 @@ class InquirysupplyonlyController extends Controller
             'inquiry_start_date' => date("Y-m-d h:i:s"), // 2024-04-02 22:18:39
             'inquiry_end_date' => $end_date, // 2024-04-02 22:18:39
             'inquiry_customer' => $request->input('nama_customer') ?? '', // CSR000008
-            'inquiry_origin' => 'OI013', // ORIGIN003
+            'inquiry_origin' => $request->input('permintaan_dari'), // ORIGIN003
             'inquiry_stage' => 'STATUS001', // STATUS009
             'inquiry_stage_progress' => 'in progress', // in progress
             'inquiry_product_division' => json_encode(

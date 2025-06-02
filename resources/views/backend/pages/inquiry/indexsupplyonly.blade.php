@@ -455,6 +455,8 @@ Inquiry - Admin Panel
     </div>
 </div>
 
+<input type="hidden" id="inquiry_id" value="">
+
 <!-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script> -->
 <script>
 
@@ -476,7 +478,8 @@ Inquiry - Admin Panel
     let datakategori = [];
 
     $(document).ready(function() {   
-        // console.log('list kategori', @json($listproduct));
+        // console.log('method', @json($method));
+        const method = @json($method);
 
         const listProduct = @json($listproduct); // convert PHP to JSON for JS
         const kategoriGroup = $('#kategoriGroup');
@@ -660,6 +663,14 @@ Inquiry - Admin Panel
             // $('.pph-input-data').css('display','block');
             $('.pph-input-data').removeClass('hidden');
         });
+
+        if (method == 'store') {
+            $('#inquiry_id').val('');
+        }else{
+            $('#inquiry_id').val(@json($id));
+
+            showdataedit();
+        }
     });
 
     function pilihkategori(kode_kategori) {
@@ -1269,6 +1280,65 @@ Inquiry - Admin Panel
         $('#header_form_nama').removeClass('hidden');
         $('#header_form_permintaan').removeClass('hidden');
         $('#header_form_gudang').removeClass('hidden');
+    }
+
+    function showdataedit() {
+        const dataheader = @json($dataheader)[0];
+        const datadetail = @json($datadetail);
+        const datauser = @json($datauser)['original'][0];
+
+        console.log('Menampilkan data edit...', dataheader, datadetail, datauser);
+        // console.log('data disini');
+
+        // document.getElementById('nama_customer').value = datauser['text'];
+        $('#nama_customer').append(new Option(datauser['text'], datauser['id'], true, true)).trigger('change');
+        if(user_code == "Reseller") {
+            var user_code = 1;
+        } else if (user_code == "End User") {
+            var user_code = 2;
+        } else if (user_code == "Kontraktor") {
+            var user_code = 3;
+        } else {
+            var user_code = 1;
+        }
+
+        document.getElementById('user_code').value = user_code;
+        document.getElementById('company').value = datauser['text'];
+        document.getElementById('address').value = datauser['customers_full_address']; 
+        document.getElementById('city').value = datauser['provinces_name']+" & "+datauser['cities_name']; 
+        document.getElementById('phone').value = datauser['customers_phone']; 
+        document.getElementById('email').value = datauser['customers_email']; 
+
+        $('#permintaan_dari').append(new Option("WhatsApp", dataheader['inquiry_origin'], true, true)).trigger('change');
+        document.getElementById('permintaan_dari_name').value = "WhatsApp"; // perlu ambil dari db
+        document.getElementById('permintaan_pengiriman').value = 1; // Kurir Bromindo
+        document.getElementById('permintaan_ongkir').value = dataheader['inquiry_shipping_cost']; 
+        $('#permintaan_stock').append(new Option("Gudang Semarang", dataheader['inquiry_warehouse'], true, true)).trigger('change');
+        document.getElementById('permintaan_stock_name').value = "Gudang Semarang"; // perlu ambil dari db
+
+        $("#harga_keseluruhan").text(dataheader['inquiry_grand_total'].toFixed(2));
+        $("#harga_keseluruhan_hide").val(dataheader['inquiry_grand_total'].toFixed(2));
+        document.getElementById('harga_ppn').value = dataheader['inquiry_tax'];
+        document.getElementById('harga_tanpa_ppn').value = dataheader['inquiry_total_no_tax'];
+
+        let divisionData = dataheader['inquiry_product_division'];
+
+        if (typeof divisionData === 'string') {
+            try {
+                divisionData = JSON.parse(divisionData);
+            } catch (e) {
+                console.error('Gagal parse JSON:', e);
+                divisionData = [];
+            }
+        }
+
+        // Sekarang aman dipakai forEach
+        divisionData.forEach(function(code) {
+            pilihkategori(code);
+        });
+
+        // tampilan untuk detail
+        
     }
 </script>
 
