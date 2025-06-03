@@ -1114,96 +1114,45 @@ Inquiry - Admin Panel
 
         postdata.append('details', JSON.stringify(details));
 
-        if($('#inquiry_id').val() != '') {
-            console.log('edit');
+        var url = $('#inquiry_id').val() != '' 
+            ? "/admin/inquiry_supply_only/update/" + $('#inquiry_id').val() 
+            : "/admin/inquiry_supply_only";
 
-            $.ajax({
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                type: "PUT",
-                url: "/admin/inquiry_supply_only/update/" + $('#inquiry_id').val(),
-                data: (postdata),
-                processData: false, // Jangan ubah data
-                contentType: false, // Atur tipe konten secara otomatis
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data.status == 401) {
-                        showAlert('danger', "Form Wajib Diisi");
-                        if (data.column == 'department_code') {
-                            alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
-                        } else {
-                            alertform('text',data.column,"Form ini Tidak Boleh Kosong");
-                        }
-                        return;
-                    } else if (data.status == 501) {
-                        showAlert('danger', "Form Wajib Diisi");
-                        if (data.column == 'department_code') {
-                            alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
-                        } else {
-                            alertform('text',data.column,"Form ini Tidak Boleh Kosong");
-                        }
-                        return;
-                    } else {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Data Saved!',
-                        }).then(function() {
-                            // location.reload();
-                            window.location.href = "/admin/inquiry";
-                        });
-                    }
-                },
-                error: function (dataerror) {
-                    alertError(dataerror.responseJSON.message);
+        var ajaxConfig = {
+            type: "POST",
+            url: url,
+            data: postdata,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            async: false,
+            success: function(data) {
+                if (data.status == 401 || data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    alertform('text', data.column, "Form ini Tidak Boleh Kosong");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        window.location.href = "/admin/inquiry";
+                    });
                 }
-            });
-        }else {
-            console.log('store');
+            },
+            error: function(dataerror) {
+                alertError(dataerror.responseJSON.message);
+            }
+        };
 
-            $.ajax({
-                type: "POST",
-                url: "/admin/inquiry_supply_only",
-                data: (postdata),
-                processData: false, // Jangan ubah data
-                contentType: false, // Atur tipe konten secara otomatis
-                dataType: "json",
-                async: false,
-                success: function (data) {
-                    if (data.status == 401) {
-                        showAlert('danger', "Form Wajib Diisi");
-                        if (data.column == 'department_code') {
-                            alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
-                        } else {
-                            alertform('text',data.column,"Form ini Tidak Boleh Kosong");
-                        }
-                        return;
-                    } else if (data.status == 501) {
-                        showAlert('danger', "Form Wajib Diisi");
-                        if (data.column == 'department_code') {
-                            alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
-                        } else {
-                            alertform('text',data.column,"Form ini Tidak Boleh Kosong");
-                        }
-                        return;
-                    } else {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success',
-                            text: 'Data Saved!',
-                        }).then(function() {
-                            // location.reload();
-                            window.location.href = "/admin/inquiry";
-                        });
-                    }
-                },
-                error: function (dataerror) {
-                    alertError(dataerror.responseJSON.message);
-                }
-            });
+        if ($('#inquiry_id').val() != '') {
+            ajaxConfig.headers = {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            };
         }
+
+        $.ajax(ajaxConfig);
 
 
     }
@@ -1357,12 +1306,12 @@ Inquiry - Admin Panel
         document.getElementById('phone').value = datauser['customers_phone']; 
         document.getElementById('email').value = datauser['customers_email']; 
 
-        $('#permintaan_dari').append(new Option("WhatsApp", dataheader['inquiry_origin'], true, true)).trigger('change');
-        document.getElementById('permintaan_dari_name').value = "WhatsApp"; // perlu ambil dari db
+        $('#permintaan_dari').append(new Option(dataheader['origin_inquiry_name'], dataheader['inquiry_origin'], true, true)).trigger('change');
+        document.getElementById('permintaan_dari_name').value = dataheader['origin_inquiry_name']; // perlu ambil dari db
         document.getElementById('permintaan_pengiriman').value = 1; // Kurir Bromindo
         document.getElementById('permintaan_ongkir').value = dataheader['inquiry_shipping_cost']; 
-        $('#permintaan_stock').append(new Option("Gudang Semarang", dataheader['inquiry_warehouse'], true, true)).trigger('change');
-        document.getElementById('permintaan_stock_name').value = "Gudang Semarang"; // perlu ambil dari db
+        $('#permintaan_stock').append(new Option(dataheader['warehouse_name'], dataheader['inquiry_warehouse'], true, true)).trigger('change');
+        document.getElementById('permintaan_stock_name').value = dataheader['warehouse_name']; // perlu ambil dari db
 
         $("#harga_keseluruhan").text(dataheader['inquiry_grand_total'].toFixed(2));
         $("#harga_keseluruhan_hide").val(dataheader['inquiry_grand_total'].toFixed(2));
@@ -1404,7 +1353,7 @@ Inquiry - Admin Panel
             const code_status = item.inquiry_product_status_on_inquiry;
             const status = code_status == "2" ? "<p style='color: green;'>Ready</p>" : "<p style='color: red;'>Tidak ditemukan disistem</p>"; // atau sesuaikan mapping
             const satuan_code = item.inquiry_product_uom;
-            const satuan = satuan_code; // perlu ambil name dari master
+            const satuan = item.uom_name; // perlu ambil name dari master
             const hargaPricelist = item.inquiry_product_pricelist;
             const hargaNet = item.inquiry_product_net_price;
             const hargaTotal = item.inquiry_product_total_price;
