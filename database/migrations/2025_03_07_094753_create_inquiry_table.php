@@ -27,6 +27,7 @@ return new class extends Migration
             $table->timestamp('inquiry_end_date')->nullable();
             $table->string('inquiry_customer', 225)->nullable();
             $table->string('inquiry_origin', 225)->nullable();
+            $table->string('inquiry_date_and_location', 225)->nullable();
             $table->string('inquiry_stage', 225)->nullable();
             $table->string('inquiry_stage_progress', 225)->nullable();
             $table->json('inquiry_product_division')->nullable();

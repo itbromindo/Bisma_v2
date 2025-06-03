@@ -8,6 +8,7 @@ use App\Models\InquiryProduct;
 use App\Models\DescriptionQuotation;
 use App\Models\ParameterDuedate;
 use App\Models\Product_divisions;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Support\Facades\Session;
@@ -23,6 +24,7 @@ class InquirysupplyonlyController extends Controller
         $this->modeldesc = new DescriptionQuotation();
         $this->modelduedate = new ParameterDuedate();
         $this->modelproduct = new Product_divisions();
+        $this->modelcustomer = new Customer();
         $this->mandatory = [
         //     'cities_name' => 'required',
         //     'cities_code' => 'nullable|string|max:225',
@@ -51,13 +53,126 @@ class InquirysupplyonlyController extends Controller
             // 'listdata' => $listdata,
             'description' => $desc[0]->description ?? 'Description not found',
             'listproduct' => $product,
+            'method' => 'store',
+            'dataheader' => [],
+            'datadetail' => [],
+            'id' => '',
+            'datauser' => [],
         ]);
+    }
+
+    public function edit_data($iddata)
+    {
+        $this->checkAuthorization(auth()->user(), ['inquiry.editsupplyonly']);
+
+        $modelheader = $this->modelheader
+            ->select(
+                // '*',
+                'inquiry_id',
+                'inquiry_code as code_inquiry',
+                'inquiry_type',
+                'inquiry_notes', 
+                'inquiry_soft_delete',
+                'inquiry_start_date', 
+                'inquiry_end_date', 
+                'inquiry_customer', 
+                'inquiry_origin', 
+                'inquiry_date_and_location',
+                'inquiry_stage', 
+                'inquiry_stage_progress', 
+                'inquiry_product_division',
+                'inquiry_warehouse', 
+                'inquiry_customer_type', 
+                'inquiry_oc', 
+                'inquiry_expedition',
+                'inquiry_expedition_service',
+                'inquiry_expedition_route',
+                'inquiry_expedition_estimation_date',
+                'inquiry_shipping_cost',
+                'inquiry_wording_card_header',
+                'inquiry_tax',
+                'inquiry_total_no_tax',
+                'inquiry_grand_total',
+                'inquiry_product_grand_total_status',
+                'inquiry_sales',
+                'inquiry_footer_note_inquiry',
+                'inquiry_flag_quote',
+                'inquiry_teams',
+                'warehouse_code',
+                'warehouse_name',
+                'origin_inquiry_code',
+                'origin_inquiry_name',
+                )
+            ->join('origin_inquiries','origin_inquiries.origin_inquiry_code','=','inquiry_origin')
+            ->join('warehouse', 'warehouse.warehouse_code', '=', 'inquiry_warehouse')
+            ->where('inquiry_id', $iddata)
+            ->where('inquiry_soft_delete', 0)
+            ->get();
+
+        // return $modelheader;
+
+        $modeldetail = [];
+        if ($modelheader) {
+            $modeldetail = $this->modeldetail
+            ->select('*')
+            ->join('uom', 'inquiry_product_uom', '=', 'uom.uom_code')
+            ->where('inquiry_code', $modelheader[0]->code_inquiry)
+            ->get();
+        }
+
+        $product = $this->modelproduct
+            ->select('product_divisions_code as code', 'product_divisions_name as name')
+            ->where('product_divisions_soft_delete', 0)
+            ->get();
+
+        // return $modeldetail;
+
+        return view('backend.pages.inquiry.indexsupplyonly', [
+            'description' => $modelheader[0]->inquiry_notes ?? 'Description not found',
+            'listproduct' => $product,
+            'method' => 'edit',
+            'dataheader' => $modelheader,
+            'datadetail' => $modeldetail,
+            'id' => $iddata,
+            'datauser' => $this->search_customer($modelheader[0]->inquiry_customer) ?? '-',
+        ]);
+        
+    }
+
+    public function search_customer($code)
+    {
+        $search = !empty($_GET['search']) ? $_GET['search'] : '%';
+        $listdata = $this->modelcustomer
+            ->select(
+                'customer.customer_code as id',
+                'customer.customer_name as text',
+                'customer.customers_existing',
+                'customer.customers_full_address',
+                'customer.customers_phone',
+                'customer.customers_email',
+                'customer.customers_PIC',
+                'customer.customers_npwp',
+                'customer.customers_village',
+                'customer.districts_code',
+                'cities.cities_code',
+                'cities.cities_name',
+                'provinces.provinces_code',
+                'provinces.provinces_name'
+            )
+            ->join('provinces', 'provinces.provinces_code', '=', 'customer.provinces_code')
+            ->join('cities', 'cities.cities_code', '=', 'customer.cities_code')
+            ->where('customer.customer_code', '=', $code)
+            ->where('customer.customers_soft_delete', 0)
+            ->get();
+
+
+        return response()->json($listdata);
     }
 
     public function store(Request $request)
     {
-        $this->checkAuthorization(auth()->user(), ['supplyonly.create']);
-        $validator = Validator::make($request->all(), $this->mandatory); // $this->mainroute
+        $this->checkAuthorization(auth()->user(), ['inquiry.createsupplyonly']);
+        $validator = Validator::make($request->all(), $this->mandatory);
 
 		if ($validator->fails()) {
 			$messages = [
@@ -88,66 +203,63 @@ class InquirysupplyonlyController extends Controller
             ->limit(1)
             ->get();
 
-        // time inquiry_end_date timestamp + $duedate[0]->time (dalam jam)
         $end_date = date("Y-m-d H:i:s", strtotime("+".$duedate[0]->time." hours"));
-        // return json_encode($request->input('kategori'));
 
         $inquiry = $this->modelheader->create([
-            'inquiry_code' => $code_inquiry, // FS/5643/PMS/I/2024
-            'inquiry_type' => 'IT0001', // IT0001
-            'inquiry_start_date' => date("Y-m-d h:i:s"), // 2024-04-02 22:18:39
-            'inquiry_end_date' => $end_date, // 2024-04-02 22:18:39
-            'inquiry_customer' => $request->input('nama_customer') ?? '', // CSR000008
-            'inquiry_origin' => 'OI013', // ORIGIN003
-            'inquiry_stage' => 'STATUS001', // STATUS009
-            'inquiry_stage_progress' => 'in progress', // in progress
+            'inquiry_code' => $code_inquiry,
+            'inquiry_type' => 'IT0001',
+            'inquiry_start_date' => date("Y-m-d h:i:s"),
+            'inquiry_end_date' => $end_date,
+            'inquiry_customer' => $request->input('nama_customer') ?? '', 
+            'inquiry_origin' => $request->input('permintaan_dari'), 
+            'inquiry_date_and_location' => $request->input('permintaan_lokasi') ?? '',
+            'inquiry_stage' => 'STATUS001',
+            'inquiry_stage_progress' => 'in progress', 
             'inquiry_product_division' => json_encode(
                 is_array($request->input('kategori'))
                 ? $request->input('kategori')
                 : explode(',', $request->input('kategori') ?? '')
-            ), // ["FS", "FE", "FH"]
-            'inquiry_warehouse' => $request->input('permintaan_stock') ?? '', // WRH0001
-            'inquiry_customer_type' => $request->input('user_code') ?? '', // End User
-            'inquiry_oc' => 0, // 0
-            'inquiry_expedition' => $request->input('permintaan_pengiriman_name') ?? '', // Kurir Bromindo
-            'inquiry_expedition_service' => '', // 
-            'inquiry_expedition_route' => '', // 
-            'inquiry_expedition_estimation_date' => '', // 
-            'inquiry_shipping_cost' => $request->input('permintaan_ongkir') ?? 0, // 15000.00
-            'inquiry_wording_card_header' => '', // 
-            'inquiry_tax' => $request->input('harga_ppn') ?? 0, // 0.00
-            'inquiry_total_no_tax' => $request->input('harga_tanpa_ppn') ?? 0, // 0.00
-            'inquiry_grand_total' => $request->input('harga_total') ?? 0, // 0.00
-            'inquiry_product_grand_total_status' => '', // 
-            'inquiry_sales' => 'admin1', // admin1 ??
-            'inquiry_footer_note_inquiry' => '', // 
-            'inquiry_flag_quote' => '', // 
-            'inquiry_teams' => '["'.Session::get('user_code').'"]', // ["admin1", "user1"] ??
+            ),
+            'inquiry_warehouse' => $request->input('permintaan_stock') ?? '',
+            'inquiry_customer_type' => $request->input('user_code') ?? '', 
+            'inquiry_oc' => 0, 
+            'inquiry_expedition' => $request->input('permintaan_pengiriman_name') ?? '', 
+            'inquiry_expedition_service' => '', 
+            'inquiry_expedition_route' => '', 
+            'inquiry_expedition_estimation_date' => '', 
+            'inquiry_shipping_cost' => $request->input('permintaan_ongkir') ?? 0, 
+            'inquiry_wording_card_header' => '', 
+            'inquiry_tax' => $request->input('harga_ppn') ?? 0,
+            'inquiry_total_no_tax' => $request->input('harga_tanpa_ppn') ?? 0,
+            'inquiry_grand_total' => $request->input('harga_total') ?? 0,
+            'inquiry_product_grand_total_status' => '', 
+            'inquiry_sales' => 'admin1', 
+            'inquiry_footer_note_inquiry' => '', 
+            'inquiry_flag_quote' => '', 
+            'inquiry_teams' => '["'.Session::get('user_code').'"]',
             'inquiry_created_at' => date("Y-m-d h:i:s"),
             'inquiry_created_by' => Session::get('user_code'),
             'inquiry_updated_at' => '',
             'inquiry_updated_by' => '',
             'inquiry_deleted_at' => '',
             'inquiry_deleted_by' => '',
-            'inquiry_notes' => $request->input('keterangan') ?? '', // lorem ipsum
+            'inquiry_notes' => $request->input('keterangan') ?? '', 
             'inquiry_soft_delete' => 0
         ]);
 
-        // Ambil data detail dari request (dalam format JSON)
         $details = json_decode($request->input('details'), true);
 
-        // Pastikan `details` ada dan bukan null
         if (!empty($details)) {
             foreach ($details as $detail) {
                 $this->modeldetail->create([
-                    'inquiry_product_code' => $this->setcode($this->modeldetail->count() + 1, 'DETISO', 6),
+                    'inquiry_product_code' => $this->setcode($this->getkeydetail() + 1, 'DETISO', 6),
                     'inquiry_code' => $code_inquiry,
                     'goods_code' => $detail['produk_code'] ?? '',
                     'inquiry_product_name' => $detail['produk_name'] ?? '',
                     'inquiry_product_status_quote_no_quote' => '',
                     'inquiry_product_qty' => $detail['qty'] ?? 0,
                     'inquiry_product_status_on_inquiry' => $detail['status'] ?? '',
-                    'inquiry_product_uom' => $detail['satuan'] ?? '', // ini tolong ganti dengan kode satuan
+                    'inquiry_product_uom' => $detail['satuan'] ?? '', 
                     'inquiry_product_cost_of_goods' => 0, 
                     'inquiry_product_pricelist' => $detail['harga_unit'] ?? 0,
                     'inquiry_product_net_price' => $detail['harga_net'] ?? 0,
@@ -161,6 +273,92 @@ class InquirysupplyonlyController extends Controller
 
         session()->flash('success', __('Level has been created.'));
         return $request;
+    }
+
+    public function update(Request $request, $id)
+    {
+        $this->checkAuthorization(auth()->user(), ['inquiry.editsupplyonly']);
+        $validator = Validator::make($request->all(), $this->mandatory); 
+
+		if ($validator->fails()) {
+			$messages = [
+				'data' => $validator->errors()->first(),
+				'status' => 401,
+                'column' => $validator->errors()->keys()[0],
+			];
+            session()->flash('error', $validator->errors()->first());
+            return response()->json($messages);
+		}
+
+        $inquiry = $this->modelheader
+        ->where('inquiry_id', $id)
+        ->update([
+            'inquiry_customer' => $request->input('nama_customer') ?? '',
+            'inquiry_origin' => $request->input('permintaan_dari'),
+            'inquiry_date_and_location' => $request->input('permintaan_lokasi') ?? '',
+            'inquiry_product_division' => json_encode(
+                is_array($request->input('kategori'))
+                ? $request->input('kategori')
+                : explode(',', $request->input('kategori') ?? '')
+            ),
+            'inquiry_warehouse' => $request->input('permintaan_stock') ?? '',
+            'inquiry_customer_type' => $request->input('user_code') ?? '',
+            'inquiry_expedition' => $request->input('permintaan_pengiriman_name') ?? '',
+            'inquiry_shipping_cost' => $request->input('permintaan_ongkir') ?? 0,
+            'inquiry_tax' => $request->input('harga_ppn') ?? 0,
+            'inquiry_total_no_tax' => $request->input('harga_tanpa_ppn') ?? 0,
+            'inquiry_grand_total' => $request->input('harga_total') ?? 0,
+            'inquiry_updated_at' => now(),
+            'inquiry_updated_by' => Session::get('user_code'),
+            'inquiry_notes' => $request->input('keterangan') ?? '', 
+        ]);
+
+        $code_header = $this->modelheader
+            ->select('inquiry_code as code_inquiry')
+            ->where('inquiry_id', $id)
+            ->where('inquiry_soft_delete', 0)
+            ->first();
+
+        $code_inquiry = $code_header->code_inquiry;
+
+        $detail_hapus = $this->modeldetail->where('inquiry_code', $code_inquiry)->delete();
+
+        $details = json_decode($request->input('details'), true);
+
+        if (!empty($details)) {
+            foreach ($details as $detail) {
+                $this->modeldetail->create([
+                    'inquiry_product_code' => $this->setcode($this->getkeydetail() + 1, 'DETISO', 6),
+                    'inquiry_code' => $code_inquiry,
+                    'goods_code' => $detail['produk_code'] ?? '',
+                    'inquiry_product_name' => $detail['produk_name'] ?? '',
+                    'inquiry_product_status_quote_no_quote' => '',
+                    'inquiry_product_qty' => $detail['qty'] ?? 0,
+                    'inquiry_product_status_on_inquiry' => $detail['status'] ?? '',
+                    'inquiry_product_uom' => $detail['satuan'] ?? '',
+                    'inquiry_product_cost_of_goods' => 0, 
+                    'inquiry_product_pricelist' => $detail['harga_unit'] ?? 0,
+                    'inquiry_product_net_price' => $detail['harga_net'] ?? 0,
+                    'inquiry_taxes_percent' => $detail['taxes'] ?? 0,
+                    'inquiry_taxes_nominal' => 0, 
+                    'inquiry_product_total_price' => $detail['harga_total'] ?? 0,
+                    'inquiry_product_reason_no_quote' => '',
+                ]);
+            }
+        }
+
+        session()->flash('success', __('Level has been created.'));
+        return $request;
+    }
+
+    public function getkeydetail()
+    {
+        $getdata = $this->modeldetail
+            ->select('inquiry_product_id as id')
+            ->orderBy('inquiry_product_id', 'desc')
+            ->first();
+
+        return $getdata->id ?? 0;
     }
 
     public function previewpdf(Request $request) {

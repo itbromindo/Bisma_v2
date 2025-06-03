@@ -117,7 +117,7 @@ $usr = Auth::guard('web')->user();
 
 			<div class="modal-header">
 				<div>
-					<button class="plain-btn rt-mr-8">
+					<button class="plain-btn rt-mr-8" onclick="show_edit_inquiry()">
 						<div class="btn-content">
 							<svg width="90" height="40" viewBox="0 0 90 40" fill="none" xmlns="http://www.w3.org/2000/svg">
 								<!-- Original edit icon paths -->
@@ -992,6 +992,20 @@ $usr = Auth::guard('web')->user();
 			}
 		})
 	});
+
+	function show_edit_inquiry() {
+		let id = $('#d-inquiry-id').val();
+
+		if (id) {
+			window.location.href = '/admin/inquiry_supply_only/edit/' + id;
+		} else {
+			Swal.fire({
+				icon: 'warning',
+				title: 'Warning!',
+				text: 'Data tidak ditemukan!',
+			})
+		}
+	}
 </script>
 
 @endsection

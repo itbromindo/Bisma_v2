@@ -77,6 +77,7 @@ class LoginController extends Controller
             $code_homebase = DB::table('homebases')
                 ->select('homebase_name')
                 ->where('homebase_code', $user->users_homebase)
+                ->where('homebase_soft_delete', 0)
                 ->first();
             $homebase_name = $code_homebase->homebase_name ?? null;
 
