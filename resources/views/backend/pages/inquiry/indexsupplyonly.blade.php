@@ -455,6 +455,8 @@ Inquiry - Admin Panel
     </div>
 </div>
 
+<input type="hidden" id="inquiry_id" value="">
+
 <!-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script> -->
 <script>
 
@@ -476,7 +478,8 @@ Inquiry - Admin Panel
     let datakategori = [];
 
     $(document).ready(function() {   
-        // console.log('list kategori', @json($listproduct));
+        // console.log('method', @json($method));
+        const method = @json($method);
 
         const listProduct = @json($listproduct); // convert PHP to JSON for JS
         const kategoriGroup = $('#kategoriGroup');
@@ -660,6 +663,14 @@ Inquiry - Admin Panel
             // $('.pph-input-data').css('display','block');
             $('.pph-input-data').removeClass('hidden');
         });
+
+        if (method == 'store') {
+            $('#inquiry_id').val('');
+        }else{
+            $('#inquiry_id').val(@json($id));
+
+            showdataedit();
+        }
     });
 
     function pilihkategori(kode_kategori) {
@@ -1103,30 +1114,22 @@ Inquiry - Admin Panel
 
         postdata.append('details', JSON.stringify(details));
 
-        $.ajax({
+        var url = $('#inquiry_id').val() != '' 
+            ? "/admin/inquiry_supply_only/update/" + $('#inquiry_id').val() 
+            : "/admin/inquiry_supply_only";
+
+        var ajaxConfig = {
             type: "POST",
-            url: "/admin/inquiry_supply_only",
-            data: (postdata),
-            processData: false, // Jangan ubah data
-            contentType: false, // Atur tipe konten secara otomatis
+            url: url,
+            data: postdata,
+            processData: false,
+            contentType: false,
             dataType: "json",
             async: false,
-            success: function (data) {
-                if (data.status == 401) {
+            success: function(data) {
+                if (data.status == 401 || data.status == 501) {
                     showAlert('danger', "Form Wajib Diisi");
-                    if (data.column == 'department_code') {
-                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
-                    } else {
-                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
-                    }
-                    return;
-                } else if (data.status == 501) {
-                    showAlert('danger', "Form Wajib Diisi");
-                    if (data.column == 'department_code') {
-                        alertform('select2',data.column,"Form ini Tidak Boleh Kosong");
-                    } else {
-                        alertform('text',data.column,"Form ini Tidak Boleh Kosong");
-                    }
+                    alertform('text', data.column, "Form ini Tidak Boleh Kosong");
                     return;
                 } else {
                     Swal.fire({
@@ -1134,15 +1137,23 @@ Inquiry - Admin Panel
                         title: 'Success',
                         text: 'Data Saved!',
                     }).then(function() {
-                        // location.reload();
                         window.location.href = "/admin/inquiry";
                     });
                 }
             },
-            error: function (dataerror) {
+            error: function(dataerror) {
                 alertError(dataerror.responseJSON.message);
             }
-        });
+        };
+
+        if ($('#inquiry_id').val() != '') {
+            ajaxConfig.headers = {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            };
+        }
+
+        $.ajax(ajaxConfig);
+
 
     }
 
@@ -1269,6 +1280,145 @@ Inquiry - Admin Panel
         $('#header_form_nama').removeClass('hidden');
         $('#header_form_permintaan').removeClass('hidden');
         $('#header_form_gudang').removeClass('hidden');
+    }
+
+    function showdataedit() {
+        const dataheader = @json($dataheader)[0];
+        const datadetail = @json($datadetail);
+        const datauser = @json($datauser)['original'][0];
+
+        // document.getElementById('nama_customer').value = datauser['text'];
+        $('#nama_customer').append(new Option(datauser['text'], datauser['id'], true, true)).trigger('change');
+        if(user_code == "Reseller") {
+            var user_code = 1;
+        } else if (user_code == "End User") {
+            var user_code = 2;
+        } else if (user_code == "Kontraktor") {
+            var user_code = 3;
+        } else {
+            var user_code = 1;
+        }
+
+        document.getElementById('user_code').value = user_code;
+        document.getElementById('company').value = datauser['text'];
+        document.getElementById('address').value = datauser['customers_full_address']; 
+        document.getElementById('city').value = datauser['provinces_name']+" & "+datauser['cities_name']; 
+        document.getElementById('phone').value = datauser['customers_phone']; 
+        document.getElementById('email').value = datauser['customers_email']; 
+
+        $('#permintaan_dari').append(new Option(dataheader['origin_inquiry_name'], dataheader['inquiry_origin'], true, true)).trigger('change');
+        document.getElementById('permintaan_dari_name').value = dataheader['origin_inquiry_name']; // perlu ambil dari db
+        document.getElementById('permintaan_pengiriman').value = 1; // Kurir Bromindo
+        document.getElementById('permintaan_ongkir').value = dataheader['inquiry_shipping_cost']; 
+        $('#permintaan_stock').append(new Option(dataheader['warehouse_name'], dataheader['inquiry_warehouse'], true, true)).trigger('change');
+        document.getElementById('permintaan_stock_name').value = dataheader['warehouse_name']; // perlu ambil dari db
+
+        $("#harga_keseluruhan").text(dataheader['inquiry_grand_total'].toFixed(2));
+        $("#harga_keseluruhan_hide").val(dataheader['inquiry_grand_total'].toFixed(2));
+        document.getElementById('harga_ppn').value = dataheader['inquiry_tax'];
+        document.getElementById('harga_tanpa_ppn').value = dataheader['inquiry_total_no_tax'];
+
+        let divisionData = dataheader['inquiry_product_division'];
+
+        if (typeof divisionData === 'string') {
+            try {
+                divisionData = JSON.parse(divisionData);
+            } catch (e) {
+                console.error('Gagal parse JSON:', e);
+                divisionData = [];
+            }
+        }
+
+        divisionData.forEach(function(code) {
+            pilihkategori(code);
+        });
+
+        // tampilan untuk detail
+        $('#modalinput').modal('hide');
+
+        $('#table_misi').removeClass('hidden');
+        $('#new_misi').addClass('hidden');
+        $('#header_form_nama').removeClass('hidden');
+        $('#header_form_permintaan').removeClass('hidden');
+        $('#header_form_gudang').removeClass('hidden');
+        $('.pph-input-data').removeClass('hidden');
+
+        datadetail.forEach((item, index) => {
+            
+            const no = index + 1;
+            const kodebarang = item.goods_code;
+            const namaBarang = item.inquiry_product_name;
+            const quantity = item.inquiry_product_qty;
+            const stok = 0; // sesuaikan kalau ada data stok
+            const code_status = item.inquiry_product_status_on_inquiry;
+            const status = code_status == "2" ? "<p style='color: green;'>Ready</p>" : "<p style='color: red;'>Tidak ditemukan disistem</p>"; // atau sesuaikan mapping
+            const satuan_code = item.inquiry_product_uom;
+            const satuan = item.uom_name; // perlu ambil name dari master
+            const hargaPricelist = item.inquiry_product_pricelist;
+            const hargaNet = item.inquiry_product_net_price;
+            const hargaTotal = item.inquiry_product_total_price;
+            const pajak = item.inquiry_taxes_percent;
+
+            $('#tbody').append(`
+                <tr>
+                    <td class="text-center">${no}</td>
+                    <td class="hidden">${kodebarang}</td>
+                    <td>${namaBarang}</td>
+                    <td><input type="number" value="${quantity}" class="quantity-input" oninput="updateHargaTotal(this)"></td>
+                    <td class="text-center">${stok}</td>
+                    <td class="hidden">${code_status}</td>
+                    <td>${status}</td>
+                    <td class="hidden">${satuan_code}</td>
+                    <td>${satuan}</td>
+                    <td class="text-center">${hargaPricelist}</td>
+                    <td class="harga-net text-center">${hargaNet}</td>
+                    <td class="pph-input-data text-center">
+                        <select class="ppn-input select2-ppn form-control" onchange="updateHargaTotal(this)">
+                            <option value="${pajak}" selected>${pajak}%</option>
+                        </select>
+                    </td>
+                    <td class="harga-total text-center">${hargaTotal.toFixed(0)}</td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <button type="button" class="btn btn-danger" onclick="hapuslist(this)">
+                                <i class="ph ph-trash"></i>
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="moveUp(this)">
+                                <i class="ph ph-arrow-up"></i>
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="moveDown(this)">
+                                <i class="ph ph-arrow-down"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `);
+            // console.log('Menambahkan xxx', item.inquiry_product_code);
+        });
+
+
+        // Inisialisasi select2 untuk semua elemen baru
+        $('.select2-ppn').select2({
+            placeholder: "PPN",
+            allowClear: true,
+            ajax: {
+                url: '/admin/combotaxes',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        search: params.term,
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data
+                    };
+                },
+                cache: true
+            },
+        });
+
     }
 </script>
 

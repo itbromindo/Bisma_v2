@@ -16,6 +16,8 @@
                     {
                         $status_card = ' bg-danger-50 border-danger';
                     }
+
+                    $idinquiry = $row->inquiry_id;
                 @endphp
 
                 <div class="card-priority rt-mb-12 {{ $status_card }}">
@@ -35,7 +37,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-actions" aria-labelledby="dropdownMenuButton_1" data-popper-placement="bottom-start">
                                 <li>
-                                    <a href="#" class="dropdown-item">
+                                    <a href="/admin/inquiry_supply_only/edit/{{$row->inquiry_id}}" class="dropdown-item">
                                         <span>
                                             <img src="{{asset('backend/assets/images/svg/pen.svg')}}" alt="pen">
                                         </span> Edit
