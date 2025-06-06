@@ -109,7 +109,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
 
     // Master Approval Routes
     Route::resource('master_approvals', App\Http\Controllers\Backend\MasterApprovalController::class);
-    Route::any('master_approvals/{id}', [App\Http\Controllers\Backend\MasterApprovalController::class, 'update']);
 
     //Province Routes
     Route::resource('provinces', App\Http\Controllers\Backend\ProvinceController::class);

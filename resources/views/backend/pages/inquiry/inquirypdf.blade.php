@@ -70,7 +70,7 @@
                     </table>
                 </td>
                 <td width="30%" style="text-align: right;">
-                    {{ $homebase }}, {{ date_format_indonesia(date('Y-m-d')) }}
+                    {{ $homebase }}, {{ date_format_indonesia(date('Y-m-d', strtotime($data['inquiry']->inquiry_created_at))) }}
                 </td>
             </tr>
         </table>
