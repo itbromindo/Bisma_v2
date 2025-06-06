@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Backend;
 use App\Http\Controllers\Controller;
 use App\Models\Levels;
 use App\Models\MasterApproval;
+use App\Models\MasterApprovalsDetail;
 use App\Models\Department;
 use App\Models\Division;
 
@@ -13,20 +14,13 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class MasterApprovalController extends Controller
 {
     public function __construct()
     {
         $this->model = new MasterApproval();
-        $this->mandatory = array(
-            'master_approvals_code' => 'nullable|string|max:225',
-            'master_approvals_approval_name' => 'required|string|max:225',
-            'department_code' => 'required|string|max:225',
-            'division_code' => 'required|string|max:225',
-            'level_code' => 'required|string|max:225',
-            'master_approvals_notes' => 'nullable|string|max:1000',
-        );
     }
 
     public function index(Request $request)
@@ -60,106 +54,125 @@ class MasterApprovalController extends Controller
         ]);
     }
 
+    public function create()
+    {
+        $this->checkAuthorization(auth()->user(), ['master_approvals.view']);
+
+        $departments = Department::select('department_code', 'department_name')->where('department_soft_delete', 0)->orderBy('department_name', 'asc')->get();
+        $division = Division::select('division_code', 'division_name')->where('division_soft_delete', 0)->orderBy('division_name', 'asc')->get();
+        $levels = Levels::select('level_code', 'level_name')->where('level_soft_delete', 0)->orderBy('level_name', 'asc')->get();
+
+        return view('backend.pages.master_approvals.form', [
+            'departments' => $departments,
+            'divisions' => $division,
+            'levels' => $levels,
+        ]);
+    }
+
     public function show($id)
     {
         $this->checkAuthorization(auth()->user(), ['master_approvals.view']);
-    
-        $model = $this->model
-            ->leftJoin('divisions', 'master_approvals.division_code', '=', 'divisions.division_code')
-            ->leftJoin('departments', 'master_approvals.department_code', '=', 'departments.department_code')
-            ->leftJoin('level', 'master_approvals.level_code', '=', 'level.level_code')
-            ->select(
-                'master_approvals.*',
-                'divisions.division_name',
-                'departments.department_name',
-                'level.level_name'
-            )
-            ->where('master_approvals.master_approvals_soft_delete', 0)
-            ->find($id);
-    
-        if (!$model) {
-            return response()->json(['message' => 'Master Approval not found'], 404);
+
+        $approval = MasterApproval::with(['details.level'])
+                    ->where('master_approvals_id', $id)
+                    ->first();
+
+        if (!$approval) {
+            return response()->json(['message' => 'Not found'], 404);
         }
-    
-        return response()->json($model);
+
+        return response()->json([
+            'approval' => $approval,
+            'details' => $approval->details->map(function ($detail) {
+                return [
+                    'section' => $detail->master_approvals_details_section,
+                    'approver_code' => $detail->master_approvals_details_approvers,
+                    'level_name' => $detail->level->level_name
+                ];
+            }),
+        ]);
+
     }
-    
-    
+
+    public function edit($id)
+    {
+        $this->checkAuthorization(auth()->user(), ['master_approvals.edit']);
+
+        $departments = Department::select('department_code', 'department_name')->where('department_soft_delete', 0)->orderBy('department_name', 'asc')->get();
+        $division = Division::select('division_code', 'division_name')->where('division_soft_delete', 0)->orderBy('division_name', 'asc')->get();
+        $levels = Levels::select('level_code', 'level_name')->where('level_soft_delete', 0)->orderBy('level_name', 'asc')->get();
+
+        $data = MasterApproval::findOrFail($id);
+
+        return view('backend.pages.master_approvals.form', [
+            'id' => $id,
+            'data' => $data,
+            'departments' => $departments,
+            'divisions' => $division,
+            'levels' => $levels,
+        ]);
+    }
 
     public function store(Request $request)
     {
         $this->checkAuthorization(auth()->user(), ['master_approvals.create']);
-        $validator = Validator::make($request->all(), $this->mandatory);
 
-        if ($validator->fails()) {
-            $messages = [
-                'data' => $validator->errors()->first(),
-                'status' => 401,
-                'column' => $validator->errors()->keys()[0]
-            ];
-            return response()->json($messages);
+        $validated = $request->validate([
+                    'master_approval_name' => 'required',
+                    'division' => 'required',
+                    'department' => 'required',
+                    'level' => 'required',
+                    'detail_section' => 'required|array',
+                    'detail_section.*' => 'required|string',
+                    'detail_atasan' => 'required|array',
+                    'detail_atasan.*' => 'required|string',
+                ]);
+
+        try {
+            DB::beginTransaction();
+            $id = $request->master_approvals_id;
+
+            $data = [
+                        'master_approvals_approval_name' => $request->master_approval_name,
+                        'division_code' => $request->division,
+                        'department_code' => $request->department,
+                        'level_code' => $request->level,
+                        'master_approvals_notes' => $request->notes,
+                    ];
+
+            if($id) {
+                $data['master_approvals_updated_at'] = now();
+                $data['master_approvals_updated_by'] = Session::get('user_code');   
+            }else{
+                $data['master_approvals_created_at'] = now();
+                $data['master_approvals_created_by'] = Session::get('user_code');
+                $data['master_approvals_code'] = 'MA' . str_pad((string) ($this->model->count() + 1), 3, '0', STR_PAD_LEFT);
+            }
+
+            $master = MasterApproval::updateOrCreate(
+                ['master_approvals_id' => $id],
+                $data
+            );
+
+            $master->details()->delete();
+            foreach ($request->detail_section as $i => $section) {
+                $master->details()->create([
+                    'master_approvals_code' => $master->master_approvals_code,
+                    'master_approvals_details_section' => $section,
+                    'master_approvals_details_approvers' => $request->detail_atasan[$i],
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            DB::commit();
+            return response()->json(['message' => 'Data berhasil disimpan.']);
+        } catch (ValidationException $e) {
+            return response()->json(['message' => 'Validasi gagal.', 'errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Gagal menyimpan data.','error' => $e->getMessage()], 500);
         }
-
-        // Check if related entities exist
-        if (!Department::where('department_code', $request->department_code)->exists()) {
-            return response()->json(['data' => 'Department not found', 'status' => 404]);
-        }
-        if (!Division::where('division_code', $request->division_code)->exists()) {
-            return response()->json(['data' => 'Division not found', 'status' => 404]);
-        }
-        if (!Levels::where('level_code', $request->level_code)->exists()) {
-            return response()->json(['data' => 'Level not found', 'status' => 404]);
-        }
-
-        $result = $this->model->create([
-            'master_approvals_code' => 'MA' . str_pad((string) ($this->model->count() + 1), 3, '0', STR_PAD_LEFT),
-            'master_approvals_approval_name' => $request->master_approvals_approval_name,
-            'department_code' => $request->department_code,
-            'division_code' => $request->division_code,
-            'level_code' => $request->level_code,
-            'master_approvals_notes' => $request->master_approvals_notes,
-            'master_approvals_created_at' => now(),
-            'master_approvals_created_by' => Session::get('user_code'),
-        ]);
-
-        session()->flash('success', __('Master Approval has been created.'));
-        return $request;
-    }
-
-    public function update(Request $request, $id)
-    {
-        $this->checkAuthorization(auth()->user(), ['master_approvals.edit']);
-
-        $validator = Validator::make($request->all(), $this->mandatory);
-
-        if ($validator->fails()) {
-            $messages = [
-                'data' => $validator->errors()->first(),
-                'status' => 401,
-                'column' => $validator->errors()->keys()[0]
-            ];
-            return response()->json($messages);
-        }
-
-        // Check if the master approval exists
-        $masterApproval = $this->model->find($id);
-        if (!$masterApproval) {
-            return response()->json(['data' => 'Master Approval not found', 'status' => 404]);
-        }
-        
-
-        $result = $masterApproval->update([
-            'master_approvals_approval_name' => $request->master_approvals_approval_name,
-            'department_code' => $request->department_code,
-            'division_code' => $request->division_code,
-            'level_code' => $request->level_code,
-            'master_approvals_notes' => $request->master_approvals_notes,
-            'master_approvals_updated_at' => now(),
-            'master_approvals_updated_by' => Session::get('user_code'),
-        ]);
-
-        session()->flash('success', 'Master Approval has been updated.');
-        return $request;
     }
 
     public function destroy($id)

@@ -45,8 +45,7 @@ Master Approvals - Admin Panel
                                     </form>
                                 </div>
                                 @if ($usr->can('master_approvals.create'))
-                                <button type="button" class="btn btn-success" data-bs-toggle="modal"
-                                    data-bs-target="#modalinput" onclick="clearForm()">Tambah Data</button>
+                                <a href="/admin/master_approvals/create" class="btn btn-success">Tambah Data</a>
                                 @endif
                             </div>
                         </div>
@@ -102,23 +101,24 @@ Master Approvals - Admin Panel
                                                                             </svg>
                                                                         </button>
                                                                         @endif
-                                                                        <button
-                                                                            class="btn btn-light btn-sm border border-success text-success"
-                                                                            title="Edit"
-                                                                            onclick="showedit('{{ $approval->master_approvals_id }}')">
-                                                                            <svg width="16" height="16" fill="none"
-                                                                                xmlns="http://www.w3.org/2000/svg">
-                                                                                <path
-                                                                                    d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z"
-                                                                                    stroke="green" stroke-width="1.25"
-                                                                                    stroke-linecap="round"
-                                                                                    stroke-linejoin="round" />
-                                                                                <path d="M11.5 2.5L13.5 4.5" stroke="green"
-                                                                                    stroke-width="1.25"
-                                                                                    stroke-linecap="round"
-                                                                                    stroke-linejoin="round" />
-                                                                            </svg>
-                                                                        </button>
+                                                                        <a href="/admin/master_approvals/{{ $approval->master_approvals_id }}/edit">
+                                                                            <button
+                                                                                class="btn btn-light btn-sm border border-success text-success"
+                                                                                title="Edit">
+                                                                                <svg width="16" height="16" fill="none"
+                                                                                    xmlns="http://www.w3.org/2000/svg">
+                                                                                    <path
+                                                                                        d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z"
+                                                                                        stroke="green" stroke-width="1.25"
+                                                                                        stroke-linecap="round"
+                                                                                        stroke-linejoin="round" />
+                                                                                    <path d="M11.5 2.5L13.5 4.5" stroke="green"
+                                                                                        stroke-width="1.25"
+                                                                                        stroke-linecap="round"
+                                                                                        stroke-linejoin="round" />
+                                                                                </svg>
+                                                                            </button>
+                                                                        </a>
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -358,12 +358,14 @@ Master Approvals - Admin Panel
                                                 </svg>
                                             </button>
                                             @endif
-                                            <button class="btn btn-light btn-sm border border-success text-success" title="Edit" onclick="showedit('${approval.master_approvals_id }')">
-                                                <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                    <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
-                                                </svg>
-                                            </button>
+                                            <a href="/admin/master_approvals/${ approval.master_approvals_id }/edit">
+                                                <button class="btn btn-light btn-sm border border-success text-success" title="Edit">
+                                                    <svg width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M12.1464 1.85355C12.3417 1.65829 12.6583 1.65829 12.8536 1.85355L14.1464 3.14645C14.3417 3.34171 14.3417 3.65829 14.1464 3.85355L5.35355 12.6464L2.5 13.5L3.35355 10.6464L12.1464 1.85355Z" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                        <path d="M11.5 2.5L13.5 4.5" stroke="green" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+                                                    </svg>
+                                                </button>
+                                            </a>
                                         </div>
                                     </td>
                                 </tr>

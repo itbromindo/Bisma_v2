@@ -45,4 +45,9 @@ class MasterApproval extends Model
     {
         return $this->belongsTo(Levels::class, 'level_code', 'level_code');
     }
+
+    public function details()
+    {
+        return $this->hasMany(MasterApprovalsDetail::class, 'master_approvals_code', 'master_approvals_code');
+    }
 }
