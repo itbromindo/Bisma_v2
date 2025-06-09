@@ -1711,3 +1711,28 @@ function showpaginate(page) {
   
   fetchSubmenus(searchQuery, page);
 }
+
+function activateSidebarMenuByPath(path) {
+    const menuLink = document.querySelector(`#side-menu a[href="${path}"]`);
+    if (!menuLink) return;
+
+    // Tambahkan class 'active' ke link
+    menuLink.classList.add('active');
+
+    // Tambahkan 'mm-active' ke <li>
+    const li = menuLink.closest('li');
+    if (li) li.classList.add('mm-active');
+
+    // Tambahkan 'mm-show' ke <ul> parent-nya
+    const ul = menuLink.closest('ul');
+    if (ul) ul.classList.add('mm-show');
+
+    // Tambahkan 'mm-active' ke semua parent <li> di atasnya
+    let parent = li?.parentElement?.closest('li');
+    while (parent) {
+        parent.classList.add('mm-active');
+        const parentUl = parent.querySelector('ul');
+        if (parentUl) parentUl.classList.add('mm-show');
+        parent = parent.parentElement?.closest('li');
+    }
+}

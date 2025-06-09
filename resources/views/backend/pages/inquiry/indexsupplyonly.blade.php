@@ -16,8 +16,8 @@ Inquiry - Admin Panel
     .floating-footer {
         position: fixed;
         bottom: 8px;
-        left: 250px; /* Sesuaikan dengan lebar sidebar */
-        width: calc(100% - 250px); /* Agar footer tidak tertutup sidebar */
+        left: 250px; 
+        width: calc(100% - 250px); 
         background-color: #232b5c;
         color: white;
         display: flex;
@@ -25,7 +25,7 @@ Inquiry - Admin Panel
         align-items: center;
         padding: 10px 20px;
         font-family: Arial, sans-serif;
-        z-index: 999; /* Pastikan berada di atas elemen lain */
+        z-index: 999; 
         border-radius: 12px 12px 12px 12px;
     }
 
@@ -42,15 +42,13 @@ Inquiry - Admin Panel
         gap: 10px;
     }
 
-    /* Pastikan semua input dan select memiliki lebar yang sama */
     .form-control {
-        width: 100%; /* Lebar 100% dari parent-nya */
-        box-sizing: border-box; /* Pastikan padding dan border termasuk dalam lebar */
+        width: 100%; 
+        box-sizing: border-box; 
     }
 
-    /* Jika ada elemen select yang masih bermasalah */
     #nama_customer, #user_code {
-        width: 100% !important; /* Force lebar 100% */
+        width: 100% !important; 
     }
 
     .kategori-group {
@@ -92,11 +90,6 @@ Inquiry - Admin Panel
         left: 50%;
         transform: translate(-50%, -50%);
     }
-
-    /* .kategori-item.selected {
-        border: 2px solid #007bff;
-        background-color: #e6f0ff;
-    } */
 
 </style>
 
@@ -236,30 +229,6 @@ Inquiry - Admin Panel
                             </div>
 
                             <!-- Kategori -->
-                            <!-- <div class="row mb-3 align-items-center">
-                                <label class="col-sm-4 col-form-label"><b>Kategori</b></label>
-                                <div class="col-sm-8">
-                                    <div class="kategori-group d-flex gap-2 flex-wrap">
-                                        <div class="kategori-item" data-value="FE">
-                                            <div class="kategori-btn"></div><span>FE</span>
-                                        </div>
-                                        <div class="kategori-item" data-value="FA">
-                                            <div class="kategori-btn"></div><span>FA</span>
-                                        </div>
-                                        <div class="kategori-item" data-value="FH">
-                                            <div class="kategori-btn"></div><span>FH</span>
-                                        </div>
-                                        <div class="kategori-item" data-value="SE">
-                                            <div class="kategori-btn"></div><span>SE</span>
-                                        </div>
-                                        <div class="kategori-item" data-value="FS">
-                                            <div class="kategori-btn"></div><span>FS</span>
-                                        </div>
-                                    </div>
-                                    <input type="hidden" id="kategoriInput" name="kategori">
-                                </div>
-                            </div> -->
-
                             <div class="row mb-3 align-items-center">
                                 <label class="col-sm-4 col-form-label"><b>Kategori</b></label>
                                 <div class="col-sm-8">
@@ -440,7 +409,6 @@ Inquiry - Admin Panel
     </div>
 </div>
 
-<!-- modal preview menggunakan iframe -->
 <div class="modal fade" id="modalpreview" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
@@ -457,7 +425,6 @@ Inquiry - Admin Panel
 
 <input type="hidden" id="inquiry_id" value="">
 
-<!-- <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script> -->
 <script>
 
     document.addEventListener("DOMContentLoaded", function () {
@@ -478,6 +445,7 @@ Inquiry - Admin Panel
     let datakategori = [];
 
     $(document).ready(function() {   
+        activateSidebarMenuByPath('/admin/inquiry');
         // console.log('method', @json($method));
         const method = @json($method);
 
@@ -674,6 +642,16 @@ Inquiry - Admin Panel
     });
 
     function pilihkategori(kode_kategori) {
+
+        const datakategori = $(".kategori-item .kategori-btn.active").map(function () {
+            return $(this).parent().data("value");
+        }).get();
+
+        const sudahDipilih = datakategori.includes(kode_kategori);
+        if (sudahDipilih) {
+            return;
+        }
+        
         const kategoriItem = $(`.kategori-item[data-value="${kode_kategori}"]`);
         if (kategoriItem.length) {
             const btn = kategoriItem.find('.kategori-btn');
@@ -821,7 +799,7 @@ Inquiry - Admin Panel
 
         pilihkategori($('#code_kategori').val()); 
 
-        $('#tbody').append(`
+        const newRow = $(`
             <tr>
                 <td class="text-center">${no}</td>
                 <td class="hidden">${kodebarang}</td>
@@ -856,7 +834,9 @@ Inquiry - Admin Panel
             </tr>
         `);
 
-        $('.select2-ppn').select2({
+        $('#tbody').append(newRow);
+
+        newRow.find('.select2-ppn').select2({
             placeholder: "PPN",
             allowClear: true,
             ajax: {
@@ -1249,7 +1229,11 @@ Inquiry - Admin Panel
         postdata.append('details', JSON.stringify(details));
 
         try {
-            const response = await fetch("inquiry_supply_only/previewpdf", {
+            var url_preview_pdf = $('#inquiry_id').val() != '' 
+            ? "../../inquiry_supply_only/previewpdf"
+            : "inquiry_supply_only/previewpdf";
+
+            const response = await fetch(url_preview_pdf, {
                 method: 'POST',
                 body: postdata
             });
@@ -1359,7 +1343,7 @@ Inquiry - Admin Panel
             const hargaTotal = item.inquiry_product_total_price;
             const pajak = item.inquiry_taxes_percent;
 
-            $('#tbody').append(`
+            const newRow = $(`
                 <tr>
                     <td class="text-center">${no}</td>
                     <td class="hidden">${kodebarang}</td>
@@ -1393,33 +1377,34 @@ Inquiry - Admin Panel
                     </td>
                 </tr>
             `);
-            // console.log('Menambahkan xxx', item.inquiry_product_code);
+
+            $('#tbody').append(newRow);
+    
+            newRow.find('.select2-ppn').select2({
+                placeholder: "PPN",
+                allowClear: true,
+                ajax: {
+                    url: '/admin/combotaxes',
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            search: params.term,
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: data
+                        };
+                    },
+                    cache: true
+                },
+            });
         });
 
-
-        // Inisialisasi select2 untuk semua elemen baru
-        $('.select2-ppn').select2({
-            placeholder: "PPN",
-            allowClear: true,
-            ajax: {
-                url: '/admin/combotaxes',
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        search: params.term,
-                    };
-                },
-                processResults: function (data) {
-                    return {
-                        results: data
-                    };
-                },
-                cache: true
-            },
-        });
 
     }
+
 </script>
 
 @endsection
