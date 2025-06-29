@@ -195,7 +195,13 @@ class InquirysupplyonlyController extends Controller
         $getmonthtodayRoman = $romanMonths[$getmonthtoday] ?? $getmonthtoday;
         
         $code_header = $this->setcode($getcountheader, 'HEAISO', 6);
-        $code_inquiry = $this->setcodeproduct($request->input('nomor_left')).'/'.$getcountheader.'/BMM/'.$getmonthtodayRoman.'/'.$getyeartoday;
+        $kode_left_default = 'OCP';
+        // return $request->input('nomor_left');
+        if ($request->input('nomor_left') != 'undefined') {
+            $kode_left_default = $this->setcodeproduct($request->input('nomor_left'));
+        }
+        
+        $code_inquiry = $kode_left_default.'/'.$getcountheader.'/BMM/'.$getmonthtodayRoman.'/'.$getyeartoday;
         $duedate = $this->modelduedate
             ->select('param_duedate_time as time')
             ->where('user_code', Session::get('user_code'))
@@ -213,7 +219,7 @@ class InquirysupplyonlyController extends Controller
             'inquiry_customer' => $request->input('nama_customer') ?? '', 
             'inquiry_origin' => $request->input('permintaan_dari'), 
             'inquiry_date_and_location' => $request->input('permintaan_lokasi') ?? '',
-            'inquiry_stage' => 'STATUS001',
+            'inquiry_stage' => $request->input('inquiry_status') ?? 'STATUS001',
             'inquiry_stage_progress' => 'in progress', 
             'inquiry_product_division' => json_encode(
                 is_array($request->input('kategori'))
@@ -373,9 +379,13 @@ class InquirysupplyonlyController extends Controller
         ];
         $getmonthtodayRoman = $romanMonths[$getmonthtoday] ?? $getmonthtoday;
 
+        $kode_left_default = 'OCP';
+        // return $request->input('nomor_left');
+        if ($request->input('nomor_left') != 'undefined') {
+            $kode_left_default = $this->setcodeproduct($request->input('nomor_left'));
+        }
         
-        
-        $code_inquiry = $this->setcodeproduct($request->input('nomor_left')).'/'.$getcountheader.'/BMM/'.$getmonthtodayRoman.'/'.$getyeartoday;
+        $code_inquiry = $kode_left_default.'/'.$getcountheader.'/BMM/'.$getmonthtodayRoman.'/'.$getyeartoday;
 
         $data = array(
             'data' => $request->all(),

@@ -111,3 +111,39 @@
         </div>
     </div>
 </div>
+
+<script>
+    function update_stage_oncallpress(id, stage)
+    {
+        // console.log('id', id);
+        $.ajax({
+            type: "GET",
+            url: '/admin/inquiry/update_stage?id='+id+'&stage='+stage,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            async: false,
+            // headers: {
+            //     'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            // },
+            success: function(data) {
+                if (data.status == 401 || data.status == 501) {
+                    showAlert('danger', "Terjadi kesalahan, silahkan coba lagi.");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        window.location.href = "/admin/inquiry";
+                    });
+                }
+            },
+            error: function(dataerror) {
+                alertError(dataerror.responseJSON.message);
+            }
+        });
+        
+    }
+</script>

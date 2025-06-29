@@ -118,4 +118,5 @@ class InquiryController extends Controller
         $pdf = Pdf::loadView('backend.pages.inquiry.inquirypdf', compact('data'));
         return $pdf->stream('preview.pdf');
     }
+
 }
