@@ -111,3 +111,65 @@
         </div>
     </div>
 </div>
+
+<script>
+    function update_stage_oncallpress(id, stage)
+    {
+        // console.log('id', id);
+        $.ajax({
+            type: "GET",
+            url: '/admin/inquiry/update_stage?id='+id+'&stage='+stage,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            async: false,
+            // headers: {
+            //     'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            // },
+            success: function(data) {
+                if (data.status == 401 || data.status == 501) {
+                    showAlert('danger', "Terjadi kesalahan, silahkan coba lagi.");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        window.location.href = "/admin/inquiry";
+                    });
+                }
+            },
+            error: function(dataerror) {
+                alertError(dataerror.responseJSON.message);
+            }
+        });
+        
+    }
+
+    function saveOnCallPrice() {
+        let id = $('#d-inquiry-oncallprace-aktive').val();
+        let harga_pokok = $('#d-hargaPokok-oncallprice').val();
+
+        let margin_enduser = $('#d-marginEndUser-oncallprice').val();
+        let margin_kontraktor = $('#d-marginKontraktor-oncallprice').val();
+        let margin_reseller = $('#d-marginReseller-oncallprice').val();
+        let margin_pricelist = $('#d-marginPricelist-oncallprice').val();
+
+        let price_enduser = $('#d-hargaEndUser-oncallprice').val();
+        let price_kontraktor = $('#d-hargaKontraktor-oncallprice').val();
+        let price_reseller = $('#d-hargaReseller-oncallprice').val();
+        let price_pricelist = $('#d-hargaPricelist-oncallprice').val();
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            text: 'Level Up! Permintaan Baru Ditambahkan!',
+        })
+
+        $('#viewadddetailitem_oncallpress').modal('hide');
+
+        // console.log('id', id);
+        // console.log('harga_pokok', harga_pokok);
+    }
+</script>

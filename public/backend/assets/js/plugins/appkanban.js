@@ -660,7 +660,9 @@
   let cardviewModal = document.querySelectorAll(".card-priority__title");
 
   cardviewModal.forEach(function (singlemodal) {
+    
     $(singlemodal).on("click", function () {
+      // console.log("sini klik");
       let cardPriority = $(this).closest(".card-priority");
       let inquiryId = cardPriority.find(".inquiry-id").val();
       $.ajax({
@@ -668,6 +670,17 @@
         dataType: 'json',
         success: function(response) {
           if(response.status == 200) {
+            
+            if (response.data.inquiry.inquiry_stage == 'STATUS002') {
+              oncallpress_function(response, inquiryId);
+              return;
+            }
+
+            if (response.data.inquiry.inquiry_stage == 'STATUS003') {
+              waiting_oncallpress_function(response, inquiryId);
+              return;
+            }
+
             let inquiry = response.data.inquiry;
             $("#viewmodal").modal("toggle");
             $('#d-inquiry-id').val(inquiryId);
@@ -759,4 +772,166 @@
       
     });
   });
+
+  // function khusus kanban 2 on call press
+  function oncallpress_function(response, inquiryId) {
+    let inquiry = response.data.inquiry;
+    $("#viewmodaloncallpress").modal("toggle");
+    $('#d-inquiry-id-kanban2').val(inquiryId);
+    $('.d-inquiry-nomor').text(inquiry.inquiry_code);
+    $('.d-inquiry-create-date').text(inquiry.create_date);
+    $('.d-inquiry-type').text(inquiry.inquiry_type_name);
+    $('.d-inquiry-due-date').text(inquiry.due_date);
+    $('.d-inquiry-customer-nama').text(inquiry.customer_name);
+    $('.d-inquiry-customer-provinsi').text(inquiry.provinces_name);
+    $('.d-inquiry-customer-kota').text(inquiry.cities_name);
+    $('.d-inquiry-customer-alamat').text(inquiry.customers_full_address);
+    $('.d-inquiry-customer-email').text(inquiry.customers_email);
+    $('.d-inquiry-customer-telp').text(inquiry.customers_phone);
+    $('.d-inquiry-customer-pic').text(inquiry.customers_PIC);
+    $('.d-inquiry-user-name').text(inquiry.users_name);
+    $('.d-inquiry-user-email').text(inquiry.users_email);
+    $('.d-inquiry-user-telp').text(inquiry.users_personal_phone);
+    $('.d-inquiry-origin').text(inquiry.origin_inquiry_name);
+    $('.d-inquiry-status').text(inquiry.inquiry_status_name);
+    // console.log("oncallpress_function", response);
+    
+    let htmlInquiryProducts = '';
+    if(inquiry.product_divisions_name) {
+      let product_divisions = inquiry.product_divisions_name;
+      let division_names = product_divisions.split(",");
+      htmlInquiryProducts += `<ul class="d-flex"><li class="me-2">:</li>`;
+      division_names.forEach(value => {
+        htmlInquiryProducts += `<li class="me-2">
+          <span class="badge rounded-pill bg-primary-50 text-primary-500">${value}</span>
+        </li>`;
+      });
+  
+      htmlInquiryProducts += `</ul>`;
+    }
+    $('.d-inquiry-product').html(htmlInquiryProducts);
+  
+    // list permintaan
+    $('.d-inquiry-warehaouse').text(inquiry.warehouse_name);
+    $('.d-inquiry-customer-type').text(inquiry.inquiry_customer_type);
+    $('.d-inquiry-oc').text(inquiry.inquiry_oc);
+    $('.d-inquiry-shopping-cost').text(inquiry.inquiry_shipping_cost);
+  
+    let list_permintaan = response.data.list_permintaan;
+    $('#tableBody-kanban2').empty();
+    let totalProdukPermintaan = 0;
+    let totalHargaPermintaan = 0;
+
+    
+    if(list_permintaan.length > 0) {
+      list_permintaan.forEach(function (data, index) {
+        totalProdukPermintaan += 1;
+        totalHargaPermintaan += data.inquiry_product_total_price;
+        let name_status = 'indent';
+        if (data.inquiry_product_status_on_inquiry == 2) {
+          name_status = '<p style="color: green;">Ready</p>';
+        }
+        if (data.inquiry_product_status_on_inquiry == 3) {
+          name_status = '<p style="color: red;">Tidak ditemukan disistem</p>';
+        }
+
+        const btn = onCallButton.replace('PLACEHOLDER_ID', data.inquiry_product_id);
+
+        $('#tableBody-kanban2').append(`
+          <tr>
+            <td class="hidden">${ data.inquiry_product_id}</td>
+            <td class="text-center">${ index + 1}</td>
+            <td class="text-center">${ data.inquiry_product_name }</td>
+            <td class="text-center">${ data.inquiry_product_qty }</td>
+            <td class="text-center">${ name_status }</td>
+            <td class="text-center">${ data.inquiry_product_pricelist }</td>
+            <td class="text-center">${ data.inquiry_product_net_price }</td>
+            <td class="text-center">${ data.inquiry_product_total_price }</td>
+            ${btn}
+          </tr>
+        `);
+      });
+    }else{
+      $('#tableBody-kanban2').append('<tr><td colspan="10" class="text-center">No results found</td></tr>');
+    }
+  
+    $('.d-total-produk-permintaan').text(thousandView(totalProdukPermintaan));
+    $('.d-total-harga-permintaan').text('Rp.' + thousandView(totalHargaPermintaan));
+  }
+
+
+  // function khusus kanban 3 waiting on call press
+  function waiting_oncallpress_function(response, inquiryId) {
+    let inquiry = response.data.inquiry;
+    $("#viewmodal_waiting_oncallprice").modal("toggle");
+    $('#d-inquiry-waiting-oncallprice-id').val(inquiryId);
+    $('.d-inquiry-waiting-oncallprice-nomor').text(inquiry.inquiry_code);
+    $('.d-inquiry-waiting-oncallprice-create-date').text(inquiry.create_date);
+    $('.d-inquiry-waiting-oncallprice-type').text(inquiry.inquiry_type_name);
+    $('.d-inquiry-waiting-oncallprice-due-date').text(inquiry.due_date);
+    $('.d-inquiry-waiting-oncallprice-customer-nama').text(inquiry.customer_name);
+    $('.d-inquiry-waiting-oncallprice-customer-provinsi').text(inquiry.provinces_name);
+    $('.d-inquiry-waiting-oncallprice-customer-kota').text(inquiry.cities_name);
+    $('.d-inquiry-waiting-oncallprice-customer-alamat').text(inquiry.customers_full_address);
+    $('.d-inquiry-waiting-oncallprice-customer-email').text(inquiry.customers_email);
+    $('.d-inquiry-waiting-oncallprice-customer-telp').text(inquiry.customers_phone);
+    $('.d-inquiry-waiting-oncallprice-customer-pic').text(inquiry.customers_PIC);
+    $('.d-inquiry-waiting-oncallprice-user-name').text(inquiry.users_name);
+    $('.d-inquiry-waiting-oncallprice-user-email').text(inquiry.users_email);
+    $('.d-inquiry-waiting-oncallprice-user-telp').text(inquiry.users_personal_phone);
+    $('.d-inquiry-waiting-oncallprice-origin').text(inquiry.origin_inquiry_name);
+    $('.d-inquiry-waiting-oncallprice-status').text(inquiry.inquiry_status_name);
+    
+    let htmlInquiryProducts = '';
+    if(inquiry.product_divisions_name) {
+      let product_divisions = inquiry.product_divisions_name;
+      let division_names = product_divisions.split(",");
+      htmlInquiryProducts += `<ul class="d-flex"><li class="me-2">:</li>`;
+      division_names.forEach(value => {
+        htmlInquiryProducts += `<li class="me-2">
+          <span class="badge rounded-pill bg-primary-50 text-primary-500">${value}</span>
+        </li>`;
+      });
+
+      htmlInquiryProducts += `</ul>`;
+    }
+    $('.d-inquiry-waiting-oncallprice-product').html(htmlInquiryProducts);
+
+    // list permintaan
+    $('.d-inquiry-waiting-oncallprice-warehaouse').text(inquiry.warehouse_name);
+    $('.d-inquiry-waiting-oncallprice-customer-type').text(inquiry.inquiry_customer_type);
+    $('.d-inquiry-waiting-oncallprice-oc').text(inquiry.inquiry_oc);
+    $('.d-inquiry-waiting-oncallprice-shopping-cost').text(thousandView(inquiry.inquiry_shipping_cost));
+
+    let list_permintaan = response.data.list_permintaan;
+    $('#tableBody_waiting_oncallprice').empty();
+    let totalProdukPermintaan = 0;
+    let totalHargaPermintaan = 0;
+    if(list_permintaan.length > 0) {
+      list_permintaan.forEach(function (data, index) {
+        totalProdukPermintaan += 1;
+        totalHargaPermintaan += data.inquiry_product_total_price;
+        $('#tableBody_waiting_oncallprice').append(`
+          <tr>
+            <td class="text-center">${ index + 1}</td>
+            <td class="text-center">${ data.inquiry_product_name }</td>
+            <td class="text-center">${ thousandView(data.inquiry_product_qty) }</td>
+            <td class="text-center">${ thousandView(data.goods_stock) }</td>
+            <td class="text-center">${ data.inquiry_product_status_on_inquiry }</td>
+            <td class="text-center">${ data.uom_name }</td>
+            <td class="text-center">${ thousandView(data.inquiry_product_pricelist) }</td>
+            <td class="text-center">${ thousandView(data.inquiry_product_net_price) }</td>
+            <td class="text-center">${ data.inquiry_taxes_percent } %</td>
+            <td class="text-center">${ thousandView(data.inquiry_product_total_price) }</td>
+          </tr>
+        `);
+      });
+    }else{
+      $('#tableBody_waiting_oncallprice').append('<tr><td colspan="10" class="text-center">No results found</td></tr>');
+    }
+
+    $('.d-total-produk-permintaan-waiting-oncallprice').text(thousandView(totalProdukPermintaan));
+    $('.d-total-harga-permintaan-waiting-oncallprice').text('Rp.' + thousandView(totalHargaPermintaan));
+  }
+
 })(jQuery);

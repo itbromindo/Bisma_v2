@@ -145,7 +145,8 @@ class Inquiry extends Model
                     'p.provinces_name',
 	                'c2.cities_name',
                     'w.warehouse_name',
-                    DB::raw('GROUP_CONCAT(DISTINCT pd.product_divisions_name) as product_divisions_name')
+                    DB::raw('GROUP_CONCAT(DISTINCT pd.product_divisions_name) as product_divisions_name'),
+                    'i.inquiry_stage'
                 )
                 ->join('customer as c', 'i.inquiry_customer', '=', 'c.customer_code')
                 ->join('users as u', 'i.inquiry_created_by', '=', 'u.user_code')
@@ -168,9 +169,10 @@ class Inquiry extends Model
     {
         $query = DB::table('inquiry_product as ip')
                 ->join('inquiry as i', 'ip.inquiry_code', '=', 'i.inquiry_code')
-                ->join('goods as g', 'ip.goods_code', '=', 'g.goods_code')
-                ->join('uom as u', 'ip.inquiry_product_uom', '=', 'u.uom_code')
+                ->leftjoin('goods as g', 'ip.goods_code', '=', 'g.goods_code')
+                ->leftjoin('uom as u', 'ip.inquiry_product_uom', '=', 'u.uom_code')
                 ->select(
+                    'ip.inquiry_product_id',
                     'ip.inquiry_product_code',
                     'ip.inquiry_product_name',
                     'ip.inquiry_product_status_on_inquiry',

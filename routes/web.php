@@ -218,6 +218,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('/cancel_stage/{id}', 'cancel_stage');
         Route::get('/detail/{id}', 'detail_inquiry');
         Route::get('/download/{id}', 'download_inquiry');
+        Route::any('/back_to_sales/{id}', 'back_to_sales');
     });
 
 

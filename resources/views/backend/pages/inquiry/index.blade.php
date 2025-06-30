@@ -699,6 +699,912 @@ $usr = Auth::guard('web')->user();
 	</div>
 </div>
 
+<div class="modal fade" id="viewmodaloncallpress" tabindex="-1" aria-labelledby="viewmodaloncallpressLabel" aria-hidden="true">
+	<div class="modal-dialog viewmodaloncallpress-dialog modal-xl modal-dialog-scrollable">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div>
+					<button class="plain-btn rt-mr-8" id="btn-download-inquiry">
+						<div class="btn-content">
+							<svg width="135" height="40" viewBox="0 0 135 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<!-- Download icon paths -->
+								<path d="M20 25V15" stroke="#191B1C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"></path>
+								<path d="M15 20L20 25L25 20" stroke="#191B1C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"></path>
+								<path d="M26.25 26.875H13.75C13.5842 26.875 13.4253 26.8092 13.3081 26.6919C13.1908 26.5747 13.125 26.4158 13.125 26.25V13.75C13.125 13.5842 13.1908 13.4253 13.3081 13.3081C13.4253 13.1908 13.5842 13.125 13.75 13.125H26.25C26.4158 13.125 26.5747 13.1908 26.6919 13.3081C26.8092 13.4253 26.875 13.5842 26.875 13.75V26.25C26.875 26.4158 26.8092 26.5747 26.6919 26.6919C26.5747 26.8092 26.4158 26.875 26.25 26.875Z" stroke="#191B1C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"></path>
+								<!-- Added text -->
+								<text x="45" y="25" font-family="Arial" font-size="14" fill="#191B1C">Download</text>
+							</svg>
+						</div>
+					</button>
+
+				</div>
+				<button type="button" class="" data-bs-dismiss="modal" aria-label="Close">
+					<img src="{{ asset('backend/assets/images/svg/cross.svg') }}" alt="" draggable="false">
+				</button>
+			</div>
+
+			<input type="hidden" id="d-inquiry-id-kanban2">
+
+			<div class="modal-body p-3">
+				<div class="card-details-wrap">
+					<div class="card-details-body">
+
+						<div class="project-idea-wrap">
+							<div class="project-idea-header d-flex justify-content-between align-items-center p-3 rounded" style="background-color: #dc3545;">
+								<div>
+									<h5 class="text-white mb-1">Harga Masih Ada Yang Kosong! 💰</h5>
+									<p class="text-white mb-0">Isi harga sekarang sebelum level berikutnya terbuka!</p>
+								</div>
+								@if ($usr->can('inquiry.editoncallpress'))
+								<div class="d-flex gap-2">
+									<button class="btn btn-light" onclick="showwarningbacktosales()">Data Nggak Lengkap</button>
+									<button class="btn btn-primary" onclick="showwarningforwardapprove()">Selesai</button>
+								</div>
+								@endif
+							</div>
+
+							<div class="project-idea-body">
+								<div class="project-idea-data d-flex">
+									<div class="col-lg-3">
+										<div class="project-idea-data-left">
+											<h5 class="text-dark mb-1 d-inquiry-nomor" style="font-size: 18px;"></h5>
+											<p>Inquiry Dibuat : <span class="d-inquiry-create-date"></span></p>
+										</div>
+									</div>
+									<div class="col-lg-9">
+										<ul class="d-flex">
+											<li class="me-2">
+												<span class="badge rounded-pill bg-warning-50 text-warning-500 d-inquiry-type"></span>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="project-idea-data" style="pointer-events: none; opacity: 0.6;">
+									<h5 class="text-dark mb-2">Due Date</h5>
+									<button type="button" class="btn btn-icon" style="background-color: #8D98AF;" id="" name="">
+										<span class="button-content-wrapper">
+											<span class="button-icon align-icon-left">
+												<input type="checkbox" id="taskCheckbox" class="custom-checkbox">
+											</span>
+											<span class="button-text text-white d-inquiry-due-date"></span>
+										</span>
+									</button>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="project-idea-data" style="pointer-events: none; opacity: 0.6;">
+									<h5 class="text-dark mb-2">Keputusan</h5>
+									<button type="button" class="btn btn-icon btn-primary" id="" name="">
+										<span class="button-content-wrapper">
+											<span class="button-icon align-icon-left">
+												<i class="ph-check-square text-white"></i> <!-- Changed Icon -->
+											</span>
+											<span class="button-text text-white"> 31 Jan 2023 (20:15) </span>
+										</span>
+									</button>
+								</div>
+							</div>
+						</div>
+
+						{{-- Deskripsi --}}
+						<div class="row mt-3">
+							<div class="col-lg-6">
+								<div class="company-customer">
+									<h6 class="table-inquiry-title">Perusahaan Customer</h6>
+									<table class="table-inquiry-header">
+										<tr>
+											<td style="width: 6rem;">Perusahaan</td>
+											<td>: <span class="d-inquiry-customer-nama"></span></td>
+										</tr>
+										<tr>
+											<td>Provinsi</td>
+											<td>: <span class="d-inquiry-customer-provinsi"></span></td>
+										</tr>
+										<tr>
+											<td>Kota</td>
+											<td>: <span class="d-inquiry-customer-kota"></span></td>
+										</tr>
+										<tr>
+											<td>Alamat</td>
+											<td>: <span class="d-inquiry-customer-alamat"></span></td>
+										</tr>
+										<tr>
+											<td>Email</td>
+											<td>: <span class="d-inquiry-customer-email"></span></td>
+										</tr>
+										<tr>
+											<td>No Telp</td>
+											<td>: <span class="d-inquiry-customer-telp"></span></td>
+										</tr>
+										<tr>
+											<td>PIC</td>
+											<td>: <span class="d-inquiry-customer-pic"></span></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="final-user">
+									<h5 class="table-inquiry-title">User Final</h5>
+									<table class="table-inquiry-header">
+										<tr>
+											<td style="width: 7rem;">Nama</td>
+											<td>: <span class="d-inquiry-user-name"></span></td>
+										</tr>
+										<tr>
+											<td>Email</td>
+											<td>: <span class="d-inquiry-user-email"></span></td>
+										</tr>
+										<tr>
+											<td>Telp</td>
+											<td>: <span class="d-inquiry-user-telp"></span></td>
+										</tr>
+									</table>
+								</div>
+								<div class="information-inquiry">
+									<h5 class="table-inquiry-title">Informasi Inquiry</h5>
+									<table class="table-inquiry-header">
+										<tr>
+											<td style="width: 7rem;">Asal Inquiry</td>
+											<td>: <span class="badge rounded-3 bg-warning-50 text-warning-500 d-inquiry-origin"></span></td>
+										</tr>
+										<tr>
+											<td>Status Saat Ini</td>
+											<td>: <span class="text-warning d-inquiry-status"></span></td>
+										</tr>
+										<tr>
+											<td>Jenis</td>
+											<td>
+												<div class="d-inquiry-product">
+													<ul class="d-flex">
+														<li class="me-2">
+															<span class="badge rounded-pill bg-warning-50 text-warning-500">SS</span>
+														</li>
+													</ul>
+												</div>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+
+						<div class="row my-4">
+							<div class="col-lg-6">
+								<div class="project-idea-data">
+									<h5 class="text-dark mb-2 fw-bold">Score</h5>
+									<div class="d-flex justify-content-start" style="border: 2px solid #E5E7E8; border-radius: 8px; padding: 20px;">
+										<img src="{{ asset('backend/assets/images/start-green.png')}}" alt="">
+										<div class="row ms-1">
+											<p class="m-0" style="font-size: 16px; font-weight: 500;">Score Final</p>
+											<p class="text-success m-0 d-flex" style="font-size: 36px; font-weight: 700;">0/100 <a class="text-primary ms-2" href="" style="font-size: 14px; font-weight: 700;">Lihat Detail <img src="{{ asset('backend/assets/images/svg/arrow-icon.svg')}}" alt="" style="margin-top: -2px; scale: 1.5; transform: rotate(-90deg);"></a></p>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="project-idea-data">
+									<h5 class="text-white mb-2">Score</h5>
+									<div class="d-flex justify-content-start" style="border: 2px solid #E5E7E8; border-radius: 8px; padding: 20px;">
+										<img src="{{ asset('backend/assets/images/start-blue.png')}}" alt="">
+										<div class="row ms-1">
+											<p class="m-0" style="font-size: 16px; font-weight: 500;">Score Penggalian Sales</p>
+											<p class="text-success m-0 d-flex" style="font-size: 36px; font-weight: 700;">0% <a class="ms-2" href="" style="font-size: 14px; font-weight: 700; color: #626C70;">Buat Schedule Dulu <img src="{{ asset('backend/assets/images/svg/arrow-icon.svg')}}" alt="" style="margin-top: -2px; scale: 1.5; transform: rotate(-90deg);"></a></p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="project-tab px-2">
+						<ul class="nav nav-tabs" id="myTab" role="tablist">
+							<li class="nav-item" role="presentation">
+								<button class="nav-link active" id="list-permintaan-tab" data-bs-toggle="tab" data-bs-target="#list-permintaan" type="button" role="tab" aria-controls="list-permintaan" aria-selected="true"> List Permintaan </button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="progress-tab" data-bs-toggle="tab" data-bs-target="#progress" type="button" role="tab" aria-controls="progress" aria-selected="false"> Progress </button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="jadwal-tab" data-bs-toggle="tab" data-bs-target="#jadwal" type="button" role="tab" aria-controls="jadwal" aria-selected="false"> Jadwal </button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="diskusi-tab" data-bs-toggle="tab" data-bs-target="#diskusi" type="button" role="tab" aria-controls="diskusi" aria-selected="false"> Diskusi </button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="file-tab" data-bs-toggle="tab" data-bs-target="#file" type="button" role="tab" aria-controls="file" aria-selected="false"> File </button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="member-tab" data-bs-toggle="tab" data-bs-target="#member" type="button" role="tab" aria-controls="member" aria-selected="false"> Member </button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="log-aktivitas-tab" data-bs-toggle="tab" data-bs-target="#log-aktivitas" type="button" role="tab" aria-controls="log-aktivitas" aria-selected="false"> Log Aktivitas </button>
+							</li>
+						</ul>
+						<div class="project-tab-body_s">
+							<div class="tab-content" id="myTabContent">
+								<div class="tab-pane fade show active" id="list-permintaan" role="tabpanel" aria-labelledby="list-permintaan-tab">
+									<section class="tables">
+										<div class="row">
+											<div class="col-lg-12">
+												<div class="table-wrapper">
+													<div class="table-content table-responsive">
+
+														<div class="row mt-2">
+															<div class="col-lg-6">
+																<p class="m-0" style="font-weight: 500; font-size: 14px;">List Permintaan</p>
+																<p class="m-0" style="font-size: 14px;"><span class="d-total-produk-permintaan"></span> Produk</p>
+															</div>
+															<div class="col-lg-6 text-end d-flex align-items-center justify-content-end">
+																<button class="btn btn-primary" id="btn-detail-permintaan">
+																	Lihat Detail
+																</button>
+															</div>
+														</div>
+
+														<hr class="custom-hr">
+
+														<div class="row my-2">
+															<div class="col-lg-6">
+																<table class="table-inquiry-detail">
+																	<tr>
+																		<td style="width: 6rem;">Stock</td>
+																		<td>: <span class="d-inquiry-warehaouse"></span></td>
+																	</tr>
+																	<tr>
+																		<td>User</td>
+																		<td>: <span class="d-inquiry-customer-type">End User</span></td>
+																	</tr>
+																</table>
+															</div>
+															<div class="col-lg-6">
+																<table class="table-inquiry-detail">
+																	<tr>
+																		<td style="width: 6rem;">OC</td>
+																		<td>: <span class="d-inquiry-oc"></span></td>
+																	</tr>
+																	<tr>
+																		<td>Ongkir</td>
+																		<td>: <span class="d-inquiry-shopping-cost"></span></td>
+																	</tr>
+																</table>
+															</div>
+														</div>
+
+														<div class="row">
+															<div class="col-lg-6">
+
+															</div>
+														</div>
+
+														<table class="table align-middle table-basic">
+															<thead style="text-align: center">
+																<tr>
+																	<th scope="col" width="5%">NO</th>
+																	<th scope="col">Produk</th>
+																	<th scope="col">Qty</th>
+																	<th scope="col">Status</th>
+																	<th scope="col">Harga / Unit</th>
+																	<th scope="col">Harga Total</th>
+																	<th scope="col">Taxes</th>
+																	@if ($usr->can('inquiry.editoncallpress'))
+																		<th scope="col">Aksi</th>
+																	@endif
+																</tr>
+															</thead>
+															<tbody id="tableBody-kanban2"></tbody>
+														</table>
+
+														<hr class="custom-hr">
+
+														<div class="row mt-3 mb-2">
+															<div class="col-lg-6">
+																<p style="font-weight: 700; font-size: 16px; margin: 0;">Harga Total : <span style="font-size: 16px; font-weight: 400;" class="d-total-harga-permintaan"></span><span class="text-success"> (Harga Valid)</span></p>
+															</div>
+														</div>
+
+													</div>
+												</div>
+											</div>
+										</div>
+									</section>
+								</div>
+								<div class="tab-pane fade" id="progress" role="tabpanel" aria-labelledby="progress-tab"></div>
+								<div class="tab-pane fade" id="jadwal" role="tabpanel" aria-labelledby="jadwal-tab"></div>
+								<div class="tab-pane fade" id="diskusi" role="tabpanel" aria-labelledby="diskusi-tab"></div>
+								<div class="tab-pane fade" id="file" role="tabpanel" aria-labelledby="file-tab"></div>
+								<div class="tab-pane fade" id="member" role="tabpanel" aria-labelledby="member-tab"></div>
+								<div class="tab-pane fade" id="log-aktivitas" role="tabpanel" aria-labelledby="log-aktivitas-tab"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="viewbacktosales_oncallpress" tabindex="-1" role="dialog" aria-labelledby="backtosales" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content text-center px-4 py-3">
+
+      <!-- Tombol Close -->
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 1.5rem;">&times;</button>
+      </div>
+
+      <!-- Icon Tanya -->
+      <div class="my-2">
+        <div class="mx-auto d-flex justify-content-center align-items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="100px" height="100px" fill="#005ce8" viewBox="0 0 256 256"><path d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path></svg>
+        </div>
+      </div>
+
+      <!-- Judul dan Pesan -->
+      <div class="modal-body">
+        <h5 class="fw-bold">Data Sales Kurang? Suruh Cek Lagi!</h5>
+        <p class="text-muted mb-0">
+          Proses selanjutnya bakal balik ke sales untuk melengkapi data yang kurang!
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer justify-content-center border-0 mt-2">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Kembali</button>
+        <button type="button" class="btn btn-primary" onclick="update_stage_oncallpress($('#d-inquiry-id-kanban2').val(), 'STATUS001')">Lanjut</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="viewapprove_oncallpress" tabindex="-1" role="dialog" aria-labelledby="approve" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content text-center px-4 py-3">
+
+      <!-- Tombol Close -->
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 1.5rem;">&times;</button>
+      </div>
+
+      <!-- Icon Tanya -->
+      <div class="my-2">
+        <div class="mx-auto d-flex justify-content-center align-items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="100px" height="100px" fill="#005ce8" viewBox="0 0 256 256"><path d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path></svg>
+        </div>
+      </div>
+
+      <!-- Judul dan Pesan -->
+      <div class="modal-body">
+        <h5 class="fw-bold">Ready to Move Forward?🚀</h5>
+        <p class="text-muted mb-0">
+          Pastikan semua sudah beres, inquiry akan lanjut ke sales!
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer justify-content-center border-0 mt-2">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Kembali</button>
+        <button type="button" class="btn btn-primary" onclick="update_stage_oncallpress($('#d-inquiry-id-kanban2').val(), 'STATUS003')">Lanjut</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="viewadddetailitem_oncallpress" tabindex="-1" aria-labelledby="viewadddetailitem_oncallpressLabel" aria-hidden="true">
+	<div class="modal-dialog viewmodaloncallpress-dialog modal-xl modal-dialog-scrollable">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<h5 class="body-font-3">On Call Price</h5>
+				<button type="button" class="" data-bs-dismiss="modal" aria-label="Close">
+					<img src="{{ asset('backend/assets/images/svg/cross.svg') }}" alt="" draggable="false">
+				</button>
+			</div>
+
+			<div class="modal-body">
+				<div class="mb-3">
+					<label class="form-label fw-bold">Harga Pokok</label>
+					<input type="text" class="form-control" id="d-hargaPokok-oncallprice" value="">
+				</div>
+
+				<div class="row text-center mb-2 fw-bold" style="color: #005ce8;">
+					<div class="col">End User</div>
+					<div class="col">Kontraktor</div>
+					<div class="col">Reseller</div>
+					<div class="col">Price List</div>
+				</div>
+
+				<div class="row mb-3">
+					<!-- Margin (%) -->
+					<div class="col">
+						<label>Margin ( % )</label>
+						<input type="number" class="form-control text-center" value="" id="d-marginEndUser-oncallprice">
+					</div>
+					<div class="col">
+						<label>Margin ( % )</label>
+						<input type="number" class="form-control text-center" value="" id="d-marginKontraktor-oncallprice">
+					</div>
+					<div class="col">
+						<label>Margin ( % )</label>
+						<input type="number" class="form-control text-center" value="" id="d-marginReseller-oncallprice">
+					</div>
+					<div class="col">
+						<label>Margin ( % )</label>
+						<input type="number" class="form-control text-center" value="" id="d-marginPricelist-oncallprice">
+					</div>
+				</div>
+
+				<input type="hidden" id="d-inquiry-oncallprace-aktive">
+
+				<div class="row">
+					<!-- Harga akhir -->
+					<div class="col">
+						<label class="form-label">Harga End User</label>
+						<input type="text" class="form-control" value="" id="d-hargaEndUser-oncallprice">
+					</div>
+					<div class="col">
+						<label class="form-label">Harga Kontraktor</label>
+						<input type="text" class="form-control" value="" id="d-hargaKontraktor-oncallprice">
+					</div>
+					<div class="col">
+						<label class="form-label">Harga Reseller</label>
+						<input type="text" class="form-control" value="" id="d-hargaReseller-oncallprice">
+					</div>
+					<div class="col">
+						<label class="form-label">Harga Price List</label>
+						<input type="text" class="form-control" value="" id="d-hargaPricelist-oncallprice">
+					</div>
+				</div>
+			</div>
+
+			<!-- Footer -->
+			<div class="modal-footer justify-content-end">
+				<button type="button" class="btn btn-primary" onclick="saveOnCallPrice()">
+					<svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="#ffffff" viewBox="0 0 256 256"><path d="M219.31,72,184,36.69A15.86,15.86,0,0,0,172.69,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V83.31A15.86,15.86,0,0,0,219.31,72ZM168,208H88V152h80Zm40,0H184V152a16,16,0,0,0-16-16H88a16,16,0,0,0-16,16v56H48V48H172.69L208,83.31ZM160,72a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h56A8,8,0,0,1,160,72Z"></path></svg> Simpan
+				</button>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="viewmodal_waiting_oncallprice" tabindex="-1" aria-labelledby="viewmodalLabel" aria-hidden="true">
+	<div class="modal-dialog viewmodal-dialog modal-xl modal-dialog-scrollable">
+		<div class="modal-content">
+
+			<div class="modal-header">
+				<div>
+					<button class="plain-btn rt-mr-8" id="btn-download-inquiry">
+						<div class="btn-content">
+							<svg width="135" height="40" viewBox="0 0 135 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<!-- Download icon paths -->
+								<path d="M20 25V15" stroke="#191B1C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"></path>
+								<path d="M15 20L20 25L25 20" stroke="#191B1C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"></path>
+								<path d="M26.25 26.875H13.75C13.5842 26.875 13.4253 26.8092 13.3081 26.6919C13.1908 26.5747 13.125 26.4158 13.125 26.25V13.75C13.125 13.5842 13.1908 13.4253 13.3081 13.3081C13.4253 13.1908 13.5842 13.125 13.75 13.125H26.25C26.4158 13.125 26.5747 13.1908 26.6919 13.3081C26.8092 13.4253 26.875 13.5842 26.875 13.75V26.25C26.875 26.4158 26.8092 26.5747 26.6919 26.6919C26.5747 26.8092 26.4158 26.875 26.25 26.875Z" stroke="#191B1C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"></path>
+								<!-- Added text -->
+								<text x="45" y="25" font-family="Arial" font-size="14" fill="#191B1C">Download</text>
+							</svg>
+						</div>
+					</button>
+
+				</div>
+				<button type="button" class="" data-bs-dismiss="modal" aria-label="Close">
+					<img src="{{ asset('backend/assets/images/svg/cross.svg') }}" alt="" draggable="false">
+				</button>
+			</div>
+
+			<input type="hidden" id="d-inquiry-waiting-oncallprice-id">
+
+			<div class="modal-body p-3">
+				<div class="card-details-wrap">
+					<div class="card-details-body">
+
+						<div class="project-idea-wrap">
+							<div class="project-idea-header d-flex justify-content-between align-items-center p-3 rounded">
+								<div>
+									<h5 class="text-white mb-1">Harga on call price mengunggu keputusan! 💰</h5>
+									<p class="text-white mb-0">Harga akan menjadi valid ketika dilakukan approval.</p>
+								</div>
+								<div class="d-flex gap-2">
+									<button class="btn btn-light" onclick="showreject_waiting_oncallprice()">Reject</button>
+									<button class="btn btn-primary" onclick="showapprove_waiting_approval()">Approve</button>
+								</div>
+							</div>
+							
+							<div class="project-idea-body">
+								<div class="project-idea-data d-flex">
+									<div class="col-lg-3">
+										<div class="project-idea-data-left">
+											<h5 class="text-dark mb-1 d-inquiry-waiting-oncallprice-nomor" style="font-size: 18px;"></h5>
+											<p>Inquiry Dibuat : <span class="d-inquiry-waiting-oncallprice-create-date"></span></p>
+										</div>
+									</div>
+									<div class="col-lg-9">
+										<ul class="d-flex">
+											<li class="me-2">
+												<span class="badge rounded-pill bg-warning-50 text-warning-500 d-inquiry-waiting-oncallprice-type"></span>
+											</li>
+										</ul>
+									</div>
+								</div>
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="project-idea-data" style="pointer-events: none; opacity: 0.6;">
+									<h5 class="text-dark mb-2">Due Date</h5>
+									<button type="button" class="btn btn-icon" style="background-color: #8D98AF;" id="" name="">
+										<span class="button-content-wrapper">
+											<span class="button-icon align-icon-left">
+												<input type="checkbox" id="taskCheckbox" class="custom-checkbox">
+											</span>
+											<span class="button-text text-white d-inquiry-waiting-oncallprice-due-date"></span>
+										</span>
+									</button>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="project-idea-data" style="pointer-events: none; opacity: 0.6;">
+									<h5 class="text-dark mb-2">Keputusan</h5>
+									<button type="button" class="btn btn-icon btn-primary" id="" name="">
+										<span class="button-content-wrapper">
+											<span class="button-icon align-icon-left">
+												<i class="ph-check-square text-white"></i> <!-- Changed Icon -->
+											</span>
+											<span class="button-text text-white"> 31 Jan 2023 (20:15) </span>
+										</span>
+									</button>
+								</div>
+							</div>
+						</div>
+
+						{{-- Deskripsi --}}
+						<div class="row mt-3">
+							<div class="col-lg-6">
+								<div class="company-customer">
+									<h6 class="table-inquiry-title">Perusahaan Customer</h6>
+									<table class="table-inquiry-header">
+										<tr>
+											<td style="width: 6rem;">Perusahaan</td>
+											<td>: <span class="d-inquiry-waiting-oncallprice-customer-nama"></span></td>
+										</tr>
+										<tr>
+											<td>Provinsi</td>
+											<td>: <span class="d-inquiry-waiting-oncallprice-customer-provinsi"></span></td>
+										</tr>
+										<tr>
+											<td>Kota</td>
+											<td>: <span class="d-inquiry-waiting-oncallprice-customer-kota"></span></td>
+										</tr>
+										<tr>
+											<td>Alamat</td>
+											<td>: <span class="d-inquiry-waiting-oncallprice-customer-alamat"></span></td>
+										</tr>
+										<tr>
+											<td>Email</td>
+											<td>: <span class="d-inquiry-waiting-oncallprice-customer-email"></span></td>
+										</tr>
+										<tr>
+											<td>No Telp</td>
+											<td>: <span class="d-inquiry-waiting-oncallprice-customer-telp"></span></td>
+										</tr>
+										<tr>
+											<td>PIC</td>
+											<td>: <span class="d-inquiry-waiting-oncallprice-customer-pic"></span></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="final-user">
+									<h5 class="table-inquiry-title">User Final</h5>
+									<table class="table-inquiry-header">
+										<tr>
+											<td style="width: 7rem;">Nama</td>
+											<td>: <span class="d-inquiry-waiting-oncallprice-user-name"></span></td>
+										</tr>
+										<tr>
+											<td>Email</td>
+											<td>: <span class="d-inquiry-waiting-oncallprice-user-email"></span></td>
+										</tr>
+										<tr>
+											<td>Telp</td>
+											<td>: <span class="d-inquiry-waiting-oncallprice-user-telp"></span></td>
+										</tr>
+									</table>
+								</div>
+								<div class="information-inquiry">
+									<h5 class="table-inquiry-title">Informasi Inquiry</h5>
+									<table class="table-inquiry-header">
+										<tr>
+											<td style="width: 7rem;">Asal Inquiry</td>
+											<td>: <span class="badge rounded-3 bg-warning-50 text-warning-500 d-inquiry-waiting-oncallprice-origin"></span></td>
+										</tr>
+										<tr>
+											<td>Status Saat Ini</td>
+											<td>: <span class="text-warning d-inquiry-waiting-oncallprice-status"></span></td>
+										</tr>
+										<tr>
+											<td>Jenis</td>
+											<td>
+												<div class="d-inquiry-waiting-oncallprice-product">
+													<ul class="d-flex">
+														<li class="me-2">
+															<span class="badge rounded-pill bg-warning-50 text-warning-500">SS</span>
+														</li>
+													</ul>
+												</div>
+											</td>
+										</tr>
+									</table>
+								</div>
+							</div>
+						</div>
+
+						<div class="row my-4">
+							<div class="col-lg-6">
+								<div class="project-idea-data">
+									<h5 class="text-dark mb-2 fw-bold">Score</h5>
+									<div class="d-flex justify-content-start" style="border: 2px solid #E5E7E8; border-radius: 8px; padding: 20px;">
+										<img src="{{ asset('backend/assets/images/start-green.png')}}" alt="">
+										<div class="row ms-1">
+											<p class="m-0" style="font-size: 16px; font-weight: 500;">Score Final</p>
+											<p class="text-success m-0 d-flex" style="font-size: 36px; font-weight: 700;">0/100 <a class="text-primary ms-2" href="" style="font-size: 14px; font-weight: 700;">Lihat Detail <img src="{{ asset('backend/assets/images/svg/arrow-icon.svg')}}" alt="" style="margin-top: -2px; scale: 1.5; transform: rotate(-90deg);"></a></p>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="project-idea-data">
+									<h5 class="text-white mb-2">Score</h5>
+									<div class="d-flex justify-content-start" style="border: 2px solid #E5E7E8; border-radius: 8px; padding: 20px;">
+										<img src="{{ asset('backend/assets/images/start-blue.png')}}" alt="">
+										<div class="row ms-1">
+											<p class="m-0" style="font-size: 16px; font-weight: 500;">Score Penggalian Sales</p>
+											<p class="text-success m-0 d-flex" style="font-size: 36px; font-weight: 700;">0% <a class="ms-2" href="" style="font-size: 14px; font-weight: 700; color: #626C70;">Buat Schedule Dulu <img src="{{ asset('backend/assets/images/svg/arrow-icon.svg')}}" alt="" style="margin-top: -2px; scale: 1.5; transform: rotate(-90deg);"></a></p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="project-tab px-2">
+						<ul class="nav nav-tabs" id="myTab" role="tablist">
+							<li class="nav-item" role="presentation">
+								<button class="nav-link active" id="list-permintaan-tab" data-bs-toggle="tab" data-bs-target="#list-permintaan" type="button" role="tab" aria-controls="list-permintaan" aria-selected="true"> List Permintaan </button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="progress-tab" data-bs-toggle="tab" data-bs-target="#progress" type="button" role="tab" aria-controls="progress" aria-selected="false"> Progress </button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="jadwal-tab" data-bs-toggle="tab" data-bs-target="#jadwal" type="button" role="tab" aria-controls="jadwal" aria-selected="false"> Jadwal </button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="diskusi-tab" data-bs-toggle="tab" data-bs-target="#diskusi" type="button" role="tab" aria-controls="diskusi" aria-selected="false"> Diskusi </button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="file-tab" data-bs-toggle="tab" data-bs-target="#file" type="button" role="tab" aria-controls="file" aria-selected="false"> File </button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="member-tab" data-bs-toggle="tab" data-bs-target="#member" type="button" role="tab" aria-controls="member" aria-selected="false"> Member </button>
+							</li>
+							<li class="nav-item" role="presentation">
+								<button class="nav-link" id="log-aktivitas-tab" data-bs-toggle="tab" data-bs-target="#log-aktivitas" type="button" role="tab" aria-controls="log-aktivitas" aria-selected="false"> Log Aktivitas </button>
+							</li>
+						</ul>
+						<div class="project-tab-body_s">
+							<div class="tab-content" id="myTabContent">
+								<div class="tab-pane fade show active" id="list-permintaan" role="tabpanel" aria-labelledby="list-permintaan-tab">
+									<section class="tables">
+										<div class="row">
+											<div class="col-lg-12">
+												<div class="table-wrapper">
+													<div class="table-content table-responsive">
+
+														<div class="row mt-2">
+															<div class="col-lg-6">
+																<p class="m-0" style="font-weight: 500; font-size: 14px;">List Permintaan</p>
+																<p class="m-0" style="font-size: 14px;"><span class="d-total-produk-permintaan"></span> Produk</p>
+															</div>
+															<div class="col-lg-6 text-end d-flex align-items-center justify-content-end">
+																<button class="btn btn-primary" id="btn-detail-permintaan">
+																	Lihat Detail
+																</button>
+															</div>
+														</div>
+
+														<hr class="custom-hr">
+
+														<div class="row my-2">
+															<div class="col-lg-6">
+																<table class="table-inquiry-detail">
+																	<tr>
+																		<td style="width: 6rem;">Stock</td>
+																		<td>: <span class="d-inquiry-waiting-oncallprice-warehaouse"></span></td>
+																	</tr>
+																	<tr>
+																		<td>User</td>
+																		<td>: <span class="d-inquiry-waiting-oncallprice-customer-type">End User</span></td>
+																	</tr>
+																</table>
+															</div>
+															<div class="col-lg-6">
+																<table class="table-inquiry-detail">
+																	<tr>
+																		<td style="width: 6rem;">OC</td>
+																		<td>: <span class="d-inquiry-waiting-oncallprice-oc"></span></td>
+																	</tr>
+																	<tr>
+																		<td>Ongkir</td>
+																		<td>: <span class="d-inquiry-waiting-oncallprice-shopping-cost"></span></td>
+																	</tr>
+																</table>
+															</div>
+														</div>
+
+														<div class="row">
+															<div class="col-lg-6">
+
+															</div>
+														</div>
+
+														<table class="table align-middle table-basic">
+															<thead style="text-align: center">
+																<tr>
+																	<th scope="col" width="5%">NO</th>
+																	<th scope="col">Produk</th>
+																	<th scope="col">Qty</th>
+																	<th scope="col">Stock</th>
+																	<th scope="col">Status</th>
+																	<th scope="col">Satuan</th>
+																	<th scope="col">Harga / Unit</th>
+																	<th scope="col">Harga NET</th>
+																	<th scope="col">Taxes</th>
+																	<th scope="col">Harga Total</th>
+																</tr>
+															</thead>
+															<tbody id="tableBody_waiting_oncallprice"></tbody>
+														</table>
+
+														<hr class="custom-hr">
+
+														<div class="row mt-3 mb-2">
+															<div class="col-lg-6">
+																<p style="font-weight: 700; font-size: 16px; margin: 0;">Harga Total : <span style="font-size: 16px; font-weight: 400;" class="d-total-harga-permintaan-waiting-oncallprice"></span><span class="text-danger"> (Harga Belum Valid)</span></p>
+															</div>
+														</div>
+
+													</div>
+												</div>
+											</div>
+										</div>
+									</section>
+								</div>
+								<div class="tab-pane fade" id="progress" role="tabpanel" aria-labelledby="progress-tab"></div>
+								<div class="tab-pane fade" id="jadwal" role="tabpanel" aria-labelledby="jadwal-tab"></div>
+								<div class="tab-pane fade" id="diskusi" role="tabpanel" aria-labelledby="diskusi-tab"></div>
+								<div class="tab-pane fade" id="file" role="tabpanel" aria-labelledby="file-tab"></div>
+								<div class="tab-pane fade" id="member" role="tabpanel" aria-labelledby="member-tab"></div>
+								<div class="tab-pane fade" id="log-aktivitas" role="tabpanel" aria-labelledby="log-aktivitas-tab"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="viewreject_waiting_oncallprice" tabindex="-1" role="dialog" aria-labelledby="reject_waiting_oncallprice" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content text-center px-4 py-3">
+
+      <!-- Tombol Close -->
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 1.5rem;">&times;</button>
+      </div>
+
+      <!-- Icon Tanya -->
+      <div class="my-2">
+        <div class="mx-auto d-flex justify-content-center align-items-center">
+		  <svg xmlns="http://www.w3.org/2000/svg" width="100px" height="100px" fill="#d54848" viewBox="0 0 256 256"><path d="M236.8,188.09,149.35,36.22h0a24.76,24.76,0,0,0-42.7,0L19.2,188.09a23.51,23.51,0,0,0,0,23.72A24.35,24.35,0,0,0,40.55,224h174.9a24.35,24.35,0,0,0,21.33-12.19A23.51,23.51,0,0,0,236.8,188.09ZM222.93,203.8a8.5,8.5,0,0,1-7.48,4.2H40.55a8.5,8.5,0,0,1-7.48-4.2,7.59,7.59,0,0,1,0-7.72L120.52,44.21a8.75,8.75,0,0,1,15,0l87.45,151.87A7.59,7.59,0,0,1,222.93,203.8ZM120,144V104a8,8,0,0,1,16,0v40a8,8,0,0,1-16,0Zm20,36a12,12,0,1,1-12-12A12,12,0,0,1,140,180Z"></path></svg>
+        </div>
+      </div>
+
+      <!-- Judul dan Pesan -->
+      <div class="modal-body">
+        <h5 class="fw-bold">Yakin Reject On Call Price Ini?</h5>
+        <p class="text-muted mb-0">
+          Pastikan sudah review On Call Proce ini sebelum di reject
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer justify-content-center border-0 mt-2">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Kembali</button>
+        <button type="button" class="btn btn-primary" onclick="showmodal_insert_message_reject()">Lanjut</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="viewmessage_reject_oncalprice" tabindex="-1" role="dialog" aria-labelledby="message_reject_oncalprice" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content text-center px-4 py-3">
+
+      	<div class="modal-header">
+			<h5 class="body-font-3">Alasan Reject</h5>
+			<button type="button" class="" data-bs-dismiss="modal" aria-label="Close">
+				<img src="{{ asset('backend/assets/images/svg/cross.svg') }}" alt="" draggable="false">
+			</button>
+		</div>
+
+		<!-- Judul dan Pesan -->
+		<div class="modal-body">
+			<div class="mb-3">
+				<label>Alasan</label>
+				<input type="text" class="form-control" id="d-message-reject-oncallprice" value="">
+			</div>
+		</div>
+
+		<!-- Footer -->
+		<div class="modal-footer justify-content-end">
+			<button type="button" class="btn btn-primary" onclick="update_stage_oncallpress($('#d-inquiry-waiting-oncallprice-id').val(), 'STATUS002')">
+				<svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="#ffffff" viewBox="0 0 256 256"><path d="M219.31,72,184,36.69A15.86,15.86,0,0,0,172.69,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V83.31A15.86,15.86,0,0,0,219.31,72ZM168,208H88V152h80Zm40,0H184V152a16,16,0,0,0-16-16H88a16,16,0,0,0-16,16v56H48V48H172.69L208,83.31ZM160,72a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h56A8,8,0,0,1,160,72Z"></path></svg> Simpan
+			</button>
+		</div>
+
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="viewapprove_waiting_oncallprice" tabindex="-1" role="dialog" aria-labelledby="approve_waiting_oncallprice" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content text-center px-4 py-3">
+
+      <!-- Tombol Close -->
+      <div class="d-flex justify-content-end">
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="border: none; background: transparent; font-size: 1.5rem;">&times;</button>
+      </div>
+
+      <!-- Icon Tanya -->
+      <div class="my-2">
+        <div class="mx-auto d-flex justify-content-center align-items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" width="100px" height="100px" fill="#005ce8" viewBox="0 0 256 256"><path d="M140,180a12,12,0,1,1-12-12A12,12,0,0,1,140,180ZM128,72c-22.06,0-40,16.15-40,36v4a8,8,0,0,0,16,0v-4c0-11,10.77-20,24-20s24,9,24,20-10.77,20-24,20a8,8,0,0,0-8,8v8a8,8,0,0,0,16,0v-.72c18.24-3.35,32-17.9,32-35.28C168,88.15,150.06,72,128,72Zm104,56A104,104,0,1,1,128,24,104.11,104.11,0,0,1,232,128Zm-16,0a88,88,0,1,0-88,88A88.1,88.1,0,0,0,216,128Z"></path></svg>
+        </div>
+      </div>
+
+      <!-- Judul dan Pesan -->
+      <div class="modal-body">
+        <h5 class="fw-bold">Yakin Approve On Call Price</h5>
+        <p class="text-muted mb-0">
+          Pastikan sudah review on call price ini sebelum di approve
+        </p>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer justify-content-center border-0 mt-2">
+        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Kembali</button>
+        <button type="button" class="btn btn-primary" onclick="update_stage_oncallpress($('#d-inquiry-waiting-oncallprice-id').val(), 'STATUS001')">Ya, Sudah</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
 <style>
 	.kanban-container {
 		display: flex;
@@ -857,15 +1763,25 @@ $usr = Auth::guard('web')->user();
 	}
 </style>
 <script>
+	const onCallButton = @can('inquiry.editoncallpress')
+		`<td class="text-center">
+			<button class='btn btn-danger' onclick="add_callpress_item(PLACEHOLDER_ID)">On Call Price</button>
+		</td>`
+	@else
+		''
+	@endcan;
+	
 	$(document).ready(function() {
 		$('#listpermintaanmodal').on('shown.bs.modal', function() {
 			setTimeout(function() {
 				$('#viewmodal').css('z-index', '-1');
+				$('#viewmodaloncallpress').css('z-index', '-1');
 			}, 100);
 		});
 		$('#listpermintaanmodal').on('hidden.bs.modal', function() {
 			setTimeout(function() {
 				$('#viewmodal').css('z-index', '');
+				$('#viewmodaloncallpress').css('z-index', '');
 			}, 100);
 		});
 
@@ -1006,6 +1922,34 @@ $usr = Auth::guard('web')->user();
 			})
 		}
 	}
+
+	function showwarningbacktosales() {
+		$('#viewbacktosales_oncallpress').modal('show');
+	}
+
+	function showwarningforwardapprove() {
+		$('#viewapprove_oncallpress').modal('show');
+	}
+
+	function showreject_waiting_oncallprice() {
+		$('#viewreject_waiting_oncallprice').modal('show');
+	}
+
+	function showmodal_insert_message_reject() {
+		$('#viewmessage_reject_oncalprice').modal('show');
+	}
+
+	function showapprove_waiting_approval() {
+		$('#viewapprove_waiting_oncallprice').modal('show');
+	}
+
+	function add_callpress_item(id){
+        // console.log('id', id);
+		$('#d-inquiry-oncallprace-aktive').val(id);
+        $('#viewadddetailitem_oncallpress').modal('show');
+    }
+
+	
 </script>
 
 @endsection
