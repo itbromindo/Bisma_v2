@@ -215,7 +215,9 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::prefix('inquiry')->controller(InquiryController::class)->group(function () {
         Route::get('/', 'index')->name('inquiry');
         Route::get('/update_stage', 'update_stage');
-        Route::get('/cancel_stage/{id}', 'cancel_stage');
+        Route::post('/cancel_stage', 'cancel_stage');
+        Route::post('/reject', 'reject_inquiry');
+        Route::post('/approve', 'approve_inquiry');
         Route::get('/detail/{id}', 'detail_inquiry');
         Route::get('/download/{id}', 'download_inquiry');
     });

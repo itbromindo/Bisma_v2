@@ -1,99 +1,98 @@
 (function ($) {
-  dragula([
-    document.getElementById("todo"),
-    document.getElementById("doing"),
-    document.getElementById("done"),
-  ]);
+	dragula([
+		document.getElementById("todo"),
+		document.getElementById("doing"),
+		document.getElementById("done"),
+	]);
 
-  const thousandView = (number = 0) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-  }
+	const thousandView = (number = 0) => {
+		return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+	}
 
-  // KANBAN BOARD
+	// KANBAN BOARD
 
-  // Dapatkan semua kolom kanban
-  let columnsCustome = Array.from(document.querySelectorAll(".kanban-columnXX"));
+	// Dapatkan semua kolom kanban
+	let columnsCustome = Array.from(document.querySelectorAll(".kanban-columnXX"));
 
-  // Inisialisasi Dragula
-  let drake = dragula(columnsCustome, {
-      removeOnSpill: false,
-      copy: false,
-      moves: function (el, container, handle) {
-          return el.classList.contains("card-priorityXX");
-      },
-      accepts: function (el, target, source, sibling) {
-          return target.classList.contains("kanban-columnXX");
-      }
-  });
+	// Inisialisasi Dragula
+	let drake = dragula(columnsCustome, {
+		removeOnSpill: false,
+		copy: false,
+		moves: function (el, container, handle) {
+			return el.classList.contains("card-priorityXX");
+		},
+		accepts: function (el, target, source, sibling) {
+			return target.classList.contains("kanban-columnXX");
+		}
+	});
 
-  // Event listener untuk saat elemen dijatuhkan ke kolom baru
-  drake.on('drop', function (el, target, source, sibling) {
-    if (el && target) {
-      let inquiryStage = target.querySelector('.inquiry-stageXX');
-      inquiryStage = inquiryStage.value;
-      let inquiryId = target.querySelector('.inquiry-idXX');
-      inquiryId = inquiryId.value;
-      updateInquiryStage(inquiryId, inquiryStage);
-    }
-  });
+	// Event listener untuk saat elemen dijatuhkan ke kolom baru
+	drake.on('drop', function (el, target, source, sibling) {
+		if (el && target) {
+			let inquiryStage = target.querySelector('.inquiry-stageXX');
+			inquiryStage = inquiryStage.value;
+			let inquiryId = target.querySelector('.inquiry-idXX');
+			inquiryId = inquiryId.value;
+			updateInquiryStage(inquiryId, inquiryStage);
+		}
+	});
 
-  // Jika elemen kembali ke tempat lama
-  drake.on('cancel', function (el, container, source) {
-    if (el && target) {
-      let inquiryStage = target.querySelector('.inquiry-stageXX');
-      inquiryStage = inquiryStage.value;
-      let inquiryId = target.querySelector('.inquiry-idXX');
-      inquiryId = inquiryId.value;
-      updateInquiryStage(inquiryId, inquiryStage);
-    }
-  });
+	// Jika elemen kembali ke tempat lama
+	drake.on('cancel', function (el, container, source) {
+		if (el && target) {
+			let inquiryStage = target.querySelector('.inquiry-stageXX');
+			inquiryStage = inquiryStage.value;
+			let inquiryId = target.querySelector('.inquiry-idXX');
+			inquiryId = inquiryId.value;
+			updateInquiryStage(inquiryId, inquiryStage);
+		}
+	});
 
-  function updateInquiryStage(id, stage)
-  {
-    $.ajax({
-      url: '/admin/inquiry/update_stage?id='+id+'&stage='+stage,
-      type: 'GET',
-      dataType: 'JSON',
-      success: function(response) {
-        console.log(response);
-      },
-      error: function(error){
-        console.log(error);
-      }
-    })
-  }
+	function updateInquiryStage(id, stage) {
+		$.ajax({
+			url: '/admin/inquiry/update_stage?id=' + id + '&stage=' + stage,
+			type: 'GET',
+			dataType: 'JSON',
+			success: function (response) {
+				console.log(response);
+			},
+			error: function (error) {
+				console.log(error);
+			}
+		})
+	}
 
-  // END::KANBAN BOARD
+	// END::KANBAN BOARD
 
-  const boardTitle = document.getElementById("board_title");
-  const CreateBoard = document.getElementById("createboard");
+	const boardTitle = document.getElementById("board_title");
+	const CreateBoard = document.getElementById("createboard");
 
-  if (boardTitle) {
-    setInterval(function () {
-      if (boardTitle.value.length > 0) {
-        CreateBoard.disabled = false;
-      } else {
-        CreateBoard.disabled = true;
-      }
-    }, 100);
-  }
+	if (boardTitle) {
+		setInterval(function () {
+			if (boardTitle.value.length > 0) {
+				CreateBoard.disabled = false;
+			} else {
+				CreateBoard.disabled = true;
+			}
+		}, 100);
+	}
 
-  var ID = function () {
-    return "_" + Math.random().toString(36).substr(2, 9);
-  };
+	var ID = function () {
+		return "_" + Math.random().toString(36).substr(2, 9);
+	};
 
-  if (CreateBoard) {
-    CreateBoard.addEventListener("click", function (event) {
-      event.preventDefault();
+	if (CreateBoard) {
+		CreateBoard.addEventListener("click", function (event) {
+			event.preventDefault();
 
-      let StingId =
-        Math.random().toString(36).substring(2, 15) +
-        Math.random().toString(36).substring(2, 15);
+			let StingId =
+				Math.random().toString(36).substring(2, 15) +
+				Math.random().toString(36).substring(2, 15);
 
-      let kanbanParents = document.getElementById("kanban_board_parent");
-      let kabanChild = document.createElement("div");
-      kabanChild.classList.add("kanbanboard_child");
-      kabanChild.innerHTML = `   
+			let kanbanParents = document.getElementById("kanban_board_parent");
+			let kabanChild = document.createElement("div");
+			kabanChild.classList.add("kanbanboard_child");
+			kabanChild.innerHTML = `   
       <div class="kanbanboard_child">
       <div class="card">
           <div class="card-body" >
@@ -104,9 +103,8 @@
               </button>
             </div>
             <div id="${StingId}">
-            <button class="btn btn-primary2 btn-icon pill d-block"  name="button-group2" type="button" id="${
-              "btn" + StingId
-            }">
+            <button class="btn btn-primary2 btn-icon pill d-block"  name="button-group2" type="button" id="${"btn" + StingId
+				}">
             <span class="button-content-wrapper">
               <span class="button-icon align-icon-right">
                 <i class="ph-arrow-right"></i>
@@ -128,24 +126,24 @@
       
       `;
 
-      kanbanParents.appendChild(kabanChild);
-      kanbanParents.insertBefore(kabanChild, kanbanParents.childNodes[6]);
-      boardTitle.value = "";
-      $("#createboard-modal").modal("hide");
-      document.querySelector(".modal-backdrop").remove();
-      //$(".modal-backdrop").removeClass("show")
-      dragula([document.getElementById(StingId)]);
+			kanbanParents.appendChild(kabanChild);
+			kanbanParents.insertBefore(kabanChild, kanbanParents.childNodes[6]);
+			boardTitle.value = "";
+			$("#createboard-modal").modal("hide");
+			document.querySelector(".modal-backdrop").remove();
+			//$(".modal-backdrop").removeClass("show")
+			dragula([document.getElementById(StingId)]);
 
-      let btngroup = document.getElementsByName("button-group2");
-      btngroup.forEach(function (item, index) {
-        item.addEventListener("click", function () {
-          let modalbox = document.createElement("div");
-          let overlay = document.createElement("div");
-          overlay.setAttribute("class", "modal-backdrop fade show");
-          overlay.setAttribute("id", "modal-vag3");
-          modalbox.setAttribute("class", "modal fade show");
-          modalbox.style.display = "block";
-          modalbox.innerHTML = `
+			let btngroup = document.getElementsByName("button-group2");
+			btngroup.forEach(function (item, index) {
+				item.addEventListener("click", function () {
+					let modalbox = document.createElement("div");
+					let overlay = document.createElement("div");
+					overlay.setAttribute("class", "modal-backdrop fade show");
+					overlay.setAttribute("id", "modal-vag3");
+					modalbox.setAttribute("class", "modal fade show");
+					modalbox.style.display = "block";
+					modalbox.innerHTML = `
           <div class="modal-dialog createcard-modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -243,48 +241,47 @@
       </div>
           
           `;
-          document.body.appendChild(modalbox);
-          document.body.appendChild(overlay);
-          document.getElementById("modal-vag").onclick = function () {
-            document.body.removeChild(modalbox);
-            document.body.removeChild(overlay);
-          };
-          document.getElementById("modal-vag2").onclick = function () {
-            document.body.removeChild(modalbox);
-            document.body.removeChild(overlay);
-          };
-          document.getElementById("modal-vag3").onclick = function () {
-            document.body.removeChild(modalbox);
-            document.body.removeChild(overlay);
-          };
+					document.body.appendChild(modalbox);
+					document.body.appendChild(overlay);
+					document.getElementById("modal-vag").onclick = function () {
+						document.body.removeChild(modalbox);
+						document.body.removeChild(overlay);
+					};
+					document.getElementById("modal-vag2").onclick = function () {
+						document.body.removeChild(modalbox);
+						document.body.removeChild(overlay);
+					};
+					document.getElementById("modal-vag3").onclick = function () {
+						document.body.removeChild(modalbox);
+						document.body.removeChild(overlay);
+					};
 
-          const createcard = document.getElementById("boardform"); // form id
-          createcard.addEventListener("submit", function (event) {
-            event.preventDefault();
-            let cardTitle = document.getElementById("card_title_1");
-            let collectdate = new Date();
-            let currentdate =
-              collectdate.getDate() +
-              " " +
-              collectdate.toLocaleString("default", { month: "short" }) +
-              ", " +
-              collectdate.getFullYear();
-            let priority__tag = document.getElementById("priority__tag");
+					const createcard = document.getElementById("boardform"); // form id
+					createcard.addEventListener("submit", function (event) {
+						event.preventDefault();
+						let cardTitle = document.getElementById("card_title_1");
+						let collectdate = new Date();
+						let currentdate =
+							collectdate.getDate() +
+							" " +
+							collectdate.toLocaleString("default", { month: "short" }) +
+							", " +
+							collectdate.getFullYear();
+						let priority__tag = document.getElementById("priority__tag");
 
-            let CurrentcardP = item.getAttribute("id");
+						let CurrentcardP = item.getAttribute("id");
 
-            let cardPriority = document.getElementById(
-              $("#" + CurrentcardP)
-                .parent()
-                .attr("id")
-            );
+						let cardPriority = document.getElementById(
+							$("#" + CurrentcardP)
+								.parent()
+								.attr("id")
+						);
 
-            let innerCard = document.createElement("div");
-            innerCard.classList.add("div");
-            innerCard.innerHTML = ` 
-            <div class="card-priority rt-mb-12 newcard" id="${
-              "newcard" + ID()
-            }">
+						let innerCard = document.createElement("div");
+						innerCard.classList.add("div");
+						innerCard.innerHTML = ` 
+            <div class="card-priority rt-mb-12 newcard" id="${"newcard" + ID()
+							}">
                                   <!-- top bar  -->
                                   <div class="card-priority__header">
                                     <div class="date">
@@ -318,9 +315,8 @@
                                           </a>
                                         </li>
                                         <li>
-                                        <a   href="#" type="button"  class="dropdown-item remove-killer2 plain-btn" id="${
-                                          "newbtn_1" + ID()
-                                        }">
+                                        <a   href="#" type="button"  class="dropdown-item remove-killer2 plain-btn" id="${"newbtn_1" + ID()
+							}">
                                         <span>
                                               <img src="assets/images/svg/trash.svg" alt="copylink">
                                             </span>
@@ -334,13 +330,11 @@
                                   <!-- labels  -->
                                   <div class="card-priority__labels">
                                     <ul>
-                                      <li><span class="labels medium">${
-                                        priority__tag.value
-                                      }</span></li>
-                                      <li><span class="labels urgent"><img class="rt-mr-6" src="assets/images/svg/red-circle.svg" alt="">${
-                                        document.getElementById("urgent_tag")
-                                          .value
-                                      }</span></li>
+                                      <li><span class="labels medium">${priority__tag.value
+							}</span></li>
+                                      <li><span class="labels urgent"><img class="rt-mr-6" src="assets/images/svg/red-circle.svg" alt="">${document.getElementById("urgent_tag")
+								.value
+							}</span></li>
                                     </ul>
                                   </div>
                                   <h2 class="card-priority__title">
@@ -379,30 +373,30 @@
                                   </div>
                                 </div>
             `;
-            cardPriority.appendChild(innerCard);
-            cardPriority.insertBefore(innerCard, cardPriority.childNodes[0]);
-            cardTitle.value = "";
+						cardPriority.appendChild(innerCard);
+						cardPriority.insertBefore(innerCard, cardPriority.childNodes[0]);
+						cardTitle.value = "";
 
-            document.body.removeChild(modalbox);
-            document.body.removeChild(overlay);
-          });
-        });
-      });
-    });
-  }
+						document.body.removeChild(modalbox);
+						document.body.removeChild(overlay);
+					});
+				});
+			});
+		});
+	}
 
-  // kanban card add
+	// kanban card add
 
-  let btngroup = document.getElementsByName("button-group");
-  btngroup.forEach(function (item, index) {
-    item.addEventListener("click", function () {
-      let modalbox = document.createElement("div");
-      let overlay = document.createElement("div");
-      overlay.setAttribute("class", "modal-backdrop fade show");
-      overlay.setAttribute("id", "modal-vag3");
-      modalbox.setAttribute("class", "modal fade show");
-      modalbox.style.display = "block";
-      modalbox.innerHTML = `
+	let btngroup = document.getElementsByName("button-group");
+	btngroup.forEach(function (item, index) {
+		item.addEventListener("click", function () {
+			let modalbox = document.createElement("div");
+			let overlay = document.createElement("div");
+			overlay.setAttribute("class", "modal-backdrop fade show");
+			overlay.setAttribute("id", "modal-vag3");
+			modalbox.setAttribute("class", "modal fade show");
+			modalbox.style.display = "block";
+			modalbox.innerHTML = `
         <style>
           .inquiry-option {
               border: 2px solid #ddd;
@@ -494,46 +488,46 @@
     </script>
         
         `;
-      document.body.appendChild(modalbox);
-      document.body.appendChild(overlay);
-      document.getElementById("modal-vag").onclick = function () {
-        document.body.removeChild(modalbox);
-        document.body.removeChild(overlay);
-      };
-      document.getElementById("modal-vag2").onclick = function () {
-        document.body.removeChild(modalbox);
-        document.body.removeChild(overlay);
-      };
-      document.getElementById("modal-vag3").onclick = function () {
-        document.body.removeChild(modalbox);
-        document.body.removeChild(overlay);
-      };
+			document.body.appendChild(modalbox);
+			document.body.appendChild(overlay);
+			document.getElementById("modal-vag").onclick = function () {
+				document.body.removeChild(modalbox);
+				document.body.removeChild(overlay);
+			};
+			document.getElementById("modal-vag2").onclick = function () {
+				document.body.removeChild(modalbox);
+				document.body.removeChild(overlay);
+			};
+			document.getElementById("modal-vag3").onclick = function () {
+				document.body.removeChild(modalbox);
+				document.body.removeChild(overlay);
+			};
 
-      const createcard = document.getElementById("boardform"); // form id
-      createcard.addEventListener("submit", function (event) {
-        event.preventDefault();
-        let cardTitle = document.getElementById("card_title_1");
-        let collectdate = new Date();
-        let currentdate =
-          collectdate.getDate() +
-          " " +
-          collectdate.toLocaleString("default", { month: "short" }) +
-          ", " +
-          collectdate.getFullYear();
-        let priority__tag = document.getElementById("priority__tag");
+			const createcard = document.getElementById("boardform"); // form id
+			createcard.addEventListener("submit", function (event) {
+				event.preventDefault();
+				let cardTitle = document.getElementById("card_title_1");
+				let collectdate = new Date();
+				let currentdate =
+					collectdate.getDate() +
+					" " +
+					collectdate.toLocaleString("default", { month: "short" }) +
+					", " +
+					collectdate.getFullYear();
+				let priority__tag = document.getElementById("priority__tag");
 
-        let CurrentcardP = item.getAttribute("id");
-        console.log(CurrentcardP);
-        let cardPriority = document.getElementById(
-          $("#" + CurrentcardP)
-            .parent()
-            .parent()
-            .attr("id")
-        );
+				let CurrentcardP = item.getAttribute("id");
+				console.log(CurrentcardP);
+				let cardPriority = document.getElementById(
+					$("#" + CurrentcardP)
+						.parent()
+						.parent()
+						.attr("id")
+				);
 
-        let innerCard = document.createElement("div");
-        innerCard.classList.add("div");
-        innerCard.innerHTML = ` 
+				let innerCard = document.createElement("div");
+				innerCard.classList.add("div");
+				innerCard.innerHTML = ` 
           <div class="card-priority rt-mb-12">
                                 <!-- top bar  -->
                                 <div class="card-priority__header">
@@ -583,13 +577,11 @@
                                 <!-- labels  -->
                                 <div class="card-priority__labels">
                                   <ul>
-                                    <li><span class="labels medium">${
-                                      priority__tag.value
-                                    }</span></li>
-                                    <li><span class="labels urgent"><img class="rt-mr-6" src="assets/images/svg/red-circle.svg" alt="">${
-                                      document.getElementById("urgent_tag")
-                                        .value
-                                    }</span></li>
+                                    <li><span class="labels medium">${priority__tag.value
+					}</span></li>
+                                    <li><span class="labels urgent"><img class="rt-mr-6" src="assets/images/svg/red-circle.svg" alt="">${document.getElementById("urgent_tag")
+						.value
+					}</span></li>
                                   </ul>
                                 </div>
                                 <h2 class="card-priority__title">
@@ -628,135 +620,168 @@
                                 </div>
                               </div>
           `;
-        cardPriority.appendChild(innerCard);
-        cardPriority.insertBefore(innerCard, cardPriority.childNodes[0]);
-        cardTitle.value = "";
+				cardPriority.appendChild(innerCard);
+				cardPriority.insertBefore(innerCard, cardPriority.childNodes[0]);
+				cardTitle.value = "";
 
-        document.body.removeChild(modalbox);
-        document.body.removeChild(overlay);
-      });
-    });
-  });
+				document.body.removeChild(modalbox);
+				document.body.removeChild(overlay);
+			});
+		});
+	});
 
-  const UniqBoardButton = document.querySelectorAll(".remove-killer");
-  const UinqBoard = document.getElementsByClassName("card-priority");
+	const UniqBoardButton = document.querySelectorAll(".remove-killer");
+	const UinqBoard = document.getElementsByClassName("card-priority");
 
-  UinqBoard.forEach(function (item) {
-    item.setAttribute("id", "pid_" + ID());
-  });
-  UniqBoardButton.forEach(function (item, index) {
-    item.setAttribute("id", ID());
-    let singleItem = item.getAttribute("id");
-    let getsingletem = document.getElementById(singleItem);
-    let removeitemid =
-      getsingletem.parentNode.parentNode.parentNode.parentNode.parentNode.id;
-    let removeitem = document.getElementById(removeitemid);
+	UinqBoard.forEach(function (item) {
+		item.setAttribute("id", "pid_" + ID());
+	});
+	UniqBoardButton.forEach(function (item, index) {
+		item.setAttribute("id", ID());
+		let singleItem = item.getAttribute("id");
+		let getsingletem = document.getElementById(singleItem);
+		let removeitemid =
+			getsingletem.parentNode.parentNode.parentNode.parentNode.parentNode.id;
+		let removeitem = document.getElementById(removeitemid);
 
-    getsingletem.addEventListener("click", function () {
-      removeitem.remove();
-    });
-  });
+		getsingletem.addEventListener("click", function () {
+			removeitem.remove();
+		});
+	});
 
-  let cardviewModal = document.querySelectorAll(".card-priority__title");
+	let cardviewModal = document.querySelectorAll(".card-priority__title");
 
-  cardviewModal.forEach(function (singlemodal) {
-    $(singlemodal).on("click", function () {
-      let cardPriority = $(this).closest(".card-priority");
-      let inquiryId = cardPriority.find(".inquiry-id").val();
-      $.ajax({
-        url: '/admin/inquiry/detail/'+inquiryId,
-        dataType: 'json',
-        success: function(response) {
-          if(response.status == 200) {
-            let inquiry = response.data.inquiry;
-            $("#viewmodal").modal("toggle");
-            $('#d-inquiry-id').val(inquiryId);
-            $('.d-inquiry-nomor').text(inquiry.inquiry_code);
-            $('.d-inquiry-create-date').text(inquiry.create_date);
-            $('.d-inquiry-type').text(inquiry.inquiry_type_name);
-            $('.d-inquiry-due-date').text(inquiry.due_date);
-            $('.d-inquiry-customer-nama').text(inquiry.customer_name);
-            $('.d-inquiry-customer-provinsi').text(inquiry.provinces_name);
-            $('.d-inquiry-customer-kota').text(inquiry.cities_name);
-            $('.d-inquiry-customer-alamat').text(inquiry.customers_full_address);
-            $('.d-inquiry-customer-email').text(inquiry.customers_email);
-            $('.d-inquiry-customer-telp').text(inquiry.customers_phone);
-            $('.d-inquiry-customer-pic').text(inquiry.customers_PIC);
-            $('.d-inquiry-user-name').text(inquiry.users_name);
-            $('.d-inquiry-user-email').text(inquiry.users_email);
-            $('.d-inquiry-user-telp').text(inquiry.users_personal_phone);
-            $('.d-inquiry-origin').text(inquiry.origin_inquiry_name);
-            $('.d-inquiry-status').text(inquiry.inquiry_status_name);
-            
-            let htmlInquiryProducts = '';
-            if(inquiry.product_divisions_name) {
-              let product_divisions = inquiry.product_divisions_name;
-              let division_names = product_divisions.split(",");
-              htmlInquiryProducts += `<ul class="d-flex"><li class="me-2">:</li>`;
-              division_names.forEach(value => {
-                htmlInquiryProducts += `<li class="me-2">
+	cardviewModal.forEach(function (singlemodal) {
+		$(singlemodal).on("click", function () {
+			let cardPriority = $(this).closest(".card-priority");
+			let inquiryId = cardPriority.find(".inquiry-id").val();
+			$.ajax({
+				url: '/admin/inquiry/detail/' + inquiryId,
+				dataType: 'json',
+				success: function (response) {
+					if (response.status == 200) {
+						let inquiry = response.data.inquiry;
+						$("#viewmodal").modal("toggle");
+
+						if (inquiry.inquiry_stage == 'STATUS008') {
+							if (inquiry.can_approve) {
+								$('#card-action-status-inquiry').html(`<div class="project-idea-header" style="background-color: #BA3838;">
+									<div class="row">
+										<div class="col-md-8">
+											<h3>Waiting Approval Inquiry Batal</h3>
+											<p>Inquiry perlu persetujuan dulu sebelum benar-benar Dibatalkan.</p>
+										</div>
+										<div class="col-md-4 text-end">
+											<a href="#" class="btn btn-danger2" onclick="rejectInquiry('${inquiry.inquiry_code}', ${inquiry.master_approvals_details_id})">Reject</a>
+											<a href="#" class="btn btn-primary" onclick="approveInquiry('${inquiry.inquiry_code}', ${inquiry.master_approvals_details_id})">Approve</a>
+										</div>
+									</div>
+								</div>`);
+							} else {
+								$('#card-action-status-inquiry').html(`<div class="project-idea-header" style="background-color: #BA3838;">
+									<div class="row">
+										<div class="col-md-12">
+											<h3>Waiting Approval Inquiry Batal</h3>
+											<p>Inquiry perlu persetujuan dulu sebelum benar-benar Dibatalkan.</p>
+										</div>
+									</div>
+								</div>`);
+							}
+						} else {
+							$('#card-action-status-inquiry').html(`<div class="project-idea-header" style="background-color: #323C55;">
+								<h3>Mission Possible: 4 Jam Menuju Keputusan!</h3>
+								<p>Mau lanjut ke Quote atau No Quote? Waktu terus berjalan…</p>
+							</div>`);
+						}
+
+						$('#d-inquiry-id').val(inquiryId);
+						$('.d-inquiry-nomor').text(inquiry.inquiry_code);
+						$('.d-inquiry-create-date').text(inquiry.create_date);
+						$('.d-inquiry-type').text(inquiry.inquiry_type_name);
+						$('.d-inquiry-due-date').text(inquiry.due_date);
+						$('.d-inquiry-customer-nama').text(inquiry.customer_name);
+						$('.d-inquiry-customer-provinsi').text(inquiry.provinces_name);
+						$('.d-inquiry-customer-kota').text(inquiry.cities_name);
+						$('.d-inquiry-customer-alamat').text(inquiry.customers_full_address);
+						$('.d-inquiry-customer-email').text(inquiry.customers_email);
+						$('.d-inquiry-customer-telp').text(inquiry.customers_phone);
+						$('.d-inquiry-customer-pic').text(inquiry.customers_PIC);
+						$('.d-inquiry-user-name').text(inquiry.users_name);
+						$('.d-inquiry-user-email').text(inquiry.users_email);
+						$('.d-inquiry-user-telp').text(inquiry.users_personal_phone);
+						$('.d-inquiry-origin').text(inquiry.origin_inquiry_name);
+						$('.d-inquiry-status').text(inquiry.inquiry_status_name);
+
+						let htmlInquiryProducts = '';
+						if (inquiry.product_divisions_name) {
+							let product_divisions = inquiry.product_divisions_name;
+							let division_names = product_divisions.split(",");
+							htmlInquiryProducts += `<ul class="d-flex"><li class="me-2">:</li>`;
+							division_names.forEach(value => {
+								htmlInquiryProducts += `<li class="me-2">
                   <span class="badge rounded-pill bg-primary-50 text-primary-500">${value}</span>
                 </li>`;
-              });
+							});
 
-              htmlInquiryProducts += `</ul>`;
-            }
-            $('.d-inquiry-product').html(htmlInquiryProducts);
+							htmlInquiryProducts += `</ul>`;
+						}
+						$('.d-inquiry-product').html(htmlInquiryProducts);
 
-            // list permintaan
-            $('.d-inquiry-warehaouse').text(inquiry.warehouse_name);
-            $('.d-inquiry-customer-type').text(inquiry.inquiry_customer_type);
-            $('.d-inquiry-oc').text(inquiry.inquiry_oc);
-            $('.d-inquiry-shopping-cost').text(thousandView(inquiry.inquiry_shipping_cost));
+						// list permintaan
+						$('.d-inquiry-warehaouse').text(inquiry.warehouse_name);
+						$('.d-inquiry-customer-type').text(inquiry.inquiry_customer_type);
+						$('.d-inquiry-oc').text(inquiry.inquiry_oc);
+						$('.d-inquiry-shopping-cost').text(thousandView(inquiry.inquiry_shipping_cost));
 
-            let list_permintaan = response.data.list_permintaan;
-            $('#tableBody').empty();
-            let totalProdukPermintaan = 0;
-            let totalHargaPermintaan = 0;
-            if(list_permintaan.length > 0) {
-              list_permintaan.forEach(function (data, index) {
-                totalProdukPermintaan += 1;
-                totalHargaPermintaan += data.inquiry_product_total_price;
-                $('#tableBody').append(`
+						let list_permintaan = response.data.list_permintaan;
+						$('#tableBody').empty();
+						let totalProdukPermintaan = 0;
+						let totalHargaPermintaan = 0;
+						if (list_permintaan.length > 0) {
+							list_permintaan.forEach(function (data, index) {
+								totalProdukPermintaan += 1;
+								totalHargaPermintaan += data.inquiry_product_total_price;
+								$('#tableBody').append(`
                   <tr>
-                    <td class="text-center">${ index + 1}</td>
-                    <td class="text-center">${ data.inquiry_product_name }</td>
-                    <td class="text-center">${ thousandView(data.inquiry_product_qty) }</td>
-                    <td class="text-center">${ thousandView(data.goods_stock) }</td>
-                    <td class="text-center">${ data.inquiry_product_status_on_inquiry }</td>
-                    <td class="text-center">${ data.uom_name }</td>
-                    <td class="text-center">${ thousandView(data.inquiry_product_pricelist) }</td>
-                    <td class="text-center">${ thousandView(data.inquiry_product_net_price) }</td>
-                    <td class="text-center">${ data.inquiry_taxes_percent } %</td>
-                    <td class="text-center">${ thousandView(data.inquiry_product_total_price) }</td>
+                    <td class="text-center">${index + 1}</td>
+                    <td class="text-center">${data.inquiry_product_name}</td>
+                    <td class="text-center">${thousandView(data.inquiry_product_qty)}</td>
+                    <td class="text-center">${thousandView(data.goods_stock)}</td>
+                    <td class="text-center">${data.inquiry_product_status_on_inquiry}</td>
+                    <td class="text-center">${data.uom_name}</td>
+                    <td class="text-center">${thousandView(data.inquiry_product_pricelist)}</td>
+                    <td class="text-center">${thousandView(data.inquiry_product_net_price)}</td>
+                    <td class="text-center">${data.inquiry_taxes_percent} %</td>
+                    <td class="text-center">${thousandView(data.inquiry_product_total_price)}</td>
                   </tr>
                 `);
-              });
-            }else{
-              $('#tableBody').append('<tr><td colspan="10" class="text-center">No results found</td></tr>');
-            }
+							});
+						} else {
+							$('#tableBody').append('<tr><td colspan="10" class="text-center">No results found</td></tr>');
+						}
 
-            $('.d-total-produk-permintaan').text(thousandView(totalProdukPermintaan));
-            $('.d-total-harga-permintaan').text('Rp.' + thousandView(totalHargaPermintaan));
+						$('.d-total-produk-permintaan').text(thousandView(totalProdukPermintaan));
+						$('.d-total-harga-permintaan').text('Rp.' + thousandView(totalHargaPermintaan));
 
-          }else{
-            Swal.fire({
-              icon: 'warning',
-              title: 'Warning!',
-              text: 'Data tidak ditemukan!',
-            })
-          }
-        },
-        error: function(error) {
-          console.log(error)
-          Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'Terjadi kesalahan data!',
-          })
-        }
-      })
-      
-    });
-  });
+					} else {
+						Swal.fire({
+							icon: 'warning',
+							title: 'Warning!',
+							text: 'Data tidak ditemukan!',
+						})
+					}
+				},
+				error: function (error) {
+					console.log(error)
+					Swal.fire({
+						icon: 'error',
+						title: 'Error!',
+						text: 'Terjadi kesalahan data!',
+					})
+				}
+			})
+
+		});
+	});
+
 })(jQuery);
