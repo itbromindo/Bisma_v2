@@ -944,7 +944,7 @@ $usr = Auth::guard('web')->user();
 																<p class="m-0" style="font-size: 14px;"><span class="d-total-produk-permintaan-oncallprice"></span> Produk</p>
 															</div>
 															<div class="col-lg-6 text-end d-flex align-items-center justify-content-end">
-																<button class="btn btn-primary" id="btn-detail-permintaan">
+																<button class="btn btn-primary" id="btn-detail-permintaan-on-call-price" disabled>
 																	Lihat Detail
 																</button>
 															</div>
@@ -1101,7 +1101,7 @@ $usr = Auth::guard('web')->user();
 </div>
 
 <div class="modal fade" id="viewadddetailitem_oncallpress" tabindex="-1" aria-labelledby="viewadddetailitem_oncallpressLabel" aria-hidden="true">
-	<div class="modal-dialog viewmodaloncallpress-dialog modal-xl modal-dialog-scrollable">
+	<div class="modal-dialog viewmodaloncallpress-dialog modal-xl modal-dialog-centered">
 		<div class="modal-content">
 
 			<div class="modal-header">
@@ -1114,7 +1114,7 @@ $usr = Auth::guard('web')->user();
 			<div class="modal-body">
 				<div class="mb-3">
 					<label class="form-label fw-bold">Harga Pokok</label>
-					<input type="text" class="form-control" id="d-hargaPokok-oncallprice" value="">
+					<input type="number" class="form-control text-left" id="d-hargaPokok-oncallprice" value="">
 				</div>
 
 				<div class="row text-center mb-2 fw-bold" style="color: #005ce8;">
@@ -1150,19 +1150,19 @@ $usr = Auth::guard('web')->user();
 					<!-- Harga akhir -->
 					<div class="col">
 						<label class="form-label">Harga End User</label>
-						<input type="text" class="form-control" value="" id="d-hargaEndUser-oncallprice">
+						<input type="number" class="form-control text-center" value="" id="d-hargaEndUser-oncallprice">
 					</div>
 					<div class="col">
 						<label class="form-label">Harga Kontraktor</label>
-						<input type="text" class="form-control" value="" id="d-hargaKontraktor-oncallprice">
+						<input type="number" class="form-control text-center" value="" id="d-hargaKontraktor-oncallprice">
 					</div>
 					<div class="col">
 						<label class="form-label">Harga Reseller</label>
-						<input type="text" class="form-control" value="" id="d-hargaReseller-oncallprice">
+						<input type="number" class="form-control text-center" value="" id="d-hargaReseller-oncallprice">
 					</div>
 					<div class="col">
 						<label class="form-label">Harga Price List</label>
-						<input type="text" class="form-control" value="" id="d-hargaPricelist-oncallprice">
+						<input type="number" class="form-control text-center" value="" id="d-hargaPricelist-oncallprice">
 					</div>
 				</div>
 
@@ -1196,7 +1196,7 @@ $usr = Auth::guard('web')->user();
 
 			<!-- Footer -->
 			<div class="modal-footer justify-content-end">
-				<button type="button" class="btn btn-primary" onclick="saveOnCallPrice()">
+				<button type="button" class="btn btn-primary" onclick="saveOnCallPrice()" id="btn-save-oncall" disabled>
 					<svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="#ffffff" viewBox="0 0 256 256"><path d="M219.31,72,184,36.69A15.86,15.86,0,0,0,172.69,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V83.31A15.86,15.86,0,0,0,219.31,72ZM168,208H88V152h80Zm40,0H184V152a16,16,0,0,0-16-16H88a16,16,0,0,0-16,16v56H48V48H172.69L208,83.31ZM160,72a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h56A8,8,0,0,1,160,72Z"></path></svg> Simpan
 				</button>
 			</div>
@@ -1446,7 +1446,7 @@ $usr = Auth::guard('web')->user();
 																<p class="m-0" style="font-size: 14px;"><span class="d-total-produk-permintaan"></span> Produk</p>
 															</div>
 															<div class="col-lg-6 text-end d-flex align-items-center justify-content-end">
-																<button class="btn btn-primary" id="btn-detail-permintaan">
+																<button class="btn btn-primary" id="btn-detail-permintaan-waiting-oncallprice">
 																	Lihat Detail
 																</button>
 															</div>
@@ -1965,6 +1965,50 @@ $usr = Auth::guard('web')->user();
         });
 	});
 
+    document.addEventListener("DOMContentLoaded", function () {
+
+        function validateFields() {
+            let isValid = true;
+
+            const fields = [
+                '#d-hargaPokok-oncallprice',
+                '#d-marginEndUser-oncallprice',
+                '#d-marginKontraktor-oncallprice',
+                '#d-marginReseller-oncallprice',
+                '#d-marginPricelist-oncallprice',
+                '#d-hargaEndUser-oncallprice',
+                '#d-hargaKontraktor-oncallprice',
+                '#d-hargaReseller-oncallprice',
+                '#d-hargaPricelist-oncallprice',
+                '#d-oncall-price-brand-code',
+                '#d-oncall-price-product-division-code',
+                '#d-oncall-price-uom-code',
+                '#d-oncall-category-code',
+            ];
+
+            for (const selector of fields) {
+                const el = document.querySelector(selector);
+                if (!el || el.value.trim() === "" || el.value === null) {
+                    isValid = false;
+                    break;
+                }
+            }
+
+            document.getElementById("btn-save-oncall").disabled = !isValid;
+        }
+
+        // Daftar input biasa
+        $('#d-hargaEndUser-oncallprice, #d-marginEndUser-oncallprice, #d-marginKontraktor-oncallprice, #d-marginReseller-oncallprice, #d-marginPricelist-oncallprice, #d-hargaKontraktor-oncallprice, #d-hargaReseller-oncallprice, #d-hargaPricelist-oncallprice')
+            .on('input', validateFields);
+
+// Daftar Select2
+        $('#d-oncall-price-brand-code, #d-oncall-price-product-division-code, #d-oncall-price-uom-code, #d-oncall-category-code')
+            .on('select2:select select2:unselect', validateFields);
+
+// Jalankan validasi awal
+        validateFields();
+    });
+
 	function show_edit_inquiry() {
 		let id = $('#d-inquiry-id').val();
 
@@ -2003,6 +2047,25 @@ $usr = Auth::guard('web')->user();
         // console.log('id', id);
 		$('#d-inquiry-oncallprace-aktive').val(id);
         $('#viewadddetailitem_oncallpress').modal('show');
+        document.getElementById("btn-save-oncall").disabled = true;
+
+        $('#d-hargaPokok-oncallprice').val('');
+        $('#d-marginEndUser-oncallprice').val('');
+        $('#d-marginKontraktor-oncallprice').val('');
+        $('#d-marginReseller-oncallprice').val('');
+        $('#d-marginPricelist-oncallprice').val('');
+        $('#d-hargaEndUser-oncallprice').val('');
+        $('#d-hargaKontraktor-oncallprice').val('');
+        $('#d-hargaReseller-oncallprice').val('');
+        $('#d-hargaPricelist-oncallprice').val('');
+        $('#d-hargaKontraktor-oncallprice').val('');
+        $('#d-hargaKontraktor-oncallprice').val('');
+
+        $('#d-oncall-price-brand-code').append(new Option('', '', true, true)).trigger('change');
+        $('#d-oncall-price-product-division-code').append(new Option('', '', true, true)).trigger('change');
+        $('#d-oncall-price-uom-code').append(new Option('', '', true, true)).trigger('change');
+        $('#d-oncall-category-code').append(new Option('', '', true, true)).trigger('change');
+
     }
 
 
