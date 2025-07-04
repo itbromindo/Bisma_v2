@@ -14,27 +14,27 @@ class Inquiry extends Model
     public $incrementing = false;
     protected $keyType = 'string';
     protected $fillable = [
-        'inquiry_code', 
-        'inquiry_type', 
-        'inquiry_created_at', 
-        'inquiry_created_by', 
-        'inquiry_updated_at', 
-        'inquiry_updated_by', 
+        'inquiry_code',
+        'inquiry_type',
+        'inquiry_created_at',
+        'inquiry_created_by',
+        'inquiry_updated_at',
+        'inquiry_updated_by',
         'inquiry_deleted_at',
-        'inquiry_deleted_by', 
-        'inquiry_notes', 
+        'inquiry_deleted_by',
+        'inquiry_notes',
         'inquiry_soft_delete',
-        'inquiry_start_date', 
-        'inquiry_end_date', 
-        'inquiry_customer', 
-        'inquiry_origin', 
+        'inquiry_start_date',
+        'inquiry_end_date',
+        'inquiry_customer',
+        'inquiry_origin',
         'inquiry_date_and_location',
-        'inquiry_stage', 
-        'inquiry_stage_progress', 
+        'inquiry_stage',
+        'inquiry_stage_progress',
         'inquiry_product_division',
-        'inquiry_warehouse', 
-        'inquiry_customer_type', 
-        'inquiry_oc', 
+        'inquiry_warehouse',
+        'inquiry_customer_type',
+        'inquiry_oc',
         'inquiry_expedition',
         'inquiry_expedition_service',
         'inquiry_expedition_route',
@@ -125,7 +125,7 @@ class Inquiry extends Model
     {
         $query = DB::table('inquiry as i')
                 ->select(
-                    'i.inquiry_code', 
+                    'i.inquiry_code',
                     'i.inquiry_product_division',
                     'i.inquiry_customer_type',
                     'i.inquiry_oc',
@@ -149,16 +149,17 @@ class Inquiry extends Model
                     'p.provinces_name',
 	                'c2.cities_name',
                     'w.warehouse_name',
-                    DB::raw('GROUP_CONCAT(DISTINCT pd.product_divisions_name) as product_divisions_name')
+                    DB::raw('GROUP_CONCAT(DISTINCT pd.product_divisions_name) as product_divisions_name'),
+                    'i.inquiry_stage'
                 )
-                ->join('customer as c', 'i.inquiry_customer', '=', 'c.customer_code')
-                ->join('users as u', 'i.inquiry_created_by', '=', 'u.user_code')
-                ->join('inquiry_statuses as is2', 'i.inquiry_stage', '=', 'is2.inquiry_status_code')
-                ->join('inquiry_type as it', 'i.inquiry_type', '=', 'it.inquiry_type_code')
-                ->join('origin_inquiries as oi', 'i.inquiry_origin', '=', 'oi.origin_inquiry_code')
-                ->join('provinces as p', 'c.provinces_code', '=', 'p.provinces_code') 
-                ->join('cities as c2', 'c.cities_code', '=', 'c2.cities_code') 
-                ->join('warehouse as w', 'w.warehouse_code', '=', 'i.inquiry_warehouse')
+                ->leftjoin('customer as c', 'i.inquiry_customer', '=', 'c.customer_code')
+                ->leftjoin('users as u', 'i.inquiry_created_by', '=', 'u.user_code')
+                ->leftjoin('inquiry_statuses as is2', 'i.inquiry_stage', '=', 'is2.inquiry_status_code')
+                ->leftjoin('inquiry_type as it', 'i.inquiry_type', '=', 'it.inquiry_type_code')
+                ->leftjoin('origin_inquiries as oi', 'i.inquiry_origin', '=', 'oi.origin_inquiry_code')
+                ->leftjoin('provinces as p', 'c.provinces_code', '=', 'p.provinces_code')
+                ->leftjoin('cities as c2', 'c.cities_code', '=', 'c2.cities_code')
+                ->leftjoin('warehouse as w', 'w.warehouse_code', '=', 'i.inquiry_warehouse')
                 ->leftJoin('product_divisions as pd', function ($join) {
                     $join->on(DB::raw("JSON_CONTAINS(i.inquiry_product_division, JSON_QUOTE(pd.product_divisions_code), '$')"), '=', DB::raw('1'));
                 })
@@ -212,10 +213,11 @@ class Inquiry extends Model
     public function listPermintaanInquiry($id)
     {
         $query = DB::table('inquiry_product as ip')
-                ->join('inquiry as i', 'ip.inquiry_code', '=', 'i.inquiry_code')
-                ->join('goods as g', 'ip.goods_code', '=', 'g.goods_code')
-                ->join('uom as u', 'ip.inquiry_product_uom', '=', 'u.uom_code')
+                ->leftjoin('inquiry as i', 'ip.inquiry_code', '=', 'i.inquiry_code')
+                ->leftjoin('goods as g', 'ip.goods_code', '=', 'g.goods_code')
+                ->leftjoin('uom as u', 'ip.inquiry_product_uom', '=', 'u.uom_code')
                 ->select(
+                    'ip.inquiry_product_id',
                     'ip.inquiry_product_code',
                     'ip.inquiry_product_name',
                     'ip.inquiry_product_status_on_inquiry',

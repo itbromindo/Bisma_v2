@@ -417,7 +417,7 @@ Inquiry - Admin Panel
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" onclick="showppn()"></button>
             </div>
             <div class="modal-body">
-                <iframe id="iframePreview" src="inquiry_supply_only/previewpdf" style="width: 100%; height: 80vh; border: none;"></iframe>
+                <iframe id="iframePreview" src="#" style="width: 100%; height: 80vh; border: none;"></iframe>
             </div>
         </div>
     </div>
@@ -438,7 +438,7 @@ Inquiry - Admin Panel
                 window.myEditor = editor;
             })
             .catch(error => {
-                console.error(error);
+                // console.error(error);
             });
     });
 
@@ -446,7 +446,6 @@ Inquiry - Admin Panel
 
     $(document).ready(function() {   
         activateSidebarMenuByPath('/admin/inquiry');
-        // console.log('method', @json($method));
         const method = @json($method);
 
         const listProduct = @json($listproduct); // convert PHP to JSON for JS
@@ -761,25 +760,29 @@ Inquiry - Admin Panel
 
         let hargaTotal = (quantity * hargaNet);
 
-        if(satuan == null || satuan == "") {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Mohon isi satuan terlebih dahulu!'
-            });
-
-            return;
+        if (checkreq == false) {
+            if(satuan == null || satuan == "") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Mohon isi satuan terlebih dahulu!'
+                });
+    
+                return;
+            }
+    
+            if(hargaNet == null || hargaNet == "" || hargaNet == 0) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Harga Net tidak boleh kosong!'
+                });
+    
+                return;
+            }
+            
         }
 
-        if(hargaNet == null || hargaNet == "" || hargaNet == 0) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'Harga Net tidak boleh kosong!'
-            });
-
-            return;
-        }
 
         $('#modalinput').modal('hide');
 
@@ -997,12 +1000,6 @@ Inquiry - Admin Panel
             return;
         }
 
-        // Validasi datakategori
-        if (!Array.isArray(datakategori) || datakategori.length === 0 || !datakategori[0]) {
-            alertError("Kategori wajib diisi.");
-            return;
-        }
-
 
         var postdata = new FormData();
         postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
@@ -1050,6 +1047,7 @@ Inquiry - Admin Panel
         }
 
         var details = [];
+        let inquiry_Status = 'STATUS001'; // Default status inquiry
 
         for (var i = 0; i < rows.length; i++) {
             var cells = rows[i].getElementsByTagName('td');
@@ -1089,10 +1087,27 @@ Inquiry - Admin Panel
                 harga_total: cells[12].innerText.trim()
             };
 
+            if (cells[5].innerText.trim() == 3) {
+                inquiry_Status = 'STATUS002'; // Not Value in System
+            }
+
             details.push(detail);
         }
 
+        postdata.append('inquiry_status', inquiry_Status);
+
         postdata.append('details', JSON.stringify(details));
+
+        if (inquiry_Status == 'STATUS001') {
+            // Validasi datakategori
+            if (!Array.isArray(datakategori) || datakategori.length === 0 || !datakategori[0]) {
+                alertError("Kategori wajib diisi.");
+                return;
+            }
+        }
+
+        // console.log("data",  Array.from(postdata.entries()));
+        // return;
 
         var url = $('#inquiry_id').val() != '' 
             ? "/admin/inquiry_supply_only/update/" + $('#inquiry_id').val() 
@@ -1252,7 +1267,7 @@ Inquiry - Admin Panel
             $('#header_form_gudang').addClass('hidden');
             $('#modalpreview').modal('show');
         } catch (error) {
-            console.error('Error:', error);
+            // console.error('Error:', error);
             Swal.fire('Error', 'Gagal memuat preview PDF', 'error');
         }
 
@@ -1308,7 +1323,7 @@ Inquiry - Admin Panel
             try {
                 divisionData = JSON.parse(divisionData);
             } catch (e) {
-                console.error('Gagal parse JSON:', e);
+                // console.error('Gagal parse JSON:', e);
                 divisionData = [];
             }
         }

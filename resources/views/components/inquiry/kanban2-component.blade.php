@@ -11,7 +11,7 @@
                     $duedate = $row->inquiry_end_date;
                     $today = date('Y-m-d H:i:s');
                     $status_card = '';
-                    
+
                     if($today > $duedate)
                     {
                         $status_card = ' bg-danger-50 border-danger';
@@ -29,7 +29,7 @@
                             <p>Due Date Inquiry : <br>{{ date("d M, Y", strtotime($duedate)) }}</p>
                         </div>
                         <!-- actions  -->
-                        
+
                     </div>
 
                     <!-- labels  -->
@@ -111,3 +111,123 @@
         </div>
     </div>
 </div>
+
+<script>
+    function update_stage_oncallpress(id, stage)
+    {
+        // console.log('id', id);
+        $.ajax({
+            type: "GET",
+            url: '/admin/inquiry/update_stage?id='+id+'&stage='+stage,
+            processData: false,
+            contentType: false,
+            dataType: "json",
+            async: false,
+            // headers: {
+            //     'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            // },
+            success: function(data) {
+                if (data.status == 401 || data.status == 501) {
+                    showAlert('danger', "Terjadi kesalahan, silahkan coba lagi.");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Data Saved!',
+                    }).then(function() {
+                        window.location.href = "/admin/inquiry";
+                    });
+                }
+            },
+            error: function(dataerror) {
+                alertError(dataerror.responseJSON.message);
+            }
+        });
+
+    }
+
+    function saveOnCallPrice() {
+        let id = $('#d-inquiry-oncallprace-aktive').val();
+        let harga_pokok = $('#d-hargaPokok-oncallprice').val();
+
+        let margin_enduser = $('#d-marginEndUser-oncallprice').val();
+        let margin_kontraktor = $('#d-marginKontraktor-oncallprice').val();
+        let margin_reseller = $('#d-marginReseller-oncallprice').val();
+        let margin_pricelist = $('#d-marginPricelist-oncallprice').val();
+
+        let price_enduser = $('#d-hargaEndUser-oncallprice').val();
+        let price_kontraktor = $('#d-hargaKontraktor-oncallprice').val();
+        let price_reseller = $('#d-hargaReseller-oncallprice').val();
+        let price_pricelist = $('#d-hargaPricelist-oncallprice').val();
+
+        let brand = $('#d-oncall-price-brand-code').val();
+        let type = $('#d-oncall-price-product-division-code').val();
+        let satuan = $('#d-oncall-price-uom-code').val();
+        let kategori = $('#d-oncall-category-code').val();
+
+        let type_user = $('#d-inquiry-type-user').val();
+
+        var postdata = new FormData();
+        postdata.append('_token', document.getElementsByName('_token')[0].defaultValue);
+        postdata.append('harga_pokok', harga_pokok);
+        postdata.append('margin_enduser', margin_enduser);
+        postdata.append('margin_kontraktor', margin_kontraktor);
+        postdata.append('margin_reseller', margin_reseller);
+        postdata.append('margin_pricelist', margin_pricelist);
+        postdata.append('price_enduser', price_enduser);
+        postdata.append('price_kontraktor', price_kontraktor);
+        postdata.append('price_reseller', price_reseller);
+        postdata.append('price_pricelist', price_pricelist);
+        postdata.append('brand', brand);
+        postdata.append('type', type);
+        postdata.append('satuan', satuan);
+        postdata.append('kategori', kategori);
+        postdata.append('type_user', type_user);
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            type: "POST",
+            url: "/admin/inquiry/update_oncallprice/" + id,
+            data: (postdata),
+            processData: false, // Jangan ubah data
+            contentType: false, // Atur tipe konten secara otomatis
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                if (data.status == 401) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    return;
+                } else if (data.status == 501) {
+                    showAlert('danger', "Form Wajib Diisi");
+                    return;
+                } else {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Success',
+                        text: 'Level Up! Permintaan Baru Ditambahkan!',
+                    }).then(function() {
+                        $('#viewadddetailitem_oncallpress').modal('hide');
+                        const row = $(`#tableBody-kanban2 tr[data-inquiry-id="${id}"]`);
+
+                        row.find('.pricelist-cell').text(data.inquiry_product_pricelist);
+                        row.find('.netprice-cell').text(data.inquiry_product_net_price);
+                        row.find('.totalprice-cell').text(data.inquiry_product_total_price);
+                    });
+
+                }
+            },
+            error: function (dataerror) {
+                console.log(dataerror);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: dataerror.responseJSON.message
+                });
+            }
+        });
+
+    }
+</script>
