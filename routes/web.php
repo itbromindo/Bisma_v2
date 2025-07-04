@@ -96,7 +96,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('departments', App\Http\Controllers\Backend\DepartmentController::class);
     Route::any('departments/{id}', [App\Http\Controllers\Backend\DepartmentController::class, 'update']);
     Route::get('combodepartments', [App\Http\Controllers\Backend\DepartmentController::class, 'combo']);
-    
+
     // Homebase Routes
     Route::resource('homebases', App\Http\Controllers\Backend\HomebaseController::class);
     Route::any('homebases/{id}', [App\Http\Controllers\Backend\HomebaseController::class, 'update']);
@@ -114,7 +114,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('provinces', App\Http\Controllers\Backend\ProvinceController::class);
     Route::any('provinces/{id}', [App\Http\Controllers\Backend\ProvinceController::class, 'update']);
     Route::get('comboprovinces', [App\Http\Controllers\Backend\ProvinceController::class, 'combo']);
-    
+
     //City Routes
     Route::resource('cities', App\Http\Controllers\Backend\CityController::class);
     Route::any('cities/{id}', [App\Http\Controllers\Backend\CityController::class, 'update']);
@@ -169,28 +169,28 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('company_type', App\Http\Controllers\Backend\CompanytypeController::class);
     Route::any('company_type/{id}', [App\Http\Controllers\Backend\CompanytypeController::class, 'update']);
 
-    
+
     //Inquiry Good Routes
     Route::resource('inquiry_goods', App\Http\Controllers\Backend\InquiryGoodController::class);
     Route::any('inquiry_goods/{id}', [App\Http\Controllers\Backend\InquiryGoodController::class, 'update']);
-    
+
     //Origin Inquiry Routes
     Route::resource('origin_inquiries', App\Http\Controllers\Backend\OriginInquiryController::class);
     Route::any('origin_inquiries/{id}', [App\Http\Controllers\Backend\OriginInquiryController::class, 'update']);
     Route::get('comboorigininquiries', [App\Http\Controllers\Backend\OriginInquiryController::class, 'combo']);
-    
+
     //Description Quotation Routes
     Route::resource('description_quotations', App\Http\Controllers\Backend\DescriptionQuotationController::class);
     Route::any('description_quotations/{id}', [App\Http\Controllers\Backend\DescriptionQuotationController::class, 'update']);
-    
+
     //Origin Parameter Duedate Routes
     Route::resource('parameter_duedates', App\Http\Controllers\Backend\ParameterDuedateController::class);
     Route::any('parameter_duedates/{id}', [App\Http\Controllers\Backend\ParameterDuedateController::class, 'update']);
-    
+
     //Decission Quotation Routes
     Route::resource('decission_quotations', App\Http\Controllers\Backend\DecissionQuotationController::class);
     Route::any('decission_quotations/{id}', [App\Http\Controllers\Backend\DecissionQuotationController::class, 'update']);
-    
+
     //Quotation Status Routes
     Route::resource('quotation_statuses', App\Http\Controllers\Backend\QuotationStatusController::class);
     Route::any('quotation_statuses/{id}', [App\Http\Controllers\Backend\QuotationStatusController::class, 'update']);
@@ -198,17 +198,17 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     Route::resource('pillars', App\Http\Controllers\Backend\PillarController::class);
     Route::any('pillars/{id}', [App\Http\Controllers\Backend\PillarController::class, 'update']);
     Route::get('combopillars', [App\Http\Controllers\Backend\PillarController::class, 'combo']);
-    
+
     Route::resource('checklists', App\Http\Controllers\Backend\ChecklistController::class);
     Route::any('checklists/{id}', [App\Http\Controllers\Backend\ChecklistController::class, 'update']);
     Route::get('combochecklists', [App\Http\Controllers\Backend\ChecklistController::class, 'combo']);
-    
+
     Route::resource('optionchecklists', App\Http\Controllers\Backend\OptionChecklistController::class);
     Route::any('optionchecklists/{id}', [App\Http\Controllers\Backend\OptionChecklistController::class, 'update']);
 
     Route::resource('template_win_loses', App\Http\Controllers\Backend\TemplateWinLoseController::class);
     Route::any('template_win_loses/{id}', [App\Http\Controllers\Backend\TemplateWinLoseController::class, 'update']);
-    
+
     Route::resource('inquiry_statuses', App\Http\Controllers\Backend\InquiryStatusController::class);
     Route::any('inquiry_statuses/{id}', [App\Http\Controllers\Backend\InquiryStatusController::class, 'update']);
 
@@ -221,6 +221,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::any('/back_to_sales/{id}', 'back_to_sales');
     });
 
+    Route::any('inquiry/update_oncallprice/{id}', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'update_oncallprice']);
 
     Route::post('inquiry_supply_only/previewpdf', [App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class, 'previewpdf']);
     Route::resource('inquiry_supply_only', App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class);
