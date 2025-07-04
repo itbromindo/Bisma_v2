@@ -725,6 +725,7 @@ $usr = Auth::guard('web')->user();
 			</div>
 
 			<input type="hidden" id="d-inquiry-id-kanban2">
+            <input type="hidden" id="d-inquiry-type-user"></input>
 
 			<div class="modal-body p-3">
 				<div class="card-details-wrap">
@@ -748,14 +749,14 @@ $usr = Auth::guard('web')->user();
 								<div class="project-idea-data d-flex">
 									<div class="col-lg-3">
 										<div class="project-idea-data-left">
-											<h5 class="text-dark mb-1 d-inquiry-nomor" style="font-size: 18px;"></h5>
-											<p>Inquiry Dibuat : <span class="d-inquiry-create-date"></span></p>
+											<h5 class="text-dark mb-1 d-inquiry-oncallprice-nomor" style="font-size: 18px;"></h5>
+											<p>Inquiry Dibuat : <span class="d-inquiry-oncallprice-create-date"></span></p>
 										</div>
 									</div>
 									<div class="col-lg-9">
 										<ul class="d-flex">
 											<li class="me-2">
-												<span class="badge rounded-pill bg-warning-50 text-warning-500 d-inquiry-type"></span>
+												<span class="badge rounded-pill bg-warning-50 text-warning-500 d-inquiry-oncallprice-type"></span>
 											</li>
 										</ul>
 									</div>
@@ -773,7 +774,7 @@ $usr = Auth::guard('web')->user();
 											<span class="button-icon align-icon-left">
 												<input type="checkbox" id="taskCheckbox" class="custom-checkbox">
 											</span>
-											<span class="button-text text-white d-inquiry-due-date"></span>
+											<span class="button-text text-white d-inquiry-oncallprice-due-date"></span>
 										</span>
 									</button>
 								</div>
@@ -801,31 +802,31 @@ $usr = Auth::guard('web')->user();
 									<table class="table-inquiry-header">
 										<tr>
 											<td style="width: 6rem;">Perusahaan</td>
-											<td>: <span class="d-inquiry-customer-nama"></span></td>
+											<td>: <span class="d-inquiry-oncallprice-customer-nama"></span></td>
 										</tr>
 										<tr>
 											<td>Provinsi</td>
-											<td>: <span class="d-inquiry-customer-provinsi"></span></td>
+											<td>: <span class="d-inquiry-oncallprice-customer-provinsi"></span></td>
 										</tr>
 										<tr>
 											<td>Kota</td>
-											<td>: <span class="d-inquiry-customer-kota"></span></td>
+											<td>: <span class="d-inquiry-oncallprice-customer-kota"></span></td>
 										</tr>
 										<tr>
 											<td>Alamat</td>
-											<td>: <span class="d-inquiry-customer-alamat"></span></td>
+											<td>: <span class="d-inquiry-oncallprice-customer-alamat"></span></td>
 										</tr>
 										<tr>
 											<td>Email</td>
-											<td>: <span class="d-inquiry-customer-email"></span></td>
+											<td>: <span class="d-inquiry-oncallprice-customer-email"></span></td>
 										</tr>
 										<tr>
 											<td>No Telp</td>
-											<td>: <span class="d-inquiry-customer-telp"></span></td>
+											<td>: <span class="d-inquiry-oncallprice-customer-telp"></span></td>
 										</tr>
 										<tr>
 											<td>PIC</td>
-											<td>: <span class="d-inquiry-customer-pic"></span></td>
+											<td>: <span class="d-inquiry-oncallprice-customer-pic"></span></td>
 										</tr>
 									</table>
 								</div>
@@ -836,15 +837,15 @@ $usr = Auth::guard('web')->user();
 									<table class="table-inquiry-header">
 										<tr>
 											<td style="width: 7rem;">Nama</td>
-											<td>: <span class="d-inquiry-user-name"></span></td>
+											<td>: <span class="d-inquiry-oncallprice-user-name"></span></td>
 										</tr>
 										<tr>
 											<td>Email</td>
-											<td>: <span class="d-inquiry-user-email"></span></td>
+											<td>: <span class="d-inquiry-oncallprice-user-email"></span></td>
 										</tr>
 										<tr>
 											<td>Telp</td>
-											<td>: <span class="d-inquiry-user-telp"></span></td>
+											<td>: <span class="d-inquiry-oncallprice-user-telp"></span></td>
 										</tr>
 									</table>
 								</div>
@@ -853,16 +854,16 @@ $usr = Auth::guard('web')->user();
 									<table class="table-inquiry-header">
 										<tr>
 											<td style="width: 7rem;">Asal Inquiry</td>
-											<td>: <span class="badge rounded-3 bg-warning-50 text-warning-500 d-inquiry-origin"></span></td>
+											<td>: <span class="badge rounded-3 bg-warning-50 text-warning-500 d-inquiry-oncallprice-origin"></span></td>
 										</tr>
 										<tr>
 											<td>Status Saat Ini</td>
-											<td>: <span class="text-warning d-inquiry-status"></span></td>
+											<td>: <span class="text-warning d-inquiry-oncallprice-status"></span></td>
 										</tr>
 										<tr>
 											<td>Jenis</td>
 											<td>
-												<div class="d-inquiry-product">
+												<div class="d-inquiry-oncallprice-product">
 													<ul class="d-flex">
 														<li class="me-2">
 															<span class="badge rounded-pill bg-warning-50 text-warning-500">SS</span>
@@ -940,7 +941,7 @@ $usr = Auth::guard('web')->user();
 														<div class="row mt-2">
 															<div class="col-lg-6">
 																<p class="m-0" style="font-weight: 500; font-size: 14px;">List Permintaan</p>
-																<p class="m-0" style="font-size: 14px;"><span class="d-total-produk-permintaan"></span> Produk</p>
+																<p class="m-0" style="font-size: 14px;"><span class="d-total-produk-permintaan-oncallprice"></span> Produk</p>
 															</div>
 															<div class="col-lg-6 text-end d-flex align-items-center justify-content-end">
 																<button class="btn btn-primary" id="btn-detail-permintaan">
@@ -956,11 +957,11 @@ $usr = Auth::guard('web')->user();
 																<table class="table-inquiry-detail">
 																	<tr>
 																		<td style="width: 6rem;">Stock</td>
-																		<td>: <span class="d-inquiry-warehaouse"></span></td>
+																		<td>: <span class="d-inquiry-oncallprice-warehaouse"></span></td>
 																	</tr>
 																	<tr>
 																		<td>User</td>
-																		<td>: <span class="d-inquiry-customer-type">End User</span></td>
+																		<td>: <span class="d-inquiry-oncallprice-customer-type">End User</span></td>
 																	</tr>
 																</table>
 															</div>
@@ -968,11 +969,11 @@ $usr = Auth::guard('web')->user();
 																<table class="table-inquiry-detail">
 																	<tr>
 																		<td style="width: 6rem;">OC</td>
-																		<td>: <span class="d-inquiry-oc"></span></td>
+																		<td>: <span class="d-inquiry-oncallprice-oc"></span></td>
 																	</tr>
 																	<tr>
 																		<td>Ongkir</td>
-																		<td>: <span class="d-inquiry-shopping-cost"></span></td>
+																		<td>: <span class="d-inquiry-oncallprice-shopping-cost"></span></td>
 																	</tr>
 																</table>
 															</div>
@@ -1006,7 +1007,7 @@ $usr = Auth::guard('web')->user();
 
 														<div class="row mt-3 mb-2">
 															<div class="col-lg-6">
-																<p style="font-weight: 700; font-size: 16px; margin: 0;">Harga Total : <span style="font-size: 16px; font-weight: 400;" class="d-total-harga-permintaan"></span><span class="text-success"> (Harga Valid)</span></p>
+																<p style="font-weight: 700; font-size: 16px; margin: 0;">Harga Total : <span style="font-size: 16px; font-weight: 400;" class="d-total-harga-permintaan-oncallprice"></span><span class="text-success"> (Harga Valid)</span></p>
 															</div>
 														</div>
 
@@ -1164,6 +1165,33 @@ $usr = Auth::guard('web')->user();
 						<input type="text" class="form-control" value="" id="d-hargaPricelist-oncallprice">
 					</div>
 				</div>
+
+                <div class="row">
+                    <div class="col">
+                        <label class="form-label">Brand</label>
+                        <select class="form-control" id="d-oncall-price-brand-code" style="width: 100%;">
+                            <option value="" disabled selected>Pilih data</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Type</label>
+                        <select class="form-control" id="d-oncall-price-product-division-code" style="width: 100%;">
+                            <option value="" disabled selected>Pilih data</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Satuan</label>
+                        <select class="form-control" id="d-oncall-price-uom-code" style="width: 100%;">
+                            <option value="" disabled selected>Pilih data</option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="form-label">Kategori</label>
+                        <select class="form-control" id="d-oncall-category-code" style="width: 100%;">
+                            <option value="" disabled selected>Pilih data</option>
+                        </select>
+                    </div>
+                </div>
 			</div>
 
 			<!-- Footer -->
@@ -1219,7 +1247,7 @@ $usr = Auth::guard('web')->user();
 									<button class="btn btn-primary" onclick="showapprove_waiting_approval()">Approve</button>
 								</div>
 							</div>
-							
+
 							<div class="project-idea-body">
 								<div class="project-idea-data d-flex">
 									<div class="col-lg-3">
@@ -1770,7 +1798,7 @@ $usr = Auth::guard('web')->user();
 	@else
 		''
 	@endcan;
-	
+
 	$(document).ready(function() {
 		$('#listpermintaanmodal').on('shown.bs.modal', function() {
 			setTimeout(function() {
@@ -1907,6 +1935,34 @@ $usr = Auth::guard('web')->user();
 				window.open('/admin/inquiry/download/' + inquiryId, '_blank', 'noopener,noreferrer');
 			}
 		})
+
+        $('#viewadddetailitem_oncallpress').on('shown.bs.modal', function () {
+            // Inisialisasi Select2
+            $('#d-oncall-price-brand-code, #d-oncall-price-product-division-code, #d-oncall-price-uom-code, #d-oncall-category-code').select2({
+                dropdownParent: $('#viewadddetailitem_oncallpress'),
+                placeholder: "Pilih Data",
+                allowClear: true,
+                ajax: {
+                    url: function () {
+                        // Tentukan URL berdasarkan ID elemen
+                        if ($(this).attr('id') === 'd-oncall-price-brand-code') return '/admin/combobrand';
+                        if ($(this).attr('id') === 'd-oncall-price-product-division-code') return '/admin/comboproductdivision';
+                        if ($(this).attr('id') === 'd-oncall-price-uom-code') return '/admin/combosatuan';
+                        if ($(this).attr('id') === 'd-oncall-category-code') return '/admin/combokategori';
+                    },
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return { search: params.term };
+                    },
+                    processResults: function (data) {
+                        return { results: data };
+                    },
+                    cache: true
+                }
+            });
+
+        });
 	});
 
 	function show_edit_inquiry() {
@@ -1949,7 +2005,7 @@ $usr = Auth::guard('web')->user();
         $('#viewadddetailitem_oncallpress').modal('show');
     }
 
-	
+
 </script>
 
 @endsection

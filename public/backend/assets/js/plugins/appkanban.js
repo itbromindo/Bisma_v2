@@ -93,7 +93,7 @@
       let kanbanParents = document.getElementById("kanban_board_parent");
       let kabanChild = document.createElement("div");
       kabanChild.classList.add("kanbanboard_child");
-      kabanChild.innerHTML = `   
+      kabanChild.innerHTML = `
       <div class="kanbanboard_child">
       <div class="card">
           <div class="card-body" >
@@ -112,20 +112,20 @@
                 <i class="ph-arrow-right"></i>
               </span>
               <span class="button-text" >
-                 
+
             Add new card
               </span>
               </span>
-            
+
             </button>
-            
+
             </div>
-            
+
           </div>
       </div>
-      
+
     </div>
-      
+
       `;
 
       kanbanParents.appendChild(kabanChild);
@@ -162,9 +162,9 @@
                   <div className="fromGroup">
                   <label class=" body-font-4 pointer block mb-2" for="card_title_1">Tittle</label>
                   <input type="text" placeholder="Add tittle" class="form-control" id="card_title_1">
-                  
+
                   </div>
-                    
+
                   </div>
                 </div>
                 <div class="row">
@@ -218,13 +218,13 @@
                    <label for="member-email" class="block rt-mb-4">Add Member</label>
                     <input type="text" placeholder="Member email address" id="member-email">
                   </div>
-                   
+
                   </div>
                 </div>
               </div>
               <div class="createcard-modal-footer d-flex justify-content-between">
                 <button type="button" class="btn btn-dark2 pill" id="modal-vag2" >Cancel</button>
-         
+
                 <button type="submit" class="btn btn-primary pill btn-icon" id="createcard">
                   <span class="button-content-wrapper">
                   <span class="button-icon align-icon-right">
@@ -235,13 +235,13 @@
                   </span>
                   </span>
                 </button>
-                
+
               </div>
             </form>
           </div>
         </div>
       </div>
-          
+
           `;
           document.body.appendChild(modalbox);
           document.body.appendChild(overlay);
@@ -281,7 +281,7 @@
 
             let innerCard = document.createElement("div");
             innerCard.classList.add("div");
-            innerCard.innerHTML = ` 
+            innerCard.innerHTML = `
             <div class="card-priority rt-mb-12 newcard" id="${
               "newcard" + ID()
             }">
@@ -299,8 +299,8 @@
                                         <img src="assets/images/svg/dot.svg" alt="clock">
                                       </button>
                                       <ul class="dropdown-menu dropdown-actions" aria-labelledby="dropdownMenuButton1" data-popper-placement="bottom-start">
-                                       
-              
+
+
                                         <li>
                                           <a href="#" class="dropdown-item" >
                                             <span>
@@ -330,7 +330,7 @@
                                       </ul>
                                     </div>
                                   </div>
-                           
+
                                   <!-- labels  -->
                                   <div class="card-priority__labels">
                                     <ul>
@@ -460,7 +460,7 @@
           </form>
             <div class="createcard-modal-footer d-flex justify-content-between">
               <button type="button" class="btn btn-dark2 pill" id="modal-vag2" >&nbsp;</button>
-       
+
               <button type="submit" class="btn btn-primary pill btn-icon" id="createcard" onclick="saveinquiry_active()">
                 <span class="button-content-wrapper">
                 <span class="button-icon align-icon-right">
@@ -471,7 +471,7 @@
                 </span>
                 </span>
               </button>
-              
+
             </div>
         </div>
       </div>
@@ -492,7 +492,7 @@
             });
         });
     </script>
-        
+
         `;
       document.body.appendChild(modalbox);
       document.body.appendChild(overlay);
@@ -533,7 +533,7 @@
 
         let innerCard = document.createElement("div");
         innerCard.classList.add("div");
-        innerCard.innerHTML = ` 
+        innerCard.innerHTML = `
           <div class="card-priority rt-mb-12">
                                 <!-- top bar  -->
                                 <div class="card-priority__header">
@@ -549,8 +549,8 @@
                                       <img src="assets/images/svg/dot.svg" alt="clock">
                                     </button>
                                     <ul class="dropdown-menu dropdown-actions" aria-labelledby="dropdownMenuButton1" data-popper-placement="bottom-start">
-                                     
-            
+
+
                                       <li>
                                         <a href="#" class="dropdown-item" >
                                           <span>
@@ -568,7 +568,7 @@
                                         </a>
                                       </li>
                                       <li>
-                                     
+
                                     <a     class="dropdown-item remove-killer plain-btn">
                                         <span>
                                               <img src="assets/images/svg/trash.svg" alt="copylink">
@@ -579,7 +579,7 @@
                                     </ul>
                                   </div>
                                 </div>
-                         
+
                                 <!-- labels  -->
                                 <div class="card-priority__labels">
                                   <ul>
@@ -660,7 +660,7 @@
   let cardviewModal = document.querySelectorAll(".card-priority__title");
 
   cardviewModal.forEach(function (singlemodal) {
-    
+
     $(singlemodal).on("click", function () {
       // console.log("sini klik");
       let cardPriority = $(this).closest(".card-priority");
@@ -670,7 +670,7 @@
         dataType: 'json',
         success: function(response) {
           if(response.status == 200) {
-            
+
             if (response.data.inquiry.inquiry_stage == 'STATUS002') {
               oncallpress_function(response, inquiryId);
               return;
@@ -700,7 +700,7 @@
             $('.d-inquiry-user-telp').text(inquiry.users_personal_phone);
             $('.d-inquiry-origin').text(inquiry.origin_inquiry_name);
             $('.d-inquiry-status').text(inquiry.inquiry_status_name);
-            
+
             let htmlInquiryProducts = '';
             if(inquiry.product_divisions_name) {
               let product_divisions = inquiry.product_divisions_name;
@@ -769,7 +769,7 @@
           })
         }
       })
-      
+
     });
   });
 
@@ -778,24 +778,25 @@
     let inquiry = response.data.inquiry;
     $("#viewmodaloncallpress").modal("toggle");
     $('#d-inquiry-id-kanban2').val(inquiryId);
-    $('.d-inquiry-nomor').text(inquiry.inquiry_code);
-    $('.d-inquiry-create-date').text(inquiry.create_date);
-    $('.d-inquiry-type').text(inquiry.inquiry_type_name);
-    $('.d-inquiry-due-date').text(inquiry.due_date);
-    $('.d-inquiry-customer-nama').text(inquiry.customer_name);
-    $('.d-inquiry-customer-provinsi').text(inquiry.provinces_name);
-    $('.d-inquiry-customer-kota').text(inquiry.cities_name);
-    $('.d-inquiry-customer-alamat').text(inquiry.customers_full_address);
-    $('.d-inquiry-customer-email').text(inquiry.customers_email);
-    $('.d-inquiry-customer-telp').text(inquiry.customers_phone);
-    $('.d-inquiry-customer-pic').text(inquiry.customers_PIC);
-    $('.d-inquiry-user-name').text(inquiry.users_name);
-    $('.d-inquiry-user-email').text(inquiry.users_email);
-    $('.d-inquiry-user-telp').text(inquiry.users_personal_phone);
-    $('.d-inquiry-origin').text(inquiry.origin_inquiry_name);
-    $('.d-inquiry-status').text(inquiry.inquiry_status_name);
+    $('#d-inquiry-type-user').val(inquiry.inquiry_customer_type);
+    $('.d-inquiry-oncallprice-nomor').text(inquiry.inquiry_code);
+    $('.d-inquiry-oncallprice-create-date').text(inquiry.create_date);
+    $('.d-inquiry-oncallprice-type').text(inquiry.inquiry_type_name);
+    $('.d-inquiry-oncallprice-due-date').text(inquiry.due_date);
+    $('.d-inquiry-oncallprice-customer-nama').text(inquiry.customer_name);
+    $('.d-inquiry-oncallprice-customer-provinsi').text(inquiry.provinces_name);
+    $('.d-inquiry-oncallprice-customer-kota').text(inquiry.cities_name);
+    $('.d-inquiry-oncallprice-customer-alamat').text(inquiry.customers_full_address);
+    $('.d-inquiry-oncallprice-customer-email').text(inquiry.customers_email);
+    $('.d-inquiry-oncallprice-customer-telp').text(inquiry.customers_phone);
+    $('.d-inquiry-oncallprice-customer-pic').text(inquiry.customers_PIC);
+    $('.d-inquiry-oncallprice-user-name').text(inquiry.users_name);
+    $('.d-inquiry-oncallprice-user-email').text(inquiry.users_email);
+    $('.d-inquiry-oncallprice-user-telp').text(inquiry.users_personal_phone);
+    $('.d-inquiry-oncallprice-origin').text(inquiry.origin_inquiry_name);
+    $('.d-inquiry-oncallprice-status').text(inquiry.inquiry_status_name);
     // console.log("oncallpress_function", response);
-    
+
     let htmlInquiryProducts = '';
     if(inquiry.product_divisions_name) {
       let product_divisions = inquiry.product_divisions_name;
@@ -806,23 +807,23 @@
           <span class="badge rounded-pill bg-primary-50 text-primary-500">${value}</span>
         </li>`;
       });
-  
+
       htmlInquiryProducts += `</ul>`;
     }
-    $('.d-inquiry-product').html(htmlInquiryProducts);
-  
+    $('.d-inquiry-oncallprice-product').html(htmlInquiryProducts);
+
     // list permintaan
-    $('.d-inquiry-warehaouse').text(inquiry.warehouse_name);
-    $('.d-inquiry-customer-type').text(inquiry.inquiry_customer_type);
-    $('.d-inquiry-oc').text(inquiry.inquiry_oc);
-    $('.d-inquiry-shopping-cost').text(inquiry.inquiry_shipping_cost);
-  
+    $('.d-inquiry-oncallprice-warehaouse').text(inquiry.warehouse_name);
+    $('.d-inquiry-oncallprice-customer-type').text(inquiry.inquiry_customer_type);
+    $('.d-inquiry-oncallprice-oc').text(inquiry.inquiry_oc);
+    $('.d-inquiry-oncallprice-shopping-cost').text(inquiry.inquiry_shipping_cost);
+
     let list_permintaan = response.data.list_permintaan;
     $('#tableBody-kanban2').empty();
     let totalProdukPermintaan = 0;
     let totalHargaPermintaan = 0;
 
-    
+
     if(list_permintaan.length > 0) {
       list_permintaan.forEach(function (data, index) {
         totalProdukPermintaan += 1;
@@ -838,15 +839,15 @@
         const btn = onCallButton.replace('PLACEHOLDER_ID', data.inquiry_product_id);
 
         $('#tableBody-kanban2').append(`
-          <tr>
+          <tr data-inquiry-id="${data.inquiry_product_id}">
             <td class="hidden">${ data.inquiry_product_id}</td>
             <td class="text-center">${ index + 1}</td>
             <td class="text-center">${ data.inquiry_product_name }</td>
             <td class="text-center">${ data.inquiry_product_qty }</td>
             <td class="text-center">${ name_status }</td>
-            <td class="text-center">${ data.inquiry_product_pricelist }</td>
-            <td class="text-center">${ data.inquiry_product_net_price }</td>
-            <td class="text-center">${ data.inquiry_product_total_price }</td>
+            <td class="text-center pricelist-cell">${data.inquiry_product_pricelist}</td>
+            <td class="text-center netprice-cell">${data.inquiry_product_net_price}</td>
+            <td class="text-center totalprice-cell">${data.inquiry_product_total_price}</td>
             ${btn}
           </tr>
         `);
@@ -854,9 +855,9 @@
     }else{
       $('#tableBody-kanban2').append('<tr><td colspan="10" class="text-center">No results found</td></tr>');
     }
-  
-    $('.d-total-produk-permintaan').text(thousandView(totalProdukPermintaan));
-    $('.d-total-harga-permintaan').text('Rp.' + thousandView(totalHargaPermintaan));
+
+    $('.d-total-produk-permintaan-oncallprice').text(thousandView(totalProdukPermintaan));
+    $('.d-total-harga-permintaan-oncallprice').text('Rp.' + thousandView(totalHargaPermintaan));
   }
 
 
@@ -881,7 +882,7 @@
     $('.d-inquiry-waiting-oncallprice-user-telp').text(inquiry.users_personal_phone);
     $('.d-inquiry-waiting-oncallprice-origin').text(inquiry.origin_inquiry_name);
     $('.d-inquiry-waiting-oncallprice-status').text(inquiry.inquiry_status_name);
-    
+
     let htmlInquiryProducts = '';
     if(inquiry.product_divisions_name) {
       let product_divisions = inquiry.product_divisions_name;
