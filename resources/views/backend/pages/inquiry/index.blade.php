@@ -156,7 +156,7 @@ $usr = Auth::guard('web')->user();
 
 						<div class="project-idea-wrap">
 							<div id="card-action-status-inquiry"></div>
-							
+
 							<div class="project-idea-body">
 								<div class="project-idea-data d-flex">
 									<div class="col-lg-3">
@@ -1233,7 +1233,7 @@ $usr = Auth::guard('web')->user();
 					<div class="card-details-body">
 
 						<div class="project-idea-wrap">
-							<div class="project-idea-header d-flex justify-content-between align-items-center p-3 rounded">
+							<div class="project-idea-header d-flex justify-content-between align-items-center p-3 rounded" style="background-color: #323C55;">
 								<div>
 									<h5 class="text-white mb-1">Harga on call price mengunggu keputusan! 💰</h5>
 									<p class="text-white mb-0">Harga akan menjadi valid ketika dilakukan approval.</p>
@@ -1963,7 +1963,7 @@ $usr = Auth::guard('web')->user();
 // Jalankan validasi awal
         validateFields();
     });
-    
+
 	function cancel_inquiry(id) {
 		Swal.fire({
 			title: 'Hold Up! Butuh Alasan Nih! ⚠️',
