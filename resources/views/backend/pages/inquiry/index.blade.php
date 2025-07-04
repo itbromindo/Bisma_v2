@@ -155,12 +155,8 @@ $usr = Auth::guard('web')->user();
 					<div class="card-details-body">
 
 						<div class="project-idea-wrap">
-							<div class="project-idea-header">
-								<h3>
-									Mission Possible: 4 Jam Menuju Keputusan!
-								</h3>
-								<p>Mau lanjut ke Quote atau No Quote? Waktu terus berjalan…</p>
-							</div>
+							<div id="card-action-status-inquiry"></div>
+							
 							<div class="project-idea-body">
 								<div class="project-idea-data d-flex">
 									<div class="col-lg-3">
@@ -1710,7 +1706,6 @@ $usr = Auth::guard('web')->user();
 	}
 
 	.project-idea-header {
-		background-color: #323C55;
 		border-radius: 8px;
 		padding: 20px;
 	}
@@ -1812,46 +1807,6 @@ $usr = Auth::guard('web')->user();
 				$('#viewmodaloncallpress').css('z-index', '');
 			}, 100);
 		});
-
-		function cancel_inquiry(id) {
-			Swal.fire({
-				title: 'Are you sure?',
-				text: 'You will not be able to revert this!',
-				icon: 'warning',
-				showCancelButton: true,
-				confirmButtonColor: '#3085d6',
-				cancelButtonColor: '#d33',
-				confirmButtonText: 'Yes, cancel it!'
-			}).then((result) => {
-				if (result.isConfirmed) {
-					$.ajax({
-						url: `/admin/inquiry/cancel_stage/${id}`,
-						type: 'GET',
-						dataType: 'JSON',
-						success: function(response) {
-							if (response.status == 200) {
-								Swal.fire({
-									icon: 'success',
-									title: 'Success!',
-									text: response.data,
-								}).then(function() {
-									location.reload();
-								});
-
-							} else {
-								Swal.fire({
-									icon: 'error',
-									title: 'Failed!',
-									text: response.data,
-								}).then(function() {
-									location.reload();
-								})
-							}
-						}
-					});
-				}
-			});
-		}
 
 		$('#btn-filter-inquiry').click(function() {
 			$('#filtermodal').modal('show');
@@ -1965,6 +1920,72 @@ $usr = Auth::guard('web')->user();
         });
 	});
 
+	function cancel_inquiry(id) {
+		Swal.fire({
+			title: 'Hold Up! Butuh Alasan Nih! ⚠️',
+			text: 'Atasan bakal cek alasan kamu sebelum batalin permintaan ini.',
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#005CE8',
+			cancelButtonColor: '#93a1af',
+			confirmButtonText: 'Lanjutkan',
+			cancelButtonText: 'Kembali'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				Swal.fire({
+					title: 'Alasan Card Dibatalkan',
+					input: 'textarea',
+					inputPlaceholder: 'Masukkan alasan kamu...',
+					inputAttributes: {
+						'aria-label': 'Masukkan alasan kamu'
+					},
+					showCancelButton: true,
+					confirmButtonText: 'Kirim',
+					cancelButtonText: 'Batal',
+					inputValidator: (value) => {
+						if (!value) {
+							return 'Alasan wajib diisi!';
+						}
+					}
+				}).then((result2) => {
+					if (result2.isConfirmed) {
+						let alasan = result2.value;
+
+						$.ajax({
+							headers: {
+								'X-CSRF-TOKEN': '{{ csrf_token() }}'
+							},
+							url: `/admin/inquiry/cancel_stage`,
+							method: 'POST',
+							data: {
+								id: id,
+								alasan: alasan
+							},
+							dataType: 'json',
+							success: function(response) {
+								if (response.status == 200) {
+									Swal.fire({
+										icon: 'success',
+										title: 'Request Canceled! 👍',
+										text: 'Atasan bakal review alasan kamu.',
+									}).then(function() {
+										location.reload();
+									});
+
+								} else {
+									Swal.fire('Gagal!', response.data, 'error');
+								}
+							},
+							error: function(error) {
+								console.log(error)
+							}
+						});
+					}
+				});
+			}
+		});
+	}
+
 	function show_edit_inquiry() {
 		let id = $('#d-inquiry-id').val();
 
@@ -1977,6 +1998,118 @@ $usr = Auth::guard('web')->user();
 				text: 'Data tidak ditemukan!',
 			})
 		}
+	}
+
+	function rejectInquiry(inquiry_code, master_approvals_details_id) {
+		$("#viewmodal").modal("hide");
+		Swal.fire({
+			icon: 'warning',
+			title: 'Reject? Yakin 100%?',
+			text: 'Cek lagi deh! Pastikan semuanya sudah bener sebelum kamu reject!',
+			showCancelButton: true,
+			confirmButtonColor: '#005CE8',
+			cancelButtonColor: '#93a1af',
+			confirmButtonText: 'Lanjut',
+			cancelButtonText: 'Kembali'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				Swal.fire({
+					title: 'Alasan Reject',
+					input: 'textarea',
+					inputPlaceholder: 'Masukkan alasan kamu...',
+					inputAttributes: {
+						'aria-label': 'Masukkan alasan kamu'
+					},
+					showCancelButton: true,
+					confirmButtonText: 'Kirim',
+					cancelButtonText: 'Batal',
+					inputValidator: (value) => {
+						if (!value) {
+							return 'Alasan wajib diisi!';
+						}
+					}
+				}).then((result2) => {
+					if (result2.isConfirmed) {
+						let alasan = result2.value;
+
+						$.ajax({
+							headers: {
+								'X-CSRF-TOKEN': '{{ csrf_token() }}'
+							},
+							url: `/admin/inquiry/reject`,
+							method: 'POST',
+							data: {
+								inquiry_code: inquiry_code,
+								alasan: alasan,
+								master_approvals_details_id: master_approvals_details_id
+							},
+							dataType: 'json',
+							success: function(response) {
+								if (response.status == 200) {
+									Swal.fire({
+										icon: 'success',
+										title: 'Berhasil!',
+										text: 'Berhasil!',
+									}).then(function() {
+										location.reload();
+									});
+
+								} else {
+									Swal.fire('Gagal!', response.data, 'error');
+								}
+							},
+							error: function(error) {
+								console.log(error)
+							}
+						});
+					}
+				});
+			}
+		});
+	}
+
+	function approveInquiry(inquiry_code, master_approvals_details_id) {
+		Swal.fire({
+			icon: 'info',
+			title: 'Yakin Approve? Gas atau Tahan? 🚀',
+			text: 'Pastikan semua sudah sesuai sebelum kamu approve!',
+			showCancelButton: true,
+			confirmButtonColor: '#005CE8',
+			cancelButtonColor: '#93a1af',
+			confirmButtonText: 'Lanjut',
+			cancelButtonText: 'Kembali'
+		}).then((result) => {
+			if (result.isConfirmed) {
+				$.ajax({
+					headers: {
+						'X-CSRF-TOKEN': '{{ csrf_token() }}'
+					},
+					url: `/admin/inquiry/approve`,
+					method: 'POST',
+					data: {
+						inquiry_code: inquiry_code,
+						master_approvals_details_id: master_approvals_details_id
+					},
+					dataType: 'json',
+					success: function(response) {
+						if (response.status == 200) {
+							Swal.fire({
+								icon: 'success',
+								title: 'Berhasil!',
+								text: 'Berhasil!',
+							}).then(function() {
+								location.reload();
+							});
+						} else {
+							Swal.fire('Gagal!', response.data, 'error');
+						}
+					},
+					error: function(error) {
+						console.log(error)
+					}
+				});
+			}
+		});
 	}
 
 	function showwarningbacktosales() {
@@ -2004,7 +2137,6 @@ $usr = Auth::guard('web')->user();
 		$('#d-inquiry-oncallprace-aktive').val(id);
         $('#viewadddetailitem_oncallpress').modal('show');
     }
-
 
 </script>
 

@@ -4,12 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class Inquiry extends Model
 {
     protected $table = 'inquiry';
     public $timestamps = false;
     protected $primaryKey = 'inquiry_code';
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
         'inquiry_code',
         'inquiry_type',
@@ -126,6 +129,7 @@ class Inquiry extends Model
                     'i.inquiry_product_division',
                     'i.inquiry_customer_type',
                     'i.inquiry_oc',
+                    'i.inquiry_stage',
                     'i.inquiry_shipping_cost',
                     'i.inquiry_notes',
                     'i.inquiry_created_at',
@@ -162,6 +166,47 @@ class Inquiry extends Model
                 ->where('i.inquiry_id', $id)
                 ->first();
 
+        if (!$query) {
+            return null;
+        }
+
+        // --- PENGECEKAN HAK AKSES ---
+
+        $canApprove = false; 
+        $master_approvals_details_id = 0;
+        $user = Auth::user();
+
+        if ($user && $query->inquiry_stage == 'STATUS008') {
+
+            $nextApprovalRule = DB::table('inquiry as i')
+                ->join('approval_transaction_header as ath', 'i.inquiry_code', '=', 'ath.transaction_number')
+                ->join('approval_transaction_detail as atd', 'ath.approval_transaction_header_code', '=', 'atd.approval_transaction_header_code')
+                ->join('master_approvals as ma', 'ath.master_approvals_code', '=', 'ma.master_approvals_code')
+                ->join('master_approvals_details as mad', function ($join) {
+                    $join->on('ma.master_approvals_code', '=', 'mad.master_approvals_code')
+                        ->on('mad.master_approvals_details_id', '=', 'atd.master_approvals_details_id');
+                })
+                ->where('atd.approval_transaction_detail_decision', 'Waiting Approval')
+                ->where('i.inquiry_id', $id)
+                ->orderBy('mad.master_approvals_details_section')
+                ->select('ma.department_code', 'ma.division_code', 'mad.master_approvals_details_approvers as level_code', 'mad.master_approvals_details_id')
+                ->first();
+
+            if ($nextApprovalRule) {
+                if (
+                    $user->users_department == $nextApprovalRule->department_code &&
+                    $user->users_division == $nextApprovalRule->division_code &&
+                    $user->users_level == $nextApprovalRule->level_code
+                ) {
+                    $canApprove = true; 
+                    $master_approvals_details_id = $nextApprovalRule->master_approvals_details_id;
+                }
+            }
+        }
+
+        $query->can_approve = $canApprove;
+        $query->master_approvals_details_id = $master_approvals_details_id;
+    
         return $query;
     }
 
