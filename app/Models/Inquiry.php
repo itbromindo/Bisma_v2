@@ -186,7 +186,7 @@ class Inquiry extends Model
                         ->on('mad.master_approvals_details_id', '=', 'atd.master_approvals_details_id');
                 })
                 ->where('atd.approval_transaction_detail_decision', 'Waiting Approval')
-                ->where('i.inquiry_id', 24)
+                ->where('i.inquiry_id', $id)
                 ->orderBy('mad.master_approvals_details_section')
                 ->select('ma.department_code', 'ma.division_code', 'mad.master_approvals_details_approvers as level_code', 'mad.master_approvals_details_id')
                 ->first();
