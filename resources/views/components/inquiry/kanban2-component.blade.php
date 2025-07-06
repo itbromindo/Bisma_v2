@@ -212,9 +212,15 @@
                         $('#viewadddetailitem_oncallpress').modal('hide');
                         const row = $(`#tableBody-kanban2 tr[data-inquiry-id="${id}"]`);
 
-                        row.find('.pricelist-cell').text(data.inquiry_product_pricelist);
-                        row.find('.netprice-cell').text(data.inquiry_product_net_price);
-                        row.find('.totalprice-cell').text(data.inquiry_product_total_price);
+                        row.find('.pricelist-cell').text(data.detail_update.inquiry_product_pricelist);
+                        row.find('.netprice-cell').text(data.detail_update.inquiry_product_net_price);
+                        row.find('.totalprice-cell').text(data.detail_update.inquiry_product_total_price);
+
+                        const thousandView = (number = 0) => {
+                            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        }
+                        $('.d-total-harga-permintaan-oncallprice').text('Rp.' + thousandView(data.count_price));
+
                     });
 
                 }
