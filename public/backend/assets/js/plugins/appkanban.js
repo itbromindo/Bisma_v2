@@ -888,7 +888,15 @@
   // function khusus kanban 3 waiting on call press
   function waiting_oncallpress_function(response, inquiryId) {
     let inquiry = response.data.inquiry;
+    if (inquiry.can_approve == true){
+        $('#button_verification_waiting_oncallprice').removeClass('hidden');
+    }else{
+        $('#button_verification_waiting_oncallprice').addClass('hidden');
+    }
+
     $("#viewmodal_waiting_oncallprice").modal("toggle");
+    $('#d-inquiry-waiting-oncallprice-approvals-id').val(inquiry.master_approvals_details_id);
+    $('#d-inquiry-waiting-oncallprice-code').val(inquiry.inquiry_code);
     $('#d-inquiry-waiting-oncallprice-id').val(inquiryId);
     $('.d-inquiry-waiting-oncallprice-nomor').text(inquiry.inquiry_code);
     $('.d-inquiry-waiting-oncallprice-create-date').text(inquiry.create_date);

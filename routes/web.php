@@ -224,6 +224,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     });
 
     Route::any('inquiry/update_oncallprice/{id}', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'update_oncallprice']);
+    Route::post('inquiry/approve_waiting_oncallprice', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'approve_waiting_oncall_price']);
 
     Route::post('inquiry_supply_only/previewpdf', [App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class, 'previewpdf']);
     Route::resource('inquiry_supply_only', App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class);

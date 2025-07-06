@@ -1226,7 +1226,9 @@ $usr = Auth::guard('web')->user();
 				</button>
 			</div>
 
-			<input type="hidden" id="d-inquiry-waiting-oncallprice-id">
+            <input type="hidden" id="d-inquiry-waiting-oncallprice-id">
+            <input type="hidden" id="d-inquiry-waiting-oncallprice-code">
+            <input type="hidden" id="d-inquiry-waiting-oncallprice-approvals-id">
 
 			<div class="modal-body p-3">
 				<div class="card-details-wrap">
@@ -1238,7 +1240,7 @@ $usr = Auth::guard('web')->user();
 									<h5 class="text-white mb-1">Harga on call price mengunggu keputusan! 💰</h5>
 									<p class="text-white mb-0">Harga akan menjadi valid ketika dilakukan approval.</p>
 								</div>
-								<div class="d-flex gap-2">
+								<div class="d-flex gap-2" id="button_verification_waiting_oncallprice">
 									<button class="btn btn-light" onclick="showreject_waiting_oncallprice()">Reject</button>
 									<button class="btn btn-primary" onclick="showapprove_waiting_approval()">Approve</button>
 								</div>
@@ -1621,7 +1623,8 @@ $usr = Auth::guard('web')->user();
       <!-- Footer -->
       <div class="modal-footer justify-content-center border-0 mt-2">
         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Kembali</button>
-        <button type="button" class="btn btn-primary" onclick="update_stage_oncallpress($('#d-inquiry-waiting-oncallprice-id').val(), 'STATUS001')">Ya, Sudah</button>
+{{--          <button type="button" class="btn btn-primary" onclick="update_stage_oncallpress($('#d-inquiry-waiting-oncallprice-id').val(), 'STATUS001')">Ya, Sudah</button>--}}
+          <button type="button" class="btn btn-primary" onclick="approve_waiting_oncallpress()">Ya, Sudah</button>
       </div>
 
     </div>
@@ -2199,6 +2202,40 @@ $usr = Auth::guard('web')->user();
         $('#d-oncall-price-uom-code').append(new Option('', '', true, true)).trigger('change');
         $('#d-oncall-category-code').append(new Option('', '', true, true)).trigger('change');
 
+    }
+
+    function approve_waiting_oncallpress() {
+        let master_approvals_details_id = $('#d-inquiry-waiting-oncallprice-approvals-id').val();
+        let inquiry_code = $('#d-inquiry-waiting-oncallprice-code').val();
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            url: `/admin/inquiry/approve_waiting_oncallprice`,
+            method: 'POST',
+            data: {
+                inquiry_code: inquiry_code,
+                master_approvals_details_id: master_approvals_details_id
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status == 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Berhasil!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire('Gagal!', response.data, 'error');
+                }
+            },
+            error: function(error) {
+                console.log(error)
+            }
+        });
     }
 
 </script>
