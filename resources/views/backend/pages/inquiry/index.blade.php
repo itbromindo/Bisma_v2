@@ -1581,13 +1581,14 @@ $usr = Auth::guard('web')->user();
 		<div class="modal-body">
 			<div class="mb-3">
 				<label>Alasan</label>
-				<input type="text" class="form-control" id="d-message-reject-oncallprice" value="">
+                <textarea id="d-message-reject-oncallprice" aria-label="Masukkan alasan kamu" class="swal2-textarea" placeholder="Masukkan alasan kamu..." style="display: flex;"></textarea>
+{{--				<input type="text" class="form-control" id="d-message-reject-oncallprice" value="">--}}
 			</div>
 		</div>
 
 		<!-- Footer -->
 		<div class="modal-footer justify-content-end">
-			<button type="button" class="btn btn-primary" onclick="update_stage_oncallpress($('#d-inquiry-waiting-oncallprice-id').val(), 'STATUS002')">
+			<button type="button" class="btn btn-primary" onclick="rejectInquiry_waiting_oncallprice()">
 				<svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="#ffffff" viewBox="0 0 256 256"><path d="M219.31,72,184,36.69A15.86,15.86,0,0,0,172.69,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V83.31A15.86,15.86,0,0,0,219.31,72ZM168,208H88V152h80Zm40,0H184V152a16,16,0,0,0-16-16H88a16,16,0,0,0-16,16v56H48V48H172.69L208,83.31ZM160,72a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h56A8,8,0,0,1,160,72Z"></path></svg> Simpan
 			</button>
 		</div>
@@ -2228,6 +2229,43 @@ $usr = Auth::guard('web')->user();
                     }).then(function() {
                         location.reload();
                     });
+                } else {
+                    Swal.fire('Gagal!', response.data, 'error');
+                }
+            },
+            error: function(error) {
+                console.log(error)
+            }
+        });
+    }
+
+    function rejectInquiry_waiting_oncallprice() {
+        let master_approvals_details_id = $('#d-inquiry-waiting-oncallprice-approvals-id').val();
+        let inquiry_code = $('#d-inquiry-waiting-oncallprice-code').val();
+        let alasan = $('#d-message-reject-oncallprice').val();
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            url: `/admin/inquiry/reject_waiting_oncall_price`,
+            method: 'POST',
+            data: {
+                inquiry_code: inquiry_code,
+                alasan: alasan,
+                master_approvals_details_id: master_approvals_details_id
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status == 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Berhasil!',
+                    }).then(function() {
+                        location.reload();
+                    });
+
                 } else {
                     Swal.fire('Gagal!', response.data, 'error');
                 }

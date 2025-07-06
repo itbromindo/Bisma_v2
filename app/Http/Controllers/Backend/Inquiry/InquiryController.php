@@ -537,5 +537,59 @@ class InquiryController extends Controller
         }
     }
 
+    public function reject_inquiry_oncall_price(Request $request)
+    {
+        $request->validate([
+            'inquiry_code' => 'required|exists:inquiry,inquiry_code',
+            'alasan' => 'required|string|max:255',
+            'master_approvals_details_id' => 'required|exists:master_approvals_details,master_approvals_details_id',
+        ]);
+
+        try {
+            DB::beginTransaction();
+            $user = Auth::user();
+
+            $inquiry = Inquiry::where('inquiry_code', $request->inquiry_code)->first();
+
+            $approvalDetail = ApprovalTransactionDetail::where('master_approvals_details_id', $request->master_approvals_details_id)
+                ->whereHas('header', function ($query) use ($request) {
+                    $query->where('transaction_number', $request->inquiry_code);
+                })
+                ->where('approval_transaction_detail_decision', 'Waiting Approval')
+                ->firstOrFail();
+
+            $approvalDetail->update([
+                'approval_transaction_detail_decision'      => 'Not Approve',
+                'approval_transaction_detail_reason'        => $request->alasan,
+                'approval_transaction_detail_approval_date' => now(),
+                'approval_transaction_detail_approvers'     => $user->user_code,
+                'approval_transaction_detail_updated_by'    => $user->user_code,
+                'approval_transaction_detail_updated_at'    => now()
+            ]);
+
+            $inquiry->update([
+                'inquiry_stage' => 'STATUS002', // Inquiry Masuk
+                'inquiry_updated_by' => $user->user_code,
+                'inquiry_updated_at' => now(),
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 200,
+                'data' => 'Berhasil menolak pembatalan inquiry!'
+            ]);
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => 500,
+                'data' => 'Gagal, terjadi kesalahan pada server.',
+                'error' => $e->getMessage()
+            ]);
+        }
+
+    }
 
 }
