@@ -11,7 +11,7 @@
                     $duedate = $row->inquiry_end_date;
                     $today = date('Y-m-d H:i:s');
                     $status_card = '';
-                    
+
                     if($today > $duedate)
                     {
                         $status_card = ' bg-danger-50 border-danger';
@@ -29,7 +29,7 @@
                             <p>Due Date Inquiry : <br>{{ date("d M, Y", strtotime($duedate)) }}</p>
                         </div>
                         <!-- actions  -->
-                        
+
                     </div>
 
                     <!-- labels  -->

@@ -93,7 +93,7 @@
 			let kanbanParents = document.getElementById("kanban_board_parent");
 			let kabanChild = document.createElement("div");
 			kabanChild.classList.add("kanbanboard_child");
-			kabanChild.innerHTML = `   
+			kabanChild.innerHTML = `
       <div class="kanbanboard_child">
       <div class="card">
           <div class="card-body" >
@@ -280,7 +280,7 @@
 
 						let innerCard = document.createElement("div");
 						innerCard.classList.add("div");
-						innerCard.innerHTML = ` 
+						innerCard.innerHTML = `
             <div class="card-priority rt-mb-12 newcard" id="${"newcard" + ID()
 							}">
                                   <!-- top bar  -->
@@ -528,7 +528,7 @@
 
 				let innerCard = document.createElement("div");
 				innerCard.classList.add("div");
-				innerCard.innerHTML = ` 
+				innerCard.innerHTML = `
           <div class="card-priority rt-mb-12">
                                 <!-- top bar  -->
                                 <div class="card-priority__header">
@@ -663,17 +663,18 @@
 				success: function (response) {
 					if (response.status == 200) {
 						let inquiry = response.data.inquiry;
-						$("#viewmodal").modal("toggle");
-            
-            if (response.data.inquiry.inquiry_stage == 'STATUS002') {
-              oncallpress_function(response, inquiryId);
-              return;
-            }
 
-            if (response.data.inquiry.inquiry_stage == 'STATUS003') {
-              waiting_oncallpress_function(response, inquiryId);
-              return;
-            }
+                        if (response.data.inquiry.inquiry_stage == 'STATUS002') {
+                          oncallpress_function(response, inquiryId);
+                          return;
+                        }
+
+                        if (response.data.inquiry.inquiry_stage == 'STATUS003') {
+                          waiting_oncallpress_function(response, inquiryId);
+                          return;
+                        }
+
+						$("#viewmodal").modal("toggle");
 
 						if (inquiry.inquiry_stage == 'STATUS008') {
 							if (inquiry.can_approve) {
@@ -887,7 +888,15 @@
   // function khusus kanban 3 waiting on call press
   function waiting_oncallpress_function(response, inquiryId) {
     let inquiry = response.data.inquiry;
+    if (inquiry.can_approve == true){
+        $('#button_verification_waiting_oncallprice').removeClass('hidden');
+    }else{
+        $('#button_verification_waiting_oncallprice').addClass('hidden');
+    }
+
     $("#viewmodal_waiting_oncallprice").modal("toggle");
+    $('#d-inquiry-waiting-oncallprice-approvals-id').val(inquiry.master_approvals_details_id);
+    $('#d-inquiry-waiting-oncallprice-code').val(inquiry.inquiry_code);
     $('#d-inquiry-waiting-oncallprice-id').val(inquiryId);
     $('.d-inquiry-waiting-oncallprice-nomor').text(inquiry.inquiry_code);
     $('.d-inquiry-waiting-oncallprice-create-date').text(inquiry.create_date);

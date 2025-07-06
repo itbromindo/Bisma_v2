@@ -217,6 +217,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::get('/update_stage', 'update_stage');
         Route::post('/cancel_stage', 'cancel_stage');
         Route::post('/reject', 'reject_inquiry');
+        Route::post('/reject_waiting_oncall_price', 'reject_inquiry_oncall_price');
         Route::post('/approve', 'approve_inquiry');
         Route::get('/detail/{id}', 'detail_inquiry');
         Route::get('/download/{id}', 'download_inquiry');
@@ -224,6 +225,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     });
 
     Route::any('inquiry/update_oncallprice/{id}', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'update_oncallprice']);
+    Route::post('inquiry/approve_waiting_oncallprice', [App\Http\Controllers\Backend\Inquiry\InquiryController::class, 'approve_waiting_oncall_price']);
 
     Route::post('inquiry_supply_only/previewpdf', [App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class, 'previewpdf']);
     Route::resource('inquiry_supply_only', App\Http\Controllers\Backend\Inquiry\InquirysupplyonlyController::class);

@@ -156,7 +156,7 @@ $usr = Auth::guard('web')->user();
 
 						<div class="project-idea-wrap">
 							<div id="card-action-status-inquiry"></div>
-							
+
 							<div class="project-idea-body">
 								<div class="project-idea-data d-flex">
 									<div class="col-lg-3">
@@ -940,7 +940,7 @@ $usr = Auth::guard('web')->user();
 																<p class="m-0" style="font-size: 14px;"><span class="d-total-produk-permintaan-oncallprice"></span> Produk</p>
 															</div>
 															<div class="col-lg-6 text-end d-flex align-items-center justify-content-end">
-																<button class="btn btn-primary" id="btn-detail-permintaan">
+																<button class="btn btn-primary" id="btn-detail-permintaan-on-call-price" disabled>
 																	Lihat Detail
 																</button>
 															</div>
@@ -1097,7 +1097,7 @@ $usr = Auth::guard('web')->user();
 </div>
 
 <div class="modal fade" id="viewadddetailitem_oncallpress" tabindex="-1" aria-labelledby="viewadddetailitem_oncallpressLabel" aria-hidden="true">
-	<div class="modal-dialog viewmodaloncallpress-dialog modal-xl modal-dialog-scrollable">
+	<div class="modal-dialog viewmodaloncallpress-dialog modal-xl modal-dialog-centered">
 		<div class="modal-content">
 
 			<div class="modal-header">
@@ -1110,7 +1110,7 @@ $usr = Auth::guard('web')->user();
 			<div class="modal-body">
 				<div class="mb-3">
 					<label class="form-label fw-bold">Harga Pokok</label>
-					<input type="text" class="form-control" id="d-hargaPokok-oncallprice" value="">
+					<input type="number" class="form-control text-left" id="d-hargaPokok-oncallprice" value="">
 				</div>
 
 				<div class="row text-center mb-2 fw-bold" style="color: #005ce8;">
@@ -1146,19 +1146,19 @@ $usr = Auth::guard('web')->user();
 					<!-- Harga akhir -->
 					<div class="col">
 						<label class="form-label">Harga End User</label>
-						<input type="text" class="form-control" value="" id="d-hargaEndUser-oncallprice">
+						<input type="number" class="form-control text-center" value="" id="d-hargaEndUser-oncallprice">
 					</div>
 					<div class="col">
 						<label class="form-label">Harga Kontraktor</label>
-						<input type="text" class="form-control" value="" id="d-hargaKontraktor-oncallprice">
+						<input type="number" class="form-control text-center" value="" id="d-hargaKontraktor-oncallprice">
 					</div>
 					<div class="col">
 						<label class="form-label">Harga Reseller</label>
-						<input type="text" class="form-control" value="" id="d-hargaReseller-oncallprice">
+						<input type="number" class="form-control text-center" value="" id="d-hargaReseller-oncallprice">
 					</div>
 					<div class="col">
 						<label class="form-label">Harga Price List</label>
-						<input type="text" class="form-control" value="" id="d-hargaPricelist-oncallprice">
+						<input type="number" class="form-control text-center" value="" id="d-hargaPricelist-oncallprice">
 					</div>
 				</div>
 
@@ -1192,7 +1192,7 @@ $usr = Auth::guard('web')->user();
 
 			<!-- Footer -->
 			<div class="modal-footer justify-content-end">
-				<button type="button" class="btn btn-primary" onclick="saveOnCallPrice()">
+				<button type="button" class="btn btn-primary" onclick="saveOnCallPrice()" id="btn-save-oncall" disabled>
 					<svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="#ffffff" viewBox="0 0 256 256"><path d="M219.31,72,184,36.69A15.86,15.86,0,0,0,172.69,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V83.31A15.86,15.86,0,0,0,219.31,72ZM168,208H88V152h80Zm40,0H184V152a16,16,0,0,0-16-16H88a16,16,0,0,0-16,16v56H48V48H172.69L208,83.31ZM160,72a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h56A8,8,0,0,1,160,72Z"></path></svg> Simpan
 				</button>
 			</div>
@@ -1226,19 +1226,21 @@ $usr = Auth::guard('web')->user();
 				</button>
 			</div>
 
-			<input type="hidden" id="d-inquiry-waiting-oncallprice-id">
+            <input type="hidden" id="d-inquiry-waiting-oncallprice-id">
+            <input type="hidden" id="d-inquiry-waiting-oncallprice-code">
+            <input type="hidden" id="d-inquiry-waiting-oncallprice-approvals-id">
 
 			<div class="modal-body p-3">
 				<div class="card-details-wrap">
 					<div class="card-details-body">
 
 						<div class="project-idea-wrap">
-							<div class="project-idea-header d-flex justify-content-between align-items-center p-3 rounded">
+							<div class="project-idea-header d-flex justify-content-between align-items-center p-3 rounded" style="background-color: #323C55;">
 								<div>
 									<h5 class="text-white mb-1">Harga on call price mengunggu keputusan! 💰</h5>
 									<p class="text-white mb-0">Harga akan menjadi valid ketika dilakukan approval.</p>
 								</div>
-								<div class="d-flex gap-2">
+								<div class="d-flex gap-2" id="button_verification_waiting_oncallprice">
 									<button class="btn btn-light" onclick="showreject_waiting_oncallprice()">Reject</button>
 									<button class="btn btn-primary" onclick="showapprove_waiting_approval()">Approve</button>
 								</div>
@@ -1442,7 +1444,7 @@ $usr = Auth::guard('web')->user();
 																<p class="m-0" style="font-size: 14px;"><span class="d-total-produk-permintaan"></span> Produk</p>
 															</div>
 															<div class="col-lg-6 text-end d-flex align-items-center justify-content-end">
-																<button class="btn btn-primary" id="btn-detail-permintaan">
+																<button class="btn btn-primary" id="btn-detail-permintaan-waiting-oncallprice">
 																	Lihat Detail
 																</button>
 															</div>
@@ -1579,13 +1581,14 @@ $usr = Auth::guard('web')->user();
 		<div class="modal-body">
 			<div class="mb-3">
 				<label>Alasan</label>
-				<input type="text" class="form-control" id="d-message-reject-oncallprice" value="">
+                <textarea id="d-message-reject-oncallprice" aria-label="Masukkan alasan kamu" class="swal2-textarea" placeholder="Masukkan alasan kamu..." style="display: flex;"></textarea>
+{{--				<input type="text" class="form-control" id="d-message-reject-oncallprice" value="">--}}
 			</div>
 		</div>
 
 		<!-- Footer -->
 		<div class="modal-footer justify-content-end">
-			<button type="button" class="btn btn-primary" onclick="update_stage_oncallpress($('#d-inquiry-waiting-oncallprice-id').val(), 'STATUS002')">
+			<button type="button" class="btn btn-primary" onclick="rejectInquiry_waiting_oncallprice()">
 				<svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="#ffffff" viewBox="0 0 256 256"><path d="M219.31,72,184,36.69A15.86,15.86,0,0,0,172.69,32H48A16,16,0,0,0,32,48V208a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V83.31A15.86,15.86,0,0,0,219.31,72ZM168,208H88V152h80Zm40,0H184V152a16,16,0,0,0-16-16H88a16,16,0,0,0-16,16v56H48V48H172.69L208,83.31ZM160,72a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h56A8,8,0,0,1,160,72Z"></path></svg> Simpan
 			</button>
 		</div>
@@ -1621,7 +1624,8 @@ $usr = Auth::guard('web')->user();
       <!-- Footer -->
       <div class="modal-footer justify-content-center border-0 mt-2">
         <button type="button" class="btn btn-light" data-bs-dismiss="modal">Kembali</button>
-        <button type="button" class="btn btn-primary" onclick="update_stage_oncallpress($('#d-inquiry-waiting-oncallprice-id').val(), 'STATUS001')">Ya, Sudah</button>
+{{--          <button type="button" class="btn btn-primary" onclick="update_stage_oncallpress($('#d-inquiry-waiting-oncallprice-id').val(), 'STATUS001')">Ya, Sudah</button>--}}
+          <button type="button" class="btn btn-primary" onclick="approve_waiting_oncallpress()">Ya, Sudah</button>
       </div>
 
     </div>
@@ -1920,6 +1924,50 @@ $usr = Auth::guard('web')->user();
         });
 	});
 
+    document.addEventListener("DOMContentLoaded", function () {
+
+        function validateFields() {
+            let isValid = true;
+
+            const fields = [
+                '#d-hargaPokok-oncallprice',
+                '#d-marginEndUser-oncallprice',
+                '#d-marginKontraktor-oncallprice',
+                '#d-marginReseller-oncallprice',
+                '#d-marginPricelist-oncallprice',
+                '#d-hargaEndUser-oncallprice',
+                '#d-hargaKontraktor-oncallprice',
+                '#d-hargaReseller-oncallprice',
+                '#d-hargaPricelist-oncallprice',
+                '#d-oncall-price-brand-code',
+                '#d-oncall-price-product-division-code',
+                '#d-oncall-price-uom-code',
+                '#d-oncall-category-code',
+            ];
+
+            for (const selector of fields) {
+                const el = document.querySelector(selector);
+                if (!el || el.value.trim() === "" || el.value === null) {
+                    isValid = false;
+                    break;
+                }
+            }
+
+            document.getElementById("btn-save-oncall").disabled = !isValid;
+        }
+
+        // Daftar input biasa
+        $('#d-hargaEndUser-oncallprice, #d-marginEndUser-oncallprice, #d-marginKontraktor-oncallprice, #d-marginReseller-oncallprice, #d-marginPricelist-oncallprice, #d-hargaKontraktor-oncallprice, #d-hargaReseller-oncallprice, #d-hargaPricelist-oncallprice')
+            .on('input', validateFields);
+
+// Daftar Select2
+        $('#d-oncall-price-brand-code, #d-oncall-price-product-division-code, #d-oncall-price-uom-code, #d-oncall-category-code')
+            .on('select2:select select2:unselect', validateFields);
+
+// Jalankan validasi awal
+        validateFields();
+    });
+
 	function cancel_inquiry(id) {
 		Swal.fire({
 			title: 'Hold Up! Butuh Alasan Nih! ⚠️',
@@ -2136,6 +2184,96 @@ $usr = Auth::guard('web')->user();
         // console.log('id', id);
 		$('#d-inquiry-oncallprace-aktive').val(id);
         $('#viewadddetailitem_oncallpress').modal('show');
+        document.getElementById("btn-save-oncall").disabled = true;
+
+        $('#d-hargaPokok-oncallprice').val('');
+        $('#d-marginEndUser-oncallprice').val('');
+        $('#d-marginKontraktor-oncallprice').val('');
+        $('#d-marginReseller-oncallprice').val('');
+        $('#d-marginPricelist-oncallprice').val('');
+        $('#d-hargaEndUser-oncallprice').val('');
+        $('#d-hargaKontraktor-oncallprice').val('');
+        $('#d-hargaReseller-oncallprice').val('');
+        $('#d-hargaPricelist-oncallprice').val('');
+        $('#d-hargaKontraktor-oncallprice').val('');
+        $('#d-hargaKontraktor-oncallprice').val('');
+
+        $('#d-oncall-price-brand-code').append(new Option('', '', true, true)).trigger('change');
+        $('#d-oncall-price-product-division-code').append(new Option('', '', true, true)).trigger('change');
+        $('#d-oncall-price-uom-code').append(new Option('', '', true, true)).trigger('change');
+        $('#d-oncall-category-code').append(new Option('', '', true, true)).trigger('change');
+
+    }
+
+    function approve_waiting_oncallpress() {
+        let master_approvals_details_id = $('#d-inquiry-waiting-oncallprice-approvals-id').val();
+        let inquiry_code = $('#d-inquiry-waiting-oncallprice-code').val();
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            url: `/admin/inquiry/approve_waiting_oncallprice`,
+            method: 'POST',
+            data: {
+                inquiry_code: inquiry_code,
+                master_approvals_details_id: master_approvals_details_id
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status == 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Berhasil!',
+                    }).then(function() {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire('Gagal!', response.data, 'error');
+                }
+            },
+            error: function(error) {
+                console.log(error)
+            }
+        });
+    }
+
+    function rejectInquiry_waiting_oncallprice() {
+        let master_approvals_details_id = $('#d-inquiry-waiting-oncallprice-approvals-id').val();
+        let inquiry_code = $('#d-inquiry-waiting-oncallprice-code').val();
+        let alasan = $('#d-message-reject-oncallprice').val();
+
+        $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            url: `/admin/inquiry/reject_waiting_oncall_price`,
+            method: 'POST',
+            data: {
+                inquiry_code: inquiry_code,
+                alasan: alasan,
+                master_approvals_details_id: master_approvals_details_id
+            },
+            dataType: 'json',
+            success: function(response) {
+                if (response.status == 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Berhasil!',
+                    }).then(function() {
+                        location.reload();
+                    });
+
+                } else {
+                    Swal.fire('Gagal!', response.data, 'error');
+                }
+            },
+            error: function(error) {
+                console.log(error)
+            }
+        });
     }
 
 </script>

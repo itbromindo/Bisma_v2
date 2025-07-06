@@ -20,6 +20,7 @@ use App\Models\MasterApproval;
 use App\Models\MasterApprovalsDetail;
 use App\Models\OriginInquiry;
 use App\Models\Product_divisions;
+use function PHPUnit\Framework\returnArgument;
 
 class InquiryController extends Controller
 {
@@ -68,12 +69,101 @@ class InquiryController extends Controller
             'inquiry_updated_by' => Session::get('user_code')
         ];
 
+//        khusus inquiry oncall price
+        if($stage == 'STATUS003'){
+            $get_noinquiry = $this->inquiry
+                ->select('inquiry_code as noinquiry')
+                ->where('inquiry_id', $id)
+                ->first();
+            if ($get_noinquiry) {
+                $cut_noinquiry = substr($get_noinquiry->noinquiry, 3, 30);
+
+                $get_category = $this->inquirydetail
+                    ->select('product_divisions_name as code_product')
+                    ->leftJoin('goods', 'goods.goods_code', '=', 'inquiry_product.goods_code')
+                    ->leftJoin('product_divisions', 'product_divisions.product_divisions_code', '=', 'goods.product_division_code')
+                    ->where('inquiry_code', $get_noinquiry->noinquiry)
+                    ->first();
+
+                if ($get_category && $get_category->code_product) {
+                    $new_inquiry_code = $get_category->code_product . $cut_noinquiry;
+                    $data['inquiry_code'] = $new_inquiry_code;
+
+                    $update_inquiry_product = $this->inquirydetail
+                        ->where('inquiry_code', $get_noinquiry->noinquiry)
+                        ->update([
+                            'inquiry_code' => $new_inquiry_code,
+                        ]);
+
+                    $this->add_approval_waiting_oncallprice($new_inquiry_code);
+                }
+
+            }
+
+        }
+
         DB::table('inquiry')->where('inquiry_id', $id)->update($data);
         $messages = [
             'status' => 200,
             'data' => 'berhasil!'
         ];
         return response()->json($messages);
+    }
+
+    public function add_approval_waiting_oncallprice($code_inquiry){
+
+        DB::beginTransaction();
+        $user = Auth::user();
+
+        $approvalRule = MasterApproval::where([
+            ['department_code', $user->users_department],
+            ['division_code', $user->users_division],
+            ['level_code', $user->users_level],
+            ['master_approvals_soft_delete', 0]
+        ])
+            ->has('details')
+            ->with(['details'])
+            ->get();
+
+        if ($approvalRule->isEmpty()) {
+            return response()->json([
+                'status' => 404,
+                'data' => 'Aturan Approval untuk level Anda tidak ditemukan!'
+            ], 404);
+        }
+
+//        $inquiry = Inquiry::where('inquiry_id', $request->id)->first();
+
+        foreach($approvalRule as $approval) {
+            $kode_approval = 'AT' . str_pad((string) (ApprovalTransactionHeader::count() + 1), 3, '0', STR_PAD_LEFT);
+
+            ApprovalTransactionHeader::create([
+                'approval_transaction_header_code' => $kode_approval,
+                'master_approvals_code' => $approval->master_approvals_code,
+                'transaction_number' => $code_inquiry,
+                'approval_transaction_header_notes' => 'Waiting Approval On Call Price',
+                'approval_transaction_header_created_by' => $user->user_code,
+                'approval_transaction_header_created_at' => now()
+            ]);
+
+            foreach($approval->details as $detail) {
+                ApprovalTransactionDetail::create([
+                    'approval_transaction_header_code' => $kode_approval,
+                    'master_approvals_details_id' => $detail->master_approvals_details_id,
+                    'approval_transaction_detail_decision' => 'Waiting Approval',
+                    'approval_transaction_detail_created_by' => $user->user_code,
+                    'approval_transaction_detail_created_at' => now()
+                ]);
+            }
+        }
+
+        DB::commit();
+
+        return response()->json([
+            'status' => 200,
+            'data' => 'Berhasil!'
+        ]);
+
     }
 
     public function cancel_stage(Request $request)
@@ -99,7 +189,7 @@ class InquiryController extends Controller
 
             if ($approvalRule->isEmpty()) {
                 return response()->json([
-                    'status' => 404, 
+                    'status' => 404,
                     'data' => 'Aturan Approval untuk level Anda tidak ditemukan!'
                 ], 404);
             }
@@ -131,7 +221,7 @@ class InquiryController extends Controller
 
             $inquiry->update([
                 'inquiry_stage' => 'STATUS008', // waiting approval no batal
-                'inquiry_updated_by' => $user->user_code, 
+                'inquiry_updated_by' => $user->user_code,
                 'inquiry_updated_at' => now()
             ]);
 
@@ -145,7 +235,7 @@ class InquiryController extends Controller
         } catch (\Throwable $e) {
             DB::rollBack();
             return response()->json([
-                'status' => 500, 
+                'status' => 500,
                 'data' => 'Gagal, terjadi kesalahan pada server.'
             ]);
         }
@@ -169,8 +259,8 @@ class InquiryController extends Controller
                 ->whereHas('header', function ($query) use ($request) {
                     $query->where('transaction_number', $request->inquiry_code);
                 })
-                ->where('approval_transaction_detail_decision', 'Waiting Approval') 
-                ->firstOrFail(); 
+                ->where('approval_transaction_detail_decision', 'Waiting Approval')
+                ->firstOrFail();
 
             $approvalDetail->update([
                 'approval_transaction_detail_decision'      => 'Not Approve',
@@ -212,7 +302,7 @@ class InquiryController extends Controller
             'inquiry_code' => 'required|exists:inquiry,inquiry_code',
             'master_approvals_details_id' => 'required|exists:master_approvals_details,master_approvals_details_id',
         ]);
-        
+
         try {
             DB::beginTransaction();
             $user = Auth::user();
@@ -222,7 +312,7 @@ class InquiryController extends Controller
                     $query->where('transaction_number', $request->inquiry_code);
                 })
                 ->where('approval_transaction_detail_decision', 'Waiting Approval')
-                ->firstOrFail(); 
+                ->firstOrFail();
 
             $currentApprovalDetail->update([
                 'approval_transaction_detail_decision'      => 'Approve',
@@ -233,15 +323,15 @@ class InquiryController extends Controller
             ]);
 
             $currentMasterDetail = MasterApprovalsDetail::find($request->master_approvals_details_id);
-            
+
             $isFinalApproval = !MasterApprovalsDetail::where('master_approvals_code', $currentMasterDetail->master_approvals_code)
                 ->where('master_approvals_details_section', '>', $currentMasterDetail->master_approvals_details_section)
-                ->exists(); 
+                ->exists();
 
             if ($isFinalApproval) {
                 $header = ApprovalTransactionHeader::where('approval_transaction_header_code', $currentApprovalDetail->approval_transaction_header_code);
                 $header->update([
-                    'approval_transaction_header_stage_progress' => 'Done', 
+                    'approval_transaction_header_stage_progress' => 'Done',
                     'approval_transaction_header_updated_by' => $user->user_code,
                     'approval_transaction_header_updated_at' => now(),
                 ]);
@@ -266,7 +356,7 @@ class InquiryController extends Controller
             return response()->json([
                 'status' => 500,
                 'data' => 'Gagal, terjadi kesalahan pada server.',
-                'error' => $e->getMessage() 
+                'error' => $e->getMessage()
             ]);
         }
     }
@@ -373,7 +463,133 @@ class InquiryController extends Controller
             ->where('inquiry_product_id', $id)
             ->first();
 
-        return $get_detail_after;
+
+        $data = [
+          'count_price' => $total_harga,
+          'detail_update'  => $get_detail_after
+        ];
+
+        return $data;
+    }
+
+    public function approve_waiting_oncall_price(Request $request)
+    {
+        $request->validate([
+            'inquiry_code' => 'required|exists:inquiry,inquiry_code',
+            'master_approvals_details_id' => 'required|exists:master_approvals_details,master_approvals_details_id',
+        ]);
+
+        try {
+            DB::beginTransaction();
+            $user = Auth::user();
+
+            $currentApprovalDetail = ApprovalTransactionDetail::where('master_approvals_details_id', $request->master_approvals_details_id)
+                ->whereHas('header', function ($query) use ($request) {
+                    $query->where('transaction_number', $request->inquiry_code);
+                })
+                ->where('approval_transaction_detail_decision', 'Waiting Approval')
+                ->firstOrFail();
+
+            $currentApprovalDetail->update([
+                'approval_transaction_detail_decision'      => 'Approve',
+                'approval_transaction_detail_approval_date' => now(),
+                'approval_transaction_detail_approvers'     => $user->user_code,
+                'approval_transaction_detail_updated_by'    => $user->user_code,
+                'approval_transaction_detail_updated_at'    => now()
+            ]);
+
+            $currentMasterDetail = MasterApprovalsDetail::find($request->master_approvals_details_id);
+
+            $isFinalApproval = !MasterApprovalsDetail::where('master_approvals_code', $currentMasterDetail->master_approvals_code)
+                ->where('master_approvals_details_section', '>', $currentMasterDetail->master_approvals_details_section)
+                ->exists();
+
+            if ($isFinalApproval) {
+                $header = ApprovalTransactionHeader::where('approval_transaction_header_code', $currentApprovalDetail->approval_transaction_header_code);
+                $header->update([
+                    'approval_transaction_header_stage_progress' => 'Done',
+                    'approval_transaction_header_updated_by' => $user->user_code,
+                    'approval_transaction_header_updated_at' => now(),
+                ]);
+
+                $inquiry = Inquiry::where('inquiry_code', $request->inquiry_code)->first();
+                $inquiry->update([
+                    'inquiry_stage' => 'STATUS001', // Inquiry Batal
+                    'inquiry_updated_by' => $user->user_code,
+                    'inquiry_updated_at' => now(),
+                ]);
+            }
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 200,
+                'data' => 'Berhasil menyetujui inquiry!'
+            ]);
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+            return response()->json([
+                'status' => 500,
+                'data' => 'Gagal, terjadi kesalahan pada server.',
+                'error' => $e->getMessage()
+            ]);
+        }
+    }
+
+    public function reject_inquiry_oncall_price(Request $request)
+    {
+        $request->validate([
+            'inquiry_code' => 'required|exists:inquiry,inquiry_code',
+            'alasan' => 'required|string|max:255',
+            'master_approvals_details_id' => 'required|exists:master_approvals_details,master_approvals_details_id',
+        ]);
+
+        try {
+            DB::beginTransaction();
+            $user = Auth::user();
+
+            $inquiry = Inquiry::where('inquiry_code', $request->inquiry_code)->first();
+
+            $approvalDetail = ApprovalTransactionDetail::where('master_approvals_details_id', $request->master_approvals_details_id)
+                ->whereHas('header', function ($query) use ($request) {
+                    $query->where('transaction_number', $request->inquiry_code);
+                })
+                ->where('approval_transaction_detail_decision', 'Waiting Approval')
+                ->firstOrFail();
+
+            $approvalDetail->update([
+                'approval_transaction_detail_decision'      => 'Not Approve',
+                'approval_transaction_detail_reason'        => $request->alasan,
+                'approval_transaction_detail_approval_date' => now(),
+                'approval_transaction_detail_approvers'     => $user->user_code,
+                'approval_transaction_detail_updated_by'    => $user->user_code,
+                'approval_transaction_detail_updated_at'    => now()
+            ]);
+
+            $inquiry->update([
+                'inquiry_stage' => 'STATUS002', // Inquiry Masuk
+                'inquiry_updated_by' => $user->user_code,
+                'inquiry_updated_at' => now(),
+            ]);
+
+            DB::commit();
+
+            return response()->json([
+                'status' => 200,
+                'data' => 'Berhasil menolak pembatalan inquiry!'
+            ]);
+
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'status' => 500,
+                'data' => 'Gagal, terjadi kesalahan pada server.',
+                'error' => $e->getMessage()
+            ]);
+        }
+
     }
 
 }
