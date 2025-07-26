@@ -221,6 +221,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
         Route::post('/approve', 'approve_inquiry');
         Route::get('/detail/{id}', 'detail_inquiry');
         Route::get('/download/{id}', 'download_inquiry');
+        Route::get('/detail_goods_oncall_price/{id}', 'detail_goods_oncall_price');
         Route::any('/back_to_sales/{id}', 'back_to_sales');
     });
 
