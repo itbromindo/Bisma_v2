@@ -1443,11 +1443,11 @@ $usr = Auth::guard('web')->user();
 																<p class="m-0" style="font-weight: 500; font-size: 14px;">List Permintaan</p>
 																<p class="m-0" style="font-size: 14px;"><span class="d-total-produk-permintaan"></span> Produk</p>
 															</div>
-															<div class="col-lg-6 text-end d-flex align-items-center justify-content-end">
-																<button class="btn btn-primary" id="btn-detail-permintaan-waiting-oncallprice">
-																	Lihat Detail
-																</button>
-															</div>
+{{--															<div class="col-lg-6 text-end d-flex align-items-center justify-content-end">--}}
+{{--																<button class="btn btn-primary" id="btn-detail-permintaan-waiting-oncallprice">--}}
+{{--																	Lihat Detail--}}
+{{--																</button>--}}
+{{--															</div>--}}
 														</div>
 
 														<hr class="custom-hr">
@@ -2195,13 +2195,35 @@ $usr = Auth::guard('web')->user();
         $('#d-hargaKontraktor-oncallprice').val('');
         $('#d-hargaReseller-oncallprice').val('');
         $('#d-hargaPricelist-oncallprice').val('');
-        $('#d-hargaKontraktor-oncallprice').val('');
-        $('#d-hargaKontraktor-oncallprice').val('');
 
         $('#d-oncall-price-brand-code').append(new Option('', '', true, true)).trigger('change');
         $('#d-oncall-price-product-division-code').append(new Option('', '', true, true)).trigger('change');
         $('#d-oncall-price-uom-code').append(new Option('', '', true, true)).trigger('change');
         $('#d-oncall-category-code').append(new Option('', '', true, true)).trigger('change');
+
+        $.ajax({
+            url: '/admin/inquiry/detail_goods_oncall_price/' + id,
+            dataType: 'json',
+            success: function(response) {
+                console.log(response.length);
+
+                $('#d-hargaPokok-oncallprice').val(response.goods_price);
+                $('#d-marginEndUser-oncallprice').val(response.goods_end_user_margin);
+                $('#d-marginKontraktor-oncallprice').val(response.goods_contractor_margin);
+                $('#d-marginReseller-oncallprice').val(response.goods_reseller_margin);
+                $('#d-marginPricelist-oncallprice').val(response.goods_pricelist_margon);
+                $('#d-hargaEndUser-oncallprice').val(response.goods_end_user_price);
+                $('#d-hargaKontraktor-oncallprice').val(response.goods_contractor_price);
+                $('#d-hargaReseller-oncallprice').val(response.goods_reseller_price);
+                $('#d-hargaPricelist-oncallprice').val(response.goods_pricelist_price);
+
+                $('#d-oncall-price-brand-code').append(new Option(response.brand_name, response.brand_code, true, true)).trigger('change');
+                $('#d-oncall-price-product-division-code').append(new Option(response.product_divisions_name, response.product_division_code, true, true)).trigger('change');
+                $('#d-oncall-price-uom-code').append(new Option(response.uom_name, response.uom_code, true, true)).trigger('change');
+                $('#d-oncall-category-code').append(new Option(response.product_category_name, response.product_category_code, true, true)).trigger('change');
+
+            }
+        });
 
     }
 

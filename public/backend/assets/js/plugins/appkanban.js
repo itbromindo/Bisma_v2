@@ -6,11 +6,12 @@
 		document.getElementById("done"),
 	]);
 
-	const thousandView = (number = 0) => {
-		return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-	}
+    const thousandView = (number = 0) => {
+        if (number == null || isNaN(number)) return "0";
+        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
 
-	// KANBAN BOARD
+    // KANBAN BOARD
 
 	// Dapatkan semua kolom kanban
 	let columnsCustome = Array.from(document.querySelectorAll(".kanban-columnXX"));
@@ -744,7 +745,7 @@
 						$('.d-inquiry-warehaouse').text(inquiry.warehouse_name);
 						$('.d-inquiry-customer-type').text(inquiry.inquiry_customer_type);
 						$('.d-inquiry-oc').text(inquiry.inquiry_oc);
-						$('.d-inquiry-shopping-cost').text(thousandView(inquiry.inquiry_shipping_cost));
+                        $('.d-inquiry-shopping-cost').text(thousandView(inquiry.inquiry_shipping_cost));
 
 						let list_permintaan = response.data.list_permintaan;
 						$('#tableBody').empty();
@@ -755,19 +756,19 @@
 								totalProdukPermintaan += 1;
 								totalHargaPermintaan += data.inquiry_product_total_price;
 								$('#tableBody').append(`
-                  <tr>
-                    <td class="text-center">${index + 1}</td>
-                    <td class="text-center">${data.inquiry_product_name}</td>
-                    <td class="text-center">${thousandView(data.inquiry_product_qty)}</td>
-                    <td class="text-center">${thousandView(data.goods_stock)}</td>
-                    <td class="text-center">${data.inquiry_product_status_on_inquiry}</td>
-                    <td class="text-center">${data.uom_name}</td>
-                    <td class="text-center">${thousandView(data.inquiry_product_pricelist)}</td>
-                    <td class="text-center">${thousandView(data.inquiry_product_net_price)}</td>
-                    <td class="text-center">${data.inquiry_taxes_percent} %</td>
-                    <td class="text-center">${thousandView(data.inquiry_product_total_price)}</td>
-                  </tr>
-                `);
+                                  <tr>
+                                    <td class="text-center">${index + 1}</td>
+                                    <td class="text-center">${data.inquiry_product_name}</td>
+                                    <td class="text-center">${thousandView(data.inquiry_product_qty)}</td>
+                                    <td class="text-center">${thousandView(data.goods_stock)}</td>
+                                    <td class="text-center">${data.inquiry_product_status_on_inquiry}</td>
+                                    <td class="text-center">${data.uom_name}</td>
+                                    <td class="text-center">${thousandView(data.inquiry_product_pricelist)}</td>
+                                    <td class="text-center">${thousandView(data.inquiry_product_net_price)}</td>
+                                    <td class="text-center">${data.inquiry_taxes_percent} %</td>
+                                    <td class="text-center">${thousandView(data.inquiry_product_total_price)}</td>
+                                  </tr>
+                                `);
 							});
 						} else {
 							$('#tableBody').append('<tr><td colspan="10" class="text-center">No results found</td></tr>');

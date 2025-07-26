@@ -69,6 +69,8 @@ class InquiryController extends Controller
             'inquiry_updated_by' => Session::get('user_code')
         ];
 
+        DB::table('inquiry')->where('inquiry_id', $id)->update($data);
+
 //        khusus inquiry oncall price
         if($stage == 'STATUS003'){
             $get_noinquiry = $this->inquiry
@@ -95,6 +97,10 @@ class InquiryController extends Controller
                             'inquiry_code' => $new_inquiry_code,
                         ]);
 
+                    DB::table('inquiry')
+                        ->where('inquiry_id', $id)
+                        ->update($data);
+
                     $this->add_approval_waiting_oncallprice($new_inquiry_code);
                 }
 
@@ -102,7 +108,7 @@ class InquiryController extends Controller
 
         }
 
-        DB::table('inquiry')->where('inquiry_id', $id)->update($data);
+
         $messages = [
             'status' => 200,
             'data' => 'berhasil!'
@@ -518,6 +524,25 @@ class InquiryController extends Controller
                     'inquiry_updated_by' => $user->user_code,
                     'inquiry_updated_at' => now(),
                 ]);
+
+                $inquiryProducts = $this->inquirydetail
+                    ->where('inquiry_code', $request->inquiry_code)
+                    ->get();
+
+                $this->inquirydetail
+                    ->where('inquiry_code', $request->inquiry_code)
+                    ->update([
+                        'inquiry_product_status_on_inquiry' => 2
+                    ]);
+
+                foreach ($inquiryProducts as $val) {
+                    $this->goods
+                        ->where('goods_code', '=', $val->goods_code)
+                        ->update([
+                            'goods_soft_delete' => 0
+                        ]);
+                }
+
             }
 
             DB::commit();
@@ -590,6 +615,20 @@ class InquiryController extends Controller
             ]);
         }
 
+    }
+
+    public function detail_goods_oncall_price($id)
+    {
+        $getdetail = $this->inquirydetail
+            ->join('goods', 'inquiry_product.goods_code', '=', 'goods.goods_code')
+            ->join('brand','goods.brand_code', '=', 'brand.brand_code')
+            ->join('product_divisions','goods.product_division_code', '=', 'product_divisions.product_divisions_code')
+            ->join('uom','goods.uom_code', '=', 'uom.uom_code')
+            ->join('product_category','goods.product_category_code', '=', 'product_category.product_category_code')
+            ->where('inquiry_product_id', $id)
+            ->first();
+
+        return $getdetail;
     }
 
 }
